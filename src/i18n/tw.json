@@ -1,0 +1,66 @@
+{
+    "appCardContent": {
+        //Resource Setter
+        "User_Group_Access_Design": "使用者及群組權限設計",
+        "Job_Frequency_Design": "作業排程設計",
+        "DB_Connection_Define": "資料庫連線定義",
+        "JCS_Agent_Define": "任務代理人定義",
+        "Alias_Domain_Define": "別名及領域定義",
+        //Metadata Definer
+        "Database_Mgnt": "資料庫管理操作",
+        "File_Mgnt": "檔案系統管理操作",
+        "SAP_Mgnt": "SAP 管理操作",
+        "Notes_Mgnt": "Notes 管理操作",
+        "Meta_Table_Column_Mgnt": "表格及欄位管理",
+        //JF Designer
+        "Entity_Category_Job_Define": "實體、類別、作業的定義",
+        "Job_Step_Design": "作業步驟設計",
+        "Flow_Map_Design": "作業流程設計",
+        "Job_Schedule_Assign": "作業排程指派",
+        "Import_Export_Operation": "資源的匯入及匯出",
+        //Task Console
+        "Job_Flow_Task_Execution": "作業流程的執行",
+        "Job_Flow_Task_Monitor": "作業流程的監控",
+        "JCS_Server_Agent_Monitor": "JCS 服務代理人監控",
+        "Resource_Monitor": "JCS 系統資源監控",
+        "Task_Log_Viewer": "工作任務的日誌瀏覽",
+        //Metaman
+        "Tech_Meta_Design": "技術元數據設計",
+        "Business_Meta_Design": "商業元數據設計",
+        "App_Meta_Design": "應用元數據設計",
+        "ER_Lineage_Model_Design": "實體及血緣關係圖設計",
+        "Data_Profile": "元數據剖析及品質分析",
+        //Operation Logger
+        "Resource_Op_Log": "資源物件的操作日誌",
+        "Metadata_Op_Log": "元數據的的操作日誌",
+        "Job_Flow_Op_Log": "作業及流程的的操作日誌",
+        "Task_Op_Log": "工作任務的操作日誌",
+        "Login_Logout_Log": "登入及登出的操作日誌",
+        //Remote Updater
+        "Remote_Data_Fetch": "遠端資料擷取",
+        "Remote_Data_Push": "遠端資料更新",
+        "Remote_Data_Pull": "遠端資料下載",
+        "Remote_Data_Deploy": "遠端資料佈署",
+        "Remote_Data_Build": "遠端資料建立",
+        //Web Task Console
+        "Web_Job_Flow_Task_Execution": "作業流程的執行",
+        "Web_Job_Flow_Task_Monitor": "作業流程的監控",
+        "Web_JCS_Server_Agent_Monitor": "JCS 服務代理人監控",
+        "Web_Running_Error_Viewer": "執行中或錯誤任務的瀏覽",
+        "Web_Task_Log_Viewer": "工作任務的日誌瀏覽"
+    },
+    "loginFormContent": {
+        "User_Account": "使用者帳號",
+        "User_Password": "使用者密碼",
+        "User_Validator": "請進行認證碼檢驗",
+        "User_Account_Placeholder": "請在此輸入您的帳號",
+        "User_Password_Placeholder": "請在此輸入您的密碼",
+        "User_Validator_Placeholder": "請照圖中驗證碼輸入",
+        "Reload_Text": "看不清楚換一張圖",
+        "Remember_Me": " 請記住我"
+    },
+    "loginWindowContent": {
+        "Login_Button": "登入",
+        "Forget_PWS": "忘記密碼?"
+    }
+}
