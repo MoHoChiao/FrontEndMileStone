@@ -5,7 +5,7 @@
             <span @click="closeModalWindow" class="w3-button w3-hover-none w3-display-topright">
                 <i class="fa fa-window-close"></i>
             </span>
-            <h4 class="w3-center">{{ _windowTitle }}</h4>
+            <h4 class="w3-center winTitle">{{ _windowTitle }}</h4>
         </header>
         <div class="w3-padding">
             <slot name="content"></slot>
@@ -60,5 +60,8 @@ export default {
         font-size: 1em;
         font-size: 4.5vw;
     }
+}
+.winTitle {
+  font-family: 'Limelight', cursive;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
     <div :class="classList" style="min-height:350px">
-        <h3>{{ this.title }}</h3>
+        <h3 class="appTile">{{ this.title }}</h3>
         <!--"margin: 0 auto" is for centered bootstrap img-responsive-->
         <img class="w3-margin-bottom img-responsive" style="margin: 0 auto" :src="_imgSrc" />
-        <ul class="w3-ul">
+        <ul class="w3-ul appSubTile">
             <li :class="[content.color === undefined ? '':'w3-text-'+content.color]" v-for="content in lists">
-                {{ $t(content.text) }}
+                {{ $t(content) }}
             </li>
         </ul>
         <slot></slot>
@@ -88,5 +88,11 @@ export default {
         font-size: 0.75em;
         font-size: 3.5vw;
     }
+}
+.appTile {
+  font-family: 'Limelight', cursive;
+}
+.appSubTile {
+  font-family: 'Courgette', cursive;
 }
 </style>

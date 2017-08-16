@@ -121,12 +121,6 @@ export default {
     }
 }
 </script>
-@media (max-width: 34em) {
-    input {
-        font-size: 0.75em;
-        font-size: 3.5vw;
-    }
-}
 <style scoped>
 @media (max-width: 34em) {
     label,input {
