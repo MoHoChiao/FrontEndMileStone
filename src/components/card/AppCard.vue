@@ -1,5 +1,6 @@
 <template>
-    <div :class="classList" style="min-height:350px">
+    <div>
+      <div v-if="this.title!=='Error !'" :class="classList" style="min-height:350px">
         <h3 class="appTile">{{ this.title }}</h3>
         <!--"margin: 0 auto" is for centered bootstrap img-responsive-->
         <img class="w3-margin-bottom img-responsive" style="margin: 0 auto" :src="_imgSrc" />
@@ -9,6 +10,17 @@
             </li>
         </ul>
         <slot></slot>
+      </div>
+
+      <div v-else :class="classList" style="min-height:350px">
+        <h3 class="w3-text-red">{{ this.title }}</h3>
+        <!--"margin: 0 auto" is for centered bootstrap img-responsive-->
+        <ul class="w3-ul w3-text-red">
+            <li :class="[content.color === undefined ? '':'w3-text-'+content.color]" v-for="content in lists">
+                {{ content }}
+            </li>
+        </ul>
+      </div>
     </div>
 </template>
 
@@ -47,7 +59,6 @@ export default {
             return this.imgSrc !== null ? this.imgSrc : '';
         }
     },
-    // merge our prepared link props with button props
     props: {
         appTitle: {
             type: String,

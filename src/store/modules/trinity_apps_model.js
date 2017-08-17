@@ -17,7 +17,7 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     fetchTrinityAPPS({ commit }) {
-        HTTP.get(`get-model`)
+        HTTP.get(`trinity-apps-model/get-apps-model`)
             .then(response => {
                 commit(types.Fetch_Trinity_APPS, response.data);
             })
