@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Info Side Bar -->
-    <info-side-bar side-bar-bg-color="signal-white" btn-bg-color="camo-black"></info-side-bar>
+    <info-side-bar side-bar-bg-color="signal-black" btn-bg-color="signal-black"></info-side-bar>
     <!-- header -->
-    <div class="w3-container w3-camo-black w3-padding w3-center">
+    <div class="w3-container w3-signal-black w3-padding w3-center">
       <h4 id="trinity_home_sub_title">Your key to the big data world.</h4>
       <h2 class="w3-xxxlarge w3-animate-zoom" id="trinity_home_title">Welcome To Trinity Home</h2>
       <div class="w3-padding-32">
@@ -21,7 +21,7 @@
     <!-- content -->
     <app-card-layout></app-card-layout>
     <!-- Footer -->
-    <div class="w3-container w3-camo-black w3-padding-16 w3-center">
+    <div class="w3-container w3-signal-black w3-padding-16 w3-center">
       <p>Copyright © Trinity Data Corporation.</p>
       <p>5.0.0.alpha Build 20170714</p>
     </div>
