@@ -1,12 +1,25 @@
 <template>
     <div class="w3-row w3-section">
         <div class="w3-col w3-text-black">
-            <input class="w3-check" type="checkbox">&nbsp;<slot></slot>
+            <input class="w3-check" type="checkbox" :checked="checked" @click="check">&nbsp;<slot></slot>
         </div>
     </div>
 </template>
 <script>
 export default {
+   data() {
+        return {
+            checked: ''
+        }
+    },
+   methods: {
+        check() {
+            if(this.checked === '')
+                this.checked = 'checked'
+            else
+                this.checked = ''
+        }
+   }
 }
 </script>
 <style scoped>

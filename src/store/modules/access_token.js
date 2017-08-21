@@ -1,25 +1,27 @@
 import { HTTP } from '../../axios/http-common';
 
 const types = {
-    Fetch_Trinity_APPS: 'fetch/Trinity_APPS_MODEL'
+    Fetch_Access_Token: 'fetch/Access_Token',
+    Gen_Access_Token: 'gen/Access_Token'
 }
 
 // state
 const state = {
-    appsContent: []
+    accessToken: ''
 }
 
 // getters 也可以整理到這邊直接返回內容
 const getters = {
-    getTrinityApps: state => state.appsContent
+    getAccessToken: state => state.accessToken
 }
 
 // actions 也是以 Object 形式建構。
 const actions = {
-    fetchTrinityAPPS({ commit }) {
-        HTTP.get(`trinity-apps-model/get-apps-model`)
+    genAccessToken({ commit }, formAttr) {
+        alert(formAttr.account)
+        HTTP.post(`authc/gen-access-token`, formAttr)
             .then(response => {
-                commit(types.Fetch_Trinity_APPS, response.data);
+                commit(types.Gen_Access_Token, response.data);
             })
             .catch(e => {
                 console.error(e);
@@ -29,9 +31,10 @@ const actions = {
 
 // mutations
 const mutations = {
-    [types.Fetch_Trinity_APPS](state, appsContent) {
-        state.appsContent = appsContent;
-        console.log('Mutation Success', types.Fetch_Trinity_APPS);
+    [types.Gen_Access_Token](state, loginInfo) {
+        document.cookie = loginInfo.info
+        state.accessToken = loginInfo.info
+        console.log('Mutation Success', types.Gen_Access_Token, "token", state.accessToken);
 
     }
 }

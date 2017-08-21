@@ -24,7 +24,7 @@
                         :input-border="inputBorder" 
                         :input-hover-color="inputHoverColor" 
             ></string-input>
-            <check-box>{{ $t('loginFormContent.Remember_Me') }}</check-box>
+            <check-box ref="remember_input">{{ $t('loginFormContent.Remember_Me') }}</check-box>
             <validate-code ref="code_input" 
                         :label-text="$t('loginFormContent.User_Validator')" 
                         :input-placeholder="$t('loginFormContent.User_Validator_Placeholder')" 
@@ -83,10 +83,15 @@ export default {
     },
     methods: {
         verifyForm() {
-            return (this.$refs.ac_input.checkEmpty('此欄位不可為空')) &&
-                (this.$refs.psw_input.checkEmpty('此欄位不可為空')) &&
-                (this.$refs.code_input.checkEmpty('此欄位不可為空')) &&
-                (this.$refs.code_input.checkVerify('驗證碼輸入有誤'));
+            return {
+                account: this.$refs.ac_input.inputContent,
+                psw: this.$refs.psw_input.inputContent,
+                remember: this.$refs.remember_input.checked,
+                flag: (this.$refs.ac_input.checkEmpty('此欄位不可為空')) &&
+                    (this.$refs.psw_input.checkEmpty('此欄位不可為空')) &&
+                    (this.$refs.code_input.checkEmpty('此欄位不可為空')) &&
+                    (this.$refs.code_input.checkVerify('驗證碼輸入有誤'))
+            } 
         }
     },
     components: {

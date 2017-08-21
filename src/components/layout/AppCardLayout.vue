@@ -6,8 +6,8 @@
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
-              bg-color="white" 
-              hover-color="light-grey" 
+              bg-color="signal-white" 
+              hover-color="theme-l3-blue-grey" 
               round="xlarge" 
             >
                 <login-btn class="w3-margin-bottom" btn-text="Login" 
@@ -22,8 +22,8 @@
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
-              bg-color="white" 
-              hover-color="light-grey" 
+              bg-color="signal-white" 
+              hover-color="theme-l3-blue-grey" 
               round="xlarge" 
             >
                 <login-btn class="w3-margin-bottom" btn-text="Login" 
@@ -43,7 +43,7 @@
 <script>
 import AppCard from '../card/AppCard.vue';
 import LoginBtn from '../button/LoginBtn.vue';
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 
 export default {
@@ -62,3 +62,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.w3-signal-white {
+    background-image: url("/src/assets/images/bgpic.jpg");
+}
+</style>
