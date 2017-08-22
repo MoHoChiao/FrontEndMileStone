@@ -7,5 +7,10 @@ export const HTTP = axios.create({
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8'
-    }
+    },
+    responseType: 'json',
+    auth: {
+        username: 'leoliu',
+        password: 'leoliu543'
+    },
 })

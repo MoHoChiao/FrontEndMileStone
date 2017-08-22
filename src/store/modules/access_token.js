@@ -21,6 +21,11 @@ const actions = {
         alert(formAttr.account)
         HTTP.post(`authc/gen-access-token`, formAttr)
             .then(response => {
+                console.log(response.data);
+                console.log(response.status);
+                console.log(response.statusText);
+                console.log(response.headers);
+                console.log(response.config);
                 commit(types.Gen_Access_Token, response.data);
             })
             .catch(e => {
