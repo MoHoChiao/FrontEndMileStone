@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- error msg -->
+    <modal-error-msg></modal-error-msg>
     <!-- Info Side Bar -->
     <info-side-bar side-bar-bg-color="signal-black" btn-bg-color="signal-black"></info-side-bar>
     <!-- header -->
@@ -32,13 +34,15 @@
 import AppCardLayout from '../components/layout/AppCardLayout.vue'
 import LoginBtn from '../components/button/LoginBtn.vue'
 import InfoSideBar from '../components/bar/InfoSideBar.vue'
+import ModalErrorMsg from '../components/display_msg/ModalErrorMsg.vue'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'
 export default {
   components: {
     'app-card-layout': AppCardLayout,
     'login-btn': LoginBtn,
-    'info-side-bar': InfoSideBar
+    'info-side-bar': InfoSideBar,
+    'modal-error-msg': ModalErrorMsg
   }
 }
 </script>
