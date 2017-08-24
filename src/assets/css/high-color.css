@@ -362,6 +362,11 @@
     color: #a6001a!important
 }
 
+.w3-border-highway-red,
+.w3-hover-border-highway-red:hover {
+    border-color: #a6001a!important
+}
+
 .w3-highway-orange {
     color: #fff;
     background-color: #e06000
@@ -370,6 +375,16 @@
 .w3-highway-schoolbus {
     color: #fff;
     background-color: #ee9600
+}
+
+.w3-text-highway-schoolbus,
+.w3-hover-text-highway-schoolbus:hover {
+    color: #ee9600!important
+}
+
+.w3-border-highway-schoolbus,
+.w3-hover-border-highway-schoolbus:hover {
+    border-color: #ee9600!important
 }
 
 .w3-highway-yellow {

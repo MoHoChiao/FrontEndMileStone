@@ -1,15 +1,11 @@
 <template>
-    <div v-if="systemStatus !== ''" class="w3-modal" style="display:block">
-   		<div class="w3-modal-content w3-animate-zoom w3-card-4">
-      		<div :class="classList">
-    			<span @click="close" class="w3-button w3-hover-none w3-display-topright">&times;</span>
-    			<h3>{{ systemStatus }}!</h3>
-    			<p v-html="systemMsg"></p>
-  			</div>
-    	</div>
-  	</div>
+    <modal-window v-if="systemStatus !== ''" window-title="systemStatus" :window-bg-color="color" @closeModalWindow="closeLoginModalWindow">
+        <p class="w3-large" slot="content" v-html="systemMsg"></p>
+        <div slot="footer" class="w3-padding"></div>
+    </modal-window>
 </template>
 <script>
+import ModalWindow from '../window/ModalWindow.vue';
 import { mapGetters } from 'vuex'
 export default {
     computed: {
@@ -25,13 +21,16 @@ export default {
             ];
         },
         color() {
-            return this.systemStatus === 'Error' ? `w3-highway-red` : 'w3-highway-schoolbus';
+            return this.systemStatus === 'Error' ? `highway-red` : 'highway-schoolbus';
         }
     },
     methods: {
-        close() {
+        closeLoginModalWindow() {
             this.$store.dispatch('setSystemStatus', {"status":"","msg":""})
         }
+    },
+    components: {
+        'modal-window': ModalWindow
     }
 }
 </script>
