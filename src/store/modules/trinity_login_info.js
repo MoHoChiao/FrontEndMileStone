@@ -1,9 +1,9 @@
 import { HTTP } from '../../axios/http-common';
+import * as common_types from '../common_mutations_type.js';
 
 const types = {
     Fetch_Login_Token: 'fetch/Login_Token',
-    Gen_Login_Token: 'gen/Login_Token',
-    Set_Login_Status: 'set/Login_Status'
+    Gen_Login_Token: 'gen/Login_Token'
 }
 
 // state
@@ -17,8 +17,6 @@ const state = {
 // getters 也可以整理到這邊直接返回內容
 const getters = {
     getLoginToken: state => state.loginToken,
-    getLoginMsg: state => state.loginMsg,
-    getLoginStatus: state => state.loginStatus,
     getUserInfo: state => state.userInfo
 }
 
@@ -30,18 +28,14 @@ const actions = {
                 commit(types.Gen_Login_Token, response.data);
             })
             .catch(error => {
-                alert(error.response.data);
                 if (error.response) {
                     let newStatus = {
-                        "msg": error.response.data.response,
+                        "msg": error.response.data,
                         "status": "Error"
                     }
-                    commit(types.Set_Login_Status, newStatus);
+                    commit(common_types.Set_System_Status, newStatus);
                 }
             })
-    },
-    setLoginStatus({ commit }, newStatus) {
-        commit(types.Set_Login_Status, newStatus);
     }
 }
 
@@ -56,11 +50,6 @@ const mutations = {
         state.userInfo = data.userinfo
 
         console.log('Mutation Success', types.Gen_Login_Token, "token", state.loginToken);
-    },
-    [types.Set_Login_Status](state, newStatus) {
-        state.loginStatus = newStatus.status
-        state.loginMsg = newStatus.msg
-        console.log('Mutation Success', types.Set_Login_Status, "new status", state.loginMsg + '(' + state.loginStatus + ')');
     }
 }
 

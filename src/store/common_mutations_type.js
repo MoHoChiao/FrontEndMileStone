@@ -1,0 +1,1 @@
+export const Set_System_Status = 'set/System_Status'; //for ajax catch error

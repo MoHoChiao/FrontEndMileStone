@@ -1,25 +1,36 @@
 <template>
-    <div v-if="LoginStatus == 'Error'" class="w3-modal" style="display:block">
-   		<div class="w3-modal-content w3-animate-top w3-card-8">
-      		<div class="w3-panel w3-red">
+    <div v-if="systemStatus !== ''" class="w3-modal" style="display:block">
+   		<div class="w3-modal-content w3-animate-zoom w3-card-4">
+      		<div :class="classList">
     			<span @click="close" class="w3-button w3-hover-none w3-display-topright">&times;</span>
-    			<h3>{{ LoginStatus }}!</h3>
-    			<p>{{ LoginMsg }}</p>
+    			<h3>{{ systemStatus }}!</h3>
+    			<p v-html="systemMsg"></p>
   			</div>
     	</div>
   	</div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
-    computed: mapGetters({
-        LoginStatus: 'getLoginStatus',
-        LoginMsg: 'getLoginMsg'
-    }),
+    computed: {
+        //ES7的寫法
+        ...mapGetters({
+            systemStatus: 'getSystemStatus',
+            systemMsg: 'getSystemMsg',
+        }),
+        classList() {
+            return [
+                'w3-panel',
+                this.color
+            ];
+        },
+        color() {
+            return this.systemStatus === 'Error' ? `w3-highway-red` : 'w3-highway-schoolbus';
+        }
+    },
     methods: {
         close() {
-            this.$store.dispatch('setLoginStatus', {"status":"","msg":""})
+            this.$store.dispatch('setSystemStatus', {"status":"","msg":""})
         }
     }
 }

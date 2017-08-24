@@ -5,10 +5,9 @@ export const HTTP = axios.create({
     timeout: 5000,
     withCredentials: true,
     headers: {
-        'Accept': 'application/json',
         'Content-Type': 'application/json'
     },
-    responseType: 'json',
+    //responseType: 'json',
     auth: {
         username: 'leoliu',
         password: 'leoliu543'
