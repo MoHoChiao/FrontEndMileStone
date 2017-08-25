@@ -50,9 +50,6 @@ export default {
     created() {
         this.$store.dispatch('fetchTrinityAPPS');
     },
-    methods: {
-        
-    },
     computed: mapGetters({
         TrinityApps: 'getTrinityApps',
     }),

@@ -10,7 +10,7 @@
                 :btn-hover-color="btnHoverColor" 
                 @click="onOpen" 
         >
-            {{ text }}
+            {{ btnText }}
         </w3c-btn>
 
         <login-modal-window v-if="alive" 
@@ -37,7 +37,6 @@ export default {
     data() {
         return {
             alive: false,
-            text: this.btnText,
         }
     },
     props: {

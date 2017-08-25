@@ -1,8 +1,9 @@
 import { HTTP } from '../../axios/http-common';
+import qs from 'qs'
 import * as common_types from '../common_mutations_type.js';
 
 const types = {
-    Fetch_Login_Token: 'fetch/Login_Token',
+    Check_Login_Token: 'check/Login_Token',
     Gen_Login_Token: 'gen/Login_Token'
 }
 
@@ -23,7 +24,10 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     genLoginToken({ commit }, formAttr) {
-        HTTP.post(`authc/gen-access-token`, formAttr)
+        let params = new URLSearchParams();
+        params.append('account', 'value1');
+        params.append('psw', 'value2');
+        HTTP.post(`authc/gen-access-token`, params)
             .then(response => {
                 commit(types.Gen_Login_Token, response.data);
             })

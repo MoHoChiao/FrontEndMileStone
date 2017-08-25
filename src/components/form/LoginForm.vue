@@ -86,7 +86,6 @@ export default {
             return {
                 account: this.$refs.ac_input.inputContent,
                 psw: this.$refs.psw_input.inputContent,
-                remember: this.$refs.remember_input.checked,
                 flag: (this.$refs.ac_input.checkEmpty('此欄位不可為空')) &&
                     (this.$refs.psw_input.checkEmpty('此欄位不可為空')) &&
                     (this.$refs.code_input.checkEmpty('此欄位不可為空')) &&
