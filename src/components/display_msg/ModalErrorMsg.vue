@@ -1,6 +1,6 @@
 <template>
-    <modal-window v-if="systemStatus !== ''" window-title="systemStatus" :window-bg-color="color" @closeModalWindow="closeLoginModalWindow">
-        <p class="w3-large" slot="content" v-html="systemMsg"></p>
+    <modal-window v-if="systemStatus !== ''" :window-title="systemStatus" :window-bg-color="color" @closeModalWindow="closeLoginModalWindow">
+        <div class="w3-panel" slot="content"><p class="w3-large" v-html="systemMsg"></p></div>
         <div slot="footer" class="w3-padding"></div>
     </modal-window>
 </template>
