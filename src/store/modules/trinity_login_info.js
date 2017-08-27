@@ -27,21 +27,32 @@ const getters = {
 const actions = {
     genLoginToken({ commit }, formAttr) {
         HTTP.post(`authc/gen-access-token`, {
-            account: formAttr.account,
-            psw: formAttr.psw
-        })
-        .then(response => {
-            commit(types.Gen_Login_Token, response.data);
-        })
-        .catch(error => {
-            if (error.response) {
-                let newStatus = {
-                    "msg": error.response.data,
-                    "status": "Error"
+                account: formAttr.account,
+                psw: formAttr.psw
+            })
+            .then(response => {
+                commit(types.Gen_Login_Token, response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
                 }
-                commit(common_types.Set_System_Status, newStatus);
-            }
-        })
+            })
+    },
+    checkLoginToken({ commit }) {
+        HTTP.get(`trinity-apps-model/test`)
+            .then(response => {
+                commit(types.Gen_Login_Token, response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    alert(error.response.data);
+                }
+            })
     }
 }
 

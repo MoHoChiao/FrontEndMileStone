@@ -65,7 +65,7 @@ export default {
     },
     methods: {
         logout() {
-            alert('Logout!');
+            this.$store.dispatch('checkLoginToken')
         }
     },
     components: {
