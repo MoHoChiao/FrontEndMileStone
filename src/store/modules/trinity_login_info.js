@@ -18,6 +18,8 @@ const state = {
 // getters 也可以整理到這邊直接返回內容
 const getters = {
     getLoginToken: state => state.loginToken,
+    getloginMsg: state => state.loginMsg,
+    getloginStatus: state => state.loginStatus,
     getUserInfo: state => state.userInfo
 }
 
@@ -38,8 +40,6 @@ const actions = {
                     "status": "Error"
                 }
                 commit(common_types.Set_System_Status, newStatus);
-            }else{
-                alert("else error!!!!!!")
             }
         })
     }
@@ -48,7 +48,8 @@ const actions = {
 // mutations
 const mutations = {
     [types.Gen_Login_Token](state, data) {
-        document.cookie = state.loginToken
+        alert(state.loginToken);
+        //document.cookie = state.loginToken
 
         state.loginToken = data.token
         state.loginMsg = data.msg
