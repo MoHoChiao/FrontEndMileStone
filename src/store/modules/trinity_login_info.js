@@ -24,22 +24,24 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     genLoginToken({ commit }, formAttr) {
-        let params = new URLSearchParams();
-        params.append('account', 'value1');
-        params.append('psw', 'value2');
-        HTTP.post(`authc/gen-access-token`, params)
-            .then(response => {
-                commit(types.Gen_Login_Token, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    commit(common_types.Set_System_Status, newStatus);
+        HTTP.post(`authc/gen-access-token`, {
+            account: formAttr.account,
+            psw: formAttr.psw
+        })
+        .then(response => {
+            commit(types.Gen_Login_Token, response.data);
+        })
+        .catch(error => {
+            if (error.response) {
+                let newStatus = {
+                    "msg": error.response.data,
+                    "status": "Error"
                 }
-            })
+                commit(common_types.Set_System_Status, newStatus);
+            }else{
+                alert("else error!!!!!!")
+            }
+        })
     }
 }
 
