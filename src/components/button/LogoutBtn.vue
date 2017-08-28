@@ -65,7 +65,7 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.dispatch('checkLoginToken')
+            this.$store.dispatch('removeLoginToken')
         }
     },
     components: {

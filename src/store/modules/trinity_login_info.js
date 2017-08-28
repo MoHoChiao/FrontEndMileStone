@@ -4,7 +4,8 @@ import * as common_types from '../common_mutations_type.js';
 
 const types = {
     Check_Login_Token: 'check/Login_Token',
-    Gen_Login_Token: 'gen/Login_Token'
+    Gen_Login_Token: 'gen/Login_Token',
+    Reomve_Login_Token: 'remove/Login_Token'
 }
 
 // state
@@ -43,7 +44,7 @@ const actions = {
                 }
             })
     },
-    checkLoginToken({ commit }) {
+    removeLoginToken({ commit }) {
         HTTP.get(`trinity-apps-model/test`)
             .then(response => {
                 alert(response.status + ":" + response.data);
