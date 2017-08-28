@@ -26,7 +26,7 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     genLoginToken({ commit }, formAttr) {
-        HTTP.post(`authc/gen-access-token`, {
+        HTTP.post(`authc/gen-token`, {
                 account: formAttr.account,
                 psw: formAttr.psw
             })
@@ -46,11 +46,15 @@ const actions = {
     checkLoginToken({ commit }) {
         HTTP.get(`trinity-apps-model/test`)
             .then(response => {
+                alert(response.status + ":" + response.data);
                 commit(types.Gen_Login_Token, response.data);
             })
             .catch(error => {
                 if (error.response) {
-                    alert(error.response.data);
+                    alert(error.response.data)
+                    alert(error.response.status)
+                } else {
+                    alert(error.message)
                 }
             })
     }
@@ -59,9 +63,6 @@ const actions = {
 // mutations
 const mutations = {
     [types.Gen_Login_Token](state, data) {
-        alert(state.loginToken);
-        //document.cookie = state.loginToken
-
         state.loginToken = data.token
         state.loginMsg = data.msg
         state.loginStatus = data.status
