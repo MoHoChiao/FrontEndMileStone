@@ -15,7 +15,6 @@
                   btn-size="xlarge" 
                   btn-font-weight="900" 
                   btn-hover-color="opacity" 
-                  form-action="/test" 
                   window-title="Sign In All App" 
         ></login-btn>
         <logout-btn v-else btn-text="LOGOUT ALL APP" 

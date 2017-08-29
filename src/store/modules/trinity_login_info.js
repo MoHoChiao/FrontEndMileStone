@@ -27,7 +27,7 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     genLoginToken({ commit }, formAttr) {
-        HTTP.post(`authc/gen-token`, {
+        HTTP.post(`authc-lib/gen-authc`, {
                 account: formAttr.account,
                 psw: formAttr.psw
             })
@@ -45,10 +45,10 @@ const actions = {
             })
     },
     removeLoginToken({ commit }) {
-        HTTP.get(`trinity-apps-model/test`)
+        HTTP.get(`authc-lib/remove-authc`)
             .then(response => {
                 alert(response.status + ":" + response.data);
-                commit(types.Gen_Login_Token, response.data);
+                commit(types.Reomve_Login_Token, response.data);
             })
             .catch(error => {
                 if (error.response) {
@@ -69,7 +69,17 @@ const mutations = {
         state.loginStatus = data.status
         state.userInfo = data.userinfo
 
-        console.log('Mutation Success', types.Gen_Login_Token, "token", state.loginToken);
+        console.log('Mutation Success', types.Gen_Login_Token, "user", state.userInfo);
+    },
+    [types.Reomve_Login_Token](state, data) {
+        if(data === 'Logout Success.'){
+            state.loginToken = ''
+            state.loginMsg = ''
+            state.loginStatus = ''
+            state.userInfo = ''
+        }
+
+        console.log('Mutation Success', types.Reomve_Login_Token, "logout", data);
     }
 }
 

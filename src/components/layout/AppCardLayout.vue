@@ -26,12 +26,15 @@
               hover-color="theme-l3-blue-grey" 
               round="xlarge" 
             >
-                <login-btn class="w3-margin-bottom" btn-text="Login" 
+                <login-btn v-if="loginStatus === ''" class="w3-margin-bottom" btn-text="Login" 
                     btn-round="medium" 
                     btn-border-color="blue" 
                     window-title="Welcome to sign in" 
-                    form-action="/test" 
                 ></login-btn>
+                <logout-btn v-else class="w3-margin-bottom" btn-text="Go to" 
+                  btn-round="medium" 
+                  btn-border-color="blue" 
+                ></logout-btn>
             </app-card>
         </div>
     </div>
@@ -41,21 +44,28 @@
 </div>
 </template>
 <script>
-import AppCard from '../card/AppCard.vue';
-import LoginBtn from '../button/LoginBtn.vue';
+import AppCard from '../card/AppCard.vue'
+import LoginBtn from '../button/LoginBtn.vue'
+import LogoutBtn from '../button/LogoutBtn.vue'
 import { mapGetters } from 'vuex'
-
 
 export default {
     created() {
         this.$store.dispatch('fetchTrinityAPPS');
     },
-    computed: mapGetters({
+    computed: {
+    //ES7的寫法
+    ...mapGetters({
         TrinityApps: 'getTrinityApps',
-    }),
+        loginStatus: 'getloginStatus',
+        loginMsg: 'getloginMsg',
+        userInfo: 'getUserInfo'
+      })
+    },
     components: {
         'app-card': AppCard,
-        'login-btn': LoginBtn
+        'login-btn': LoginBtn,
+        'logout-btn': LogoutBtn,
     }
 }
 </script>
