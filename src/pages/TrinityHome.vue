@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @focus="test">
     <!-- error msg -->
     <modal-msg></modal-msg>
     <!-- Info Side Bar -->
@@ -69,6 +69,11 @@ export default {
     ...mapGetters({
       loginStatus: 'getloginStatus'
     })
+  },
+  methods: {
+    test() {
+      alert("aaaaa")
+    }
   },
   components: {
     'app-card-layout': AppCardLayout,

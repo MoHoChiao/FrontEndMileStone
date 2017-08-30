@@ -1,11 +1,8 @@
 <template>
   <div>
-    <button v-if="_btnType === 'button'" :class="_btnClassList" :style="_btnFontWeight" @click="onClick">
+    <button :class="_btnClassList" :style="_btnFontWeight" @click="onClick">
         <slot></slot>
     </button>
-    <a v-else :href="aUrl" :class="_btnClassList" :target="aTarget" :style="_btnFontWeight+';text-decoration: none;'" @click="onClick">
-        <slot></slot>
-    </a>
   </div>
 </template>
 
@@ -23,9 +20,6 @@ export default {
                 this._btnSize,
                 this._btnBorderColor
             ];
-        },
-        _btnType() {
-            return this.btnType;
         },
         _btnBlock() {
             return this.btnBlock ? `w3-block` : '';
@@ -49,12 +43,6 @@ export default {
             return this.btnBorderColor !== null ? `w3-border w3-border-${this.btnBorderColor}` : '';
         },
         _btnHoverColor() {
-            return this.btnHoverColor !== null ? `w3-hover-${this.btnHoverColor}` : '';
-        },
-        _aTarget() {
-            return this.btnHoverColor !== null ? `w3-hover-${this.btnHoverColor}` : '';
-        },
-        _aUrl() {
             return this.btnHoverColor !== null ? `w3-hover-${this.btnHoverColor}` : '';
         }
     },
@@ -94,14 +82,6 @@ export default {
         btnHoverColor: {
             type: String,
             default: null
-        },
-        aTarget: {
-            type: String,
-            default: '_self'
-        },
-        aUrl: {
-            type: String,
-            default: '#'
         }
     },
     methods: {

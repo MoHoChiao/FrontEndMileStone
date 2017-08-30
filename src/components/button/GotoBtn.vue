@@ -1,6 +1,6 @@
 <template>
     <div>
-        <w3c-btn v-if="loginStatus !== ''" :btn-block="btnBlock" 
+        <w3c-btn :btn-block="btnBlock" 
                 :btn-disabled="btnDisabled" 
                 :btn-round="btnRound" 
                 :btn-bg-color="btnBgColor" 
@@ -8,28 +8,11 @@
                 :btn-font-weight="btnFontWeight" 
                 :btn-border-color="btnBorderColor" 
                 :btn-hover-color="btnHoverColor" 
-                btn-type="href" 
-                :a-target="aTarget" 
-                :a-url="aUrl" 
                 @click="goTo" 
         >
             {{ btnText }}
         </w3c-btn>
-        <w3c-btn v-else :btn-block="btnBlock" 
-                :btn-disabled="btnDisabled" 
-                :btn-round="btnRound" 
-                :btn-bg-color="btnBgColor" 
-                :btn-size="btnSize" 
-                :btn-font-weight="btnFontWeight" 
-                :btn-border-color="btnBorderColor" 
-                :btn-hover-color="btnHoverColor" 
-                btn-type="href" 
-                a-target="_self" 
-                a-url="#" 
-                @click="goTo" 
-        >
-            {{ btnText }}
-        </w3c-btn>
+        <form method="post" :action="aUrl" :target="aTarget" type="hidden" ref="goto_form"></form>
     </div>
 </template>
 
@@ -102,7 +85,7 @@ export default {
     },
     methods: {
         goTo(e) {
-            this.$store.dispatch('checkLoginToken', e)
+            this.$store.dispatch('checkLoginToken', this.$refs.goto_form)
         }
     },
     components: {

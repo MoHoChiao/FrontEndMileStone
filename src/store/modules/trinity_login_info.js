@@ -70,26 +70,25 @@ const actions = {
                 }
             })
     },
-    checkLoginToken({ commit }, e) {
+    checkLoginToken({ commit }, goto_form) {
         HTTP.get(`authc-lib/find-authc`)
             .then(response => {
-                if (response.data.status === 'Error' && e !== null) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    alert(e)
-                }
+                response.data.goto_form = goto_form // add form element to data
                 commit(types.Check_Login_Token, response.data);
             })
             .catch(error => {
-                if (e !== null) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
                 if (error.response) {
-                    alert(error.response.data)
-                    alert(error.response.status)
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus)
                 } else {
-                    alert(error.message)
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
                 }
             })
     }
@@ -122,11 +121,19 @@ const mutations = {
             state.userInfo = data.userinfo
             state.userType = data.usertype
                 // state.userType = 'G'
+            if(data.goto_form)
+                data.goto_form.submit();
         } else {
             state.loginMsg = ''
             state.loginStatus = ''
             state.userInfo = ''
             state.userType = ''
+
+            // let newStatus = {
+            //     "msg": 'Someone has logged out of the Trinity.',
+            //     "status": "Warn"
+            // }
+            // commit(common_types.Set_System_Status, newStatus);
         }
 
         console.log('Mutation Success', types.Check_Login_Token, "Validate:", data.msg);
