@@ -1,5 +1,4 @@
 import { HTTP } from '../../axios/http-common';
-import qs from 'qs'
 import * as common_types from '../common_mutations_type.js';
 
 const types = {
@@ -10,18 +9,18 @@ const types = {
 
 // state
 const state = {
-    loginToken: '',
     loginMsg: '',
     loginStatus: '',
-    userInfo: ''
+    userInfo: '',
+    userType: ''
 }
 
 // getters 也可以整理到這邊直接返回內容
 const getters = {
-    getLoginToken: state => state.loginToken,
     getloginMsg: state => state.loginMsg,
     getloginStatus: state => state.loginStatus,
-    getUserInfo: state => state.userInfo
+    getUserInfo: state => state.userInfo,
+    getUserType: state => state.userType
 }
 
 // actions 也是以 Object 形式建構。
@@ -41,16 +40,51 @@ const actions = {
                         "status": "Error"
                     }
                     commit(common_types.Set_System_Status, newStatus);
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
                 }
             })
     },
     removeLoginToken({ commit }) {
         HTTP.get(`authc-lib/remove-authc`)
             .then(response => {
-                alert(response.status + ":" + response.data);
                 commit(types.Reomve_Login_Token, response.data);
             })
             .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
+                }
+            })
+    },
+    checkLoginToken({ commit }, e) {
+        HTTP.get(`authc-lib/find-authc`)
+            .then(response => {
+                if (response.data.status === 'Error' && e !== null) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    alert(e)
+                }
+                commit(types.Check_Login_Token, response.data);
+            })
+            .catch(error => {
+                if (e !== null) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
                 if (error.response) {
                     alert(error.response.data)
                     alert(error.response.status)
@@ -64,22 +98,38 @@ const actions = {
 // mutations
 const mutations = {
     [types.Gen_Login_Token](state, data) {
-        state.loginToken = data.token
         state.loginMsg = data.msg
         state.loginStatus = data.status
         state.userInfo = data.userinfo
+        state.userType = data.usertype
 
-        console.log('Mutation Success', types.Gen_Login_Token, "user", state.userInfo);
+        console.log('Mutation Success', types.Gen_Login_Token, "User:", state.userInfo);
     },
     [types.Reomve_Login_Token](state, data) {
-        if(data === 'Logout Success.'){
-            state.loginToken = ''
+        if (data === 'Logout Success.') {
             state.loginMsg = ''
             state.loginStatus = ''
             state.userInfo = ''
+            state.userType = ''
         }
 
-        console.log('Mutation Success', types.Reomve_Login_Token, "logout", data);
+        console.log('Mutation Success', types.Reomve_Login_Token, "Logout:", data);
+    },
+    [types.Check_Login_Token](state, data) {
+        if (data.status === 'Success') {
+            state.loginMsg = data.msg
+            state.loginStatus = data.status
+            state.userInfo = data.userinfo
+            state.userType = data.usertype
+                // state.userType = 'G'
+        } else {
+            state.loginMsg = ''
+            state.loginStatus = ''
+            state.userInfo = ''
+            state.userType = ''
+        }
+
+        console.log('Mutation Success', types.Check_Login_Token, "Validate:", data.msg);
     }
 }
 

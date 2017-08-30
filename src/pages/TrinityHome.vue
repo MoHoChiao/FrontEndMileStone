@@ -46,12 +46,28 @@ import { mapGetters } from 'vuex'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'
 export default {
+  mounted: function() {
+    this.$store.dispatch('checkLoginToken', null)
+
+    let val = 'en'
+    let cookies = document.cookie
+    var name = "trinity_language=";
+    var ca = cookies.split(';')
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i]
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1)
+      }
+      if (c.indexOf(name) == 0) {
+        val = c.substring(name.length, c.length)
+      }
+    }
+    this.$i18n.locale = val
+  },
   computed: {
     //ES7的寫法
     ...mapGetters({
-      loginStatus: 'getloginStatus',
-      loginMsg: 'getloginMsg',
-      userInfo: 'getUserInfo'
+      loginStatus: 'getloginStatus'
     })
   },
   components: {

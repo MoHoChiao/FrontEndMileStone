@@ -94,8 +94,7 @@ export default {
         },
         formAction: {
             type: String,
-            default: '',
-            required: true
+            default: ''
         },
         fieldMsgInline: {
             type: Boolean,

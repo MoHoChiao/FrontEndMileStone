@@ -53,8 +53,7 @@ export default {
     props: {
         formAction: {
             type: String,
-            default: '',
-            required: true
+            default: ''
         },
         labelTextColor: {
             type: String,

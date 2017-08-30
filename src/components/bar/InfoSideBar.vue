@@ -62,14 +62,10 @@ export default {
     },
     methods: {
         onBar(e) {
-            if (!this.btnDisabled) {
-                this.alive = !this.alive;
-            } else {
-                e.stopPropagation();
-                e.preventDefault();
-            }
+            this.alive = !this.alive
         },
         setLanguage (val) {
+            document.cookie = "trinity_language=" + val + "; path=/"
             this.$i18n.locale = val
         }
     }

@@ -1,4 +1,5 @@
 import { HTTP } from '../../axios/http-common';
+import * as common_types from '../common_mutations_type.js';
 
 const types = {
     Fetch_Trinity_APPS: 'fetch/Trinity_APPS_MODEL'
@@ -21,8 +22,20 @@ const actions = {
             .then(response => {
                 commit(types.Fetch_Trinity_APPS, response.data);
             })
-            .catch(e => {
-                console.error(e);
+            .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
+                }
             })
     }
 }
