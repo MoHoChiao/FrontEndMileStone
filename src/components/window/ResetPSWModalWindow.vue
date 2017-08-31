@@ -1,7 +1,7 @@
 <template>
-    <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="closeLoginModalWindow">
-        <login-form slot="content" 
-                    ref="loginForm" 
+    <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" window-animations="animate-zoom" @closeModalWindow="closeResetPSWModalWindow">
+        <reset-psw-form slot="content" 
+                    ref="resetForm" 
                     :form-action="formAction" 
                     :label-text-color="labelTextColor" 
                     :field-msg-inline="fieldMsgInline" 
@@ -9,22 +9,24 @@
                     :input-round="inputRound" 
                     :input-border="inputBorder" 
                     :input-hover-color="inputHoverColor" 
-        ></login-form>
+        ></reset-psw-form>
         <div slot="footer" class="w3-container">
-            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('windowContent.Login_Button') }}</w3c-btn>
-            <span class="w3-left w3-padding">
-                <a :class="_leftTextColor" href="#">{{ $t('windowContent.Forget_PSW') }}</a>
-            </span>
+            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('windowContent.Reset_Button') }}</w3c-btn>
         </div>
     </modal-window>
 </template>
 <script>
-import ModalWindow from './ModalWindow.vue'
-import LoginForm from '../form/LoginForm.vue'
-import W3CBtn from '../button/W3CBtn.vue'
+import ModalWindow from './ModalWindow.vue';
+import ResetPSWForm from '../form/ResetPSWForm.vue';
+import W3CBtn from '../button/W3CBtn.vue';
+import { mapGetters } from 'vuex'
 
 export default {
     computed: {
+        //ES7的寫法
+        ...mapGetters({
+            loginStatus: 'getloginStatus'
+        }),
         _rightBtnColor() {
             return this.windowBtnColor !== null ? `w3-${this.windowBtnColor}` : '';
         },
@@ -39,11 +41,11 @@ export default {
         },
         windowBgColor: {
             type: String,
-            default: 'camo-black'
+            default: 'highway-schoolbus'
         },
         windowBtnColor: {
             type: String,
-            default: 'win-phone-cyan'
+            default: 'signal-white'
         },
         labelTextColor: {
             type: String,
@@ -52,7 +54,6 @@ export default {
         formAction: {
             type: String,
             default: '',
-            required: true
         },
         fieldMsgInline: {
             type: Boolean,
@@ -77,19 +78,19 @@ export default {
     },
     methods: {
         onValidate(e) {
-            let retObj = this.$refs.loginForm.verifyForm()
+            let retObj = this.$refs.resetForm.verifyForm()
             if (retObj.flag) {
-                this.$store.dispatch('genLoginToken', retObj)
-                this.$emit('closeLoginModalWindow', e)
+                this.$store.dispatch('resetLoginToken', retObj.psw)
+                this.$emit('closeResetPSWModalWindow', e)
             }
         },
-        closeLoginModalWindow(e){
-            this.$emit('closeLoginModalWindow', e)
+        closeResetPSWModalWindow(e){
+            this.$emit('closeResetPSWModalWindow', e)
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'login-form': LoginForm,
+        'reset-psw-form': ResetPSWForm,
         'w3c-btn': W3CBtn
     }
 }

@@ -41,18 +41,24 @@
         "Web_Running_Error_Viewer": "執行中或錯誤任務的瀏覽",
         "Web_Task_Log_Viewer": "工作任務的日誌瀏覽"
     },
-    "loginFormContent": {
+    "formContent": {
         "User_Account": "使用者帳號",
         "User_Password": "使用者密碼",
+        "User_New_Password": "使用者新密碼",
+        "Confirmation_Password": "確認新密碼",
         "User_Validator": "請進行認證碼檢驗",
         "User_Account_Placeholder": "請在此輸入您的帳號",
         "User_Password_Placeholder": "請在此輸入您的密碼",
         "User_Validator_Placeholder": "請照圖中驗證碼輸入",
         "Reload_Text": "看不清楚換一張圖",
-        "Remember_Me": " 請記住我"
+        "Remember_Me": " 請記住我",
+        "Field_Empty": "此欄位不可為空",
+        "Validate_Error": "驗證碼輸入有誤",
+        "PSW_Confirm_Error": "密碼確認錯誤"
     },
-    "loginWindowContent": {
+    "windowContent": {
         "Login_Button": "登入",
-        "Forget_PWS": "忘記密碼?"
+        "Reset_Button": "重設密碼",
+        "Forget_PSW": "忘記密碼?"
     }
 }

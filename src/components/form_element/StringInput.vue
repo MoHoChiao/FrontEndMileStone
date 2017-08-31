@@ -4,7 +4,7 @@
             <label v-if="labelText !== null" :class="_labelTextColor">
                 <b>{{ labelText }}</b>
             </label>
-            <form-field-msg v-if="showMsg" :inline="fieldMsgInline" :color="fieldMsgColor">{{ msg }}</form-field-msg>
+            <form-field-msg v-if="showMsg" :inline="fieldMsgInline" :color="fieldMsgColor">{{ $t(msg) }}</form-field-msg>
         </div>
         <div class="w3-col w3-text-black">
             <input v-if="_inputType === 'text'" v-model="inputContent" :class="_classList" type="text" :placeholder="inputPlaceholder" :autocomplete="_inputAuto">
@@ -114,7 +114,19 @@ export default {
                 this.showMsg = false;
                 return true;
             }
-        }
+        },
+        checkEquals(msg, value) {
+            var trimContent = this.inputContent.trim();
+            var trimValue = value.trim();
+            if(trimContent !== trimValue){
+                this.msg = msg;
+                this.showMsg = true;
+                return false;
+            }else{
+                this.showMsg = false;
+                return true;
+            }
+        },
     },
     components: {
         'form-field-msg': FormFieldMsg

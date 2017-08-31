@@ -10,17 +10,23 @@
               hover-color="theme-l3-blue-grey" 
               round="xlarge" 
             >
-                <login-btn v-if="loginStatus === ''" class="w3-margin-bottom" btn-text="Login" 
+                <login-btn v-if="(loginStatus === '' || loginStatus === 'ChangeCredentials')" class="w3-margin-bottom" btn-text="Login" 
                     btn-round="medium" 
                     btn-border-color="blue" 
-                    window-title="Welcome to sign in" 
+                    window-title="Welcome to sign in"
                 ></login-btn>
-                <goto-btn v-else class="w3-margin-bottom" btn-text="Go to" 
+                <goto-btn v-else-if="(appContent.authorization === 'G') || (appContent.authorization === 'R' && appContent.authorization === userType)" 
+                    class="w3-margin-bottom" btn-text="Go to" 
                     btn-round="medium" 
                     btn-border-color="blue" 
                     :a-target="appContent.target" 
                     :a-url="appContent.url"
                 ></goto-btn>
+                <no-permission-btn v-else class="w3-margin-bottom" btn-text="Unavaiable" 
+                    btn-round="medium" 
+                    btn-border-color="blue" 
+                    :btn-disabled="true"
+                ></no-permission-btn>
             </app-card>
         </div>
         <div class="col-md-3 col-sm-3 visible-lg" v-for="appContent in TrinityApps">
@@ -31,7 +37,7 @@
               hover-color="theme-l3-blue-grey" 
               round="xlarge" 
             >
-                <login-btn v-if="loginStatus === ''" class="w3-margin-bottom" btn-text="Login" 
+                <login-btn v-if="(loginStatus === '' || loginStatus === 'ChangeCredentials')" class="w3-margin-bottom" btn-text="Login" 
                     btn-round="medium" 
                     btn-border-color="blue" 
                     window-title="Welcome to sign in"
@@ -74,7 +80,7 @@ export default {
             TrinityApps: 'getTrinityApps',
             loginStatus: 'getloginStatus',
             userType: 'getUserType'
-      })
+        })
     },
     components: {
         'app-card': AppCard,

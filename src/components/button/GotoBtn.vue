@@ -19,19 +19,12 @@
 <script>
 import W3CBtn from './W3CBtn.vue';
 import LoginModalWindow from '../window/LoginModalWindow.vue';
-import { mapGetters } from 'vuex'
 
 export default {
     data() {
         return {
             alive: false,
         }
-    },
-    computed: {
-        //ES7的寫法
-        ...mapGetters({
-            loginStatus: 'getloginStatus'
-        })
     },
     props: {
         btnText: {

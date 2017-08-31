@@ -1,5 +1,10 @@
 <template>
-  <div @focus="test">
+  <div>
+    <!-- reset psw window -->
+    <reset-psw-modal-window v-if="loginStatus === 'ChangeCredentials'" 
+                  window-title="Password Expire! Please Reset." 
+                  @closeResetPSWModalWindow="closeResetPSW"
+    ></reset-psw-modal-window>
     <!-- error msg -->
     <modal-msg></modal-msg>
     <!-- Info Side Bar -->
@@ -9,7 +14,7 @@
       <h4 id="trinity_home_sub_title">Your key to the big data world.</h4>
       <h2 class="w3-xxxlarge w3-animate-zoom" id="trinity_home_title">Welcome To Trinity Home</h2>
       <div class="w3-padding-32">
-        <login-btn v-if="loginStatus === ''" btn-text="LOGIN ALL APP" 
+        <login-btn v-if="(loginStatus === '' || loginStatus == 'ChangeCredentials')" btn-text="LOGIN ALL APP" 
                   btn-round="medium" 
                   btn-bg-color="win-phone-cyan" 
                   btn-size="xlarge" 
@@ -41,13 +46,14 @@ import AppCardLayout from '../components/layout/AppCardLayout.vue'
 import LoginBtn from '../components/button/LoginBtn.vue'
 import LogoutBtn from '../components/button/LogoutBtn.vue'
 import InfoSideBar from '../components/bar/InfoSideBar.vue'
+import ResetPSWModalWindow from '../components/window/ResetPSWModalWindow.vue'
 import ModalMsg from '../components/display_msg/ModalMsg.vue'
 import { mapGetters } from 'vuex'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'
 export default {
   mounted: function() {
-    this.$store.dispatch('checkLoginToken', null)
+    this.$store.dispatch('checkLoginToken', 'TrinityHome')
 
     let val = 'en'
     let cookies = document.cookie
@@ -71,8 +77,8 @@ export default {
     })
   },
   methods: {
-    test() {
-      alert("aaaaa")
+    closeResetPSW(e){
+      this.alive = false;
     }
   },
   components: {
@@ -80,6 +86,7 @@ export default {
     'login-btn': LoginBtn,
     'logout-btn': LogoutBtn,
     'info-side-bar': InfoSideBar,
+    'reset-psw-modal-window': ResetPSWModalWindow,
     'modal-msg': ModalMsg
   }
 }

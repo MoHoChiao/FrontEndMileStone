@@ -29,12 +29,15 @@ export default {
                 'w3-leftbar',
                 'w3-rightbar',
                 'w3-round-large',
-                'w3-animate-top',
+                this._windowAnimations,
                 'w3-border-'+this.windowBgColor
             ];
         },
         _windowTitle() {
             return this.windowTitle === null || this.windowTitle.trim() === '' ? 'Modal Window' : this.windowTitle.trim();
+        },
+        _windowAnimations() {
+            return this.windowAnimations === null || this.windowAnimations.trim() === '' ? `w3-animate-top` : `w3-${this.windowAnimations}`;
         }
     },
     props: {
@@ -45,7 +48,11 @@ export default {
         windowBgColor: {
             type: String,
             default: 'camo-black'
-        }
+        },
+        windowAnimations: {
+            type: String,
+            default: 'animate-top'
+        },
     },
     methods: {
         closeModalWindow(e) {

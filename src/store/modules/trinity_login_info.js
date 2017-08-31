@@ -4,7 +4,8 @@ import * as common_types from '../common_mutations_type.js';
 const types = {
     Check_Login_Token: 'check/Login_Token',
     Gen_Login_Token: 'gen/Login_Token',
-    Reomve_Login_Token: 'remove/Login_Token'
+    Reomve_Login_Token: 'remove/Login_Token',
+    Reset_Login_Token: 'reset/Login_Token',
 }
 
 // state
@@ -70,10 +71,20 @@ const actions = {
                 }
             })
     },
-    checkLoginToken({ commit }, goto_form) {
+    checkLoginToken({ commit }, come_from) {
         HTTP.get(`authc-lib/find-authc`)
             .then(response => {
-                response.data.goto_form = goto_form // add form element to data
+                if (response.data.status === 'Success') {
+                    response.data.come_from = come_from // add form element to data
+                } else {
+                    if (come_from !== 'TrinityHome') {
+                        let newStatus = {
+                            "msg": 'Someone has logged out of the Trinity.',
+                            "status": "Warn"
+                        }
+                        commit(common_types.Set_System_Status, newStatus)
+                    }
+                }
                 commit(types.Check_Login_Token, response.data);
             })
             .catch(error => {
@@ -91,7 +102,33 @@ const actions = {
                     commit(common_types.Set_System_Status, newStatus);
                 }
             })
-    }
+    },
+    resetLoginToken({ commit }, psw) {
+        HTTP.post(`authc-lib/reset-authc`, psw)
+            .then(response => {
+                commit(types.Reset_Login_Token, response.data);
+                let newStatus = {
+                    "msg": response.data,
+                    "status": "Success"
+                }
+                commit(common_types.Set_System_Status, newStatus);
+            })
+            .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    commit(common_types.Set_System_Status, newStatus);
+                }
+            })
+    },
 }
 
 // mutations
@@ -101,8 +138,8 @@ const mutations = {
         state.loginStatus = data.status
         state.userInfo = data.userinfo
         state.userType = data.usertype
-
-        console.log('Mutation Success', types.Gen_Login_Token, "User:", state.userInfo);
+        alert(state.loginStatus)
+        console.log('Mutation Success', types.Gen_Login_Token, "LoginStatus:", state.loginStatus)
     },
     [types.Reomve_Login_Token](state, data) {
         if (data === 'Logout Success.') {
@@ -111,8 +148,7 @@ const mutations = {
             state.userInfo = ''
             state.userType = ''
         }
-
-        console.log('Mutation Success', types.Reomve_Login_Token, "Logout:", data);
+        console.log('Mutation Success', types.Reomve_Login_Token, "Logout:", data)
     },
     [types.Check_Login_Token](state, data) {
         if (data.status === 'Success') {
@@ -121,23 +157,23 @@ const mutations = {
             state.userInfo = data.userinfo
             state.userType = data.usertype
                 // state.userType = 'G'
-            if(data.goto_form)
-                data.goto_form.submit();
+            if (data.come_from instanceof HTMLFormElement)
+                data.come_from.submit();
         } else {
             state.loginMsg = ''
             state.loginStatus = ''
             state.userInfo = ''
             state.userType = ''
-
-            // let newStatus = {
-            //     "msg": 'Someone has logged out of the Trinity.',
-            //     "status": "Warn"
-            // }
-            // commit(common_types.Set_System_Status, newStatus);
         }
-
-        console.log('Mutation Success', types.Check_Login_Token, "Validate:", data.msg);
-    }
+        console.log('Mutation Success', types.Check_Login_Token, "Validate:", data.msg)
+    },
+    [types.Reset_Login_Token](state, data) {
+        state.loginMsg = ''
+        state.loginStatus = ''
+        state.userInfo = ''
+        state.userType = ''
+        console.log('Mutation Success', types.Reset_Login_Token, "Reset:", data)
+    },
 }
 
 /*

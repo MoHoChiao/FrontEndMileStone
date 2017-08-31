@@ -1,19 +1,8 @@
 <template>
     <div class="w3-container">
         <form class="w3-left-align" method="POST" :action="_formAction">
-            <string-input ref="ac_input"
-                        :label-text="$t('formContent.User_Account')"
-                        :input-placeholder="$t('formContent.User_Account_Placeholder')" 
-                        input-type="text" 
-                        :label-text-color="labelTextColor" 
-                        :field-msg-color="fieldMsgColor" 
-                        :field-msgIn-line="fieldMsgInline" 
-                        :input-round="inputRound" 
-                        :input-border="inputBorder" 
-                        :input-hover-color="inputHoverColor" 
-            ></string-input>
-            <string-input ref="psw_input"
-                        :label-text="$t('formContent.User_Password')" 
+            <string-input ref="psw_input1"
+                        :label-text="$t('formContent.User_New_Password')" 
                         :input-placeholder="$t('formContent.User_Password_Placeholder')" 
                         input-type="password"
                         :input-auto="false" 
@@ -24,7 +13,18 @@
                         :input-border="inputBorder" 
                         :input-hover-color="inputHoverColor" 
             ></string-input>
-            <check-box ref="remember_input">{{ $t('formContent.Remember_Me') }}</check-box>
+            <string-input ref="psw_input2"
+                        :label-text="$t('formContent.Confirmation_Password')" 
+                        :input-placeholder="$t('formContent.User_Password_Placeholder')" 
+                        input-type="password"
+                        :input-auto="false" 
+                        :label-text-color="labelTextColor" 
+                        :field-msg-color="fieldMsgColor" 
+                        :field-msgIn-line="fieldMsgInline" 
+                        :input-round="inputRound" 
+                        :input-border="inputBorder" 
+                        :input-hover-color="inputHoverColor" 
+            ></string-input>
             <validate-code ref="code_input" 
                         :label-text="$t('formContent.User_Validator')" 
                         :input-placeholder="$t('formContent.User_Validator_Placeholder')" 
@@ -41,7 +41,6 @@
 </template>
 <script>
 import StringInput from '../form_element/StringInput.vue';
-import CheckBox from '../form_element/CheckBox.vue';
 import ValidateCode from '../form_element/ValidateCode.vue';
 
 export default {
@@ -83,10 +82,10 @@ export default {
     methods: {
         verifyForm() {
             return {
-                account: this.$refs.ac_input.inputContent,
-                psw: this.$refs.psw_input.inputContent,
-                flag: (this.$refs.ac_input.checkEmpty('formContent.Field_Empty')) &&
-                    (this.$refs.psw_input.checkEmpty('formContent.Field_Empty')) &&
+                psw: this.$refs.psw_input1.inputContent,
+                flag: (this.$refs.psw_input1.checkEmpty('formContent.Field_Empty')) &&
+                    (this.$refs.psw_input2.checkEmpty('formContent.Field_Empty')) &&
+                    (this.$refs.psw_input2.checkEquals('formContent.PSW_Confirm_Error', this.$refs.psw_input1.inputContent)) &&
                     (this.$refs.code_input.checkEmpty('formContent.Field_Empty')) &&
                     (this.$refs.code_input.checkVerify('formContent.Validate_Error'))
             } 
@@ -94,7 +93,6 @@ export default {
     },
     components: {
         'string-input': StringInput,
-        'check-box': CheckBox,
         'validate-code': ValidateCode,
     }
 }

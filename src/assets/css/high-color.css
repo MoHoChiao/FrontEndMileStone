@@ -398,8 +398,13 @@
 }
 
 .w3-text-highway-green,
-.w3-hover-text-highway-greenhover {
+.w3-hover-text-highway-green:hover {
     color: #004d33!important
+}
+
+.w3-border-highway-green,
+.w3-hover-border-highway-green:hover {
+    border-color: #004d33!important
 }
 
 .w3-highway-blue {
@@ -425,6 +430,16 @@
 .w3-safety-green {
     color: #fff;
     background-color: #007256
+}
+
+.w3-text-safety-green,
+.w3-hover-text-safety-green:hover {
+    color: #007256!important
+}
+
+.w3-border-safety-green,
+.w3-hover-border-safety-green:hover {
+    border-color: #007256!important
 }
 
 .w3-safety-blue {

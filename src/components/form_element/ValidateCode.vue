@@ -4,7 +4,7 @@
             <label v-if="labelText !== null" :class="_labelTextColor">
                 <b>{{ labelText }}</b>
             </label>
-            <form-field-msg v-if="showMsg" :inline="fieldMsgInline" :color="fieldMsgColor">{{ msg }}</form-field-msg>
+            <form-field-msg v-if="showMsg" :inline="fieldMsgInline" :color="fieldMsgColor">{{ $t(msg) }}</form-field-msg>
         </div>
         <div class="w3-col">
             <div class="w3-cell w3-mobile w3-text-black">

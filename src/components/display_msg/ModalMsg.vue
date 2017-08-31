@@ -21,7 +21,13 @@ export default {
             ];
         },
         color() {
-            return this.systemStatus === 'Error' ? `highway-red` : 'highway-schoolbus';
+            if(this.systemStatus === 'Error'){
+                return `highway-red`
+            }else if(this.systemStatus === 'Warn'){
+                return 'highway-schoolbus'
+            }else{
+                return 'highway-green'
+            }
         }
     },
     methods: {

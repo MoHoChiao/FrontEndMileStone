@@ -41,18 +41,24 @@
         "Web_Running_Error_Viewer": "Running/Error Task Viewer",
         "Web_Task_Log_Viewer": "Task Log Viewer"
     },
-    "loginFormContent": {
+    "formContent": {
         "User_Account": "User Account",
         "User_Password": "User Password",
+        "User_New_Password": "User New Password",
+        "Confirmation_Password": "Confirmation Password",
         "User_Validator": "Verify Code",
         "User_Account_Placeholder": "Please input your user account",
         "User_Password_Placeholder": "Please input your user account",
         "User_Validator_Placeholder": "Please enter the verify code",
         "Reload_Text": "Image Reload",
-        "Remember_Me": " Remember Me"
+        "Remember_Me": " Remember Me",
+        "Field_Empty": "This Field can not be empty",
+        "Validate_Error": "Validate Code input error",
+        "PSW_Confirm_Error": "Password Confirmation error"
     },
-    "loginWindowContent": {
+    "windowContent": {
         "Login_Button": "Sign In",
-        "Forget_PWS": "Forget Password?"
+        "Reset_Button": "Reset",
+        "Forget_PSW": "Forget Password?"
     }
 }

@@ -41,18 +41,24 @@
         "Web_Running_Error_Viewer": "执行中或错误任务的浏览",
         "Web_Task_Log_Viewer": "工作任务的日志浏览"
     },
-    "loginFormContent": {
+    "formContent": {
         "User_Account": "使用者帐号",
         "User_Password": "使用者密码",
+        "User_New_Password": "使用者新密码",
+        "Confirmation_Password": "确认新密码",
         "User_Validator": "请进行认证码检验",
         "User_Account_Placeholder": "请在此输入您的帐号",
         "User_Password_Placeholder": "请在此输入您的密码",
         "User_Validator_Placeholder": "请照图中验证码输入",
         "Reload_Text": "看不清楚换一张图",
-        "Remember_Me": " 请记住我"
+        "Remember_Me": " 请记住我",
+        "Field_Empty": "此栏位不可为空",
+        "Validate_Error": "验证码输入有误",
+        "PSW_Confirm_Error": "密码确认错误"
     },
-    "loginWindowContent": {
+    "windowContent": {
         "Login_Button": "登入",
-        "Forget_PWS": "忘记密码?"
+        "Reset_Button": "重设密码",
+        "Forget_PSW": "忘记密码?"
     }
 }
