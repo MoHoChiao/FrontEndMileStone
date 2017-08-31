@@ -5,7 +5,7 @@ const types = {
     Check_Login_Token: 'check/Login_Token',
     Gen_Login_Token: 'gen/Login_Token',
     Reomve_Login_Token: 'remove/Login_Token',
-    Reset_Login_Token: 'reset/Login_Token',
+    Reset_Login_Token: 'reset/Login_Token'
 }
 
 // state
@@ -104,9 +104,9 @@ const actions = {
             })
     },
     resetLoginToken({ commit }, psw) {
+        commit(types.Reset_Login_Token);
         HTTP.post(`authc-lib/reset-authc`, psw)
             .then(response => {
-                commit(types.Reset_Login_Token, response.data);
                 let newStatus = {
                     "msg": response.data,
                     "status": "Success"
@@ -167,13 +167,13 @@ const mutations = {
         }
         console.log('Mutation Success', types.Check_Login_Token, "Validate:", data.msg)
     },
-    [types.Reset_Login_Token](state, data) {
+    [types.Reset_Login_Token](state) {
         state.loginMsg = ''
         state.loginStatus = ''
         state.userInfo = ''
         state.userType = ''
-        console.log('Mutation Success', types.Reset_Login_Token, "Reset:", data)
-    },
+        console.log('Mutation Success', types.Reset_Login_Token)
+    }
 }
 
 /*

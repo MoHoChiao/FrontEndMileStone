@@ -25,7 +25,7 @@ const mutations = {
         state.systemStatus = newStatus.status
         newStatus.msg = newStatus.msg.replace(/(?:\r\n|\r|\n)/g, '<br />')
         state.systemMsg = newStatus.msg;
-        console.log('Mutation Success', common_types.Set_System_Status, "new status", state.systemMsg + '(' + state.systemStatus + ')');
+        console.log('Mutation Success', common_types.Set_System_Status, "NewStatus:", state.systemMsg + '(' + state.systemStatus + ')');
     }
 }
 

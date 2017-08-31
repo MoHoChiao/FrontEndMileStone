@@ -1,5 +1,5 @@
 <template>
-    <modal-window v-if="systemStatus !== ''" :window-title="systemStatus" :window-bg-color="color" @closeModalWindow="closeLoginModalWindow">
+    <modal-window v-if="systemStatus !== ''" :window-title="systemStatus" :window-bg-color="color" window-animations="animate-zoom" @closeModalWindow="closeLoginModalWindow">
         <div class="w3-panel" slot="content"><p class="w3-large" v-html="systemMsg"></p></div>
         <div slot="footer" class="w3-padding"></div>
     </modal-window>
