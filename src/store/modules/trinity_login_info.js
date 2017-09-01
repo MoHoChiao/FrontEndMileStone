@@ -138,7 +138,6 @@ const mutations = {
         state.loginStatus = data.status
         state.userInfo = data.userinfo
         state.userType = data.usertype
-        alert(state.loginStatus)
         console.log('Mutation Success', types.Gen_Login_Token, "LoginStatus:", state.loginStatus)
     },
     [types.Reomve_Login_Token](state, data) {
