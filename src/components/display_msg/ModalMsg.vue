@@ -40,3 +40,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+div.w3-panel {
+    word-break: break-all;
+}
+</style>
