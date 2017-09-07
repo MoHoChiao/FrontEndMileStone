@@ -37,7 +37,7 @@
     <div class="w3-container w3-signal-black w3-padding-16 w3-center">
       <address>
         <p>Copyright © Trinity Data Corporation.</p>
-        <p>5.0.0.alpha Build 20170714</p>
+        <p>5.0.0.alpha Build 20170908</p>
       </address>
     </div>
   </div>
