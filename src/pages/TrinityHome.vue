@@ -5,7 +5,7 @@
                   window-title="Password Expire! Please Reset." 
                   @closeResetPSWModalWindow="closeResetPSW"
     ></reset-psw-modal-window>
-    <!-- error msg -->
+    <!-- msg window -->
     <modal-msg></modal-msg>
     <!-- Info Side Bar -->
     <info-side-bar side-bar-bg-color="signal-black" btn-bg-color="signal-black"></info-side-bar>
@@ -35,8 +35,10 @@
     <app-card-layout></app-card-layout>
     <!-- Footer -->
     <div class="w3-container w3-signal-black w3-padding-16 w3-center">
-      <p>Copyright © Trinity Data Corporation.</p>
-      <p>5.0.0.alpha Build 20170714</p>
+      <address>
+        <p>Copyright © Trinity Data Corporation.</p>
+        <p>5.0.0.alpha Build 20170714</p>
+      </address>
     </div>
   </div>
 </template>

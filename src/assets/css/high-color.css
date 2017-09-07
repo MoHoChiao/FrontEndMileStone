@@ -259,6 +259,16 @@
     background-color: #282828
 }
 
+.w3-text-signal-black,
+.w3-hover-text-signal-black:hover {
+    color: #282828!important
+}
+
+.w3-border-signal-black,
+.w3-hover-border-signal-black:hover {
+    border-color: #282828!important
+}
+
 .w3-camo-brown {
     color: #fff;
     background-color: #594d45

@@ -2,7 +2,7 @@
 <div class="w3-signal-white">
   <div class="container">
     <div class="row">
-        <div class="col-md-4 col-sm-4 hidden-lg" v-for="appContent in TrinityApps">
+        <div class="col-md-3 col-sm-3 visible-lg" v-for="appContent in TrinityApps">
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
@@ -29,7 +29,7 @@
                 ></no-permission-btn>
             </app-card>
         </div>
-        <div class="col-md-3 col-sm-3 visible-lg" v-for="appContent in TrinityApps">
+        <div class="col-md-4 col-sm-4 hidden-lg" v-for="appContent in TrinityApps">
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
