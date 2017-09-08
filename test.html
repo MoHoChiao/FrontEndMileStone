@@ -20,48 +20,109 @@
     <![endif]-->
 </head>
 
-<body class="w3-signal-black">
-    <div class="w3-container w3-animate-top" style="padding-bottom:16px;padding-top:48px">
-            <div class="w3-row w3-bar w3-block">
-                <button class="w3-col w3-bar-item w3-button w3-block w3-dark-grey w3-leftbar w3-rightbar w3-border-signal-black" style="width:17%">Permission Design</button>
-                <button class="w3-col w3-bar-item w3-button w3-block w3-win-phone-cyan w3-leftbar w3-rightbar w3-border-signal-black" style="width:22%">User Management</button>
-                <button class="w3-col w3-bar-item w3-button w3-block w3-win-phone-cyan w3-leftbar w3-rightbar w3-border-signal-black" style="width:22%">Role Management</button>
-                <button class="w3-col w3-bar-item w3-button w3-block w3-win-phone-cyan w3-leftbar w3-rightbar w3-border-signal-black" style="width:22%">User Group Design</button>
-                <button class="w3-col w3-bar-item w3-button w3-block w3-dark-grey w3-leftbar w3-rightbar w3-border-signal-black" style="width:17%">JCS Alert Setting</button>
+<body class="w3-camo-black">
+    <div class="container-fluid w3-animate-top" style="height:100%">
+        <div class="row">
+            <div id="tresource_setter_title" class="w3-xxlarge w3-animate-zoom w3-center" id="trinity_home_title">Resource Setter</div>
+        </div>
+        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:6px">
+            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">Global Setting</button>
+            </div>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">User MGT</button>
+            </div>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">Role MGT</button>
+            </div>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">User Group</button>
+            </div>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">Permission</button>
+            </div>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:5px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">JCS Alert</button>
             </div>
         </div>
-    <div class="w3-container" style="height:65%">
-            <div class="w3-row w3-bar w3-block" style="height:100%">
-                <div class="w3-col w3-bar-item w3-bar-block w3-button w3-block w3-dark-grey w3-leftbar w3-rightbar w3-border-signal-black w3-animate-left" style="width:17%;height:100%">
-                    <a href="#" class="w3-bar-item w3-button">Home</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 1</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 2</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:6px;height:70%">
+            <div style="height:100%">
+                <div class="col-md-2 col-sm-2 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:5px solid;height:100%">
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-plug" style="font-size:40px" aria-hidden="true"></i>
+                        <div style="font-size:20px">Connection<div>
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-ravelry w3-xxlarge" aria-hidden="true"></i><br>
+                        Domain
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-calendar-o w3-xxlarge" aria-hidden="true"></i><br>
+                        Exclude Freq
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-files-o w3-xxlarge" aria-hidden="true"></i><br>
+                        File Source
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-calendar w3-xxlarge" aria-hidden="true"></i><br>
+                        Frequency
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-server w3-xxlarge" aria-hidden="true"></i><br>
+                        JCS Agent
+                    </button>
                 </div>
-                <div class="w3-col w3-bar-item w3-bar-block w3-button w3-block w3-dark-grey w3-leftbar w3-rightbar w3-border-signal-black w3-animate-opacity" style="width:66%;height:100%">
-                    <a href="#" class="w3-bar-item w3-button">Home</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 1</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 2</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 3</a>
+                <div class="col-md-8 col-sm-8 w3-round-xlarge w3-dark-grey w3-border-camo-black" style="border:5px solid;height:100%">
+                    <div class="w3-dark-grey">
+                        Path:TrinityHome -> Resource Setting -> ...
+                    </div>
+                    <div class="w3-signal-white" style="height:92%">
+                        Path:TrinityHome -> Resource Setting -> ...
+                    </div>
+                    <div class="w3-dark-grey">
+                        Path:TrinityHome -> Resource Setting -> ...
+                    </div>
                 </div>
-                <div class="w3-col w3-bar-item w3-bar-block w3-button w3-block w3-dark-grey w3-leftbar w3-rightbar w3-border-signal-black w3-animate-right" style="width:17%;height:100%">
-                    <a href="#" class="w3-bar-item w3-button">Home</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 1</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 2</a>
-                    <a href="#" class="w3-bar-item w3-button">Link 3</a>
+                <div class="col-md-2 col-sm-2 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:5px solid;height:100%">
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-plug w3-xxlarge" aria-hidden="true"></i><br>
+                        Connection
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-ravelry w3-xxlarge" aria-hidden="true"></i><br>
+                        Domain
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-calendar-o w3-xxlarge" aria-hidden="true"></i><br>
+                        Exclude Freq
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-files-o w3-xxlarge" aria-hidden="true"></i><br>
+                        File Source
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-calendar w3-xxlarge" aria-hidden="true"></i><br>
+                        Frequency
+                    </button>
+                    <button class="w3-button w3-block w3-large w3-hover-none">
+                        <i class="fa fa-server w3-xxlarge" aria-hidden="true"></i><br>
+                        JCS Agent
+                    </button>
                 </div>
             </div>
         </div>
-    <div class="w3-container w3-animate-bottom">
-            <div class="w3-row w3-bar w3-block" style="padding-bottom:16px;padding-top:16px">
-                <div class="w3-col w3-bar-item w3-block w3-safety-orange" style="width:100%">
-                    Operation Record: Add Agent1 Success...
-                </div>
+        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:16px">
+            <div class="col-md-12 col-sm-12 w3-round w3-safety-orange w3-center">
+                Operation Record: Add Agent1 Success...
             </div>
-            <div class="w3-row w3-bar w3-block" style="padding-bottom:16px;padding-top:16px">
-                <div class="w3-col w3-bar-item w3-block w3-win-phone-cyan" style="width:100%">
-                    Copyright © Trinity Data Corporation. Resource Setter-5.0.0.alpha Build 20170908
-                </div>
+        </div>
+        <div class="row" style="padding-left:32px;padding-right:32px">
+            <div class="col-md-12 col-sm-12 w3-round w3-win-phone-cyan w3-center">
+                <address>
+                    <p>Copyright © Trinity Data Corporation.</p>
+                    <p>Resource Setter-0.0.1.alpha Build 20170908</p>
+                </address>
             </div>
         </div>
     </div>
@@ -69,9 +130,21 @@
 
 </html>
 <style>
-html, body{
-    height: 100%;
-	margin: 0;
-}
-
+    @media (max-width: 34em) {
+        label,
+        input {
+            font-size: 0.75em;
+            font-size: 3.5vw;
+        }
+    }
+    
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+    }
+    
+    #tresource_setter_title {
+        font-family: 'Limelight', cursive;
+    }
 </style>
