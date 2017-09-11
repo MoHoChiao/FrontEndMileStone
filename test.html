@@ -8,7 +8,6 @@
     <title>Trinity Home</title>
 
     <link rel="stylesheet" href="./src/assets/css/w3.css">
-    <link rel="stylesheet" href="./src/assets/css/w3-theme-black.css">
     <link rel="stylesheet" href="./src/assets/css/high-color.css">
     <link rel="stylesheet" href="./src/assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="./src/assets/css/WebFont.css">
@@ -21,107 +20,91 @@
 </head>
 
 <body class="w3-camo-black">
-    <div class="container-fluid w3-animate-top" style="height:100%">
-        <div class="row">
-            <div id="tresource_setter_title" class="w3-xxlarge w3-animate-zoom w3-center" id="trinity_home_title">Resource Setter</div>
+    <div class="container-fluid w3-animate-zoom" style="height:100%">
+        <div id="header" class="row">
+            <div class="w3-xxlarge w3-center" id="trinity_home_title">Resource Setter</div>
         </div>
-        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:6px">
-            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">Global Setting</button>
+        <div id="topbutton" class="row" style="padding-left:32px;padding-right:32px;padding-bottom:3px">
+            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-globe" aria-hidden="true">&nbsp;&nbsp;Global Setting</i>
+                </button>
             </div>
-            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">User MGT</button>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-users" aria-hidden="true">&nbsp;&nbsp;Users</i>
+                </button>
             </div>
-            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">Role MGT</button>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-user-secret" aria-hidden="true">&nbsp;&nbsp;Role</i>
+                </button>
             </div>
-            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">User Group</button>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-user-circle-o" aria-hidden="true">&nbsp;&nbsp;User Group</i>
+                </button>
             </div>
-            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">Permission</button>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-win-phone-cyan w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-universal-access" aria-hidden="true">&nbsp;&nbsp;Permission</i>
+                </button>
             </div>
-            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:5px solid">
-                <button class="w3-button w3-block w3-round-large w3-hover-none">JCS Alert</button>
+            <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:3px solid">
+                <button class="w3-button w3-block w3-round-large w3-hover-none">
+                    <i class="fa fa-bell" aria-hidden="true">&nbsp;&nbsp;JCS Alert</i>
+                </button>
             </div>
         </div>
-        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:6px;height:70%">
+        <div id="content" class="row" style="padding-left:32px;padding-right:32px;padding-bottom:3px">
             <div style="height:100%">
-                <div class="col-md-2 col-sm-2 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:5px solid;height:100%">
+                <div id="leftbutton" class="col-md-2 col-sm-2 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:3px solid;height:100%">
                     <button class="w3-button w3-block w3-hover-none">
-                        <i class="fa fa-plug" style="font-size:40px" aria-hidden="true"></i>
-                        <div style="font-size:20px">Connection<div>
+                        <i class="fa fa-plug" aria-hidden="true"></i>
+                        <div>Connection<div>
                     </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-ravelry w3-xxlarge" aria-hidden="true"></i><br>
-                        Domain
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-ravelry" aria-hidden="true"></i>
+                        <div>Domain<div>
                     </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-calendar-o w3-xxlarge" aria-hidden="true"></i><br>
-                        Exclude Freq
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i><br>
+                        <div>Exclude Freq<div>
                     </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-files-o w3-xxlarge" aria-hidden="true"></i><br>
-                        File Source
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-files-o" aria-hidden="true"></i><br>
+                        <div>File Source<div>
                     </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-calendar w3-xxlarge" aria-hidden="true"></i><br>
-                        Frequency
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-calendar" aria-hidden="true"></i><br>
+                        <div>Frequency<div>
                     </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-server w3-xxlarge" aria-hidden="true"></i><br>
-                        JCS Agent
+                    <button class="w3-button w3-block w3-hover-none">
+                        <i class="fa fa-server" aria-hidden="true"></i><br>
+                        <div>JCS Agent<div>
                     </button>
                 </div>
-                <div class="col-md-8 col-sm-8 w3-round-xlarge w3-dark-grey w3-border-camo-black" style="border:5px solid;height:100%">
-                    <div class="w3-dark-grey">
+                <div id="content" class="col-md-10 col-sm-10 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:3px solid;height:100%">
+                    <div class="w3-blue-grey" style="height:5%">
                         Path:TrinityHome -> Resource Setting -> ...
                     </div>
-                    <div class="w3-signal-white" style="height:92%">
+                    <div class="w3-flat-clouds" style="height:94%">
                         Path:TrinityHome -> Resource Setting -> ...
                     </div>
-                    <div class="w3-dark-grey">
-                        Path:TrinityHome -> Resource Setting -> ...
-                    </div>
-                </div>
-                <div class="col-md-2 col-sm-2 w3-round-xlarge w3-blue-grey w3-border-camo-black" style="border:5px solid;height:100%">
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-plug w3-xxlarge" aria-hidden="true"></i><br>
-                        Connection
-                    </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-ravelry w3-xxlarge" aria-hidden="true"></i><br>
-                        Domain
-                    </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-calendar-o w3-xxlarge" aria-hidden="true"></i><br>
-                        Exclude Freq
-                    </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-files-o w3-xxlarge" aria-hidden="true"></i><br>
-                        File Source
-                    </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-calendar w3-xxlarge" aria-hidden="true"></i><br>
-                        Frequency
-                    </button>
-                    <button class="w3-button w3-block w3-large w3-hover-none">
-                        <i class="fa fa-server w3-xxlarge" aria-hidden="true"></i><br>
-                        JCS Agent
-                    </button>
+                    <div class="w3-blue-grey" style="height:1%"></div>
                 </div>
             </div>
         </div>
-        <div class="row" style="padding-left:32px;padding-right:32px;padding-bottom:16px">
-            <div class="col-md-12 col-sm-12 w3-round w3-safety-orange w3-center">
+        <div id="auditing" class="row" style="padding-left:32px;padding-right:32px;padding-bottom:16px">
+            <div class="col-md-12 col-sm-12 w3-round w3-safety-orange">
                 Operation Record: Add Agent1 Success...
             </div>
         </div>
-        <div class="row" style="padding-left:32px;padding-right:32px">
-            <div class="col-md-12 col-sm-12 w3-round w3-win-phone-cyan w3-center">
+        <div id="footer" class="row" style="padding-left:32px;padding-right:32px">
+            <div class="col-md-12 col-sm-12 w3-round w3-win-phone-cyan">
                 <address>
                     <p>Copyright © Trinity Data Corporation.</p>
-                    <p>Resource Setter-0.0.1.alpha Build 20170908</p>
+                    <p>Resource Setter-0.0.1.alpha Build 20170912</p>
                 </address>
             </div>
         </div>
@@ -130,11 +113,87 @@
 
 </html>
 <style>
-    @media (max-width: 34em) {
-        label,
-        input {
-            font-size: 0.75em;
-            font-size: 3.5vw;
+    @media screen and (min-height: 1300px) {
+        #content {
+            height: 80%
+        }
+    }
+    
+    @media screen and (max-height: 1299px) and (min-height: 1000px) {
+        #content {
+            height: 78%
+        }
+    }
+    
+    @media screen and (max-height: 999px) and (min-height: 900px) {
+        #content {
+            height: 75%
+        }
+    }
+    
+    @media screen and (max-height: 899px) and (min-height: 800px) {
+        #content {
+            height: 72%
+        }
+    }
+    
+    @media screen and (max-height: 799px) and (min-height: 701px) {
+        #content {
+            height: 70%
+        }
+    }
+    
+    @media screen and (max-height: 700px) {
+        #content {
+            height: 68%
+        }
+    }
+    
+    @media screen and (min-height: 750px),
+    (min-width: 1200px) {
+        #leftbutton button i,
+        #rightbutton button i {
+            font-size: 40px;
+        }
+        #leftbutton button div,
+        #rightbutton button div {
+            font-size: 20px;
+        }
+    }
+    
+    @media screen and (max-height: 749px) and (min-height: 600px),
+    (max-width: 1199px) and (min-width: 1000px) {
+        #leftbutton button i,
+        #rightbutton button i {
+            font-size: 30px;
+        }
+        #leftbutton button div,
+        #rightbutton button div {
+            font-size: 15px;
+        }
+    }
+    
+    @media screen and (max-height: 599px) and (min-height: 500px),
+    (max-width: 999px) and (min-width: 800px) {
+        #leftbutton button i,
+        #rightbutton button i {
+            font-size: 25px;
+        }
+        #leftbutton button div,
+        #rightbutton button div {
+            font-size: 10px;
+        }
+    }
+    
+    @media screen and (max-height: 499px),
+    (max-width: 799px) {
+        #leftbutton button i,
+        #rightbutton button i {
+            font-size: 20px;
+        }
+        #leftbutton button div,
+        #rightbutton button div {
+            font-size: 6px;
         }
     }
     
@@ -144,7 +203,17 @@
         margin: 0;
     }
     
-    #tresource_setter_title {
+    #header {
         font-family: 'Limelight', cursive;
+    }
+    
+    #leftbutton,
+    #rightbutton {
+        overflow: auto;
+    }
+    
+    #footer address {
+        text-align: center;
+        padding-top: 10px;
     }
 </style>

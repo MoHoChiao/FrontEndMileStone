@@ -40,9 +40,9 @@
     </div>
 </template>
 <script>
-import StringInput from '../form_element/StringInput.vue';
-import CheckBox from '../form_element/CheckBox.vue';
-import ValidateCode from '../form_element/ValidateCode.vue';
+import StringInput from '../../Common/form/StringInput.vue';
+import CheckBox from '../../Common/form/CheckBox.vue';
+import ValidateCode from '../../Common/form/ValidateCode.vue';
 
 export default {
     computed: {

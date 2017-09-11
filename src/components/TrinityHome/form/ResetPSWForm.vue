@@ -40,8 +40,8 @@
     </div>
 </template>
 <script>
-import StringInput from '../form_element/StringInput.vue';
-import ValidateCode from '../form_element/ValidateCode.vue';
+import StringInput from '../../Common/form/StringInput.vue';
+import ValidateCode from '../../Common/form/ValidateCode.vue';
 
 export default {
     computed: {

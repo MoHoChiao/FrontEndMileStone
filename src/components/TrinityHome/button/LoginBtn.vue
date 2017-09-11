@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import W3CBtn from './W3CBtn.vue';
+import W3CBtn from '../../Common/button/W3CBtn.vue';
 import LoginModalWindow from '../window/LoginModalWindow.vue';
 
 export default {

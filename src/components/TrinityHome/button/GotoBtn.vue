@@ -8,15 +8,16 @@
                 :btn-font-weight="btnFontWeight" 
                 :btn-border-color="btnBorderColor" 
                 :btn-hover-color="btnHoverColor" 
-                @click="logout" 
+                @click="goTo" 
         >
             {{ btnText }}
         </w3c-btn>
+        <form method="post" :action="aUrl" :target="aTarget" type="hidden" ref="goto_form"></form>
     </div>
 </template>
 
 <script>
-import W3CBtn from './W3CBtn.vue';
+import W3CBtn from '../../Common/button/W3CBtn.vue';
 import LoginModalWindow from '../window/LoginModalWindow.vue';
 
 export default {
@@ -28,7 +29,7 @@ export default {
     props: {
         btnText: {
             type: String,
-            default: 'Login',
+            default: 'Go to',
         },
         btnBlock: {
             type: Boolean,
@@ -61,11 +62,23 @@ export default {
         btnHoverColor: {
             type: String,
             default: null
+        },
+        actionUrl: {
+            type: String,
+            default: ''
+        },
+        aTarget: {
+            type: String,
+            default: '_self'
+        },
+        aUrl: {
+            type: String,
+            default: '#'
         }
     },
     methods: {
-        logout() {
-            this.$store.dispatch('removeLoginToken')
+        goTo(e) {
+            this.$store.dispatch('checkLoginToken', this.$refs.goto_form)
         }
     },
     components: {

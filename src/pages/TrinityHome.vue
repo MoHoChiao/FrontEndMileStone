@@ -44,12 +44,12 @@
 </template>
 
 <script>
-import AppCardLayout from '../components/layout/AppCardLayout.vue'
-import LoginBtn from '../components/button/LoginBtn.vue'
-import LogoutBtn from '../components/button/LogoutBtn.vue'
-import InfoSideBar from '../components/bar/InfoSideBar.vue'
-import ResetPSWModalWindow from '../components/window/ResetPSWModalWindow.vue'
-import ModalMsg from '../components/display_msg/ModalMsg.vue'
+import AppCardLayout from '../components/TrinityHome/layout/AppCardLayout.vue'
+import LoginBtn from '../components/TrinityHome/button/LoginBtn.vue'
+import LogoutBtn from '../components/TrinityHome/button/LogoutBtn.vue'
+import InfoSideBar from '../components/TrinityHome/bar/InfoSideBar.vue'
+import ResetPSWModalWindow from '../components/TrinityHome/window/ResetPSWModalWindow.vue'
+import ModalMsg from '../components/Common/window/ModalMsg.vue'
 import { mapGetters } from 'vuex'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'

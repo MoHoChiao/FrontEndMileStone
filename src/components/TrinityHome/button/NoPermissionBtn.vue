@@ -8,16 +8,15 @@
                 :btn-font-weight="btnFontWeight" 
                 :btn-border-color="btnBorderColor" 
                 :btn-hover-color="btnHoverColor" 
-                @click="goTo" 
+                @click="noPermission" 
         >
             {{ btnText }}
         </w3c-btn>
-        <form method="post" :action="aUrl" :target="aTarget" type="hidden" ref="goto_form"></form>
     </div>
 </template>
 
 <script>
-import W3CBtn from './W3CBtn.vue';
+import W3CBtn from '../../Common/button/W3CBtn.vue';
 import LoginModalWindow from '../window/LoginModalWindow.vue';
 
 export default {
@@ -29,7 +28,7 @@ export default {
     props: {
         btnText: {
             type: String,
-            default: 'Go to',
+            default: 'Login',
         },
         btnBlock: {
             type: Boolean,
@@ -62,23 +61,16 @@ export default {
         btnHoverColor: {
             type: String,
             default: null
-        },
-        actionUrl: {
-            type: String,
-            default: ''
-        },
-        aTarget: {
-            type: String,
-            default: '_self'
-        },
-        aUrl: {
-            type: String,
-            default: '#'
         }
     },
     methods: {
-        goTo(e) {
-            this.$store.dispatch('checkLoginToken', this.$refs.goto_form)
+        noPermission(e) {
+            this.$store.dispatch('checkLoginToken', 'NoPermissionBtn')
+            let newStatus = {
+                "msg": "Sorry! you do not have enough permissions to access this program.<br>Please contact your manager.",
+                "status": "Warn"
+            }
+            this.$store.dispatch('setSystemStatus', newStatus)
         }
     },
     components: {

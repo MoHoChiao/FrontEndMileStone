@@ -8,7 +8,7 @@
                 :btn-font-weight="btnFontWeight" 
                 :btn-border-color="btnBorderColor" 
                 :btn-hover-color="btnHoverColor" 
-                @click="noPermission" 
+                @click="logout" 
         >
             {{ btnText }}
         </w3c-btn>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import W3CBtn from './W3CBtn.vue';
+import W3CBtn from '../../Common/button/W3CBtn.vue';
 import LoginModalWindow from '../window/LoginModalWindow.vue';
 
 export default {
@@ -64,13 +64,8 @@ export default {
         }
     },
     methods: {
-        noPermission(e) {
-            this.$store.dispatch('checkLoginToken', 'NoPermissionBtn')
-            let newStatus = {
-                "msg": "Sorry! you do not have enough permissions to access this program.<br>Please contact your manager.",
-                "status": "Warn"
-            }
-            this.$store.dispatch('setSystemStatus', newStatus)
+        logout() {
+            this.$store.dispatch('removeLoginToken')
         }
     },
     components: {
