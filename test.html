@@ -21,10 +21,7 @@
 
 <body class="w3-camo-black">
     <div class="container-fluid w3-animate-zoom" style="height:100%">
-        <div id="header" class="row">
-            <div class="w3-xxlarge w3-center" id="trinity_home_title">Resource Setter</div>
-        </div>
-        <div id="topbutton" class="row" style="padding-left:32px;padding-right:32px;padding-bottom:3px">
+        <div id="topbutton" class="row" style="padding-left:32px;padding-right:32px;padding-top:32px;padding-bottom:3px">
             <div class="col-md-2 col-sm-2 w3-round-large w3-blue-grey w3-hover-grey w3-border-camo-black" style="border:3px solid">
                 <button class="w3-button w3-block w3-round-large w3-hover-none">
                     <i class="fa fa-globe" aria-hidden="true">&nbsp;&nbsp;Global Setting</i>
@@ -113,7 +110,13 @@
 
 </html>
 <style>
-    @media screen and (min-height: 1300px) {
+    @media screen and (min-height: 1400px) {
+        #content {
+            height: 83%
+        }
+    }
+    
+    @media screen and (max-height: 1399px) and (min-height: 1300px) {
         #content {
             height: 80%
         }

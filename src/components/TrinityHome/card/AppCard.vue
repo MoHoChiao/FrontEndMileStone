@@ -25,7 +25,7 @@ export default {
     computed: {
         classList() {
             return [
-                'w3-card-2',
+                'w3-card-4',
                 'w3-container',
                 'w3-hover-shadow',
                 'w3-margin-top',
