@@ -1,8 +1,7 @@
 <template>
-<div class="w3-signal-white">
-  <div class="container">
-    <div class="row">
-        <div class="col-md-3 col-sm-3 visible-lg" v-for="appContent in TrinityApps">
+  <div class="w3-container w3-content" style="max-width:1250px;margin-top:20px;margin-bottom:20px">
+    <div class="w3-row">
+        <div class="w3-col m3 w3-hide-medium w3-hide-small" style="padding-left:6px;padding-right:6px" v-for="appContent in TrinityApps">
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
@@ -29,7 +28,7 @@
                 ></no-permission-btn>
             </app-card>
         </div>
-        <div class="col-md-4 col-sm-4 hidden-lg" v-for="appContent in TrinityApps">
+        <div class="w3-col m4 w3-hide-large" style="padding-left:6px;padding-right:5px" v-for="appContent in TrinityApps">
             <app-card :app-title="appContent.name" 
               :img-src="appContent.img" 
               :content-list="appContent.desc" 
@@ -58,7 +57,6 @@
         </div>
     </div>
   </div>
-</div>
 </template>
 </div>
 </template>
@@ -92,7 +90,5 @@ export default {
 }
 </script>
 <style scoped>
-.w3-signal-white {
-    background-image: url("/src/assets/images/bgpic.jpg");
-}
+
 </style>

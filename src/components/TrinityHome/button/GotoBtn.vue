@@ -78,6 +78,7 @@ export default {
     },
     methods: {
         goTo(e) {
+            this.$router.push('ResourceSetter')
             this.$store.dispatch('checkLoginToken', this.$refs.goto_form)
         }
     },

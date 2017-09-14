@@ -1,18 +1,13 @@
 <template>
-  <div>
-    <trinity-home></trinity-home>
-  </div>
+    <router-view>
+    <!--所有被routing的組件內容都會在這裡渲染-->
+    </router-view>
 </template>
 
 <script>
-import TrinityHome from './pages/TrinityHome.vue'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'
-export default {
-  components: {
-    'trinity-home': TrinityHome
-  }
-}
+
 </script>
 <style scoped>
 /*

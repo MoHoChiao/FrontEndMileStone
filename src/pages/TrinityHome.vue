@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w3-animate-opacity">
     <!-- reset psw window -->
     <reset-psw-modal-window v-if="loginStatus === 'ChangeCredentials'" 
                   window-title="Password Expire! Please Reset." 
@@ -10,10 +10,10 @@
     <!-- Info Side Bar -->
     <info-side-bar side-bar-bg-color="signal-black" btn-bg-color="signal-black"></info-side-bar>
     <!-- header -->
-    <div class="w3-container w3-signal-black w3-padding w3-center">
+    <div class="w3-container w3-signal-black w3-center">
       <h4 id="trinity_home_sub_title">Your key to the big data world.</h4>
       <h2 class="w3-xxxlarge w3-animate-zoom" id="trinity_home_title">Welcome To Trinity Home</h2>
-      <div class="w3-padding-32">
+      <div style="padding-top:16px;padding-bottom:32px">
         <login-btn v-if="(loginStatus === '' || loginStatus == 'ChangeCredentials')" btn-text="LOGIN ALL APP" 
                   btn-round="medium" 
                   btn-bg-color="win-phone-cyan" 

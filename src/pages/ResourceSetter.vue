@@ -1,0 +1,381 @@
+<template>
+    <div>
+        <!-- Navbar -->
+        <div class="w3-top w3-animate-opacity">
+            <div class="w3-bar w3-camo-black w3-left-align w3-large">
+                <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" @click="openNav"><i class="fa fa-bars"></i></a>
+                <a href="#" class="w3-bar-item w3-button w3-padding-large w3-signal-black"><i class="fa fa-home w3-margin-right"></i>Go Home</a>
+                <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Other Apps"><i class="fa fa-laptop"></i></a>
+                <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Help"><i class="fa fa-question-circle"></i></a>
+                <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="About"><i class="fa fa-info-circle"></i></a>
+                <div class="w3-dropdown-hover w3-hide-small">
+                    <button class="w3-button w3-padding-large" title="Auditing"><i class="fa fa-bell"></i><span class="w3-badge w3-right w3-small w3-green">5</span></button>
+                    <div class="w3-dropdown-content w3-card-4 w3-bar-block w3-small">
+                        <i class="w3-bar-item fa fa-check-square-o fa-fw">&nbsp;&nbsp;Add Agent(Test_Agent_1) Success.</i>
+                        <i class="w3-bar-item fa fa-check-square-o fa-fw">&nbsp;&nbsp;Edit Alias(Test_Alias) Success.</i>
+                        <i class="w3-bar-item fa fa-ban fa-fw">&nbsp;&nbsp;Add Frequency(Test_Connection_1) Error!</i>
+                        <i class="w3-bar-item fa fa-check-square-o fa-fw">&nbsp;&nbsp;Delete Connection(Test_Connection_1) Success.</i>
+                        <i class="w3-bar-item fa fa-ban fa-fw">&nbsp;&nbsp;Delete Connection(Test_Connection_1) Error!</i>
+                    </div>
+                </div>
+                <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account"><img src="/src/assets/images/resource_setter/People_24.png" class="w3-circle" style="height:25px;width:25px" alt="My Account"></a>
+            </div>
+        </div>
+
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a>
+            <a href="#" class="w3-bar-item w3-button w3-padding-large">My Profile</a>
+        </div>
+
+        <!-- Page Container -->
+        <div class="w3-container w3-content w3-animate-zoom" style="max-width:1400px;margin-top:80px">
+            <!-- The Grid -->
+            <div class="w3-row">
+                <!-- Left Column -->
+                <div class="w3-col m3">
+                    <!-- Profile -->
+                    <div class="w3-card-4 w3-round w3-signal-white">
+                        <div class="w3-container">
+                            <h4 class="w3-center">User Setting</h4>
+                            <p class="w3-center"><img src="/src/assets/images/resource_setter/Edit-Male-User_64.png" class="w3-circle" style="height:64px;width:64px" alt="User Set"></p>
+                            <hr class="w3-border-black">
+                            <p><a href="#"><i class="fa fa-users fa-fw w3-margin-right w3-text-theme"></i>User Account</a></p>
+                            <p><a href="#"><i class="fa fa-user-secret fa-fw w3-margin-right w3-text-theme"></i>User Role</a></p>
+                            <p><a href="#"><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i>User Group</a></p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <!-- Accordion -->
+                    <div class="w3-card-4 w3-round">
+                        <div class="w3-signal-white">
+                            <button @click="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Instances</button>
+                            <div id="Demo1" class="w3-hide w3-container">
+                                <p>
+                                    <div class="w3-bar-block">
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>Alias Reference</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>Domain</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-plug fa-fw w3-margin-right"></i>Connection</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-files-o fa-fw w3-margin-right"></i>File Source</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>JCS Agent</a>
+                                    </div>
+                                </p>
+                            </div>
+                            <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-universal-access fa-fw w3-margin-right"></i>Permissions</button>
+                            <div id="Demo2" class="w3-hide w3-container">
+                                <p>
+                                    <div class="w3-bar-block">
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-pencil-square fa-fw w3-margin-right"></i>Access</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-keyboard-o fa-fw w3-margin-right"></i>Execution</a>
+                                    </div>
+                                </p>
+                            </div>
+                            <button @click="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Frequency Events</button>
+                            <div id="Demo3" class="w3-hide w3-container">
+                                <p>
+                                    <div class="w3-bar-block">
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>Exclude Freq</a>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <!-- Interests -->
+                    <div class="w3-card-4 w3-round w3-signal-white w3-hide-small">
+                        <div class="w3-container">
+                            <p><i class="fa fa-globe fa-fw w3-margin-right"></i>Global</p>
+                            <p>
+                                <button class="w3-button w3-tag w3-small w3-theme-d3">Domain</button>
+                                <button class="w3-button w3-tag w3-small w3-theme-l1">Alias</button>
+                                <button class="w3-button w3-tag w3-small w3-theme-l4">Exclude Freq</button>
+                            </p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <!-- Alert Box -->
+                    <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+                        <p><i class="fa fa-wrench fa-fw w3-margin-right"></i>Setting</p>
+                        <p>
+                            <button class="w3-button w3-tag w3-small w3-theme-d3">Configuration</button>
+                            <button class="w3-button w3-tag w3-small w3-theme-l1">Resource</button>
+                        </p>
+                    </div>
+
+                    <!-- End Left Column -->
+                </div>
+
+                <!-- Middle Column -->
+                <div class="w3-col m7">
+
+                    <div class="w3-row-padding">
+                        <div class="w3-col m12">
+                            <div class="w3-card-4 w3-round w3-signal-white">
+                                <div class="w3-container w3-padding">
+                                    <h6 class="w3-opacity">The current path is as follows :</h6>
+                                    <p contenteditable="false" class="w3-border w3-padding">
+                                        <i class="fa fa-arrow-right" aria-hidden="true"> Resource Setter</i>
+                                        <i class="fa fa-arrow-right" aria-hidden="true"> Instances</i>
+                                        <i class="fa fa-arrow-right" aria-hidden="true"> JCSAgent</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-13 02:23:11</span>
+                        <h4>My Test Agent 1</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2000</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:6</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i> Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i> Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-12 11:47:56</span>
+                        <h4>My Test Virtual Agent 1</h4>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Deactivate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:10</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-12 09:55:43</span>
+                        <h4>My Test Agent 2</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2001</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Deactivate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:5</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-11 08:45:55</span>
+                        <h4>My Test Agent 3</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2002</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:10</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-10 22:11:59</span>
+                        <h4>My Test Agent 4</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2003</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:6</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-09 11:34:33</span>
+                        <h4>My Test Agent 5</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2004</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Deactivate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:6</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-09 10:15:26</span>
+                        <h4>My Test Virtual Agent 2</h4>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:20</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-08 11:47:56</span>
+                        <h4>My Test Virtual Agent 3</h4>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:30</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i>  Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-07 11:47:56</span>
+                        <h4>My Test Virtual Agent 4</h4>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Deactivate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:50</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i> Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i> Delete</button>
+                    </div>
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin"><br>
+                        <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:64px;width:64px">
+                        <span class="w3-right w3-opacity">2017-09-05 02:23:11</span>
+                        <h4>My Test Agent 6</h4>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">Host:127.0.0.1</span>
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">Port:2005</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Activate</span>
+                        <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">Max Job:3</span>
+                        <hr class="w3-border-black w3-clear">
+                        <p>Description...</p>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-pencil"></i> Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-trash-o"></i> Delete</button>
+                    </div>
+                    <!-- End Middle Column -->
+                </div>
+
+                <!-- Right Column -->
+                <div class="w3-col m2 w3-small">
+                    <div class="w3-card-4 w3-round w3-signal-white">
+                        <div class="w3-container">
+                            <p class="w3-center">Add</p>
+                            <p><button type="button" class="w3-button w3-block w3-theme"><i class="fa fa-plus"></i> Agent</button></p>
+                            <p><button type="button" class="w3-button w3-block w3-theme"><i class="fa fa-plus"></i> Virtual Agent</button></p>
+                            <p class="w3-center">Pagging</p>
+                            <p>
+                                <select class="w3-select w3-border w3-round" name="option">
+                                <option value="" disabled selected>Choose your page</option>
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                            </p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="w3-card-4 w3-round w3-signal-white">
+                        <div class="w3-container">
+                            <p class="w3-center">Filtering</p>
+                            <p>
+                                <input class="w3-radio" type="radio" name="gender" value="female" checked>
+                                <label>Name</label>
+                            </p>
+                            <p>
+                                <input class="w3-radio" type="radio" name="gender" value="female">
+                                <label>Status</label>
+                            </p>
+                            <p><input class="w3-input w3-border w3-round" type="text" placeholder="Querry String"></p>
+                            <p><button class="w3-button w3-block w3-theme-l4">Search</button></p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="w3-card-4 w3-round w3-signal-white">
+                        <div class="w3-container">
+                            <p class="w3-center">Ordering</p>
+                            <p>
+                                <input class="w3-check" type="checkbox">
+                                <label>Name</label>
+                            </p>
+                            <p>
+                                <input class="w3-check" type="checkbox">
+                                <label>Status</label>
+                            </p>
+                            <p>
+                                <input class="w3-check" type="checkbox">
+                                <label>Type</label>
+                            </p>
+                            <hr class="w3-border-black">
+                            <p>
+                                <input class="w3-radio" type="radio" name="gender" value="female">
+                                <label>Asc</label>
+                            </p>
+                            <p>
+                                <input class="w3-radio" type="radio" name="gender" value="female">
+                                <label>Desc</label>
+                            </p>
+                            <div class="w3-row w3-opacity">
+                                <div class="w3-half">
+                                    <button class="w3-button w3-block w3-green w3-section" title="Accept"><i class="fa fa-check"></i></button>
+                                </div>
+                                <div class="w3-half">
+                                    <button class="w3-button w3-block w3-red w3-section" title="Decline"><i class="fa fa-remove"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- End Right Column -->
+                </div>
+
+                <!-- End Grid -->
+            </div>
+
+            <!-- End Page Container -->
+        </div>
+        <br>
+
+        <!-- Footer -->
+        <footer class="w3-container w3-center w3-camo-black w3-padding-16">
+            <p>Resource Setter - 5.0.0.alpha Build 20170915</p>
+        </footer>
+
+        <footer class="w3-container w3-center w3-signal-black">
+            <p>Copyright © Trinity Data Corporation.</p>
+        </footer>
+    </div>
+</template>
+<script>
+export default {
+    methods: {
+        myFunction(id){
+            var x = document.getElementById(id);
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+                x.previousElementSibling.className += " w3-theme-d1";
+            } else {
+                x.className = x.className.replace("w3-show", "");
+                x.previousElementSibling.className =
+                x.previousElementSibling.className.replace(" w3-theme-d1", "");
+            }
+        },
+        openNav(e){
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+    },
+    components: {
+        
+    }
+}
+</script>
+<style scoped>
+    div {
+        font-family: "Fugaz One"
+    }
+</style>
