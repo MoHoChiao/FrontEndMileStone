@@ -4,7 +4,6 @@
             &#9776;
         </span>
         <div v-if="alive" :class="_sideBarClassList" @mouseleave="onBar" style="width:160px">
-           
             <h3 class="w3-bar-item InfoTile">Language</h3>
             <button class="w3-button w3-block InfoSubTile" @click="setLanguage('en')">English</button>
             <button class="w3-button w3-block InfoSubTile" @click="setLanguage('tw')">繁體中文</button>
