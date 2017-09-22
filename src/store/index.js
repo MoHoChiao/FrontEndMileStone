@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 // modules
-import trinity_apps_model from './modules/trinity_apps_model';
-import trinity_login_info from './modules/trinity_login_info';
 import system_status from './modules/system_status';
+import trinity_apps_model from './modules/TrinityHome/trinity_apps_model';
+import trinity_login_info from './modules/TrinityHome/trinity_login_info';
+import resource_content_model from './modules/ResourceSetter/resource_content_model';
 
 Vue.use(Vuex);
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     modules: {
         system_status,
         trinity_apps_model,
-        trinity_login_info
+        trinity_login_info,
+        resource_content_model
     },
     // 嚴格模式，禁止直接修改 state
     strict: true

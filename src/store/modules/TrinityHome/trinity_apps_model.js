@@ -1,5 +1,5 @@
-import { HTTP } from '../../axios/http-common';
-import * as common_types from '../common_mutations_type.js';
+import { HTTP } from '../../../axios/http-common';
+import * as common_types from '../../common_mutations_type.js';
 
 const types = {
     Fetch_Trinity_APPS: 'fetch/Trinity_APPS_MODEL'

@@ -1,5 +1,7 @@
 <template>
     <div>
+        <!-- msg window -->
+        <modal-msg></modal-msg>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -105,7 +107,7 @@
 
                 <!-- Middle Column -->
                 <div class="w3-col m7">
-                    <router-view>
+                    <router-view name="content">
                     <!--所有被routing的組件內容都會在這裡渲染-->
                     </router-view>
                     <!-- End Middle Column -->
@@ -113,78 +115,10 @@
 
                 <!-- Right Column -->
                 <div class="w3-col m2 w3-small">
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <p class="w3-center">Add</p>
-                            <p><button type="button" class="w3-button w3-block w3-theme"><i class="fa fa-plus"></i> Agent</button></p>
-                            <p><button type="button" class="w3-button w3-block w3-theme"><i class="fa fa-plus"></i> Virtual Agent</button></p>
-                            <p class="w3-center">Pagging</p>
-                            <p>
-                                <select class="w3-select w3-border w3-round" name="option">
-                                <option value="" disabled selected>Choose your page</option>
-                                <option value="1">Page 1</option>
-                                <option value="2">Page 2</option>
-                                <option value="3">Page 3</option>
-                            </select>
-                            </p>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <p class="w3-center">Filtering</p>
-                            <p>
-                                <input class="w3-radio" type="radio" name="gender" value="female" checked>
-                                <label>Name</label>
-                            </p>
-                            <p>
-                                <input class="w3-radio" type="radio" name="gender" value="female">
-                                <label>Status</label>
-                            </p>
-                            <p><input class="w3-input w3-border w3-round" type="text" placeholder="Querry String"></p>
-                            <p><button class="w3-button w3-block w3-theme-l4">Search</button></p>
-                        </div>
-                    </div>
-                    <br>
-
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <p class="w3-center">Ordering</p>
-                            <p>
-                                <input class="w3-check" type="checkbox">
-                                <label>Name</label>
-                            </p>
-                            <p>
-                                <input class="w3-check" type="checkbox">
-                                <label>Status</label>
-                            </p>
-                            <p>
-                                <input class="w3-check" type="checkbox">
-                                <label>Type</label>
-                            </p>
-                            <hr class="w3-border-black">
-                            <p>
-                                <input class="w3-radio" type="radio" name="gender" value="female">
-                                <label>Asc</label>
-                            </p>
-                            <p>
-                                <input class="w3-radio" type="radio" name="gender" value="female">
-                                <label>Desc</label>
-                            </p>
-                            <div class="w3-row w3-opacity">
-                                <div class="w3-half">
-                                    <button class="w3-button w3-block w3-green w3-section" title="Accept"><i class="fa fa-check"></i></button>
-                                </div>
-                                <div class="w3-half">
-                                    <button class="w3-button w3-block w3-red w3-section" title="Decline"><i class="fa fa-remove"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
+                    <router-view name="filter">
+                    </router-view>
                     <!-- End Right Column -->
                 </div>
-
                 <!-- End Grid -->
             </div>
 
@@ -203,6 +137,8 @@
     </div>
 </template>
 <script>
+import ModalMsg from '../components/Common/window/ModalMsg.vue'
+
 export default {
     data() {
         return {
@@ -234,7 +170,7 @@ export default {
         }
     },
     components: {
-        
+        'modal-msg': ModalMsg
     }
 }
 </script>

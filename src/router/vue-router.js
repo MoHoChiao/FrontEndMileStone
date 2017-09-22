@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TrinityHome from '../pages/TrinityHome.vue'
 import ResourceSetter from '../pages/ResourceSetter.vue'
 import MiddleContainer from '../components/ResourceSetting/MiddleContainer.vue'
+import FilterContainer from '../components/ResourceSetting/FilterContainer.vue'
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -16,7 +17,10 @@ export default new VueRouter({
             children: [{
                 name: 'JCSAgent',
                 path: 'JCSAgent',
-                component: MiddleContainer
+                components: {
+                    content: MiddleContainer,
+                    filter: FilterContainer
+                }
             }]
         }, {
             path: '/',

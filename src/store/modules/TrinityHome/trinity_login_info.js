@@ -1,5 +1,5 @@
-import { HTTP } from '../../axios/http-common';
-import * as common_types from '../common_mutations_type.js';
+import { HTTP } from '../../../axios/http-common';
+import * as common_types from '../../common_mutations_type.js';
 
 const types = {
     Check_Login_Token: 'check/Login_Token',
