@@ -105,21 +105,11 @@
                     <!-- End Left Column -->
                 </div>
 
-                <!-- Middle Column -->
-                <div class="w3-col m7">
-                    <router-view name="content">
-                    <!--所有被routing的組件內容都會在這裡渲染-->
-                    </router-view>
-                    <!-- End Middle Column -->
-                </div>
-
-                <!-- Right Column -->
-                <div class="w3-col m2 w3-small">
-                    <router-view name="filter">
-                    </router-view>
-                    <!-- End Right Column -->
-                </div>
-                <!-- End Grid -->
+                <!-- Middle Column & Right Column -->
+                <router-view name="content">
+                <!--所有被routing的組件內容都會在這裡渲染-->
+                </router-view>
+                <!-- End Middle Column & Right Column -->
             </div>
 
             <!-- End Page Container -->

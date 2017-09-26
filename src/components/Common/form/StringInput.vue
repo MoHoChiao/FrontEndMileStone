@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import FormFieldMsg from './FormFieldMsg.vue';
+import FormFieldMsg from './FormFieldMsg.vue'
 
 export default {
     data() {
@@ -126,7 +126,7 @@ export default {
                 this.showMsg = false;
                 return true;
             }
-        },
+        }
     },
     components: {
         'form-field-msg': FormFieldMsg

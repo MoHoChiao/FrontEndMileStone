@@ -2,6 +2,7 @@ import { HTTPRepo } from '../../../axios/http-common';
 import * as common_types from '../../common_mutations_type.js';
 
 const types = {
+    InitialAllParams: 'initial/All_Params_MODEL',
     Fetch_Agent_Content: 'fetch/Agent_Content_MODEL',
     Edit_Agent_Content: 'edit/Agent_Content_MODEL'
 }
@@ -24,6 +25,9 @@ const getters = {
 
 // actions 也是以 Object 形式建構。
 const actions = {
+    initialAllParams({ commit }) {
+        commit(types.InitialAllParams);
+    },
     fetchAgentContent({ commit }, params) {
         HTTPRepo.get(`jcsagent/findAll`, { params })
             .then(response => {
@@ -52,6 +56,13 @@ const actions = {
 
 // mutations
 const mutations = {
+    [types.InitialAllParams](state) {
+        state.content = []
+        state.totalPages = 1
+        state.pageSize = 10
+        state.pageNum = 0
+        console.log('Mutation Success', types.InitialAllParams);
+    },
     [types.Fetch_Agent_Content](state, data) {
         if (data.content !== undefined) {
             state.content = data.content

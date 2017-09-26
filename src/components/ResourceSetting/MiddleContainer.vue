@@ -1,5 +1,6 @@
 <template>
 <div>
+  <div class="w3-col m7">
     <div class="w3-row-padding">
         <div class="w3-col m12">
             <div class="w3-card-4 w3-round w3-signal-white">
@@ -17,7 +18,7 @@
         </div>
     </div>
 
-    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in contentList"><br>
+    <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in objs"><br>
         <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right" style="height:48px;width:48px">
         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
         <p>{{ content.agentname }}</p>
@@ -30,17 +31,20 @@
         <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" @click="test(index)"><i class="fa fa-pencil"></i> Edit</button>
         <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="test(index)"><i class="fa fa-trash-o"></i> Delete</button>
     </div>
+  </div>
+  <filter-container ref="filter" @fromFilter="findAll"></filter-container>
 </div>
 </template>
 <script>
 import { HTTPRepo } from '../../axios/http-common'
+import FilterContainer from './FilterContainer.vue'
 import { mapGetters } from 'vuex'
 
 export default {
     data() {
         return {
             objs: new Object(),
-            editable: false
+            editable: false,
         }
     },
     computed: {
@@ -50,24 +54,42 @@ export default {
         })
     },
     mounted() {
-        let params = {
-            "number": 0,
-            "size": 1
-        }
-        this.$store.dispatch('fetchAgentContent', params)
-        // HTTPRepo.get(`jcsagent/findAll`)
-        //     .then(response => {
-        //         this.objs = response.data;
-        //     })
-        //     .catch(error => {
-        //         if (error.response) {
-        //             alert(error.response.data)
-        //         } else {
-        //             alert(error.message)
-        //         }
-        //     })
+        // this.$store.dispatch('initialAllParams')
+        // let params = {
+        //     "number": 0,
+        //     "size": 1
+        // }
+        // this.$store.dispatch('fetchAgentContent', params)
+        this.findAll()
+        
     },
     methods: {
+        findAll(){
+            let params = {
+                "number": this.$refs.filter.selectedNum,
+                "size": this.$refs.filter.selectedSize,
+                "orderType": this.$refs.filter.orderType,
+                "orderField": this.$refs.filter.orderField
+            }
+            alert(params.orderType)
+            HTTPRepo.get(`jcsagent/findAll/PaggingAndSorting`, { params })
+            .then(response => {
+                if (response.data.content !== undefined) {
+                    this.objs = response.data.content
+                    this.$refs.filter.totalPages = response.data.totalPages
+                } else {
+                    this.objs = response.data
+                    this.$refs.filter.totalPages = 1
+                }
+            })
+            .catch(error => {
+                if (error.response) {
+                    alert(error.response.data)
+                } else {
+                    alert(error.message)
+                }
+            })
+        },
         changeEditable(e){
             this.editable = !this.editable
             alert(this.editable)
@@ -81,6 +103,9 @@ export default {
             }
             this.$store.dispatch('editAgentContent', newContent)
         }
+    },
+    components: {
+        'filter-container': FilterContainer
     }
 }
 </script>
