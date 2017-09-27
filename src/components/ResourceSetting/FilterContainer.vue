@@ -45,7 +45,10 @@
                 <input class="w3-radio" type="radio" name="DESC" value="DESC" v-model="orderType">
                 <label>Desc</label>
             </p>
-            <p><button class="w3-button w3-block w3-theme-l4" @click="applyOrder">Apply</button></p>
+            <p>
+                <button v-if="!isOrder" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Order" @click="applyOrder"><i class="fa fa-check"></i></button>
+                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Order" @click="cancelOrder"><i class="fa fa-remove"></i></button>
+            </p>
         </div>
     </div>
     <br>
@@ -71,18 +74,18 @@
                 <input class="w3-radio" type="radio" name="LIKE" value="LIKE" v-model="queryType">
                 <label>Like</label>
             </p>
+            <p>
+                <input class="w3-check" type="checkbox" v-model="ignoreCase">
+                <label>IgnoreCase</label>
+            </p>
             <hr class="w3-border-black">
             <p>
-                <input class="w3-input w3-border" type="text">
+                <input class="w3-input w3-border" type="text" placeholder="Input Keyword" v-model="queryString">
             </p>
-            <div class="w3-row w3-opacity">
-                <div class="w3-half">
-                    <button class="w3-button w3-block w3-green w3-section" title="Apply"><i class="fa fa-check"></i></button>
-                </div>
-                <div class="w3-half">
-                    <button class="w3-button w3-block w3-red w3-section" title="Cancel"><i class="fa fa-remove"></i></button>
-                </div>
-            </div>
+            <p>
+                <button v-if="!isQuery" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Query" @click="applyQuery"><i class="fa fa-check"></i></button>
+                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Query" @click="cancelQuery"><i class="fa fa-remove"></i></button>
+            </p>
         </div>
     </div>
     <br>
@@ -95,22 +98,22 @@ import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
+            //for pagging
             selectedNum: 0,
             selectedSize: 10,
             totalPages: 1,
+            //for ordering
+            isOrder: false,
             orderField: 'lastupdatetime',
             orderType: 'DESC',
+            //for querying
+            isQuery: false,
             queryField: '',
             queryType: '',
-            queryString: ''
+            queryString: '',
+            ignoreCase: false
         }
     },
-    // computed: {
-    //     //ES7的寫法
-    //     ...mapGetters({
-    //         totalPages: 'getTotalPages'
-    //     })
-    // },
     methods: {
         changeSize(e){
             this.selectedNum = 0
@@ -120,23 +123,22 @@ export default {
             this.$emit('fromFilter', e)
         },
         applyOrder(e){
+            this.isOrder = true
+            this.$emit('fromFilter', e)
+        },
+        applyQuery(e){
+            this.isQuery = true
+            this.$emit('fromFilter', e)
+        },
+        cancelOrder(e){
+            this.isOrder = false
+            this.$emit('fromFilter', e)
+        },
+        cancelQuery(e){
+            this.isQuery = false
             this.$emit('fromFilter', e)
         }
     }
-    
-    // mounted() {
-    //     HTTPRepo.get(`jcsagent/findAll`)
-    //         .then(response => {
-    //             this.objs = response.data;
-    //         })
-    //         .catch(error => {
-    //             if (error.response) {
-    //                 alert(error.response.data)
-    //             } else {
-    //                 alert(error.message)
-    //             }
-    //         })
-    // }
 }
 </script>
 
