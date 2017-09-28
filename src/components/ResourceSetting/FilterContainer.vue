@@ -4,7 +4,7 @@
         <div class="w3-container">
             <p class="w3-center">Page Size</p>
             <p>
-                <select class="w3-select w3-border w3-round" name="option" v-model="selectedSize" @change="changeSize">
+                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
                     <option value="-1" disabled selected>Size</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -16,7 +16,7 @@
             </p>
             <p class="w3-center">Page Num</p>
             <p>
-                <select class="w3-select w3-border w3-round" name="option" v-model="selectedNum" @change="changeNum">
+                <select class="w3-select w3-border w3-round" v-model="selectedNum" @change="changeNum">
                     <option value="-1" disabled selected>Num</option>
                     <option :value="index" v-for="(page, index) in totalPages">{{ index + 1 }}</option>
                 </select>
@@ -28,7 +28,7 @@
         <div class="w3-container">
             <p class="w3-center">Ordering</p>
             <p>
-                <select class="w3-select w3-border w3-round" name="option" v-model="orderField">
+                <select class="w3-select w3-border w3-round" v-model="orderField">
                     <option value="" disabled selected>Field</option>
                     <option value="lastupdatetime">Update Time</option>
                     <option value="agentname">Name</option>
@@ -38,11 +38,11 @@
                 </select>
             </p>
             <p>
-                <input class="w3-radio" type="radio" name="ASC" value="ASC" v-model="orderType">
+                <input class="w3-radio" type="radio" value="ASC" v-model="orderType">
                 <label>Asc</label>
             </p>
             <p>
-                <input class="w3-radio" type="radio" name="DESC" value="DESC" v-model="orderType">
+                <input class="w3-radio" type="radio" value="DESC" v-model="orderType">
                 <label>Desc</label>
             </p>
             <p>
@@ -57,7 +57,7 @@
         <div class="w3-container">
             <p class="w3-center">Querying</p>
             <p>
-                <select class="w3-select w3-border w3-round" name="option" v-model="queryField">
+                <select class="w3-select w3-border w3-round" v-model="queryField">
                     <option value="" disabled selected>Field</option>
                     <option value="Agentname">Name</option>
                     <option value="Activate">Activate</option>
@@ -67,11 +67,11 @@
                 </select>
             </p>
             <p>
-                <input class="w3-radio" type="radio" name="EQUALS" value="EQUALS" v-model="queryType">
+                <input class="w3-radio" type="radio" value="EQUALS" v-model="queryType">
                 <label>Equals</label>
             </p>
             <p>
-                <input class="w3-radio" type="radio" name="LIKE" value="LIKE" v-model="queryType">
+                <input class="w3-radio" type="radio" value="LIKE" v-model="queryType">
                 <label>Like</label>
             </p>
             <p>

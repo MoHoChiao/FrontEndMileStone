@@ -32,7 +32,7 @@
             <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" @click="changeEditable(index)"><i class="fa fa-pencil"></i> Edit</button>
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="deleteAgent(index, content.agentuid)"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
-        <edit-form v-else>{{ content.agentname }}</edit-form>
+        <edit-form v-else :index="index" :content="content" @closeForm="changeEditable"></edit-form>
     </div>
   </div>
   <filter-container ref="filter" @fromFilter="getAgents"></filter-container>
@@ -100,9 +100,17 @@ export default {
                     this.$refs.filter.isQuery = false
 
                 if (error.response) {
-                    alert(error.response.data)
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
                 } else {
-                    alert(error.message)
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
                 }
             })
         },
@@ -116,7 +124,7 @@ export default {
                 this.$set(this.editable, index, true) 
             }else{
                 this.$set(this.editable, index, !this.editable[index])
-            }   
+            }
         },
         editAgent(content){
             content.agentname = 'fuck'
