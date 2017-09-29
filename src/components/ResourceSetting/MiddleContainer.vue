@@ -32,7 +32,7 @@
             <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" @click="changeEditable(index)"><i class="fa fa-pencil"></i> Edit</button>
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="deleteAgent(index, content.agentuid)"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
-        <edit-form v-else :index="index" :content="content" @closeForm="changeEditable"></edit-form>
+        <edit-form v-else :index="index" :content="content" :agentname="content.agentname" @closeForm="changeEditable"></edit-form>
     </div>
   </div>
   <filter-container ref="filter" @fromFilter="getAgents"></filter-container>
@@ -114,9 +114,9 @@ export default {
                 }
             })
         },
-        changeEditable(index){
+        changeEditable(index, content){
             /*
-                $set for above :
+                this.$set is for above :
                 http://www.jianshu.com/p/358c1974d9a5
                 https://jsfiddle.net/qnq2munr/2/
             */
@@ -125,9 +125,10 @@ export default {
             }else{
                 this.$set(this.editable, index, !this.editable[index])
             }
-        },
-        editAgent(content){
-            content.agentname = 'fuck'
+
+            if(content !== undefined){
+                this.objs[index] = content
+            }
         },
         deleteAgent(index, agentuid){
             alert(agentuid)
