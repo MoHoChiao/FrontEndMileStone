@@ -1,5 +1,9 @@
 <template>
 <div>
+  <add-modal-window v-if="windowAlive" 
+                    window-title="Add JCS Agent" 
+                    @closeAdd="changeWindowStatus" 
+  ></add-modal-window>
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -11,7 +15,8 @@
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> JCSAgent</i>
                         <i class="fa fa-list-alt w3-button w3-right" title="Table List" aria-hidden="true"></i></button>
                         <i class="fa fa-list w3-button w3-right" title="Content List" aria-hidden="true"></i>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true"></i>
+                        <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeWindowStatus()"></i>
+                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i></button>
                     </p>
                 </div>
             </div>
@@ -29,10 +34,10 @@
             <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
             <hr class="w3-border-black w3-clear">
             <p class="w3-small">{{ content.description }}</p>
-            <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" @click="changeEditable(index)"><i class="fa fa-pencil"></i> Edit</button>
-            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="deleteAgent(index, content.agentuid)"><i class="fa fa-trash-o"></i> Delete</button>
+            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)"><i class="fa fa-pencil"></i> Edit</button>
+            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="deleteAgent(index, content.agentuid)"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
-        <edit-form v-else :index="index" :content="content" :agentname="content.agentname" @closeForm="changeEditable"></edit-form>
+        <agent-edit v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit>
     </div>
   </div>
   <filter-container ref="filter" @fromFilter="getAgents"></filter-container>
@@ -41,11 +46,13 @@
 <script>
 import { HTTPRepo } from '../../axios/http-common'
 import FilterContainer from './FilterContainer.vue'
-import EditForm from './EditForm.vue'
+import JCSAgentEdit from './JCSAgentEdit.vue'
+import AddModalWindow from './AddModalWindow.vue'
 
 export default {
     data() {
         return {
+            windowAlive: false,
             objs: new Object(),
             editable: [],
         }
@@ -131,13 +138,46 @@ export default {
             }
         },
         deleteAgent(index, agentuid){
-            alert(agentuid)
-            this.objs.splice(index, 1)
+            HTTPRepo.get(`jcsagent/delete`, {
+                params: {
+                    agentuid: agentuid
+                }
+            })
+            .then(response => {
+                this.objs.splice(index, 1)
+                this.editable.splice(index, 1)
+            })
+            .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+            
+        },
+        changeWindowStatus(content){
+            this.windowAlive = !this.windowAlive
+            this.editable
+            if(content !== undefined){
+                this.objs.unshift(content) //add object to the top of array
+                this.editable.fill(false) //close all edit form
+                // this.editable.unshift(false)
+            }
         }
     },
     components: {
         'filter-container': FilterContainer,
-        'edit-form': EditForm
+        'agent-edit': JCSAgentEdit,
+        'add-modal-window': AddModalWindow
     }
 }
 </script>

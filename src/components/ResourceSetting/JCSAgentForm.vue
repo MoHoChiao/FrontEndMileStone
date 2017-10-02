@@ -114,12 +114,6 @@
                 <input class="w3-input w3-border" v-model="new_content.memweight" type="number" placeholder="Please Memory Weight">
             </div>
         </div>
-        <hr class="w3-border-black">
-        <div class="w3-row w3-right">
-            <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
-            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="save"><i class="fa fa-clipboard"></i> Save</button>
-            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" @click="reset"><i class="fa fa-undo"></i> Reset</button>
-        </div>
     </div>
 </template>
 <script>
@@ -151,9 +145,6 @@ export default {
             }
         }
     },
-    computed: {
-        
-    },
     props: {
         content: {
             type: Object,
@@ -166,7 +157,7 @@ export default {
                     port: '',
                     maximumjob: 5,
                     activate: '0',
-                    ostype: '',
+                    ostype: 'Linux',
                     osname: '',
                     deadperiod: 10,
                     memweight: 1,
@@ -180,41 +171,14 @@ export default {
         index: Number
     },
     methods: {
-        // verifyForm() {
-        //     return {
-        //         account: this.$refs.ac_input.inputContent,
-        //         psw: this.$refs.psw_input.inputContent,
-        //         flag: (this.$refs.ac_input.checkEmpty('formContent.Field_Empty')) &&
-        //             (this.$refs.psw_input.checkEmpty('formContent.Field_Empty')) &&
-        //             (this.$refs.code_input.checkEmpty('formContent.Field_Empty')) &&
-        //             (this.$refs.code_input.checkVerify('formContent.Validate_Error'))
-        //     } 
-        // },
-        cancel(){
-            this.$emit('closeForm', this.index)
-        },
         save(){
-            HTTPRepo.post(`jcsagent/edit`, this.new_content)
-            .then(response => {
-                this.$emit('closeForm', this.index, response.data)
-            })
-            .catch(error => {
-                if (error.response) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
+            this.new_content.activate = Number(this.new_content.activate)
+            this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
+
+            return this.new_content
         },
         reset(){
+            alert(Number(true))
             this.new_content.agentuid = this.content.agentuid,
             this.new_content.agentname = this.content.agentname,
             this.new_content.description = this.content.description,
@@ -231,9 +195,6 @@ export default {
             this.new_content.monitortime = this.content.monitortime,
             this.new_content.cpuweight = this.content.cpuweight
         }
-    },
-    components: {
-        
     }
 }
 </script>
