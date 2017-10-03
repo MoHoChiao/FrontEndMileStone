@@ -1,9 +1,17 @@
 <template>
 <div>
-  <add-modal-window v-if="windowAlive" 
+  <agent-add-window :windowAlive="addWindowAlive" 
                     window-title="Add JCS Agent" 
-                    @closeAdd="changeWindowStatus" 
-  ></add-modal-window>
+                    @closeAdd="changeAddWindowStatus" 
+  ></agent-add-window>
+  <confirm-delete-window :windowAlive="deleteWindowAlive" 
+                    :deleteName="deleteName" 
+                    window-title="Confirm window" 
+                    window-bg-color="highway-schoolbus"
+                    btn-color="signal-white" 
+                    @closeDelete="changeDeleteWindowStatus" 
+                    @confirmDelete="deleteAgent" 
+  ></confirm-delete-window>
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -15,7 +23,7 @@
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> JCSAgent</i>
                         <i class="fa fa-list-alt w3-button w3-right" title="Table List" aria-hidden="true"></i></button>
                         <i class="fa fa-list w3-button w3-right" title="Content List" aria-hidden="true"></i>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeWindowStatus()"></i>
+                        <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                         <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i></button>
                     </p>
                 </div>
@@ -35,26 +43,31 @@
             <hr class="w3-border-black w3-clear">
             <p class="w3-small">{{ content.description }}</p>
             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)"><i class="fa fa-pencil"></i> Edit</button>
-            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="deleteAgent(index, content.agentuid)"><i class="fa fa-trash-o"></i> Delete</button>
+            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)"><i class="fa fa-trash-o"></i> Delete</button>
         </div>
-        <agent-edit v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit>
+        <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
     </div>
   </div>
-  <filter-container ref="filter" @fromFilter="getAgents"></filter-container>
+  <filter-panel ref="filter" @fromFilter="getAgents"></filter-panel>
 </div>
 </template>
 <script>
-import { HTTPRepo } from '../../axios/http-common'
-import FilterContainer from './FilterContainer.vue'
-import JCSAgentEdit from './JCSAgentEdit.vue'
-import AddModalWindow from './AddModalWindow.vue'
+import { HTTPRepo } from '../../../../axios/http-common'
+import FilterPanel from '../../FilterPanel.vue'
+import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
+import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
+import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
 export default {
     data() {
         return {
-            windowAlive: false,
-            objs: new Object(),
-            editable: [],
+            addWindowAlive: false,  //for add agent modal windows
+            deleteWindowAlive: false,  //for add agent modal windows
+            deleteIndex: -1,    //store which index be delete
+            deleteUid: '',      //store which obj be delete
+            deleteName: '',     //store which obj name be delete
+            objs: new Object(), //for all agents list panel
+            editable: [],   //for all agents content edit panel
         }
     },
     mounted() {
@@ -137,15 +150,22 @@ export default {
                 this.objs[index] = content
             }
         },
-        deleteAgent(index, agentuid){
+        deleteAgent(){
+            if(this.deleteIndex === -1)
+                return
+            if(this.deleteUid === '')
+                return
+            
             HTTPRepo.get(`jcsagent/delete`, {
                 params: {
-                    agentuid: agentuid
+                    agentuid: this.deleteUid
                 }
             })
             .then(response => {
-                this.objs.splice(index, 1)
-                this.editable.splice(index, 1)
+                this.objs.splice(this.deleteIndex, 1)
+                this.editable.splice(this.deleteIndex, 1)
+                this.editable.fill(false) //close all edit form
+                this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
                 if (error.response) {
@@ -164,20 +184,31 @@ export default {
             })
             
         },
-        changeWindowStatus(content){
-            this.windowAlive = !this.windowAlive
+        changeAddWindowStatus(content){
+            this.addWindowAlive = !this.addWindowAlive
             this.editable
             if(content !== undefined){
                 this.objs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
                 // this.editable.unshift(false)
             }
+        },
+        changeDeleteWindowStatus(index, agentuid, agentname){
+            this.deleteWindowAlive = !this.deleteWindowAlive
+
+            /*
+                store which obj be delete
+            */
+            this.deleteIndex = index
+            this.deleteUid = agentuid
+            this.deleteName = agentname
         }
     },
     components: {
-        'filter-container': FilterContainer,
-        'agent-edit': JCSAgentEdit,
-        'add-modal-window': AddModalWindow
+        'filter-panel': FilterPanel,
+        'agent-edit-panel': JCSAgentEditPanel,
+        'agent-add-window': JCSAgentAddWindow,
+        'confirm-delete-window': ConfirmDeleteWindow
     }
 }
 </script>

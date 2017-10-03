@@ -1,8 +1,8 @@
 <template>
     <div class="w3-row w3-small">
-        <button type="button" :class="classList" @click="save"><i class="fa fa-clipboard"></i> Save</button>
-        <button type="button" :class="classList" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
-        <button type="button" :class="classList" @click="reset"><i class="fa fa-undo"></i> Reset</button>
+        <button type="button" :class="classList" style="margin-right:3px" @click="save"><i class="fa fa-clipboard"></i> Save</button>
+        <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
+        <button type="button" :class="classList" style="margin-right:3px" @click="reset"><i class="fa fa-undo"></i> Reset</button>
     </div>
 </template>
 <script>
@@ -13,7 +13,6 @@ export default {
         classList() {
             return [
                 'w3-button',
-                'w3-margin-right',
                 'w3-right',
                 'w3-round',
                 this._btnColor,

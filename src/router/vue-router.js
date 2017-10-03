@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router'
 import TrinityHome from '../pages/TrinityHome.vue'
 import ResourceSetter from '../pages/ResourceSetter.vue'
-import MiddleContainer from '../components/ResourceSetting/MiddleContainer.vue'
+import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -17,7 +17,7 @@ export default new VueRouter({
                 name: 'JCSAgent',
                 path: 'JCSAgent',
                 components: {
-                    content: MiddleContainer
+                    content: JCSAgentContainer
                 }
             }]
         }, {

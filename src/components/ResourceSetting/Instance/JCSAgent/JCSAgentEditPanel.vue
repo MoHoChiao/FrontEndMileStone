@@ -6,9 +6,9 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../axios/http-common'
+import { HTTPRepo } from '../../../../axios/http-common'
 import JCSAgentForm from './JCSAgentForm.vue'
-import FormButton from './FormButton.vue'
+import FormButton from '../../FormButton.vue'
 
 export default {
     props: {
@@ -41,25 +41,29 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            HTTPRepo.post(`jcsagent/edit`, this.$refs.agentForm.save())
-            .then(response => {
-                this.$emit('closeEdit', this.index, response.data)
-            })
-            .catch(error => {
-                if (error.response) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
+            let postContent = this.$refs.agentForm.save()
+            
+            if(postContent){
+                HTTPRepo.post(`jcsagent/edit`, postContent)
+                .then(response => {
+                    this.$emit('closeEdit', this.index, response.data)
+                })
+                .catch(error => {
+                    if (error.response) {
+                        let newStatus = {
+                            "msg": error.response.data,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    } else {
+                        let newStatus = {
+                            "msg": error.message,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
                     }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
+                })
+            }
         },
         reset(){
             this.$refs.agentForm.reset()
