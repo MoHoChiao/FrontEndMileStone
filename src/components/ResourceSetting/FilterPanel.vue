@@ -30,11 +30,7 @@
             <p>
                 <select class="w3-select w3-border w3-round" v-model="orderField">
                     <option value="" disabled selected>Field</option>
-                    <option value="lastupdatetime">Update Time</option>
-                    <option value="agentname">Name</option>
-                    <option value="activate">Activate</option>
-                    <option value="host">Host</option>
-                    <option value="port">Port</option>
+                    <option :value="field.value" v-for="field in orderFileds">{{ field.name }}</option>
                 </select>
             </p>
             <p>
@@ -59,11 +55,7 @@
             <p>
                 <select class="w3-select w3-border w3-round" v-model="queryField">
                     <option value="" disabled selected>Field</option>
-                    <option value="Agentname">Name</option>
-                    <option value="Activate">Activate</option>
-                    <option value="Host">Host</option>
-                    <option value="Port">Port</option>
-                    <option value="Description">Desc</option>
+                    <option :value="field.value" v-for="field in queryFileds">{{ field.name }}</option>
                 </select>
             </p>
             <p>
@@ -112,6 +104,18 @@ export default {
             queryType: '',
             queryString: '',
             ignoreCase: false
+        }
+    },
+    props: {
+        orderFileds: {
+            type: Array,
+            default: () => [],
+            required: true
+        },
+        queryFileds: {
+            type: Array,
+            default: () => [],
+            required: true
         }
     },
     methods: {

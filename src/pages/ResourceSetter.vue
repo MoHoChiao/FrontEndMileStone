@@ -53,8 +53,8 @@
                                         <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>Domain</a>
                                         <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-plug fa-fw w3-margin-right"></i>Connection</a>
                                         <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-files-o fa-fw w3-margin-right"></i>File Source</a>
-                                        <a @click="getAgents()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>JCS Agent</a>
-                                        <a @click="getAgents()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>Virtual Agent</a>
+                                        <a @click="getAgents()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cog fa-fw w3-margin-right"></i>JCS Agent</a>
+                                        <a @click="getVRAgents()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>Virtual Agent</a>
                                     </div>
                                 </p>
                             </div>
@@ -158,6 +158,9 @@ export default {
         },
         getAgents(e){
             this.$router.push({ name: 'JCSAgent'})
+        },
+        getVRAgents(e){
+            this.$router.push({ name: 'VRAgent'})
         }
     },
     components: {

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TrinityHome from '../pages/TrinityHome.vue'
 import ResourceSetter from '../pages/ResourceSetter.vue'
 import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
+import VRAgentContainer from '../components/ResourceSetting/Instance/VRAgent/VRAgentContainer.vue'
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -14,12 +15,20 @@ export default new VueRouter({
             path: '/ResourceSetter',
             component: ResourceSetter,
             children: [{
-                name: 'JCSAgent',
-                path: 'JCSAgent',
-                components: {
-                    content: JCSAgentContainer
+                    name: 'JCSAgent',
+                    path: 'JCSAgent',
+                    components: {
+                        content: JCSAgentContainer
+                    }
+                },
+                {
+                    name: 'VRAgent',
+                    path: 'VRAgent',
+                    components: {
+                        content: VRAgentContainer
+                    }
                 }
-            }]
+            ]
         }, {
             path: '/',
             redirect: '/TrinityHome'

@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <agent-form slot="content" ref="agentForm"></agent-form>
+        <vr-agent-form slot="content" ref="vrAgentForm"></vr-agent-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import JCSAgentForm from './JCSAgentForm.vue'
+import VRAgentForm from './VRAgentForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -35,10 +35,10 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.agentForm.save()
+            let postContent = this.$refs.vrAgentForm.save()
 
             if(postContent){
-                HTTPRepo.post(`jcsagent/add`, postContent)
+                HTTPRepo.post(`vragent/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })
@@ -60,12 +60,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.agentForm.reset()
+            this.$refs.vrAgentForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'agent-form': JCSAgentForm,
+        'vr-agent-form': VRAgentForm,
         'form-button': FormButton
     }
 }

@@ -1,9 +1,9 @@
 <template>
 <div>
-  <agent-add-window :windowAlive="addWindowAlive" 
-                    window-title="Add JCS Agent" 
+  <vr-agent-add-window :windowAlive="addWindowAlive" 
+                    window-title="Add Virtual Agent" 
                     @closeAdd="changeAddWindowStatus" 
-  ></agent-add-window>
+  ></vr-agent-add-window>
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
@@ -20,10 +20,10 @@
                     <h6 class="w3-opacity">The current path is as follows :</h6>
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> JCSAgent</i>
-                        <i class="fa fa-toggle-on w3-button w3-right" title="Table List" aria-hidden="true" @click="changeShowMode()"></i></button>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i></button>
+                        <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> Virtual Agent</i>
+                        <i class="fa fa-toggle-on w3-button w3-right" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i></button>
+                        <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
+                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i></button>
                     </p>
                 </div>
             </div>
@@ -33,34 +33,32 @@
     <div v-if="showMode">
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in objs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.agentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4 w3-hide-medium" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
+                <p>{{ content.virtualagentname }}</p>
+                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
+                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
+                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <hr class="w3-border-black w3-clear">
                 <p class="w3-small">{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i> Edit</button>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
+                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i> Delete</button>
             </div>
-            <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
+            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
         </div>
     </div>
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
         <li class="w3-bar w3-border-camo-black" v-for="(content, index) in objs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.agentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4 w3-hide-medium" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
+                <p>{{ content.virtualagentname }}</p>
+                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
+                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
+                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
+                <button type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i>
                     <span class="w3-hide-medium"> Delete</span>
                 </button>
@@ -69,53 +67,51 @@
                     <span class="w3-hide-medium"> Edit</span>
                 </button>
             </div>
-            <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
+            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
         </li>
     </ul>
 
   </div>
-  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getAgents"></filter-panel>
+  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getVRAgents"></filter-panel>
 </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import FilterPanel from '../../FilterPanel.vue'
-import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
-import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
+import VRAgentEditPanel from './VRAgentEditPanel.vue'
+import VRAgentAddWindow from './VRAgentAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
 export default {
     data() {
         return {
             showMode: true, //switch content list or table list
-            addWindowAlive: false,  //for add agent modal windows
-            deleteWindowAlive: false,  //for delete agent modal windows
+            addWindowAlive: false,  //for add virtual agent modal windows
+            deleteWindowAlive: false,  //for delete virtual agent modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            objs: new Object(), //for all agents list panel
-            editable: [],   //for all agents content edit panel
+            objs: new Object(), //for all virtual agents list panel
+            editable: [],   //for all virtual agents content edit panel
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "agentname"},
+                {name: "Name",value: "virtualagentname"},
                 {name: "Activate",value: "activate"},
-                {name: "Host",value: "host"},
-                {name: "Port",value: "port"}
+                {name: "Mode",value: "mode"}
             ],
             queryFields: [  //for querying filter fields
-                {name: "Name",value: "Agentname"},
+                {name: "Name",value: "virtualagentname"},
                 {name: "Activate",value: "activate"},
-                {name: "Host",value: "host"},
-                {name: "Port",value: "port"},
+                {name: "Mode",value: "mode"},
                 {name: "Desc",value: "Description"}
             ]
         }
     },
     mounted() {
-        this.getAgents()
+        this.getVRAgents()
     },
     methods: {
-        getAgents(e){
+        getVRAgents(e){
             let params = {
                 "paging":{
                     "number":this.$refs.filter.selectedNum,
@@ -139,7 +135,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`jcsagent/findByFilter`, params)
+            HTTPRepo.post(`vragent/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -198,10 +194,10 @@ export default {
                 return
             if(this.deleteUid === '')
                 return
-            
-            HTTPRepo.get(`jcsagent/delete`, {
+            alert(this.deleteUid)
+            HTTPRepo.get(`vragent/delete`, {
                 params: {
-                    agentuid: this.deleteUid
+                    virtualagentuid: this.deleteUid
                 }
             })
             .then(response => {
@@ -239,21 +235,21 @@ export default {
                 // this.editable.unshift(false)
             }
         },
-        changeDeleteWindowStatus(index, agentuid, agentname){
+        changeDeleteWindowStatus(index, vr_agentuid, vr_agentname){
             this.deleteWindowAlive = !this.deleteWindowAlive
 
             /*
                 store which obj be delete
             */
             this.deleteIndex = index
-            this.deleteUid = agentuid
-            this.deleteName = agentname
+            this.deleteUid = vr_agentuid
+            this.deleteName = vr_agentname
         }
     },
     components: {
         'filter-panel': FilterPanel,
-        'agent-edit-panel': JCSAgentEditPanel,
-        'agent-add-window': JCSAgentAddWindow,
+        'vr-agent-edit-panel': VRAgentEditPanel,
+        'vr-agent-add-window': VRAgentAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow
     }
 }
