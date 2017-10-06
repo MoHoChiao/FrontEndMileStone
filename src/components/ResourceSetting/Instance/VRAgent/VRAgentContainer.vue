@@ -21,9 +21,9 @@
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> Virtual Agent</i>
-                        <i class="fa fa-toggle-on w3-button w3-right" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i></button>
+                        <i class="fa fa-toggle-on w3-button w3-right" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i>
                         <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i></button>
+                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i>
                     </p>
                 </div>
             </div>
