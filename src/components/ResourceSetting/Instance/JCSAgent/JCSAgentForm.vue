@@ -8,7 +8,7 @@
                 <input :class="inputClassList.name" v-model="new_content.agentname" type="text" maxlength="32" placeholder="Please Input Agent Name">
             </div>
             <div class="w3-col m3 w3-right">
-                <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
+                <input class="w3-check" v-model="new_content.activate" type="checkbox">
                 <label>Activate</label>
             </div>
         </div>
@@ -20,7 +20,7 @@
                 <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
             <div class="w3-col m3 w3-right">
-                <input class="w3-check" v-model="new_content.compresstransfer" style="width:40px;" type="checkbox">
+                <input class="w3-check" v-model="new_content.compresstransfer" type="checkbox">
                 <label>Compress</label>
             </div>
         </div>
@@ -243,3 +243,11 @@ export default {
     }
 }
 </script>
+<style scoped>
+    input,select {
+        height: 30px
+    }
+    input.w3-check {
+        height: 20px
+    }
+</style>

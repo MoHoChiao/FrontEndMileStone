@@ -40,9 +40,9 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:300px;">
+                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:280px">
                     <table class="w3-table-all">
-                        <tr class="w3-blue-grey">
+                        <tr class="w3-teal">
                             <th class="w3-center" width="7%" style="padding-top:18px">Seq</th>
                             <th class="w3-center" width="30%" style="padding-top:18px">Name</th>
                             <th class="w3-center" width="10%" style="padding-top:18px">Activate</th>
@@ -51,17 +51,25 @@
                                 <i class="fa fa-plus-square w3-button w3-hover-none" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i>
                             </th>
                         </tr>
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="drag(index)" @drop="drop(index)" v-for="(content, index) in testlist">
+                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="drag(index)" @drop="drop(index)" v-for="(list_info, index) in new_vRAgentList">
                             <td style="padding-top:13px">{{ index + 1 }}</td>
-                            <td style="padding-top:13px">
-                                <span>{{ content.name }}</span>
+                            <td style="padding:10px 0px 0px 0px">
+                                <span>
+                                    <select class="w3-select w3-border w3-round" v-model="list_info.agentuid" style="height:25px;width:100%">
+                                        <option :value="list_info.agentuid">{{ list_info.jcsAgent.agentname }} minutes</option>
+                                        <!--option value="Other">Other</option>
+                                        <option value="Unix">Unix</option>
+                                        <option value="Windows">Windows</option-->
+                                    </select>
+                                </span>
                             </td>
                             <td class="w3-center">
-                                <input class="w3-check" style="height:16px" type="checkbox" v-model="content.activate">
+                                <input class="w3-check" style="height:16px" type="checkbox" v-model="list_info.activate">
                             </td>
-                            <td style="padding-top:13px" @dblclick="descDbclick(index)">
-                                <span v-if="content.descEditable" @mouseout="descMouseout(index)"><input class="w3-input w3-border" style="height:30px" v-model="content.desc" type="text" maxlength="255" placeholder="Please Input Description"></span>
-                                <span v-else>{{ content.desc }}</span>
+                            <td style="padding:10px 0px 0px 0px">
+                                <span>
+                                    <input class="w3-input w3-border" style="height:25px;width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
+                                </span>
                             </td>
                             <td class="w3-center">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true"></i>
@@ -97,11 +105,7 @@ export default {
                 mode: this.content.mode
             },
             dragIndex: 0,
-            testlist: [
-                {name: "agent1", activate: 1, desc: "this. is agent1"},
-                {name: "agent2", activate: 0, desc: "this. is agent2"},
-                {name: "agent3", activate: 1, desc: "this. is agent3"}
-            ]
+            new_vRAgentList: this.content.vRAgentList.slice(0)    //copy a new array, avoid array/obj to call by refrence
         }
     },
     computed: {
@@ -151,12 +155,6 @@ export default {
             this.$set(this.testlist, index, this.testlist[this.dragIndex])
             this.$set(this.testlist, this.dragIndex, temp)
         },
-        descDbclick(index){
-            this.$set(this.testlist[index], 'descEditable', true)
-        },
-        descMouseout(index){
-            this.$set(this.testlist[index], 'descEditable', false)
-        },
         save(){
             this.clearInValid()
 
@@ -190,5 +188,11 @@ export default {
 <style scoped>
     th {
         padding-top:13px
+    }
+    input,select {
+        height: 30px
+    }
+    input.w3-check,input.w3-radio {
+        height: 20px
     }
 </style>
