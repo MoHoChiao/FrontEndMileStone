@@ -40,7 +40,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:280px">
+                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:278px">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
                             <th class="w3-center" width="7%" style="padding-top:18px">Seq</th>
@@ -48,31 +48,31 @@
                             <th class="w3-center" width="10%" style="padding-top:18px">Activate</th>
                             <th class="w3-center" width="45%" style="padding-top:18px">Description</th>
                             <th class="w3-center" width="8%">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add JCS Agent" aria-hidden="true" @click="addAgent"></i>
                             </th>
                         </tr>
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="drag(index)" @drop="drop(index)" v-for="(list_info, index) in new_vRAgentList">
+                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.vRAgentList">
                             <td style="padding-top:13px">{{ index + 1 }}</td>
-                            <td style="padding:10px 0px 0px 0px">
+                            <td style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.agentuid" style="height:25px;width:100%">
-                                        <option :value="list_info.agentuid">{{ list_info.jcsAgent.agentname }} minutes</option>
-                                        <!--option value="Other">Other</option>
-                                        <option value="Unix">Unix</option>
-                                        <option value="Windows">Windows</option-->
+                                    <select class="w3-select w3-border w3-round w3-tiny" v-model="list_info.agentuid" style="height:32px;width:100%" @change="changeAgent(list_info.agentuid,index)">
+                                        <template v-for="(jcsagent, index) in allJCSAgents">
+                                            <option v-if="jcsagent.agentuid === list_info.agentuid" :value="jcsagent.agentuid" selected>{{ jcsagent.agentname }}</option>
+                                            <option v-else-if="!jcsAgentUids.includes(jcsagent.agentuid)" :value="jcsagent.agentuid">{{ jcsagent.agentname }}</option>
+                                        </template>
                                     </select>
                                 </span>
                             </td>
                             <td class="w3-center">
                                 <input class="w3-check" style="height:16px" type="checkbox" v-model="list_info.activate">
                             </td>
-                            <td style="padding:10px 0px 0px 0px">
+                            <td style="padding:7px 0px 0px 0px">
                                 <span>
-                                    <input class="w3-input w3-border" style="height:25px;width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
+                                    <input class="w3-input w3-border" style="height:32px;width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
                                 </span>
                             </td>
                             <td class="w3-center">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delAgent(index)"></i>
                             </td>
                         </tr>
                     </table>
@@ -102,11 +102,55 @@ export default {
                 description: this.content.description,
                 maximumjob: this.content.maximumjob,
                 activate: Number(this.content.activate),
-                mode: this.content.mode
+                mode: this.content.mode,
+                vRAgentList: new Array(this.content.vRAgentList.length) //Create a new array from this.content.vRAgentList, Avoid array to call by reference.
             },
             dragIndex: 0,
-            new_vRAgentList: this.content.vRAgentList.slice(0)    //copy a new array, avoid array/obj to call by refrence
+            allJCSAgents: [],
+            jcsAgentUids:[] //Array for keeping the selected jcsagent uids
         }
+    },
+    created() {
+        /*
+            Copy all new objs from this.content.vRAgentList's objs into this.new_content.vRAgentList
+            Avoid objs to call by reference.
+        */
+        for (var i = 0, len = this.content.vRAgentList.length; i < len; i++) {
+            this.new_content.vRAgentList[i] = {
+                virtualagentuid: this.content.vRAgentList[i].virtualagentuid,
+                agentuid: this.content.vRAgentList[i].agentuid,
+                activate: Number(this.content.vRAgentList[i].activate),
+                description: this.content.vRAgentList[i].description,
+                seq: this.content.vRAgentList[i].seq
+            };
+        }
+
+        //Initial to get all jcsagent for select boxes
+        let params = {
+                "ordering":{
+                    "orderType":'DESC',
+                    "orderField":'lastupdatetime'
+                }
+            }
+        HTTPRepo.post(`jcsagent/findByFilter`, params)
+            .then(response => {
+                this.allJCSAgents = response.data
+            })
+            .catch(error => {
+                if (error.response) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
     },
     computed: {
         _classList() {
@@ -132,28 +176,47 @@ export default {
                     description: '',
                     maximumjob: 5,
                     activate: '0',
-                    mode: '0'
+                    mode: '0',
+                    vRAgentList: []
                 }
             }
         },
         index: Number
     },
     methods: {
-        drag(index){
+        changeAgent(uid,index){
+            // console.log(uid+'/'+index)
+            this.jcsAgentUids.splice(index, 1, uid);
+        },
+        delAgent(index){
+            this.new_content.vRAgentList.splice(index, 1)
+            this.jcsAgentUids.splice(index, 1);
+        },
+        addAgent(){
+            let new_agent= {
+                virtualagentuid: this.new_content.virtualagentuid,
+                agentuid: '',
+                activate: 0,
+                description: '',
+                seq: this.new_content.vRAgentList.length + 1
+            };
+            this.new_content.vRAgentList.push(new_agent)
+        },
+        dragAgent(index){
             this.dragIndex = index
         },
-        drop(index){
-            if (this.testlist.length === 1) 
+        dropAgent(index){
+            if (this.new_content.vRAgentList.length === 1) 
                 return
 
-            var temp = this.testlist[index];
+            var temp = this.new_content.vRAgentList[index];
             /*
                 this.$set is for above :
                 http://www.jianshu.com/p/358c1974d9a5
                 https://jsfiddle.net/qnq2munr/2/
             */
-            this.$set(this.testlist, index, this.testlist[this.dragIndex])
-            this.$set(this.testlist, this.dragIndex, temp)
+            this.$set(this.new_content.vRAgentList, index, this.new_content.vRAgentList[this.dragIndex])
+            this.$set(this.new_content.vRAgentList, this.dragIndex, temp)
         },
         save(){
             this.clearInValid()

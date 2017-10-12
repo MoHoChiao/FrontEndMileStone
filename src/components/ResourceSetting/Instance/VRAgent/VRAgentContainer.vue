@@ -39,13 +39,13 @@
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <p><div class="w3-responsive w3-card w3-round" style="overflow:auto;height:260px">
+                <p><div class="w3-responsive w3-card w3-round" style="overflow:auto;height:212px">
                   <table class="w3-table-all w3-small">
                     <tr class="w3-teal">
-                        <th class="w3-center" width="7%" style="padding-top:18px">Seq</th>
-                        <th class="w3-center" width="33%" style="padding-top:18px">Name</th>
-                        <th class="w3-center" width="10%" style="padding-top:18px">Activate</th>
-                        <th class="w3-center" width="50%" style="padding-top:18px">Description</th>
+                        <th class="w3-center" width="7%">Seq</th>
+                        <th class="w3-center" width="33%">Name</th>
+                        <th class="w3-center" width="10%">Activate</th>
+                        <th class="w3-center" width="50%">Description</th>
                     </tr>
                     <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.vRAgentList">
                         <td>{{ list_index + 1 }}</td>
@@ -207,7 +207,7 @@ export default {
             }else{
                 this.$set(this.editable, index, !this.editable[index])
             }
-
+            
             if(content !== undefined){
                 this.objs[index] = content
             }
@@ -217,7 +217,7 @@ export default {
                 return
             if(this.deleteUid === '')
                 return
-            alert(this.deleteUid)
+            
             HTTPRepo.get(`vragent/delete`, {
                 params: {
                     virtualagentuid: this.deleteUid
