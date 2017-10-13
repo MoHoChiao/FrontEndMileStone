@@ -103,27 +103,16 @@ export default {
                 maximumjob: this.content.maximumjob,
                 activate: Number(this.content.activate),
                 mode: this.content.mode,
-                vRAgentList: new Array(this.content.vRAgentList.length) //Create a new array from this.content.vRAgentList, Avoid array to call by reference.
+                vRAgentList: null
             },
             dragIndex: 0,
             allJCSAgents: [],
-            jcsAgentUids:[] //Array for keeping the selected jcsagent uids
+            jcsAgentUids:null //Array for keeping the selected jcsagent uids
         }
     },
     created() {
-        /*
-            Copy all new objs from this.content.vRAgentList's objs into this.new_content.vRAgentList
-            Avoid objs to call by reference.
-        */
-        for (var i = 0, len = this.content.vRAgentList.length; i < len; i++) {
-            this.new_content.vRAgentList[i] = {
-                virtualagentuid: this.content.vRAgentList[i].virtualagentuid,
-                agentuid: this.content.vRAgentList[i].agentuid,
-                activate: Number(this.content.vRAgentList[i].activate),
-                description: this.content.vRAgentList[i].description,
-                seq: this.content.vRAgentList[i].seq
-            };
-        }
+        //Initial Clone vRAgentList
+        this.cloneVRAgentList()
 
         //Initial to get all jcsagent for select boxes
         let params = {
@@ -185,12 +174,12 @@ export default {
     },
     methods: {
         changeAgent(uid,index){
-            // console.log(uid+'/'+index)
-            this.jcsAgentUids.splice(index, 1, uid);
+            console.log(uid)
+            this.jcsAgentUids.splice(index, 1, uid)
         },
         delAgent(index){
             this.new_content.vRAgentList.splice(index, 1)
-            this.jcsAgentUids.splice(index, 1);
+            this.jcsAgentUids.splice(index, 1)
         },
         addAgent(){
             let new_agent= {
@@ -201,6 +190,7 @@ export default {
                 seq: this.new_content.vRAgentList.length + 1
             };
             this.new_content.vRAgentList.push(new_agent)
+            this.jcsAgentUids.push('')
         },
         dragAgent(index){
             this.dragIndex = index
@@ -240,6 +230,28 @@ export default {
             this.new_content.maximumjob = this.content.maximumjob,
             this.new_content.activate = Number(this.content.activate),
             this.new_content.mode = this.content.mode
+            //Reset Clone vRAgentList
+            this.cloneVRAgentList()
+        },
+        cloneVRAgentList(){
+            //for reset method, keep jcsAgentUids's size is equals to Original size
+            this.jcsAgentUids = new Array(this.content.vRAgentList.length)
+
+            //Create a new array from this.content.vRAgentList, Avoid array to call by reference.
+            this.new_content.vRAgentList = new Array(this.content.vRAgentList.length)
+            /*
+                Copy all new objs from this.content.vRAgentList's objs into this.new_content.vRAgentList
+                Avoid objs to call by reference.
+            */
+            for (var i = 0, len = this.content.vRAgentList.length; i < len; i++) {
+                this.new_content.vRAgentList[i] = {
+                    virtualagentuid: this.content.vRAgentList[i].virtualagentuid,
+                    agentuid: this.content.vRAgentList[i].agentuid,
+                    activate: Number(this.content.vRAgentList[i].activate),
+                    description: this.content.vRAgentList[i].description,
+                    seq: this.content.vRAgentList[i].seq
+                };
+            }
         },
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
