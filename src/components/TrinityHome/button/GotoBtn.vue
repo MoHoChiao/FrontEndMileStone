@@ -78,7 +78,7 @@ export default {
     },
     methods: {
         goTo(e) {
-            if(this.aUrl.indexOf('ResourceSetter')){
+            if(this.aUrl.indexOf('ResourceSetter') > -1){
                 this.$router.push('ResourceSetter')
             }else{
                 this.$store.dispatch('checkLoginToken', this.$refs.goto_form)
