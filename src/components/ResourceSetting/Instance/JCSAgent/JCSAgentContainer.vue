@@ -201,7 +201,7 @@ export default {
             
             HTTPRepo.get(`jcsagent/delete`, {
                 params: {
-                    agentuid: this.deleteUid
+                    id: this.deleteUid
                 }
             })
             .then(response => {
@@ -241,7 +241,6 @@ export default {
         },
         changeDeleteWindowStatus(index, agentuid, agentname){
             this.deleteWindowAlive = !this.deleteWindowAlive
-
             /*
                 store which obj be delete
             */
