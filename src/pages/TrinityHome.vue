@@ -5,8 +5,6 @@
                   window-title="Password Expire! Please Reset." 
                   @closeResetPSWModalWindow="closeResetPSW"
     ></reset-psw-modal-window>
-    <!-- msg window -->
-    <modal-msg></modal-msg>
     <!-- Info Side Bar -->
     <info-side-bar side-bar-bg-color="signal-black" btn-bg-color="signal-black"></info-side-bar>
     <!-- header -->
@@ -49,7 +47,6 @@ import LoginBtn from '../components/TrinityHome/button/LoginBtn.vue'
 import LogoutBtn from '../components/TrinityHome/button/LogoutBtn.vue'
 import InfoSideBar from '../components/TrinityHome/bar/InfoSideBar.vue'
 import ResetPSWModalWindow from '../components/TrinityHome/window/ResetPSWModalWindow.vue'
-import ModalMsg from '../components/Common/window/ModalMsg.vue'
 import { mapGetters } from 'vuex'
 //import './assets/css/w3.css'
 //import './assets/css/high-color.css'
@@ -88,8 +85,7 @@ export default {
     'login-btn': LoginBtn,
     'logout-btn': LogoutBtn,
     'info-side-bar': InfoSideBar,
-    'reset-psw-modal-window': ResetPSWModalWindow,
-    'modal-msg': ModalMsg
+    'reset-psw-modal-window': ResetPSWModalWindow
   }
 }
 </script>

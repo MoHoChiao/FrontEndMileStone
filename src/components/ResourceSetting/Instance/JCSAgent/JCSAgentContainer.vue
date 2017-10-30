@@ -201,7 +201,7 @@ export default {
             
             HTTPRepo.get(`jcsagent/delete`, {
                 params: {
-                    id: this.deleteUid
+                    uid: this.deleteUid
                 }
             })
             .then(response => {

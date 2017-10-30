@@ -47,10 +47,10 @@
                         <th class="w3-center" width="10%">Activate</th>
                         <th class="w3-center" width="50%">Description</th>
                     </tr>
-                    <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.vRAgentList">
+                    <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
                         <td>{{ list_index + 1 }}</td>
                         <td>
-                            <span>{{ list_info.jcsAgent.agentname }}</span>
+                            <span>{{ list_info.agentname }}</span>
                         </td>
                         <td class="w3-center">
                             <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>

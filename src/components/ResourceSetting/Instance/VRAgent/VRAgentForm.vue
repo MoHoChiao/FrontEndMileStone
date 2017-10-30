@@ -51,7 +51,7 @@
                                 <i class="fa fa-plus-square w3-button w3-hover-none" title="Add JCS Agent" aria-hidden="true" @click="addAgent"></i>
                             </th>
                         </tr>
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.vRAgentList">
+                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
                             <td style="padding-top:13px">{{ index + 1 }}</td>
                             <td style="padding:6px 0px 0px 0px">
                                 <span>
@@ -103,16 +103,16 @@ export default {
                 maximumjob: this.content.maximumjob,
                 activate: Number(this.content.activate),
                 mode: this.content.mode,
-                vRAgentList: null
+                agentlist: null
             },
             dragIndex: 0,
-            allJCSAgents: [],
-            jcsAgentUids:null //Array for keeping the selected jcsagent uids
+            allJCSAgents: [],   //store all jcsagent in the db
+            jcsAgentUids: null //Array for keeping the selected jcsagent uids
         }
     },
     created() {
-        //Initial Clone vRAgentList
-        this.cloneVRAgentList()
+        //Initial Clone AgentList
+        this.cloneAgentList()
 
         //Initial to get all jcsagent for select boxes
         let params = {
@@ -166,7 +166,7 @@ export default {
                     maximumjob: 5,
                     activate: '0',
                     mode: '0',
-                    vRAgentList: []
+                    agentlist: []
                 }
             }
         },
@@ -178,7 +178,7 @@ export default {
             this.jcsAgentUids.splice(index, 1, uid)
         },
         delAgent(index){
-            this.new_content.vRAgentList.splice(index, 1)
+            this.new_content.agentlist.splice(index, 1)
             this.jcsAgentUids.splice(index, 1)
         },
         addAgent(){
@@ -187,26 +187,26 @@ export default {
                 agentuid: '',
                 activate: 0,
                 description: '',
-                seq: this.new_content.vRAgentList.length + 1
+                seq: this.new_content.agentlist.length + 1
             };
-            this.new_content.vRAgentList.push(new_agent)
+            this.new_content.agentlist.push(new_agent)
             this.jcsAgentUids.push('')
         },
         dragAgent(index){
             this.dragIndex = index
         },
         dropAgent(index){
-            if (this.new_content.vRAgentList.length === 1) 
+            if (this.new_content.agentlist.length === 1) 
                 return
 
-            var temp = this.new_content.vRAgentList[index];
+            var temp = this.new_content.agentlist[index];
             /*
                 this.$set is for above :
                 http://www.jianshu.com/p/358c1974d9a5
                 https://jsfiddle.net/qnq2munr/2/
             */
-            this.$set(this.new_content.vRAgentList, index, this.new_content.vRAgentList[this.dragIndex])
-            this.$set(this.new_content.vRAgentList, this.dragIndex, temp)
+            this.$set(this.new_content.agentlist, index, this.new_content.agentlist[this.dragIndex])
+            this.$set(this.new_content.agentlist, this.dragIndex, temp)
         },
         save(){
             this.clearInValid()
@@ -218,6 +218,10 @@ export default {
                 this.inputClassList.maxjobs.splice(2, 1, 'w3-text-red')
             }else{
                 this.new_content.activate = Number(this.new_content.activate)
+                if (this.jcsAgentUids.indexOf('') > -1)
+                    alert("Agent List can not contains any empty agent name!")
+                if (this.jcsAgentUids.length <= 0)
+                    alert("Agent List can not be empty!")
                 return this.new_content
             }                
         },
@@ -230,26 +234,26 @@ export default {
             this.new_content.maximumjob = this.content.maximumjob,
             this.new_content.activate = Number(this.content.activate),
             this.new_content.mode = this.content.mode
-            //Reset Clone vRAgentList
-            this.cloneVRAgentList()
+            //Reset Clone agentlist
+            this.cloneAgentList()
         },
-        cloneVRAgentList(){
+        cloneAgentList(){
             //for reset method, keep jcsAgentUids's size is equals to Original size
-            this.jcsAgentUids = new Array(this.content.vRAgentList.length)
+            this.jcsAgentUids = new Array(this.content.agentlist.length)
 
-            //Create a new array from this.content.vRAgentList, Avoid array to call by reference.
-            this.new_content.vRAgentList = new Array(this.content.vRAgentList.length)
+            //Create a new array from this.content.agentlist, Avoid array to call by reference.
+            this.new_content.agentlist = new Array(this.content.agentlist.length)
             /*
-                Copy all new objs from this.content.vRAgentList's objs into this.new_content.vRAgentList
+                Copy all new objs from this.content.agentlist's objs into this.new_content.agentlist
                 Avoid objs to call by reference.
             */
-            for (var i = 0, len = this.content.vRAgentList.length; i < len; i++) {
-                this.new_content.vRAgentList[i] = {
-                    virtualagentuid: this.content.vRAgentList[i].virtualagentuid,
-                    agentuid: this.content.vRAgentList[i].agentuid,
-                    activate: Number(this.content.vRAgentList[i].activate),
-                    description: this.content.vRAgentList[i].description,
-                    seq: this.content.vRAgentList[i].seq
+            for (var i = 0, len = this.content.agentlist.length; i < len; i++) {
+                this.new_content.agentlist[i] = {
+                    virtualagentuid: this.content.agentlist[i].virtualagentuid,
+                    agentuid: this.content.agentlist[i].agentuid,
+                    activate: Number(this.content.agentlist[i].activate),
+                    description: this.content.agentlist[i].description,
+                    seq: this.content.agentlist[i].seq
                 };
             }
         },
