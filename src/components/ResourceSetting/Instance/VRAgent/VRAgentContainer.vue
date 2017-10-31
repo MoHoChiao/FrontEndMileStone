@@ -220,7 +220,7 @@ export default {
             
             HTTPRepo.get(`vragent/delete`, {
                 params: {
-                    virtualagentuid: this.deleteUid
+                    uid: this.deleteUid
                 }
             })
             .then(response => {

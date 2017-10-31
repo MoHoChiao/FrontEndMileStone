@@ -36,7 +36,7 @@ export default {
         },
         save(){
             let postContent = this.$refs.vrAgentForm.save()
-
+            
             if(postContent){
                 HTTPRepo.post(`vragent/add`, postContent)
                 .then(response => {

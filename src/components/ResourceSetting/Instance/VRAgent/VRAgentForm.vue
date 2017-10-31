@@ -174,7 +174,7 @@ export default {
     },
     methods: {
         changeAgent(uid,index){
-            console.log(uid)
+            
             this.jcsAgentUids.splice(index, 1, uid)
         },
         delAgent(index){
@@ -218,11 +218,19 @@ export default {
                 this.inputClassList.maxjobs.splice(2, 1, 'w3-text-red')
             }else{
                 this.new_content.activate = Number(this.new_content.activate)
-                if (this.jcsAgentUids.indexOf('') > -1)
-                    alert("Agent List can not contains any empty agent name!")
-                if (this.jcsAgentUids.length <= 0)
-                    alert("Agent List can not be empty!")
-                return this.new_content
+                
+                if(this.jcsAgentUids.length <= 0){
+                    let newStatus = {
+                        "msg": "Agent List can not be empty!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }else{
+                    this.new_content.agentlist.forEach(function(element) {  //activate value must be cast to integer 0 or 1
+                        element.activate = Number(element.activate)
+                    });
+                    return this.new_content
+                }
             }                
         },
         reset(){
