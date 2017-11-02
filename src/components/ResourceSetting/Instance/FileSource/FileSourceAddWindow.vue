@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <vr-agent-form slot="content" ref="vrAgentForm"></vr-agent-form>
+        <file-source-form slot="content" ref="fileSourceForm"></file-source-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import VRAgentForm from './VRAgentForm.vue'
+import FileSourceForm from './FileSourceForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -32,7 +32,7 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.fileSourceForm.save()
             
             if(postContent){
                 HTTPRepo.post(`vragent/add`, postContent)
@@ -57,12 +57,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.fileSourceForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'vr-agent-form': VRAgentForm,
+        'file-source-form': FileSourceForm,
         'form-button': FormButton
     }
 }

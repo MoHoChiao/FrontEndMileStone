@@ -21,7 +21,8 @@
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
                         <i class="fa fa-arrow-right w3-left" aria-hidden="true" style="margin: 6px 6px 0 0"> Virtual Agent</i>
-                        <i class="fa fa-toggle-on w3-button w3-right" title="Content/Table List Switch" aria-hidden="true" @click="changeShowMode()"></i>
+                        <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode()"></i></button>
+                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i></button>
                         <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                         <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i>
                     </p>
@@ -31,37 +32,43 @@
     </div>
 
     <div v-if="showMode">
-        <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in objs">
+        <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allVRAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.virtualagentname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <p><div class="w3-responsive w3-card w3-round" style="overflow:auto;height:212px">
-                  <table class="w3-table-all w3-small">
-                    <tr class="w3-teal">
-                        <th class="w3-center" width="7%">Seq</th>
-                        <th class="w3-center" width="33%">Name</th>
-                        <th class="w3-center" width="10%">Activate</th>
-                        <th class="w3-center" width="50%">Description</th>
-                    </tr>
-                    <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
-                        <td>{{ list_index + 1 }}</td>
-                        <td>
-                            <span>{{ list_info.agentname }}</span>
-                        </td>
-                        <td class="w3-center">
-                            <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>
-                            <i v-else class="fa fa-square-o" title="Deactivate" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <span>{{ list_info.description }}</span>
-                        </td>
-                    </tr>
-                  </table>
-                </div></p>
+                <p>
+                  <div class="w3-responsive w3-card w3-round">
+                    <table class="w3-table-all w3-small">
+                        <tr class="w3-teal">
+                            <th class="w3-center" width="7%">Seq</th>
+                            <th class="w3-center" width="33%">Name</th>
+                            <th class="w3-center" width="10%">Activate</th>
+                            <th class="w3-center" width="50%">Description</th>
+                        </tr>
+                    </table>
+                  </div>
+                  <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
+                    <table class="w3-table-all w3-small">
+                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
+                            <td width="7%">{{ list_index + 1 }}</td>
+                            <td class="w3-center" width="33%">
+                                <span>{{ list_info.agentname }}</span>
+                            </td>
+                            <td class="w3-center" width="10%">
+                                <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>
+                                <i v-else class="fa fa-square-o" title="Deactivate" aria-hidden="true"></i>
+                            </td>
+                            <td width="50%">
+                                <span>{{ list_info.description }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                  </div>
+                </p>
                 <hr class="w3-border-black w3-clear">
                 <p class="w3-small">{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
@@ -73,9 +80,9 @@
         </div>
     </div>
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-        <li class="w3-bar w3-border-camo-black" v-for="(content, index) in objs">
+        <li class="w3-bar w3-border-camo-black" v-for="(content, index) in allVRAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.virtualagentname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
@@ -114,7 +121,7 @@ export default {
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            objs: new Object(), //for all virtual agents list panel
+            allVRAgentObjs: new Object(), //store all virtual agents
             editable: [],   //for all virtual agents content edit panel
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},
@@ -162,10 +169,10 @@ export default {
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
-                    this.objs = response.data.content
+                    this.allVRAgentObjs = response.data.content
                     this.$refs.filter.totalPages = response.data.totalPages
                 } else {
-                    this.objs = response.data
+                    this.allVRAgentObjs = response.data
                     this.$refs.filter.totalPages = 1
                 }
             })
@@ -209,7 +216,7 @@ export default {
             }
             
             if(content !== undefined){
-                this.objs[index] = content
+                this.allVRAgentObjs[index] = content
             }
         },
         deleteAgent(){
@@ -224,7 +231,7 @@ export default {
                 }
             })
             .then(response => {
-                this.objs.splice(this.deleteIndex, 1)
+                this.allVRAgentObjs.splice(this.deleteIndex, 1)
                 this.editable.splice(this.deleteIndex, 1)
                 this.editable.fill(false) //close all edit form
                 this.changeDeleteWindowStatus(-1, '', '')
@@ -253,7 +260,7 @@ export default {
             this.addWindowAlive = !this.addWindowAlive
             this.editable
             if(content !== undefined){
-                this.objs.unshift(content) //add object to the top of array
+                this.allVRAgentObjs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
                 // this.editable.unshift(false)
             }

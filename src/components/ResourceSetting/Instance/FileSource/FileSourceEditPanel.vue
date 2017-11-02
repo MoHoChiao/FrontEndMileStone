@@ -1,43 +1,43 @@
 <template>
-    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <vr-agent-form slot="content" ref="vrAgentForm"></vr-agent-form>
-        <div slot="footer">
-            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
-        </div>
-    </modal-window>
+    <div>
+        <file-source-form ref="fileSourceForm" :index="index" :content="content"></file-source-form>
+        <hr class="w3-border-grey">
+        <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
+    </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import VRAgentForm from './VRAgentForm.vue'
+import FileSourceForm from './FileSourceForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
+        content: {
+            type: Object,
+            default () {
+                return {
+                    virtualagentuid: '',
+                    virtualagentname: '',
+                    description: '',
+                    maximumjob: 5,
+                    activate: '0',
+                    mode: '0'
+                }
+            }
         },
-        windowBgColor: {
-            type: String,
-            default: 'camo-black'
-        },
-        windowAlive: {
-            type: Boolean,
-            default: false
-        }
+        index: Number
     },
     methods: {
         cancel(){
-            this.$emit('closeAdd')
+            this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.fileSourceForm.save()
             
             if(postContent){
-                HTTPRepo.post(`vragent/add`, postContent)
+                HTTPRepo.post(`vragent/edit`, postContent)
                 .then(response => {
-                    this.$emit('closeAdd', response.data)
+                    this.$emit('closeEdit', this.index, response.data)
                 })
                 .catch(error => {
                     if (error.response) {
@@ -57,12 +57,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.fileSourceForm.reset()
         }
     },
     components: {
-        'modal-window': ModalWindow,
-        'vr-agent-form': VRAgentForm,
+        'file-source-form': FileSourceForm,
         'form-button': FormButton
     }
 }

@@ -40,24 +40,20 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <div class="w3-responsive w3-card w3-round">
+                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:278px">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="7%" style="padding-top:12px;padding-bottom:12px">Seq</th>
-                            <th class="w3-center" width="30%" style="padding-top:12px;padding-bottom:12px">Name</th>
-                            <th class="w3-center" width="10%" style="padding-top:12px;padding-bottom:12px">Activate</th>
-                            <th class="w3-center" width="45%" style="padding-top:12px;padding-bottom:12px">Description</th>
-                            <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
+                            <th class="w3-center" width="7%" style="padding-top:18px">Seq</th>
+                            <th class="w3-center" width="30%" style="padding-top:18px">Name</th>
+                            <th class="w3-center" width="10%" style="padding-top:18px">Activate</th>
+                            <th class="w3-center" width="45%" style="padding-top:18px">Description</th>
+                            <th class="w3-center" width="8%">
                                 <i class="fa fa-plus-square w3-button w3-hover-none" title="Add JCS Agent" aria-hidden="true" @click="addAgent"></i>
                             </th>
                         </tr>
-                    </table>
-                </div>
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
-                    <table class="w3-table-all">
                         <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
-                            <td width="7%" style="padding-top:13px">{{ index + 1 }}</td>
-                            <td class="w3-center" width="30%" style="padding:6px 0px 0px 0px">
+                            <td style="padding-top:13px">{{ index + 1 }}</td>
+                            <td style="padding:6px 0px 0px 0px">
                                 <span>
                                     <select class="w3-select w3-border w3-round w3-tiny" v-model="list_info.agentuid" style="height:32px;width:100%" @change="changeAgent(list_info.agentuid,index)">
                                         <template v-for="(jcsagent, index) in allJCSAgents">
@@ -67,15 +63,15 @@
                                     </select>
                                 </span>
                             </td>
-                            <td class="w3-center" width="10%">
+                            <td class="w3-center">
                                 <input class="w3-check" style="height:16px" type="checkbox" v-model="list_info.activate">
                             </td>
-                            <td width="45%" style="padding:7px 0px 0px 0px">
+                            <td style="padding:7px 0px 0px 0px">
                                 <span>
                                     <input class="w3-input w3-border" style="height:32px;width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
                                 </span>
                             </td>
-                            <td class="w3-center" width="8%">
+                            <td class="w3-center">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delAgent(index)"></i>
                             </td>
                         </tr>

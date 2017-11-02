@@ -4,6 +4,7 @@ import TrinityHome from '../pages/TrinityHome.vue'
 import ResourceSetter from '../pages/ResourceSetter.vue'
 import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
 import VRAgentContainer from '../components/ResourceSetting/Instance/VRAgent/VRAgentContainer.vue'
+import FileSourceContainer from '../components/ResourceSetting/Instance/FileSource/FileSourceContainer.vue'
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -26,6 +27,13 @@ export default new VueRouter({
                     path: 'VRAgent',
                     components: {
                         content: VRAgentContainer
+                    }
+                },
+                {
+                    name: 'FileSource',
+                    path: 'FileSource',
+                    components: {
+                        content: FileSourceContainer
                     }
                 }
             ]
