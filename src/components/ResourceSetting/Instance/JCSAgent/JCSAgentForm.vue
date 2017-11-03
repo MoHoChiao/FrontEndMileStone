@@ -217,20 +217,20 @@ export default {
         reset(){
             this.clearInValid()
             
-            this.new_content.agentuid = this.content.agentuid,
-            this.new_content.agentname = this.content.agentname,
-            this.new_content.description = this.content.description,
-            this.new_content.host = this.content.host,
-            this.new_content.port = this.content.port,
-            this.new_content.maximumjob = this.content.maximumjob,
-            this.new_content.activate = Number(this.content.activate),
-            this.new_content.ostype = this.content.ostype,
-            this.new_content.osname = this.content.osname,
-            this.new_content.deadperiod = this.content.deadperiod,
-            this.new_content.memweight = this.content.memweight,
-            this.new_content.compresstransfer = Number(this.content.compresstransfer),
-            this.new_content.encoding = this.content.encoding,
-            this.new_content.monitortime = this.content.monitortime,
+            this.new_content.agentuid = this.content.agentuid
+            this.new_content.agentname = this.content.agentname
+            this.new_content.description = this.content.description
+            this.new_content.host = this.content.host
+            this.new_content.port = this.content.port
+            this.new_content.maximumjob = this.content.maximumjob
+            this.new_content.activate = Number(this.content.activate)
+            this.new_content.ostype = this.content.ostype
+            this.new_content.osname = this.content.osname
+            this.new_content.deadperiod = this.content.deadperiod
+            this.new_content.memweight = this.content.memweight
+            this.new_content.compresstransfer = Number(this.content.compresstransfer)
+            this.new_content.encoding = this.content.encoding
+            this.new_content.monitortime = this.content.monitortime
             this.new_content.cpuweight = this.content.cpuweight
         },
         clearInValid(){

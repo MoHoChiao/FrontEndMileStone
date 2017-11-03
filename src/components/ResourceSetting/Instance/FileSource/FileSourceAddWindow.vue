@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <file-source-form slot="content" ref="fileSourceForm"></file-source-form>
+        <file-source-category-form slot="content" ref="fileSourceCategoryForm"></file-source-category-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import FileSourceForm from './FileSourceForm.vue'
+import FileSourceCategoryForm from './FileSourceCategoryForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -32,10 +32,10 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.fileSourceForm.save()
+            let postContent = this.$refs.fileSourceCategoryForm.save()
             
             if(postContent){
-                HTTPRepo.post(`vragent/add`, postContent)
+                HTTPRepo.post(`file-source-category/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })
@@ -57,12 +57,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.fileSourceForm.reset()
+            this.$refs.fileSourceCategoryForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'file-source-form': FileSourceForm,
+        'file-source-category-form': FileSourceCategoryForm,
         'form-button': FormButton
     }
 }

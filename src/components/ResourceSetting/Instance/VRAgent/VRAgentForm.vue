@@ -55,7 +55,7 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table-all">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
+                        <tr :key="list_info.agentuid" class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
                             <td width="7%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="30%" style="padding:6px 0px 0px 0px">
                                 <span>
@@ -240,11 +240,11 @@ export default {
         reset(){
             this.clearInValid()
             
-            this.new_content.virtualagentuid = this.content.virtualagentuid,
-            this.new_content.virtualagentname = this.content.virtualagentname,
-            this.new_content.description = this.content.description,
-            this.new_content.maximumjob = this.content.maximumjob,
-            this.new_content.activate = Number(this.content.activate),
+            this.new_content.virtualagentuid = this.content.virtualagentuid
+            this.new_content.virtualagentname = this.content.virtualagentname
+            this.new_content.description = this.content.description
+            this.new_content.maximumjob = this.content.maximumjob
+            this.new_content.activate = Number(this.content.activate)
             this.new_content.mode = this.content.mode
             //Reset Clone agentlist
             this.cloneAgentList()
