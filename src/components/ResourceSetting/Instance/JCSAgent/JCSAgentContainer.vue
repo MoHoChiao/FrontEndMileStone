@@ -237,7 +237,7 @@ export default {
         },
         changeAddWindowStatus(old_content){
             this.addWindowAlive = !this.addWindowAlive  //change add window open/close
-            if(old_content){    //index !== undefined, it means from Copy Click
+            if(old_content){    //old_content !== undefined, it means from Copy Click
                 this.copyContent = new Object()
                 this.copyContent.agentname = ''
                 this.copyContent.description = ''
