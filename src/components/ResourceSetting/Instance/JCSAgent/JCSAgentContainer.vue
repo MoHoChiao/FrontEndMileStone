@@ -256,7 +256,7 @@ export default {
             }
         },
         saveAddWindowContent(new_content){
-            this.copyContent = undefined //Reset Add Window Content is clean
+            this.copyContent = undefined //Reset Add Window Content is empty
             this.changeAddWindowStatus()    //Add Window open/close
 
             if(new_content){    //new_content !== undefined, it means from Add Window Save Click

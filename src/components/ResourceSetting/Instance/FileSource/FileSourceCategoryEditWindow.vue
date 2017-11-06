@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <file-source-category-form slot="content" ref="fileSourceCategoryForm"></file-source-category-form>
+        <file-source-category-form slot="content" ref="fileSourceCategoryForm" :content="content"></file-source-category-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -25,6 +25,16 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
+        },
+        content: {
+            type: Object,
+            default () {
+                return {
+                    fscategoryuid: '',
+                    fscategoryname: '',
+                    description: ''
+                }
+            }
         }
     },
     methods: {
@@ -32,12 +42,19 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
+            let urlOp = 'add'
+            if(this.content.fscategoryuid && this.content.fscategoryuid !== '')
+                urlOp = 'edit'
+
             let postContent = this.$refs.fileSourceCategoryForm.save()
             
             if(postContent){
-                HTTPRepo.post(`file-source-category/add`, postContent)
+                HTTPRepo.post(`file-source-category/` + urlOp, postContent)
                 .then(response => {
-                    this.$emit('closeAdd', response.data)
+                    if(urlOp === 'add') //add operation
+                        this.$emit('closeAdd', response.data)
+                    else    //edit operation
+                        this.$emit('closeEdit', response.data)   
                 })
                 .catch(error => {
                     if (error.response) {
