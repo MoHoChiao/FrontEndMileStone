@@ -49,7 +49,7 @@ export default {
                     this.$emit('closeEdit', this.index, response.data)
                 })
                 .catch(error => {
-                    if (error.response) {
+                    if (error.response && error.response.data && error.response.data.msg) {
                         let newStatus = {
                             "msg": error.response.data,
                             "status": "Error"

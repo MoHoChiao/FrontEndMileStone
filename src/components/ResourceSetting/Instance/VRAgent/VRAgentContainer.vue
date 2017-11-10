@@ -187,7 +187,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
 
-                if (error.response) {
+                if (error.response && error.response.data && error.response.data.msg) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -236,7 +236,7 @@ export default {
                 this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
-                if (error.response) {
+                if (error.response && error.response.data && error.response.data.msg) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

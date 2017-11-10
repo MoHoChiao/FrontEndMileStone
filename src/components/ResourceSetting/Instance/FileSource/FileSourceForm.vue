@@ -1,7 +1,7 @@
 <template>
-    <div class="w3-small">
+    <div class="w3-container w3-small" style="overflow:auto;min-height:440px">
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
+            <div class="w3-col m2" style="padding:4px 4px 4px 0px">
                 <label class="w3-right">Name</label>
             </div>
             <div class="w3-col m6">
@@ -9,21 +9,55 @@
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
+            <div class="w3-col m2" style="padding:4px 4px 4px 0px">
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
                 <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
+        <div class="w3-row">
+            <a href="javascript:void(0)" @click="openTab(0)">
+                <div :class="tabsClass[0]">Directory <span class="w3-hide-medium">Asign</span></div>
+            </a>
+            <a href="javascript:void(0)" @click="openTab(1)">
+                <div :class="tabsClass[1]">File Source</div>
+            </a>
+            <a href="javascript:void(0)" @click="openTab(2)">
+                <div :class="tabsClass[2]">Job Trigger</div>
+            </a>
+            <a href="javascript:void(0)" @click="openTab(3)">
+                <div :class="tabsClass[3]">FTP <span class="w3-hide-medium">Setting</span></div>
+            </a>
+        </div>
+
+        <div v-if="tabsFlag[0]" class="w3-container">
+            <directory-asign-form></directory-asign-form>
+        </div>
+
+        <div v-if="tabsFlag[1]" class="w3-container">
+            <filesource-design-form></filesource-design-form>
+        </div>
+
+        <div v-if="tabsFlag[2]" class="w3-container">
+            <h2>Tokyo</h2>
+            <p>Tokyo is the capital of Japan.</p>
+        </div>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
+import DirectoryAsignForm from './DirectoryAsignForm.vue'
+import FileSourceDesignForm from './FileSourceDesignForm.vue'
 
 export default {
     data() {
         return {
+            tabsClass: ['w3-quarter tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-theme',
+                        'w3-quarter tablink w3-bottombar w3-hover-light-grey w3-padding',
+                        'w3-quarter tablink w3-bottombar w3-hover-light-grey w3-padding',
+                        'w3-quarter tablink w3-bottombar w3-hover-light-grey w3-padding'],
+            tabsFlag: [true, false, false],
             inputClassList: {
                 name: ['w3-input','w3-border'],
                 desc: ['w3-input','w3-border']
@@ -40,18 +74,7 @@ export default {
         }
     },
     computed: {
-        _classList() {
-            return {
-                name:  ['w3-input','w3-border']
-            };
-        },
-        _invalidClassList() {
-            return [
-                'w3-input',
-                'w3-border',
-                'w3-text-red'
-            ];
-        }
+       
     },
     props: {
         content: {
@@ -66,6 +89,17 @@ export default {
         }
     },
     methods: {
+        openTab(whichTab) {
+            for (let i = 0; i < this.tabsFlag.length; i++) {
+                this.$set(this.tabsFlag, i, false)
+            }
+            this.$set(this.tabsFlag, whichTab, true)
+
+            for (let i = 0; i < this.tabsClass.length; i++) {
+                this.$set(this.tabsClass, i, this.tabsClass[i].replace(" w3-border-theme", ""))
+            }
+            this.$set(this.tabsClass, whichTab, this.tabsClass[whichTab] + " w3-border-theme")
+        },
         save(){
             this.clearInValid()
             
@@ -85,17 +119,15 @@ export default {
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
         }
+    },
+    components: {
+        'directory-asign-form': DirectoryAsignForm,
+        'filesource-design-form': FileSourceDesignForm
     }
 }
 </script>
 <style scoped>
-    th {
-        padding-top:13px
-    }
-    input,select {
-        height: 30px
-    }
-    input.w3-check,input.w3-radio {
-        height: 20px
+    input {
+        height: 25px
     }
 </style>

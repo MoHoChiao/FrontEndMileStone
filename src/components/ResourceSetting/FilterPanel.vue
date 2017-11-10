@@ -42,8 +42,8 @@
                 <label>Desc</label>
             </p>
             <p>
-                <button v-if="!isOrder" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Order" @click="applyOrder"><i class="fa fa-check"></i></button>
-                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Order" @click="cancelOrder"><i class="fa fa-remove"></i></button>
+                <button v-if="!isOrder" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Order" @click="applyOrder"><i class="fa fa-check" title="Apply Order" aria-hidden="true"></i></button>
+                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Order" @click="cancelOrder"><i class="fa fa-remove" title="Cancel Order" aria-hidden="true"></i></button>
             </p>
         </div>
     </div>
@@ -75,8 +75,8 @@
                 <input class="w3-input w3-border" type="text" placeholder="Input Keyword" v-model="queryString">
             </p>
             <p>
-                <button v-if="!isQuery" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Query" @click="applyQuery"><i class="fa fa-check"></i></button>
-                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Query" @click="cancelQuery"><i class="fa fa-remove"></i></button>
+                <button v-if="!isQuery" class="w3-button w3-block w3-green w3-round w3-hover-green" title="Apply Query" @click="applyQuery"><i class="fa fa-check" title="Apply Query" aria-hidden="true"></i></button>
+                <button v-else class="w3-button w3-block w3-red w3-round w3-hover-red" title="Cancel Query" @click="cancelQuery"><i class="fa fa-remove" title="Cancel Query" aria-hidden="true"></i></button>
             </p>
         </div>
     </div>

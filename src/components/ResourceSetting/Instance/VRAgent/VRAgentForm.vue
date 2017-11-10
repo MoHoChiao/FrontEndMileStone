@@ -130,7 +130,7 @@ export default {
                 this.allJCSAgents = response.data
             })
             .catch(error => {
-                if (error.response) {
+                if (error.response && error.response.data && error.response.data.msg) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -144,20 +144,6 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }
             })
-    },
-    computed: {
-        _classList() {
-            return {
-                name:  ['w3-input','w3-border']
-            };
-        },
-        _invalidClassList() {
-            return [
-                'w3-input',
-                'w3-border',
-                'w3-text-red'
-            ];
-        }
     },
     props: {
         content: {

@@ -55,7 +55,7 @@ export default {
             
         },
         cancel(){
-            this.$emit('closeDelete', -1, '')
+            this.$emit('closeDelete')
         },
         confirm(){
             this.$emit('confirmDelete')

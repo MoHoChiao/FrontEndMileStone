@@ -166,7 +166,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
 
-                if (error.response) {
+                if (error.response && error.response.data && error.response.data.msg) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -209,13 +209,13 @@ export default {
                 }
             })
             .then(response => {
-                this.objs.splice(this.deleteIndex, 1)
+                this.allJCSAgentObjs.splice(this.deleteIndex, 1)
                 this.editable.splice(this.deleteIndex, 1)
                 this.editable.fill(false) //close all edit form
                 this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
-                if (error.response) {
+                if (error.response && error.response.data && error.response.data.msg) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

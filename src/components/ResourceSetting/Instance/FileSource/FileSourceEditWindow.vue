@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <file-source-category-form slot="content" ref="fileSourceCategoryForm" :content="content"></file-source-category-form>
+        <file-source-form slot="content" ref="fileSourceForm" :content="content"></file-source-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import FileSourceCategoryForm from './FileSourceCategoryForm.vue'
+import FileSourceForm from './FileSourceForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -57,7 +57,7 @@ export default {
                         this.$emit('closeEdit', response.data)   
                 })
                 .catch(error => {
-                    if (error.response) {
+                    if (error.response && error.response.data && error.response.data.msg) {
                         let newStatus = {
                             "msg": error.response.data,
                             "status": "Error"
@@ -79,7 +79,7 @@ export default {
     },
     components: {
         'modal-window': ModalWindow,
-        'file-source-category-form': FileSourceCategoryForm,
+        'file-source-form': FileSourceForm,
         'form-button': FormButton
     }
 }

@@ -1,18 +1,24 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <vr-agent-form slot="content" ref="vrAgentForm"></vr-agent-form>
+        <file-source-category-form v-if="this.urlOp === 'add'" slot="content" ref="fileSourceCategoryForm"></file-source-category-form>
+        <file-source-category-form v-else slot="content" ref="fileSourceCategoryForm" :content="content"></file-source-category-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import VRAgentForm from './VRAgentForm.vue'
-import FormButton from '../../FormButton.vue'
+import { HTTPRepo } from '../../../../../axios/http-common'
+import ModalWindow from '../../../../Common/window/ModalWindow.vue'
+import FileSourceCategoryForm from './FileSourceCategoryForm.vue'
+import FormButton from '../../../FormButton.vue'
 
 export default {
+    // data() {
+    //     return {
+    //         urlOp: ''
+    //     }
+    // },
     props: {
         windowTitle: {
             type: String,
@@ -25,19 +31,39 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
+        },
+        content: {
+            type: Object,
+            default () {
+                return {
+                    fscategoryuid: '',
+                    fscategoryname: '',
+                    description: ''
+                }
+            }
+        },
+        urlOp: {
+            type: String,
+            default: 'add'
         }
     },
     methods: {
         cancel(){
-            this.$emit('closeAdd')
+            if(this.urlOp === 'add')
+                this.$emit('closeAdd')
+            else
+                this.$emit('closeEdit')
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.fileSourceCategoryForm.save()
             
             if(postContent){
-                HTTPRepo.post(`vragent/add`, postContent)
+                HTTPRepo.post(`file-source-category/` + this.urlOp, postContent)
                 .then(response => {
-                    this.$emit('closeAdd', response.data)
+                    if(this.urlOp === 'add') //add operation
+                        this.$emit('closeAdd', response.data)
+                    else    //edit operation
+                        this.$emit('closeEdit', response.data)   
                 })
                 .catch(error => {
                     if (error.response && error.response.data && error.response.data.msg) {
@@ -57,12 +83,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.fileSourceCategoryForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'vr-agent-form': VRAgentForm,
+        'file-source-category-form': FileSourceCategoryForm,
         'form-button': FormButton
     }
 }

@@ -19,7 +19,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo } from '../../../../../axios/http-common'
 
 export default {
     data() {
@@ -37,20 +37,6 @@ export default {
                 fscategoryname: this.content.fscategoryname,
                 description: this.content.description
             }
-        }
-    },
-    computed: {
-        _classList() {
-            return {
-                name:  ['w3-input','w3-border']
-            };
-        },
-        _invalidClassList() {
-            return [
-                'w3-input',
-                'w3-border',
-                'w3-text-red'
-            ];
         }
     },
     props: {
