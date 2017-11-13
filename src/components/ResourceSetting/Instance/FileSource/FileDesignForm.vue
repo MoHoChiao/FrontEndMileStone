@@ -5,10 +5,10 @@
                 <label class="w3-right"><span class="w3-hide-medium">File Name </span><span>Pattern</span></label>
             </div>
             <div class="w3-col m5" style="padding-right:4px">
-                <input :class="inputClassList.name" v-model="new_content.agentname" type="text" maxlength="64" placeholder="Please Input Root Path">
+                <input :class="inputClassList.filename" v-model="new_content.filename" type="text" maxlength="64" placeholder="Please Input File Name Pattern">
             </div>
             <div class="w3-col m5">
-                <select class="w3-select w3-border w3-round" v-model="new_content.ostype" style="padding:0px">
+                <select class="w3-select w3-border w3-round" v-model="new_content.pattern" style="padding:0px">
                     <option value="1" selected>From The Beginning</option>
                     <option value="2">From The End</option>
                     <option value="3">Specified Position</option>
@@ -16,20 +16,36 @@
                 </select>
             </div>
         </div>
-        <div class="w3-row w3-section">
+        <div v-if="new_content.pattern === '3'" class="w3-row w3-section">
             <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Received</label>
+                <label class="w3-right">Start</label>
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Received Path">
+            <div class="w3-col m2">
+                <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" placeholder="Start Position">
+            </div>
+            <div class="w3-col m1" style="padding-right:4px;padding-left:10px">
+                <label class="w3-right">End</label>
+            </div>
+            <div class="w3-col m2">
+                <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" placeholder="End Position">
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Target</label>
+            <div class="w3-col m2" style="padding-right:4px">
+                <label class="w3-right">File Type</label>
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Target Path">
+            <div class="w3-col m5" style="padding-right:4px">
+                <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px">
+                    <option value="D" selected>Regular File</option>
+                    <option value="C">Control File</option>
+                </select>
+            </div>
+            <div v-if="new_content.filetype === 'C'" class="w3-col m5">
+                <select class="w3-select w3-border w3-round" v-model="new_content.cfImpClass" style="padding:0px">
+                    <template v-for="(info, index) in cfs">
+                        <option v-if="index % 2 === 0 && cfs[index+1]" :value="cfs[index+1].value">{{ info.value }}</option>
+                    </template>
+                </select>
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -73,9 +89,11 @@ export default {
     data() {
         return {
             inputClassList: {
-                name: ['w3-input','w3-border'],
-                desc: ['w3-input','w3-border'],
-                host: ['w3-input','w3-border'],
+                filename: ['w3-input','w3-border'],
+                startposition: ['w3-input','w3-border'],
+                endposition: ['w3-input','w3-border'],
+
+
                 port: ['w3-input','w3-border'],
                 osname: ['w3-input','w3-border'],
                 encoding: ['w3-input','w3-border'],
@@ -87,44 +105,87 @@ export default {
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                agentuid: this.content.agentuid,
-                agentname: this.content.agentname,
-                description: this.content.description,
-                host: this.content.host,
-                port: this.content.port,
-                maximumjob: this.content.maximumjob,
-                activate: Number(this.content.activate),
-                ostype: this.content.ostype,
-                osname: this.content.osname,
-                deadperiod: this.content.deadperiod,
-                memweight: this.content.memweight,
-                compresstransfer: Number(this.content.compresstransfer),
-                encoding: this.content.encoding,
-                monitortime: this.content.monitortime,
-                cpuweight: this.content.cpuweight
-            }
+                filetrigger: this.content.filetrigger,
+
+
+
+
+
+                filename: this.content.filename,
+                pattern: this.content.pattern,
+                startposition: this.content.startposition,
+                endposition: this.content.endposition,
+                filetype: this.content.filetype,
+                cfImpClass: this.content.cfImpClass,
+
+
+
+
+
+                
+                minfile: this.content.minfile,
+                maxfile: this.content.maxfile,
+                timeout: this.content.timeout,
+                checkduplicate: this.content.checkduplicate,
+                filterduplicate: this.content.filterduplicate,
+                checkrow: this.content.checkrow,
+                bypasszero: this.content.bypasszero,
+                ftpget: this.content.ftpget,
+                ftppostaction: this.content.ftppostaction,
+                
+                txdateformat: this.content.txdateformat,
+                ftpconnectionuid: this.content.ftpconnectionuid,
+                passive: this.content.passive,
+                triggerjobuid: this.content.triggerjobuid,
+                checksumalg: this.content.checksumalg,
+                txdateendpos: this.content.txdateendpos,
+                ftpmovedir: this.content.ftpmovedir,
+                datafilecountmode: this.content.datafilecountmode,
+                checksumfe: this.content.checksumfe,
+                appendUid: this.content.appendUid,
+                ftpremotedir: this.content.ftpremotedir,
+                checksum: this.content.checksum,
+                sftp: this.content.sftp,
+                txdatestartpos: this.content.txdatestartpos,
+                ftpbinary: this.content.ftpbinary
+            },
+            cfs: []
         }
+    },
+    created() {
+        HTTPRepo.get(`disconfig/findByModule`, {params: {
+                module: 'filesource'
+            }})
+            .then(response => {
+                this.cfs = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data && error.response.data.msg) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
     },
     props: {
         content: {
             type: Object,
             default () {
                 return {
-                    agentuid: '',
-                    agentname: '',
-                    description: '',
-                    host: '',
-                    port: '',
-                    maximumjob: 5,
-                    activate: '0',
-                    ostype: 'Linux',
-                    osname: '',
-                    deadperiod: 10,
-                    memweight: 1,
-                    compresstransfer: '0',
-                    encoding: '',
-                    monitortime: 6,
-                    cpuweight: 2
+                    filename: '',
+                    pattern: 1,
+                    startposition: 0,
+                    endposition: 0,
+                    filetype: 'D',
+                    cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler'
                 }
             }
         },
@@ -181,9 +242,6 @@ export default {
 </script>
 <style scoped>
     input, select {
-        height: 20px
-    }
-    select {
         height: 20px
     }
 </style>

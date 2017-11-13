@@ -1,11 +1,11 @@
 <template>
-    <div class="w3-container w3-small" style="overflow:auto;min-height:440px">
+    <div class="w3-container w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:4px 4px 4px 0px">
                 <label class="w3-right">Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.fscategoryname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -21,7 +21,7 @@
                 <div :class="tabsClass[0]">Directory <span class="w3-hide-medium">Asign</span></div>
             </a>
             <a href="javascript:void(0)" @click="openTab(1)">
-                <div :class="tabsClass[1]">File Source</div>
+                <div :class="tabsClass[1]">File Design</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(2)">
                 <div :class="tabsClass[2]">Job Trigger</div>
@@ -31,15 +31,15 @@
             </a>
         </div>
 
-        <div v-if="tabsFlag[0]" class="w3-container">
+        <div v-if="tabsFlag[0]" class="w3-container" style="overflow:auto;max-height:350px">
             <directory-asign-form></directory-asign-form>
         </div>
 
-        <div v-if="tabsFlag[1]" class="w3-container">
-            <filesource-design-form></filesource-design-form>
+        <div v-if="tabsFlag[1]" class="w3-container" style="overflow:auto;max-height:350px">
+            <files-design-form></files-design-form>
         </div>
 
-        <div v-if="tabsFlag[2]" class="w3-container">
+        <div v-if="tabsFlag[2]" class="w3-container" style="overflow:auto;max-height:350px">
             <h2>Tokyo</h2>
             <p>Tokyo is the capital of Japan.</p>
         </div>
@@ -48,7 +48,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import DirectoryAsignForm from './DirectoryAsignForm.vue'
-import FileSourceDesignForm from './FileSourceDesignForm.vue'
+import FileDesignForm from './FileDesignForm.vue'
 
 export default {
     data() {
@@ -67,9 +67,21 @@ export default {
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                fscategoryuid: this.content.fscategoryuid,
-                fscategoryname: this.content.fscategoryname,
-                description: this.content.description
+                filesourceuid: this.content.filesourceuid,
+                filesourcename: this.content.filesourcename,
+                description: this.content.description,
+                directoryAsign: {
+                    rootdir: this.content.rootdir,
+                    receivedir: this.content.receivedir,
+                    targetdir: this.content.targetdir,
+                    completedir: this.content.completedir,
+                    corruptdir: this.content.corruptdir,
+                    duplicatedir: this.content.duplicatedir,
+                    errordir: this.content.errordir
+                },
+                fileDesign: {
+                    
+                }
             }
         }
     },
@@ -81,8 +93,8 @@ export default {
             type: Object,
             default () {
                 return {
-                    fscategoryuid: '',
-                    fscategoryname: '',
+                    filesourceuid: '',
+                    filesourcename: '',
                     description: ''
                 }
             }
@@ -122,7 +134,7 @@ export default {
     },
     components: {
         'directory-asign-form': DirectoryAsignForm,
-        'filesource-design-form': FileSourceDesignForm
+        'files-design-form': FileDesignForm
     }
 }
 </script>

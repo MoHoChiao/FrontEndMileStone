@@ -5,7 +5,7 @@
                 <label class="w3-right">Root</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.name" v-model="new_content.agentname" type="text" maxlength="64" placeholder="Please Input Root Path">
+                <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" placeholder="Please Input Root Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -13,7 +13,7 @@
                 <label class="w3-right">Received</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Received Path">
+                <input :class="inputClassList.receivedir" v-model="new_content.receivedir" type="text" maxlength="128" placeholder="Please Input Received Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -21,7 +21,7 @@
                 <label class="w3-right">Target</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Target Path">
+                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" maxlength="128" placeholder="Please Input Target Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -29,7 +29,7 @@
                 <label class="w3-right">Complete</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Complete Path">
+                <input :class="inputClassList.completedir" v-model="new_content.completedir" type="text" maxlength="128" placeholder="Please Input Complete Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -37,7 +37,7 @@
                 <label class="w3-right">Corrupt</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Corrupt Path">
+                <input :class="inputClassList.corruptdir" v-model="new_content.corruptdir" type="text" maxlength="128" placeholder="Please Input Corrupt Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -45,7 +45,7 @@
                 <label class="w3-right">Duplicate</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Duplicate Path">
+                <input :class="inputClassList.duplicatedir" v-model="new_content.duplicatedir" type="text" maxlength="128" placeholder="Please Input Duplicate Path">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -53,7 +53,7 @@
                 <label class="w3-right">Error</label>
             </div>
             <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Error Path">
+                <input :class="inputClassList.errordir" v-model="new_content.errordir" type="text" maxlength="128" placeholder="Please Input Error Path">
             </div>
         </div>
     </div>
@@ -65,35 +65,26 @@ export default {
     data() {
         return {
             inputClassList: {
-                name: ['w3-input','w3-border'],
-                desc: ['w3-input','w3-border'],
-                host: ['w3-input','w3-border'],
-                port: ['w3-input','w3-border'],
-                osname: ['w3-input','w3-border'],
-                encoding: ['w3-input','w3-border'],
-                cpu: ['w3-input','w3-border'],
-                mem: ['w3-input','w3-border']
+                rootdir: ['w3-input','w3-border'],
+                receivedir: ['w3-input','w3-border'],
+                targetdir: ['w3-input','w3-border'],
+                completedir: ['w3-input','w3-border'],
+                corruptdir: ['w3-input','w3-border'],
+                duplicatedir: ['w3-input','w3-border'],
+                errordir: ['w3-input','w3-border']
             },
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                agentuid: this.content.agentuid,
-                agentname: this.content.agentname,
-                description: this.content.description,
-                host: this.content.host,
-                port: this.content.port,
-                maximumjob: this.content.maximumjob,
-                activate: Number(this.content.activate),
-                ostype: this.content.ostype,
-                osname: this.content.osname,
-                deadperiod: this.content.deadperiod,
-                memweight: this.content.memweight,
-                compresstransfer: Number(this.content.compresstransfer),
-                encoding: this.content.encoding,
-                monitortime: this.content.monitortime,
-                cpuweight: this.content.cpuweight
+                rootdir: this.content.rootdir,
+                receivedir: this.content.receivedir,
+                targetdir: this.content.targetdir,
+                completedir: this.content.completedir,
+                corruptdir: this.content.corruptdir,
+                duplicatedir: this.content.duplicatedir,
+                errordir: this.content.errordir
             }
         }
     },
@@ -102,21 +93,13 @@ export default {
             type: Object,
             default () {
                 return {
-                    agentuid: '',
-                    agentname: '',
-                    description: '',
-                    host: '',
-                    port: '',
-                    maximumjob: 5,
-                    activate: '0',
-                    ostype: 'Linux',
-                    osname: '',
-                    deadperiod: 10,
-                    memweight: 1,
-                    compresstransfer: '0',
-                    encoding: '',
-                    monitortime: 6,
-                    cpuweight: 2
+                    rootdir: '',
+                    receivedir: '',
+                    targetdir: '',
+                    completedir: '',
+                    corruptdir: '',
+                    duplicatedir: '',
+                    errordir: ''
                 }
             }
         },
