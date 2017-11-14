@@ -1,59 +1,44 @@
 <template>
     <div class="w3-small w3-panel w3-card">
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Root</label>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m2">&nbsp;</div>
+            <div class="w3-col m4">
+                <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" placeholder="Root Path">
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" placeholder="Please Input Root Path">
+                <input class="w3-check" v-model="new_content.isApplyRoot" type="checkbox">
+                <label>Apply Root Path</label>
+            </div>
+            <div class="w3-col m2">&nbsp;</div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Received Directory</label>
+                <input :class="inputClassList.receivedir" v-model="new_content.receivedir" type="text" maxlength="128" placeholder="Please Input Received Path" required>
+            </div>
+            <div class="w3-col m6">
+                <label>Corrupt Directory</label>
+                <input :class="inputClassList.corruptdir" v-model="new_content.corruptdir" type="text" maxlength="128" placeholder="Please Input Corrupt Path" required>
             </div>
         </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Received</label>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Target Directory</label>
+                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" maxlength="128" placeholder="Please Input Target Path" required>
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.receivedir" v-model="new_content.receivedir" type="text" maxlength="128" placeholder="Please Input Received Path">
-            </div>
-        </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Target</label>
-            </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" maxlength="128" placeholder="Please Input Target Path">
+            <div class="w3-col m6">
+                <label>Duplicate Directory</label>
+                <input :class="inputClassList.duplicatedir" v-model="new_content.duplicatedir" type="text" maxlength="128" placeholder="Please Input Duplicate Path" required>
             </div>
         </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Complete</label>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Complete Directory</label>
+                <input :class="inputClassList.completedir" v-model="new_content.completedir" type="text" maxlength="128" placeholder="Please Input Complete Path" required>
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.completedir" v-model="new_content.completedir" type="text" maxlength="128" placeholder="Please Input Complete Path">
-            </div>
-        </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Corrupt</label>
-            </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.corruptdir" v-model="new_content.corruptdir" type="text" maxlength="128" placeholder="Please Input Corrupt Path">
-            </div>
-        </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Duplicate</label>
-            </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.duplicatedir" v-model="new_content.duplicatedir" type="text" maxlength="128" placeholder="Please Input Duplicate Path">
-            </div>
-        </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Error</label>
-            </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.errordir" v-model="new_content.errordir" type="text" maxlength="128" placeholder="Please Input Error Path">
+            <div class="w3-col m6">
+                <label>Error Directory</label>
+                <input :class="inputClassList.errordir" v-model="new_content.errordir" type="text" maxlength="128" placeholder="Please Input Error Path" required>
             </div>
         </div>
     </div>
@@ -65,7 +50,7 @@ export default {
     data() {
         return {
             inputClassList: {
-                rootdir: ['w3-input','w3-border'],
+                rootdir: ['w3-input'],
                 receivedir: ['w3-input','w3-border'],
                 targetdir: ['w3-input','w3-border'],
                 completedir: ['w3-input','w3-border'],
@@ -85,7 +70,8 @@ export default {
                 corruptdir: this.content.corruptdir,
                 duplicatedir: this.content.duplicatedir,
                 errordir: this.content.errordir
-            }
+            },
+            isApplyRoot: false
         }
     },
     props: {
@@ -156,6 +142,9 @@ export default {
 </script>
 <style scoped>
     input {
+        height: 30px
+    }
+    input.w3-check {
         height: 20px
     }
 </style>

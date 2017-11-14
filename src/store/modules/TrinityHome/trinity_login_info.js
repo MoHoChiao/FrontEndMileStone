@@ -35,7 +35,7 @@ const actions = {
                 commit(types.Gen_Login_Token, response.data);
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -56,7 +56,7 @@ const actions = {
                 commit(types.Reomve_Login_Token, response.data);
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -88,7 +88,7 @@ const actions = {
                 commit(types.Check_Login_Token, response.data);
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -114,7 +114,7 @@ const actions = {
                 commit(common_types.Set_System_Status, newStatus);
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

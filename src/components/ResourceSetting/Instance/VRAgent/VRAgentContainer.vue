@@ -81,7 +81,7 @@
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
         <li class="w3-bar w3-border-camo-black" v-for="(content, index) in allVRAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.virtualagentname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
@@ -89,11 +89,11 @@
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <button type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i>
-                    <span class="w3-hide-medium"> Delete</span>
+                    <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
-                    <span class="w3-hide-medium"> Edit</span>
+                    <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
             </div>
             <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
@@ -187,7 +187,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
 
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -236,7 +236,7 @@ export default {
                 this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

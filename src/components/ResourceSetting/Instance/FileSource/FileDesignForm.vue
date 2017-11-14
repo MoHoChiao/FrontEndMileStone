@@ -1,14 +1,19 @@
 <template>
     <div class="w3-small w3-panel w3-card">
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding-right:4px">
-                <label class="w3-right"><span class="w3-hide-medium">File Name </span><span>Pattern</span></label>
+            <div class="w3-col m12">
+                <label>Pattern And Type</label>
+                <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
-            <div class="w3-col m5" style="padding-right:4px">
-                <input :class="inputClassList.filename" v-model="new_content.filename" type="text" maxlength="64" placeholder="Please Input File Name Pattern">
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>File Name Pattern</label>
+                <input :class="inputClassList.filename" v-model="new_content.filename" type="text" maxlength="64" placeholder="Please Input File Name Pattern" required>
             </div>
-            <div class="w3-col m5">
-                <select class="w3-select w3-border w3-round" v-model="new_content.pattern" style="padding:0px">
+            <div class="w3-col m6">
+                <label>Pattern Rule</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.pattern" style="padding:0px" required>
                     <option value="1" selected>From The Beginning</option>
                     <option value="2">From The End</option>
                     <option value="3">Specified Position</option>
@@ -16,32 +21,36 @@
                 </select>
             </div>
         </div>
-        <div v-if="new_content.pattern === '3'" class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Start</label>
+        <div v-if="new_content.pattern === '3'" class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Start Position</label>
+                <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" placeholder="Start Position" required>
             </div>
-            <div class="w3-col m2">
-                <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" placeholder="Start Position">
-            </div>
-            <div class="w3-col m1" style="padding-right:4px;padding-left:10px">
-                <label class="w3-right">End</label>
-            </div>
-            <div class="w3-col m2">
-                <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" placeholder="End Position">
+            <div class="w3-col m6">
+                <label>End Position</label>
+                <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" placeholder="End Position" required>
             </div>
         </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding-right:4px">
-                <label class="w3-right">File Type</label>
-            </div>
-            <div class="w3-col m5" style="padding-right:4px">
-                <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px">
+        <div v-if="new_content.filetype === 'D'" class="w3-row-padding w3-section">
+            <div class="w3-col m12">
+                <label>File Type</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px" required>
                     <option value="D" selected>Regular File</option>
                     <option value="C">Control File</option>
                 </select>
             </div>
-            <div v-if="new_content.filetype === 'C'" class="w3-col m5">
-                <select class="w3-select w3-border w3-round" v-model="new_content.cfImpClass" style="padding:0px">
+        </div>
+        <div v-else class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>File Type</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px" required>
+                    <option value="D" selected>Regular File</option>
+                    <option value="C">Control File</option>
+                </select>
+            </div>
+            <div class="w3-col m6">
+                <label>Implementation Class</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.cfImpClass" style="padding:0px" required>
                     <template v-for="(info, index) in cfs">
                         <option v-if="index % 2 === 0 && cfs[index+1]" :value="cfs[index+1].value">{{ info.value }}</option>
                     </template>
@@ -49,35 +58,104 @@
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Complete</label>
+            <div class="w3-col m12">
+                <label>Check Mode</label>
+                <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Complete Path">
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <input class="w3-check" v-model="new_content.checkduplicate" type="checkbox">
+                <label>Check Duplication</label>
+            </div>
+            <div class="w3-col m6">
+                <input class="w3-check" v-model="new_content.checksum" type="checkbox">
+                <label>Check Sum</label>
+            </div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div v-if="new_content.checkduplicate && new_content.filetype === 'C'" class="w3-col m6">
+                <label>Filter Rule</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.filterduplicate" style="padding:0px" required>
+                    <option value="1" selected>Filter Out Duplication</option>
+                    <option value="2">Filter Out All</option>
+                </select>
+            </div>
+            <div v-if="new_content.checksum" class="w3-col m3">
+                <label><span class="w3-hide-medium w3-hide-small">Check Sum </span>File Extension</label>
+                <input :class="inputClassList.checksumfe" v-model="new_content.checksumfe" type="text" placeholder="Check Sum File Extension" required>
+            </div>
+            <div v-if="new_content.checksum" class="w3-col m3">
+                <label>Algorithm</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.checksumalg" style="padding:0px" required>
+                    <option value="M" selected>MD5</option>
+                    <option value="S">SHA1</option>
+                </select>
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Corrupt</label>
+            <div class="w3-col m12">
+                <label>File Setting</label>
+                <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Corrupt Path">
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Min Amount of Files</label>
+                <input :class="inputClassList.minfile" v-model="new_content.minfile" type="number" required>
+            </div>
+            <div class="w3-col m6">
+                <label>Max Amount of Files</label>
+                <input :class="inputClassList.maxfile" v-model="new_content.maxfile" type="number" required>
+            </div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>Timeout (In Minutes)</label>
+                <input :class="inputClassList.timeout" v-model="new_content.timeout" type="number" required>
+            </div>
+            <div v-if="new_content.filetype === 'C'" class="w3-col m6">
+                <label>Control File Amount Mode</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.datafilecountmode" style="padding:0px">
+                    <option value="R" selected>Data File</option>
+                    <option value="C">Control File</option>
+                </select>
+            </div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m5">
+                <input class="w3-check" v-model="new_content.bypasszero" type="checkbox">
+                <label>Success If No File</label>
+            </div>
+            <div class="w3-col m7">
+                <input class="w3-check" v-model="new_content.appendUid" type="checkbox">
+                <label>Append Task Uid in File(s) Name</label>
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Duplicate</label>
-            </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Duplicate Path">
+            <div class="w3-col m12">
+                <label>FTP Setting</label>
+                <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
         </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m3" style="padding-right:4px">
-                <label class="w3-right">Error</label>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <input class="w3-check" v-model="new_content.ftpget" type="checkbox">
+                <label>FTP Get</label>
             </div>
-            <div class="w3-col m8">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="128" placeholder="Please Input Error Path">
+            <div v-if="new_content.ftpget" class="w3-col m6">
+                <input class="w3-check" v-model="new_content.sftp" type="checkbox">
+                <label>SFTP</label>
+            </div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div v-if="new_content.ftpget && !new_content.sftp" class="w3-col m6">
+                <input class="w3-check" v-model="new_content.ftpbinary" type="checkbox">
+                <label>FTP Binary Mode</label>
+            </div>
+            <div v-if="new_content.ftpget && !new_content.sftp" class="w3-col m6">
+                <input class="w3-check" v-model="new_content.passive" type="checkbox">
+                <label>Passive</label>
             </div>
         </div>
     </div>
@@ -92,12 +170,15 @@ export default {
                 filename: ['w3-input','w3-border'],
                 startposition: ['w3-input','w3-border'],
                 endposition: ['w3-input','w3-border'],
+                checksumfe: ['w3-input','w3-border'],
+                minfile: ['w3-input','w3-border'],
+                maxfile: ['w3-input','w3-border'],
+                timeout: ['w3-input','w3-border'],
 
 
-                port: ['w3-input','w3-border'],
-                osname: ['w3-input','w3-border'],
-                encoding: ['w3-input','w3-border'],
-                cpu: ['w3-input','w3-border'],
+                
+                
+                
                 mem: ['w3-input','w3-border']
             },
             new_content: {
@@ -117,37 +198,37 @@ export default {
                 endposition: this.content.endposition,
                 filetype: this.content.filetype,
                 cfImpClass: this.content.cfImpClass,
-
-
-
-
-
-                
+                datafilecountmode: this.content.datafilecountmode,
+                checkduplicate: this.content.checkduplicate,
+                filterduplicate: this.content.filterduplicate,
+                checksum: this.content.checksum,
+                checksumalg: this.content.checksumalg,
+                checksumfe: this.content.checksumfe,
                 minfile: this.content.minfile,
                 maxfile: this.content.maxfile,
                 timeout: this.content.timeout,
-                checkduplicate: this.content.checkduplicate,
-                filterduplicate: this.content.filterduplicate,
-                checkrow: this.content.checkrow,
                 bypasszero: this.content.bypasszero,
+                appendUid: this.content.appendUid,
                 ftpget: this.content.ftpget,
-                ftppostaction: this.content.ftppostaction,
+                sftp: this.content.sftp,
+                ftpbinary: this.content.ftpbinary,
+                passive: this.content.passive,
+
+
                 
+                
+                
+                
+                checkrow: this.content.checkrow,
+                ftppostaction: this.content.ftppostaction,
                 txdateformat: this.content.txdateformat,
                 ftpconnectionuid: this.content.ftpconnectionuid,
-                passive: this.content.passive,
                 triggerjobuid: this.content.triggerjobuid,
-                checksumalg: this.content.checksumalg,
                 txdateendpos: this.content.txdateendpos,
                 ftpmovedir: this.content.ftpmovedir,
-                datafilecountmode: this.content.datafilecountmode,
-                checksumfe: this.content.checksumfe,
-                appendUid: this.content.appendUid,
                 ftpremotedir: this.content.ftpremotedir,
-                checksum: this.content.checksum,
-                sftp: this.content.sftp,
                 txdatestartpos: this.content.txdatestartpos,
-                ftpbinary: this.content.ftpbinary
+                
             },
             cfs: []
         }
@@ -160,7 +241,7 @@ export default {
                 this.cfs = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -185,7 +266,22 @@ export default {
                     startposition: 0,
                     endposition: 0,
                     filetype: 'D',
-                    cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler'
+                    cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler',
+                    datafilecountmode: 'R',
+                    checkduplicate: 0,
+                    filterduplicate: 1,
+                    checksum: 0,
+                    checksumalg: 'M',
+                    checksumfe: '.checksum',
+                    minfile: 1,
+                    maxfile: 5,
+                    timeout: 3,
+                    bypasszero: 0,
+                    appendUid: 0,
+                    ftpget: 0,
+                    sftp: 0,
+                    ftpbinary: 0,
+                    passive: 0
                 }
             }
         },
@@ -241,7 +337,10 @@ export default {
 }
 </script>
 <style scoped>
-    input, select {
+    input,select {
+        height: 30px
+    }
+    input.w3-check {
         height: 20px
     }
 </style>

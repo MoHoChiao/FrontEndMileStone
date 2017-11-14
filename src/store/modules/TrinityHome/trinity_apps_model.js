@@ -23,7 +23,7 @@ const actions = {
                 commit(types.Fetch_Trinity_APPS, response.data);
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

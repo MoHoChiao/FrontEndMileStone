@@ -222,7 +222,7 @@ export default {
                 categoryContainer.scrollTop = -categoryContainer.scrollHeight
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -287,7 +287,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
                 
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -385,7 +385,7 @@ export default {
                 this.getFileSources()   //refresh file sources content
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -412,7 +412,7 @@ export default {
                 this.closeDeleteWindow()
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"

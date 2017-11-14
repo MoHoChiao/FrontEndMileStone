@@ -1,7 +1,7 @@
 <template>
     <div class="w3-container w3-small">
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:4px 4px 4px 0px">
+            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right">Name</label>
             </div>
             <div class="w3-col m6">
@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:4px 4px 4px 0px">
+            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
@@ -18,7 +18,7 @@
         </div>
         <div class="w3-row">
             <a href="javascript:void(0)" @click="openTab(0)">
-                <div :class="tabsClass[0]">Directory <span class="w3-hide-medium">Asign</span></div>
+                <div :class="tabsClass[0]">Directory <span class="w3-hide-medium w3-hide-small">Asign</span></div>
             </a>
             <a href="javascript:void(0)" @click="openTab(1)">
                 <div :class="tabsClass[1]">File Design</div>
@@ -27,19 +27,19 @@
                 <div :class="tabsClass[2]">Job Trigger</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(3)">
-                <div :class="tabsClass[3]">FTP <span class="w3-hide-medium">Setting</span></div>
+                <div :class="tabsClass[3]">FTP <span class="w3-hide-medium w3-hide-small">Setting</span></div>
             </a>
         </div>
 
-        <div v-if="tabsFlag[0]" class="w3-container" style="overflow:auto;max-height:350px">
+        <div v-show="tabsFlag[0]" class="w3-container" style="overflow:auto;max-height:300px;min-height:300px">
             <directory-asign-form></directory-asign-form>
         </div>
 
-        <div v-if="tabsFlag[1]" class="w3-container" style="overflow:auto;max-height:350px">
+        <div v-show="tabsFlag[1]" class="w3-container" style="overflow:auto;max-height:300px;min-height:300px">
             <files-design-form></files-design-form>
         </div>
 
-        <div v-if="tabsFlag[2]" class="w3-container" style="overflow:auto;max-height:350px">
+        <div v-show="tabsFlag[2]" class="w3-container" style="overflow:auto;max-height:300px;min-height:300px">
             <h2>Tokyo</h2>
             <p>Tokyo is the capital of Japan.</p>
         </div>
@@ -140,6 +140,6 @@ export default {
 </script>
 <style scoped>
     input {
-        height: 25px
+        height: 30px
     }
 </style>

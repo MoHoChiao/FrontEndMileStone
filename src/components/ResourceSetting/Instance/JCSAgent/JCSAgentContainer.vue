@@ -40,7 +40,7 @@
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4 w3-hide-medium" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
+                <span class="w3-tag w3-small w3-theme-l4 w3-hide-medium w3-hide-small" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <hr class="w3-border-black w3-clear">
                 <p class="w3-small">{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeAddWindowStatus(content)">
@@ -56,7 +56,7 @@
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
         <li class="w3-bar w3-border-camo-black" v-for="(content, index) in allJCSAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.agentname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
@@ -166,7 +166,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
 
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
@@ -215,7 +215,7 @@ export default {
                 this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
-                if (error.response && error.response.data && error.response.data.msg) {
+                if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
                         "status": "Error"
