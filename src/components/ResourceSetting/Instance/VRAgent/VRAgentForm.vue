@@ -114,7 +114,7 @@ export default {
             jcsAgentUids: null //Array for keeping the selected jcsagent uids
         }
     },
-    created() {
+    mounted() {
         //Initial Clone AgentList
         this.cloneAgentList()
 

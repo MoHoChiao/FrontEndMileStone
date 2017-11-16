@@ -148,14 +148,32 @@
                 <label>SFTP</label>
             </div>
         </div>
-        <div class="w3-row-padding w3-section">
-            <div v-if="new_content.ftpget && !new_content.sftp" class="w3-col m6">
+        <div v-if="new_content.ftpget && !new_content.sftp" class="w3-row-padding w3-section">
+            <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.ftpbinary" type="checkbox">
                 <label>FTP Binary Mode</label>
             </div>
-            <div v-if="new_content.ftpget && !new_content.sftp" class="w3-col m6">
+            <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.passive" type="checkbox">
                 <label>Passive</label>
+            </div>
+        </div>
+        <div v-if="new_content.ftpget" class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>FTP Connection</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.ftpconnectionuid" style="padding:0px" required>
+                    <template v-for="(info, index) in ftpConns">
+                        <option :value="info.connectionuid">{{ info.connectionname }}</option>
+                    </template>
+                </select>
+            </div>
+            <div class="w3-col m6">
+                <label>Post FTP Action</label>
+                <select class="w3-select w3-border w3-round" v-model="new_content.ftppostaction" style="padding:0px">
+                    <option value="0" selected>Do Nothing</option>
+                    <option value="1">Move File To Another Directory</option>
+                    <option value="2">Delete File</option>
+                </select>
             </div>
         </div>
     </div>
@@ -213,16 +231,14 @@ export default {
                 sftp: this.content.sftp,
                 ftpbinary: this.content.ftpbinary,
                 passive: this.content.passive,
-
-
+                ftpconnectionuid: this.content.ftpconnectionuid,
+                ftppostaction: this.content.ftppostaction,
                 
                 
                 
                 
                 checkrow: this.content.checkrow,
-                ftppostaction: this.content.ftppostaction,
                 txdateformat: this.content.txdateformat,
-                ftpconnectionuid: this.content.ftpconnectionuid,
                 triggerjobuid: this.content.triggerjobuid,
                 txdateendpos: this.content.txdateendpos,
                 ftpmovedir: this.content.ftpmovedir,
@@ -230,15 +246,50 @@ export default {
                 txdatestartpos: this.content.txdatestartpos,
                 
             },
-            cfs: []
+            cfs: [],    //store all Implementation Class and display name
+            ftpConns: []
         }
     },
-    created() {
+    mounted() {
+        //Fetch cfs objs is above
         HTTPRepo.get(`disconfig/findByModule`, {params: {
                 module: 'filesource'
             }})
             .then(response => {
                 this.cfs = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        
+        //Fetch ftp connection objs is above
+        let params = {
+            "ordering":{
+                "orderType":"ASC",
+                "orderField":"connectionname"
+            },
+            "querying":{
+                "queryType":'equals',
+                "queryField":'connectiontype',
+                "queryString":'F',
+                "ignoreCase":true
+            }
+        }
+        HTTPRepo.post(`connection/findByFilter`, params)
+            .then(response => {
+                this.ftpConns = response.data
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -262,14 +313,14 @@ export default {
             default () {
                 return {
                     filename: '',
-                    pattern: 1,
+                    pattern: '1',
                     startposition: 0,
                     endposition: 0,
                     filetype: 'D',
                     cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler',
                     datafilecountmode: 'R',
                     checkduplicate: 0,
-                    filterduplicate: 1,
+                    filterduplicate: '1',
                     checksum: 0,
                     checksumalg: 'M',
                     checksumfe: '.checksum',
@@ -281,7 +332,9 @@ export default {
                     ftpget: 0,
                     sftp: 0,
                     ftpbinary: 0,
-                    passive: 0
+                    passive: 0,
+                    ftpconnectionuid: '',
+                    ftppostaction: '0'
                 }
             }
         },
