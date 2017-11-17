@@ -40,8 +40,7 @@
         </div>
 
         <div v-show="tabsFlag[2]" class="w3-container" style="overflow:auto;max-height:300px;min-height:300px">
-            <h2>Tokyo</h2>
-            <p>Tokyo is the capital of Japan.</p>
+            <job-trigger-form></job-trigger-form>
         </div>
     </div>
 </template>
@@ -49,6 +48,7 @@
 import { HTTPRepo } from '../../../../axios/http-common'
 import DirectoryAsignForm from './DirectoryAsignForm.vue'
 import FileDesignForm from './FileDesignForm.vue'
+import JobTriggerForm from './JobTriggerForm.vue'
 
 export default {
     data() {
@@ -134,7 +134,8 @@ export default {
     },
     components: {
         'directory-asign-form': DirectoryAsignForm,
-        'files-design-form': FileDesignForm
+        'files-design-form': FileDesignForm,
+        'job-trigger-form': JobTriggerForm
     }
 }
 </script>

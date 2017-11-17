@@ -158,7 +158,7 @@
                 <label>Passive</label>
             </div>
         </div>
-        <div v-if="new_content.ftpget" class="w3-row-padding w3-section">
+        <div v-if="new_content.ftpget" class="w3-row-padding w3-section" style="padding-top:10px">
             <div class="w3-col m6">
                 <label>FTP Connection</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.ftpconnectionuid" style="padding:0px" required>
@@ -174,6 +174,16 @@
                     <option value="1">Move File To Another Directory</option>
                     <option value="2">Delete File</option>
                 </select>
+            </div>
+        </div>
+        <div v-if="new_content.ftpget" class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <label>FTP Remote Directory</label>
+                <input :class="inputClassList.ftpremotedir" v-model="new_content.ftpremotedir" type="text" required>
+            </div>
+            <div v-if="new_content.ftppostaction === '1'" class="w3-col m6">
+                <label>FTP Move Directory</label>
+                <input :class="inputClassList.ftpmovedir" v-model="new_content.ftpmovedir" type="text" required>
             </div>
         </div>
     </div>
@@ -192,24 +202,14 @@ export default {
                 minfile: ['w3-input','w3-border'],
                 maxfile: ['w3-input','w3-border'],
                 timeout: ['w3-input','w3-border'],
-
-
-                
-                
-                
-                mem: ['w3-input','w3-border']
+                ftpremotedir: ['w3-input','w3-border'],
+                ftpmovedir: ['w3-input','w3-border']
             },
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                filetrigger: this.content.filetrigger,
-
-
-
-
-
                 filename: this.content.filename,
                 pattern: this.content.pattern,
                 startposition: this.content.startposition,
@@ -233,18 +233,9 @@ export default {
                 passive: this.content.passive,
                 ftpconnectionuid: this.content.ftpconnectionuid,
                 ftppostaction: this.content.ftppostaction,
-                
-                
-                
-                
-                checkrow: this.content.checkrow,
-                txdateformat: this.content.txdateformat,
-                triggerjobuid: this.content.triggerjobuid,
-                txdateendpos: this.content.txdateendpos,
-                ftpmovedir: this.content.ftpmovedir,
                 ftpremotedir: this.content.ftpremotedir,
-                txdatestartpos: this.content.txdatestartpos,
-                
+                ftpmovedir: this.content.ftpmovedir,
+                checkrow: this.content.checkrow    //此值不知道作用, 似乎永遠都是0
             },
             cfs: [],    //store all Implementation Class and display name
             ftpConns: []
@@ -334,7 +325,10 @@ export default {
                     ftpbinary: 0,
                     passive: 0,
                     ftpconnectionuid: '',
-                    ftppostaction: '0'
+                    ftppostaction: '0',
+                    ftpremotedir: '',
+                    ftpmovedir: '',
+                    checkrow: 0
                 }
             }
         },
