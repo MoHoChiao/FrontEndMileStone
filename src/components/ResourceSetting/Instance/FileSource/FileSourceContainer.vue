@@ -14,6 +14,7 @@
                     @closeAdd="saveFileSourceWindowContentForAdd" 
                      @closeEdit="saveFileSourceWindowContentForEdit" 
                     :content="selectedFileSourceRecord" 
+                    :urlOp="addORedit" 
   ></file-source-edit-window>
   <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
@@ -109,7 +110,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="w3-responsive w3-card w3-round" style="min-height:700px">
+                <div id="filesourceContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
                     <table id="filesourceTable" class="w3-table-all w3-small">
                         <tr :id="content.filesourceuid" :key="content.filesourceuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnFileSource(content.filesourceuid, index)" v-for="(content, index) in allFileSourceObjs">
                             <td class="w3-center" width="32%">
@@ -213,6 +214,7 @@ export default {
                 this.allCategoryObjs = response.data
 
                 this.clearSelectedCategoryRecord()
+                this.clearSelectedFileSourceRecord()
                 this.getFileSources()   //refresh file sources content
                 
                 /*
@@ -274,6 +276,7 @@ export default {
                     this.allFileSourceObjs = response.data
                     this.$refs.filter.totalPages = 1
                 }
+                this.clearSelectedFileSourceRecord()
             })
             .catch(error => {
                 if(e){
@@ -317,16 +320,17 @@ export default {
             }
         },
         changeFileSourceWindowStatusForAdd(){
-            this.selectedFileSourceRecord = new Object()  //reset empty data to add window
+            this.addORedit = 'add'
             this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
         },
         changeFileSourceWindowStatusForEdit(){
             if(this.selectedFileSourceRecord && this.selectedFileSourceRecord.filesourceuid && this.selectedFileSourceRecord.filesourceuid !== ''){
+                this.addORedit = 'edit'
                 this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
             }
         },
         saveCategoryWindowContentForAdd(new_content){
-            if(new_content){    //new_content !== undefined, it means from Edit Window Save Click
+            if(new_content){    //new_content !== undefined, it means from File Source Category Window Save Click
                 this.allCategoryObjs.unshift(new_content) //add object to the top of array
                 this.clearSelectedCategoryRecord()
                 this.getFileSources()   //refresh file sources content
@@ -340,7 +344,7 @@ export default {
             this.editCategoryWindowAlive = !this.editCategoryWindowAlive
         },
         saveCategoryWindowContentForEdit(new_content){
-            if(new_content && this.selectedCategoryRecord && (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0)){    //new_content !== undefined, it means from Edit Window Save Click
+            if(new_content && this.selectedCategoryRecord && (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0)){    //new_content !== undefined, it means from File Source Category Window Save Click
                 new_content.index = this.selectedCategoryRecord.index   //asign old index prop to new content
                 this.allCategoryObjs[this.selectedCategoryRecord.index] = new_content   //replace object to the array
                 this.selectedCategoryRecord = new_content
@@ -348,14 +352,20 @@ export default {
             this.editCategoryWindowAlive = !this.editCategoryWindowAlive
         },
         saveFileSourceWindowContentForAdd(new_content){
-            if(new_content){    //new_content !== undefined, it means from Edit Window Save Click
+            if(new_content){    //new_content !== undefined, it means from File Source Window Save Click
                 this.allFileSourceObjs.unshift(new_content) //add object to the top of array
                 this.clearSelectedFileSourceRecord()
+
+                /*
+                 * if add category record success, scroll to top
+                */
+                let filesourceContainer = this.$el.querySelector("#filesourceContainer")
+                filesourceContainer.scrollTop = -filesourceContainer.scrollHeight
             }
             this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
         },
         saveFileSourceWindowContentForEdit(new_content){
-            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){    //new_content !== undefined, it means from Edit Window Save Click
+            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){    //new_content !== undefined, it means from File Source Window Save Click
                 new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
                 this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
                 this.selectedFileSourceRecord = new_content

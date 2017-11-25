@@ -2,7 +2,7 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.virtualagentname" type="text" maxlength="32" placeholder="Please Input Name">
@@ -22,7 +22,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Max Jobs</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Max Jobs</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.maxjobs" v-model="new_content.maximumjob" type="number" placeholder="Please Input 1~2048">
@@ -202,10 +202,10 @@ export default {
             this.clearInValid()
 
             if(this.new_content.virtualagentname.trim().length <= 0){
-                this.inputClassList.name.splice(2, 1, 'w3-text-red')
+                this.inputClassList.name.splice(2, 1, 'w3-red')
             }else if(this.new_content.maximumjob.toString().trim() === '' || isNaN(this.new_content.maximumjob) || 
                         (this.new_content.maximumjob <1 || this.new_content.maximumjob >2048)){
-                this.inputClassList.maxjobs.splice(2, 1, 'w3-text-red')
+                this.inputClassList.maxjobs.splice(2, 1, 'w3-red')
             }else{
                 this.new_content.activate = Number(this.new_content.activate)
                 

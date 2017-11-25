@@ -1,6 +1,7 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <file-source-form slot="content" ref="fileSourceForm" :content="content"></file-source-form>
+        <file-source-form v-if="this.urlOp === 'add'" slot="content" ref="fileSourceForm"></file-source-form>
+        <file-source-form v-else slot="content" ref="fileSourceForm" :content="content"></file-source-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -30,11 +31,53 @@ export default {
             type: Object,
             default () {
                 return {
-                    fscategoryuid: '',
-                    fscategoryname: '',
-                    description: ''
+                    filesourceuid: '',
+                    filesourcename: '',
+                    description: '',
+                    rootdir: '',
+                    receivedir: '',
+                    targetdir: '',
+                    completedir: '',
+                    corruptdir: '',
+                    duplicatedir: '',
+                    errordir: '',
+                    filename: '',
+                    pattern: '1',
+                    startposition: 0,
+                    endposition: 0,
+                    filetype: 'D',
+                    cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler',
+                    datafilecountmode: 'R',
+                    checkduplicate: 0,
+                    filterduplicate: '1',
+                    checksum: 0,
+                    checksumalg: 'M',
+                    checksumfe: '.checksum',
+                    minfile: 1,
+                    maxfile: 5,
+                    timeout: 3,
+                    bypasszero: 0,
+                    appendUid: 0,
+                    ftpget: 0,
+                    sftp: 0,
+                    ftpbinary: 0,
+                    passive: 0,
+                    ftpconnectionuid: '',
+                    ftppostaction: '0',
+                    ftpremotedir: '',
+                    ftpmovedir: '',
+                    checkrow: 0,
+                    filetrigger: 0,
+                    triggerjobuid: '',
+                    txdateformat: '',
+                    txdatestartpos: 0,
+                    txdateendpos: 0
                 }
             }
+        },
+        urlOp: {
+            type: String,
+            default: 'add'
         }
     },
     methods: {
@@ -43,13 +86,13 @@ export default {
         },
         save(){
             let urlOp = 'add'
-            if(this.content.fscategoryuid && this.content.fscategoryuid !== '')
+            if(this.content.filesourceuid && this.content.filesourceuid !== '')
                 urlOp = 'edit'
 
-            let postContent = this.$refs.fileSourceCategoryForm.save()
+            let postContent = this.$refs.fileSourceForm.save()
             
             if(postContent){
-                HTTPRepo.post(`file-source-category/` + urlOp, postContent)
+                HTTPRepo.post(`file-source/` + urlOp, postContent)
                 .then(response => {
                     if(urlOp === 'add') //add operation
                         this.$emit('closeAdd', response.data)
@@ -74,7 +117,7 @@ export default {
             }
         },
         reset(){
-            this.$refs.fileSourceCategoryForm.reset()
+            this.$refs.fileSourceForm.reset()
         }
     },
     components: {

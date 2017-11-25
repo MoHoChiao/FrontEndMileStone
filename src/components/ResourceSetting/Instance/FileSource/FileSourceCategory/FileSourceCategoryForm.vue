@@ -2,7 +2,7 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.fscategoryname" type="text" maxlength="32" placeholder="Please Input Name">
@@ -56,7 +56,7 @@ export default {
             this.clearInValid()
             
             if(this.new_content.fscategoryname === undefined || this.new_content.fscategoryname.trim().length <= 0){
-                this.inputClassList.name.splice(2, 1, 'w3-text-red')
+                this.inputClassList.name.splice(2, 1, 'w3-red')
             }else{
                 return this.new_content
             }                

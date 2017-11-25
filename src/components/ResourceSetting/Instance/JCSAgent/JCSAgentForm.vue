@@ -2,7 +2,7 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.agentname" type="text" maxlength="32" placeholder="Please Input Agent Name">
@@ -26,7 +26,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">OS Type</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>OS Type</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.ostype" style="padding:7px">
@@ -45,13 +45,13 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Host</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Host</label>
             </div>
             <div class="w3-col m4">
                 <input :class="inputClassList.host" v-model="new_content.host" type="text" maxlength="30" placeholder="Please Input Host">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Port</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Port</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.port" v-model="new_content.port" type="number" placeholder="Please Input Port">
@@ -59,7 +59,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Max Jobs</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Max Jobs</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.maximumjob" style="padding:7px">
@@ -78,7 +78,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Dead Period</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Dead Period</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.deadperiod" style="padding:7px">
@@ -89,7 +89,7 @@
                 </select>
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Monitor Period</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Monitor Period</label>
             </div>
             <div class="w3-col m3">
                 <select class="w3-select w3-border w3-round" v-model="new_content.monitortime" style="padding:7px">
@@ -102,13 +102,13 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">CPU Weight</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>CPU Weight</label>
             </div>
             <div class="w3-col m4">
                 <input :class="inputClassList.cpu" v-model="new_content.cpuweight" type="number" placeholder="Please Cpu Weight">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">MEM Weight</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>MEM Weight</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.mem" v-model="new_content.memweight" type="number" placeholder="Please Memory Weight">
@@ -185,15 +185,18 @@ export default {
             this.clearInValid()
 
             if(this.new_content.agentname.trim().length <= 0){
-                this.inputClassList.name.splice(2, 1, 'w3-text-red')
+                this.inputClassList.name.splice(2, 1, 'w3-red')
             }else if(this.new_content.host.trim().length <= 0){
-                this.inputClassList.host.splice(2, 1, 'w3-text-red')
-            }else if(this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port)){
-                this.inputClassList.port.splice(2, 1, 'w3-text-red')
-            }else if(this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight)){
-                this.inputClassList.cpu.splice(2, 1, 'w3-text-red')
-            }else if(this.new_content.memweight.toString().trim() === '' || isNaN(this.new_content.memweight)){
-                this.inputClassList.mem.splice(2, 1, 'w3-text-red')
+                this.inputClassList.host.splice(2, 1, 'w3-red')
+            }else if(this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port) || 
+                        this.new_content.port < 0 || this.new_content.port > 32767){
+                this.inputClassList.port.splice(2, 1, 'w3-red')
+            }else if(this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight) || 
+                        this.new_content.cpuweight < 0){
+                this.inputClassList.cpu.splice(2, 1, 'w3-red')
+            }else if(this.new_content.memweight.toString().trim() === '' || isNaN(this.new_content.memweight) || 
+                        this.new_content.memweight < 0){
+                this.inputClassList.mem.splice(2, 1, 'w3-red')
             }else{
                 this.new_content.activate = Number(this.new_content.activate)
                 this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
