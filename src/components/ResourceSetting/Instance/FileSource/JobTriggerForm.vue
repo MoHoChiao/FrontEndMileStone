@@ -6,10 +6,10 @@
                 <label>File Trigger</label>
             </div>
             <div v-if="new_content.filetrigger" class="w3-col m8">
-                <input :class="inputClassList.namePath" v-model="namePath" type="text" readonly>
+                <input :class="inputClassList.namePath" v-model="namePath" type="text" @click="changeSelectedTableStatus" readonly>
             </div>
         </div>
-        <div v-if="new_content.filetrigger" class="w3-row-padding w3-section">
+        <div v-if="new_content.filetrigger && this.isShowSelectedTable" class="w3-row-padding w3-section">
             <div class="w3-third">
                 <div class="w3-responsive w3-card-0 w3-round">
                     <table class="w3-table-all w3-small">
@@ -99,6 +99,7 @@ import { HTTPRepo } from '../../../../axios/http-common'
 export default {
     data() {
         return {
+            isShowSelectedTable: false,
             inputClassList: {
                 namePath: ['w3-input','w3-border'],
                 txdateformat: ['w3-input','w3-border'],
@@ -131,6 +132,8 @@ export default {
     mounted() {
         //fetch all entities
         this.getEntities()
+        //fetch trigger job full path
+        this.getJobFullPath()
         //reset isOverrideTxDate value
         if(this.new_content.txdateformat.trim() === '' && 
                 this.new_content.txdatestartpos == 0 && 
@@ -282,6 +285,40 @@ export default {
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 this.jobs = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        },
+        changeSelectedTableStatus(){
+            this.isShowSelectedTable = !this.isShowSelectedTable
+        },
+        getJobFullPath(){
+            if(!this.new_content.triggerjobuid || this.new_content.triggerjobuid.trim() === '')
+                return
+
+            HTTPRepo.get(`job/findJobFullPathByUid`, {params: {
+                uid: this.new_content.triggerjobuid
+            }})
+            .then(response => {
+                if(!response.data.jobuid || response.data.jobuid.trim() === ''){
+                    this.namePath = ''
+                    this.new_content.triggerjobuid = ''
+                }else{
+                    this.namePath = response.data.busentityname + ':' + response.data.categoryname + '.' + response.data.jobname
+                }
             })
             .catch(error => {
                 if (error.response && error.response.data) {

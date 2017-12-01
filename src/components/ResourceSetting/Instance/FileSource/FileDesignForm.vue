@@ -337,7 +337,6 @@ export default {
     },
     methods: {
         save(){
-            // alert('2:'+this.new_content.ftpconnectionuid)
             this.clearInValid()
 
             //檢查值是否為空或合法範圍

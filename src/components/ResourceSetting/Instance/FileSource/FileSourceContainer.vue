@@ -4,17 +4,19 @@
   <file-source-category-edit-window :windowAlive="editCategoryWindowAlive" 
                     window-title="Edit File Source Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
-                     @closeEdit="saveCategoryWindowContentForEdit" 
+                    @closeEdit="saveCategoryWindowContentForEdit" 
                     :content="selectedCategoryRecord" 
-                    :urlOp="addORedit" 
+                    :urlOp="operation" 
   ></file-source-category-edit-window>
   <!-- For Add/Edit File Source Window -->
   <file-source-edit-window :windowAlive="editFileSourceWindowAlive" 
-                    window-title="Edit File Source" 
                     @closeAdd="saveFileSourceWindowContentForAdd" 
-                     @closeEdit="saveFileSourceWindowContentForEdit" 
+                    @closeEdit="saveFileSourceWindowContentForEdit" 
+                    @closeCopy="saveFileSourceWindowContentForCopy" 
+                    @closeMove="saveFileSourceWindowContentForMove" 
                     :content="selectedFileSourceRecord" 
-                    :urlOp="addORedit" 
+                    :selectedCategoryRecord="selectedCategoryRecord" 
+                    :urlOp="operation" 
   ></file-source-edit-window>
   <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
@@ -47,8 +49,8 @@
                     <span><img src="/src/assets/images/resource_setter/filesource_category.png" alt="File Source Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span class="w3-medium">All Categories</span>
                     <i class="fa fa-trash-o w3-button w3-right" title="Delete File Source Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source Category" aria-hidden="true" @click="changeCategoryWindowStatusForEdit()"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add File Source Category" aria-hidden="true" @click="changeCategoryWindowStatusForAdd()"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
                     <i class="fa fa-refresh w3-button w3-right" title="Reload File Source Category" aria-hidden="true" @click="getCategories"></i>
                 </div>
             </p>
@@ -94,8 +96,10 @@
                         <span class="w3-medium">File Sources</span> ({{ selectedCategoryRecord.fscategoryname }})</span>
                     <span v-else class="w3-medium">All File Sources</span>
                     <i class="fa fa-trash-o w3-button w3-right" title="Delete File Source" aria-hidden="true" @click="showDeleteFileSourceWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source" aria-hidden="true" @click="changeFileSourceWindowStatusForEdit()"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add File Source" aria-hidden="true" @click="changeFileSourceWindowStatusForAdd()"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('edit')"></i>
+                    <i class="fa fa-clipboard w3-button w3-right" title="Move File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('move')"></i>
+                    <i class="fa fa-clone w3-button w3-right" title="Copy File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('copy')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('add')"></i>
                     <i class="fa fa-refresh w3-button w3-right" title="Reload File Source" aria-hidden="true" @click="getFileSources"></i>
                 </div>
             </p>
@@ -147,7 +151,7 @@ export default {
             selectedFileSourceRecord: new Object(),   //store which record has been selected.(File Sources)
             editCategoryWindowAlive: false,  //for add/edit file source category modal windows
             editFileSourceWindowAlive: false,  //for add/edit file source modal windows
-            addORedit: 'add',
+            operation: 'add',   //keep which operation(add,edit,copy,move) will be execute
             deleteWindowAlive: false,  //show or not show delete modal windows
             deleteName: '', //store delete object name
             deleteWhich: '', //store delete Category or FileSource
@@ -240,9 +244,9 @@ export default {
             })
         },
         getFileSources(e){
-            let urlPath = 'file-source/findByFilter'
+            let urlPath = 'file-source/findByFilter?categoryUid='
             if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== '')
-                urlPath = 'file-source/findByFilter?categoryUid=' + this.selectedCategoryRecord.fscategoryuid
+                urlPath += this.selectedCategoryRecord.fscategoryuid
             
             let params = {
                 "paging":{
@@ -307,27 +311,29 @@ export default {
         },
 
         /*
-         * Above For All About Add/Edit Function
+         * Above For All About Add/Edit/Copy/Move Function
         */
-        changeCategoryWindowStatusForAdd(){
-            this.addORedit = 'add'
-            this.editCategoryWindowAlive = !this.editCategoryWindowAlive
-        },
-        changeCategoryWindowStatusForEdit(){
-            if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== ''){
-                this.addORedit = 'edit'
+        changeCategoryWindowStatus(which){
+            if(which === 'add'){
+                this.operation = which
                 this.editCategoryWindowAlive = !this.editCategoryWindowAlive
+            }else{
+                if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== ''){
+                    this.operation = which
+                    this.editCategoryWindowAlive = !this.editCategoryWindowAlive
+                }
             }
         },
-        changeFileSourceWindowStatusForAdd(){
-            this.addORedit = 'add'
-            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
-        },
-        changeFileSourceWindowStatusForEdit(){
-            if(this.selectedFileSourceRecord && this.selectedFileSourceRecord.filesourceuid && this.selectedFileSourceRecord.filesourceuid !== ''){
-                this.addORedit = 'edit'
+        changeFileSourceWindowStatus(which){
+            if(which != 'add'){
+                if(this.selectedFileSourceRecord && this.selectedFileSourceRecord.filesourceuid && this.selectedFileSourceRecord.filesourceuid !== ''){
+                    this.operation = which
+                    this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+                }
+            }else{
+                this.operation = which
                 this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
-            }
+            } 
         },
         saveCategoryWindowContentForAdd(new_content){
             if(new_content){    //new_content !== undefined, it means from File Source Category Window Save Click
@@ -344,7 +350,8 @@ export default {
             this.editCategoryWindowAlive = !this.editCategoryWindowAlive
         },
         saveCategoryWindowContentForEdit(new_content){
-            if(new_content && this.selectedCategoryRecord && (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0)){    //new_content !== undefined, it means from File Source Category Window Save Click
+            //new_content !== undefined, it means from File Source Category Window Save Click
+            if(new_content && this.selectedCategoryRecord && (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0)){
                 new_content.index = this.selectedCategoryRecord.index   //asign old index prop to new content
                 this.allCategoryObjs[this.selectedCategoryRecord.index] = new_content   //replace object to the array
                 this.selectedCategoryRecord = new_content
@@ -355,20 +362,41 @@ export default {
             if(new_content){    //new_content !== undefined, it means from File Source Window Save Click
                 this.allFileSourceObjs.unshift(new_content) //add object to the top of array
                 this.clearSelectedFileSourceRecord()
-
-                /*
-                 * if add category record success, scroll to top
-                */
-                let filesourceContainer = this.$el.querySelector("#filesourceContainer")
-                filesourceContainer.scrollTop = -filesourceContainer.scrollHeight
             }
             this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
         },
         saveFileSourceWindowContentForEdit(new_content){
-            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){    //new_content !== undefined, it means from File Source Window Save Click
+            //new_content !== undefined, it means from File Source Window Save Click
+            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){
                 new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
                 this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
                 this.selectedFileSourceRecord = new_content
+            }
+            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+        },
+        saveFileSourceWindowContentForCopy(fscategoryuid, new_content){
+            if(new_content){    //new_content !== undefined, it means from File Source Window Save Click
+                //如果相等, 表示copy過去的目標category, 即目前所在的category(即目前所選擇的category), 則立刻在最上列加一筆filesource
+                if(this.selectedCategoryRecord.fscategoryuid === fscategoryuid){
+                    this.allFileSourceObjs.unshift(new_content) //add object to the top of array
+                }
+                this.clearSelectedFileSourceRecord()
+            }
+            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+        },
+        saveFileSourceWindowContentForMove(fscategoryuid, new_content){
+            //new_content !== undefined, it means from File Source Window Save Click
+            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){
+                if(this.selectedCategoryRecord.fscategoryuid === fscategoryuid){
+                    alert('if')
+                    new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
+                    this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
+                    this.selectedFileSourceRecord = new_content
+                }else{
+                    alert('else')
+                    this.allFileSourceObjs.splice(this.selectedFileSourceRecord.index, 1)
+                    this.clearSelectedFileSourceRecord()
+                }
             }
             this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
         },

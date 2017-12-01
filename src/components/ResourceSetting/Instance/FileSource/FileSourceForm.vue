@@ -1,16 +1,35 @@
 <template>
     <div class="w3-container w3-small">
         <div></div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
+        <div v-if="urlOp === 'add' || urlOp === 'edit'" class="w3-row w3-section">
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name">
             </div>
         </div>
+        <div v-else class="w3-row w3-section">
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+            </div>
+            <div class="w3-col m4">
+                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name">
+            </div>
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+            </div>
+            <div class="w3-col m3">
+                <select :class="inputClassList.fscategoryuid" v-model="fscategoryuid" style="padding:0px">
+                    <option value="" selected>/</option>
+                    <template v-for="category in allCategoryObjs">
+                        <option :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
+                    </template>
+                </select>
+            </div>
+        </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:8px 4px 8px 0px">
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
@@ -57,8 +76,11 @@ export default {
             tabsFlag: [true, false, false],
             inputClassList: {
                 name: ['w3-input','w3-border'],
-                desc: ['w3-input','w3-border']
+                desc: ['w3-input','w3-border'],
+                fscategoryuid: ['w3-select','w3-border','w3-round']
             },
+            fscategoryuid: '',  //store categoryuid for copy/move operation
+            allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
@@ -114,8 +136,18 @@ export default {
             }
         }
     },
-    computed: {
-       
+    created() {
+        if(this.urlOp === 'copy' || this.urlOp === 'move'){
+            this.getCategories()    //取得所有可供選擇的file source categories
+
+            if(this.urlOp === 'copy'){
+                //copy動作, 把name和description設空值
+                this.new_content.filesourcename = ''
+                this.new_content.description = ''
+            }else if(this.urlOp === 'move'){
+                // this.tabsFlag.fill(false)    //disable all tabs, because of move operation can not be modified
+            }
+        }
     },
     props: {
         content: {
@@ -165,6 +197,10 @@ export default {
                     txdateendpos: 0
                 }
             }
+        },
+        urlOp: {
+            type: String,
+            default: 'add'
         }
     },
     methods: {
@@ -187,13 +223,17 @@ export default {
                 this.inputClassList.name.splice(2, 1, 'w3-red')
                 return
             }
-
+            
             //collect basic necessary value
             let returnValue = {
                 "filesourceuid":this.new_content.filesourceuid,
                 "filesourcename":this.new_content.filesourcename,
-                "description":this.new_content.description,   
+                "description":this.new_content.description
             }
+            
+            //fscategoryuid這個值只為了如果是move/copy的情況下, 需要傳回去,才能知道目前選擇的是那一個category
+            if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
+                returnValue.fscategoryuid = this.fscategoryuid
 
             //call Directory Asign form to check value
             let directoryAsignContent = this.$refs.directoryAsignForm.save()
@@ -231,8 +271,6 @@ export default {
                 return
             }
 
-            console.log(returnValue)
-
             return returnValue
         },
         reset(){
@@ -240,9 +278,11 @@ export default {
             this.clearInValid()
 
             //reset value to initial
-            this.new_content.filesourceuid = this.content.filesourceuid
-            this.new_content.filesourcename = this.content.filesourcename
-            this.new_content.description = this.content.description
+            if(this.urlOp !== 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
+                this.new_content.filesourceuid = this.content.filesourceuid
+                this.new_content.filesourcename = this.content.filesourcename
+                this.new_content.description = this.content.description
+            }
 
             //call child form to reset value to initial
             this.$refs.directoryAsignForm.reset()
@@ -252,7 +292,35 @@ export default {
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
             this.inputClassList.desc.splice(2, 1)
-        }
+        },
+        getCategories(){
+            let params = {
+                "ordering":{
+                    "orderType":"ASC",
+                    "orderField":"fscategoryname"
+                }
+            }
+
+            HTTPRepo.post(`file-source-category/findByFilter`, params)
+            .then(response => {
+                this.allCategoryObjs = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        },
     },
     components: {
         'directory-asign-form': DirectoryAsignForm,
@@ -262,7 +330,7 @@ export default {
 }
 </script>
 <style scoped>
-    input {
+    input, select {
         height: 30px
     }
 </style>
