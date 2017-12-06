@@ -5,6 +5,7 @@ import ResourceSetter from '../pages/ResourceSetter.vue'
 import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
 import VRAgentContainer from '../components/ResourceSetting/Instance/VRAgent/VRAgentContainer.vue'
 import FileSourceContainer from '../components/ResourceSetting/Instance/FileSource/FileSourceContainer.vue'
+import ConnectionContainer from '../components/ResourceSetting/Instance/Connection/ConnectionContainer.vue'
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -34,6 +35,13 @@ export default new VueRouter({
                     path: 'FileSource',
                     components: {
                         content: FileSourceContainer
+                    }
+                },
+                {
+                    name: 'Connection',
+                    path: 'Connection',
+                    components: {
+                        content: ConnectionContainer
                     }
                 }
             ]

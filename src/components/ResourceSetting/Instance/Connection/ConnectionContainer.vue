@@ -1,33 +1,33 @@
 <template>
 <div>
   <!-- For Add/Edit Category Window -->
-  <file-source-category-edit-window :windowAlive="editCategoryWindowAlive" 
-                    window-title="Edit File Source Category" 
+  <connection-category-edit-window :windowAlive="editCategoryWindowAlive" 
+                    window-title="Edit Connection Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
                     :content="selectedCategoryRecord" 
                     :urlOp="operation" 
-  ></file-source-category-edit-window>
-  <!-- For Add/Edit File Source Window -->
-  <file-source-edit-window :windowAlive="editFileSourceWindowAlive" 
-                    @closeAdd="saveFileSourceWindowContentForAdd" 
-                    @closeEdit="saveFileSourceWindowContentForEdit" 
-                    @closeCopy="saveFileSourceWindowContentForCopy" 
-                    @closeMove="saveFileSourceWindowContentForMove" 
-                    :content="selectedFileSourceRecord" 
+  ></connection-category-edit-window>
+  <!-- For Add/Edit Connection Window -->
+  <connection-edit-window :windowAlive="editConnectionWindowAlive" 
+                    @closeAdd="saveConnectionWindowContentForAdd" 
+                    @closeEdit="saveConnectionWindowContentForEdit" 
+                    @closeCopy="saveConnectionWindowContentForCopy" 
+                    @closeMove="saveConnectionWindowContentForMove" 
+                    :content="selectedConnectionRecord" 
                     :selectedCategoryRecord="selectedCategoryRecord" 
                     :urlOp="operation" 
-  ></file-source-edit-window>
+  ></connection-edit-window>
   <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
-                    window-bg-color="highway-schoolbus"
+                    window-bg-color="highway-schoolbus" 
                     btn-color="signal-white" 
                     @closeDelete="closeDeleteWindow" 
                     @confirmDelete="deleteObj" 
   ></confirm-delete-window>
-  <!-- File Source Path Header -->
+  <!-- Connection Path Header -->
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -35,23 +35,23 @@
                 <div class="w3-container">
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> File Source</i>
+                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Connection</i>
                     </p>
                 </div>
             </div>
         </div>
     </div>
-    <!-- File Source Category Panel -->
+    <!-- Connection Category Panel -->
     <div>
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
                 <div class="w3-small">
-                    <span><img src="/src/assets/images/resource_setter/filesource_category.png" alt="File Source Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                    <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span class="w3-medium">All Categories</span>
-                    <i class="fa fa-trash-o w3-button w3-right" title="Delete File Source Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
-                    <i class="fa fa-refresh w3-button w3-right" title="Reload File Source Category" aria-hidden="true" @click="getCategories"></i>
+                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection Category" aria-hidden="true" @click="getCategories"></i>
                 </div>
             </p>
             <p>
@@ -68,9 +68,9 @@
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
                     <table id="categoryTable" class="w3-table-all w3-small">
                         <template v-for="(content, index) in allCategoryObjs">
-                        <tr :id="content.fscategoryuid" :key="content.fscategoryuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnCategory(content.fscategoryuid, index)">
+                        <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnCategory(content.conncategoryuid, index)">
                             <td class="w3-center" width="32%">
-                                <span>{{ content.fscategoryname }}</span>
+                                <span>{{ content.conncategoryname }}</span>
                             </td>
                             <td width="46%">
                                 <span>{{ content.description }}</span>
@@ -86,21 +86,21 @@
             </p>
         </div>
     </div>
-    <!-- File Source Panel -->
+    <!-- Connection Panel -->
     <div>
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
                 <div class="w3-small">
-                    <span><img src="/src/assets/images/resource_setter/filesource.png" alt="File Source" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
-                    <span v-if="selectedCategoryRecord && selectedCategoryRecord.fscategoryname">
-                        <span class="w3-medium">File Sources</span> ({{ selectedCategoryRecord.fscategoryname }})</span>
-                    <span v-else class="w3-medium">File Sources</span>
-                    <i class="fa fa-trash-o w3-button w3-right" title="Delete File Source" aria-hidden="true" @click="showDeleteFileSourceWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('edit')"></i>
-                    <i class="fa fa-clipboard w3-button w3-right" title="Move File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('move')"></i>
-                    <i class="fa fa-clone w3-button w3-right" title="Copy File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('copy')"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('add')"></i>
-                    <i class="fa fa-refresh w3-button w3-right" title="Reload File Source" aria-hidden="true" @click="getFileSources"></i>
+                    <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                    <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
+                        <span class="w3-medium">Connections</span> ({{ selectedCategoryRecord.conncategoryname }})</span>
+                    <span v-else class="w3-medium">Connections</span>
+                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
+                    <i class="fa fa-clipboard w3-button w3-right" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
+                    <i class="fa fa-clone w3-button w3-right" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="getConnections"></i>
                 </div>
             </p>
             <p>
@@ -114,11 +114,11 @@
                         </tr>
                     </table>
                 </div>
-                <div id="filesourceContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
-                    <table id="filesourceTable" class="w3-table-all w3-small">
-                        <tr :id="content.filesourceuid" :key="content.filesourceuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnFileSource(content.filesourceuid, index)" v-for="(content, index) in allFileSourceObjs">
+                <div id="connectionContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
+                    <table id="connectionTable" class="w3-table-all w3-small">
+                        <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
                             <td class="w3-center" width="32%">
-                                <span>{{ content.filesourcename }}</span>
+                                <span>{{ content.connectionname }}</span>
                             </td>
                             <td width="46%">
                                 <span>{{ content.description }}</span>
@@ -134,42 +134,44 @@
         </div>
     </div>
   </div>
-  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getFileSources"></filter-panel>
+  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getConnections"></filter-panel>
 </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import FilterPanel from '../../FilterPanel.vue'
-import FileSourceCategoryEditWindow from './FileSourceCategory/FileSourceCategoryEditWindow.vue'
-import FileSourceEditWindow from './FileSourceEditWindow.vue'
+import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategoryEditWindow.vue'
+import ConnectionEditWindow from './ConnectionEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
 export default {
     data() {
         return {
-            selectedCategoryRecord: new Object(),   //store which record has been selected.(File Source Categories)
-            selectedFileSourceRecord: new Object(),   //store which record has been selected.(File Sources)
-            editCategoryWindowAlive: false,  //for add/edit file source category modal windows
-            editFileSourceWindowAlive: false,  //for add/edit file source modal windows
+            selectedCategoryRecord: new Object(),   //store which record has been selected.(Connection Categories)
+            selectedConnectionRecord: new Object(),   //store which record has been selected.(Connections)
+            editCategoryWindowAlive: false,  //for add/edit Connection category modal windows
+            editConnectionWindowAlive: false,  //for add/edit Connection modal windows
             operation: 'add',   //keep which operation(add,edit,copy,move) will be execute
             deleteWindowAlive: false,  //show or not show delete modal windows
             deleteName: '', //store delete object name
-            deleteWhich: '', //store delete Category or FileSource
-            allCategoryObjs: new Object(), //store all remote data.(File Source Categories)
-            allFileSourceObjs: new Object(), //store all remote data.(File Sources)
+            deleteWhich: '', //store delete Category or Connection
+            allCategoryObjs: new Object(), //store all remote data.(Connection Categories)
+            allConnectionObjs: new Object(), //store all remote data.(Connections)
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "filesourcename"}
+                {name: "Name",value: "connectionname"},
+                {name: "Type",value: "connectiontype"}
             ],
             queryFields: [  //for querying filter fields
-                {name: "Name",value: "filesourcename"},
+                {name: "Name",value: "connectionname"},
+                {name: "Type",value: "connectiontype"},
                 {name: "Desc",value: "Description"}
             ]
         }
     },
     mounted() {
         this.getCategories()
-        this.getFileSources()
+        this.getConnections()
     },
     methods: {
         /*
@@ -178,7 +180,7 @@ export default {
         clickOnCategory(id, index){
             let tr = document.getElementById(id)
             this.clearSelectedCategoryRecord(tr)
-            this.clearSelectedFileSourceRecord()
+            this.clearSelectedConnectionRecord()
             
             if (tr.className.indexOf('w3-blue-grey') == -1) {
                 tr.className = 'w3-blue-grey'
@@ -187,16 +189,16 @@ export default {
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
-            this.getFileSources()   //refresh file sources content
+            this.getConnections()   //refresh Connections content
         },
-        clickOnFileSource(id, index){
+        clickOnConnection(id, index){
             let tr = document.getElementById(id)
-            this.clearSelectedFileSourceRecord(tr)
+            this.clearSelectedConnectionRecord(tr)
 
             if (tr.className.indexOf('w3-blue-grey') == -1) {
                 tr.className = 'w3-blue-grey'
-                this.selectedFileSourceRecord = this.allFileSourceObjs[index]
-                this.selectedFileSourceRecord.index = index //New prop is stores which category obj will be deleted in UI
+                this.selectedConnectionRecord = this.allConnectionObjs[index]
+                this.selectedConnectionRecord.index = index //New prop is stores which category obj will be deleted in UI
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
@@ -209,17 +211,17 @@ export default {
             let params = {
                 "ordering":{
                     "orderType":"ASC",
-                    "orderField":"fscategoryname"
+                    "orderField":"conncategoryname"
                 }
             }
 
-            HTTPRepo.post(`file-source-category/findByFilter`, params)
+            HTTPRepo.post(`connection-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
 
                 this.clearSelectedCategoryRecord()
-                this.clearSelectedFileSourceRecord()
-                this.getFileSources()   //refresh file sources content
+                this.clearSelectedConnectionRecord()
+                this.getConnections()   //refresh Connections content
                 
                 /*
                  * if fetch category records success, scroll to top
@@ -228,6 +230,7 @@ export default {
                 categoryContainer.scrollTop = -categoryContainer.scrollHeight
             })
             .catch(error => {
+                alert(error)
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
@@ -243,10 +246,10 @@ export default {
                 }
             })
         },
-        getFileSources(e){
-            let urlPath = 'file-source/findByFilter?categoryUid='
-            if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== '')
-                urlPath += this.selectedCategoryRecord.fscategoryuid
+        getConnections(e){
+            let urlPath = 'connection/findByFilter?categoryUid='
+            if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && this.selectedCategoryRecord.conncategoryuid !== '')
+                urlPath += this.selectedCategoryRecord.conncategoryuid
             
             let params = {
                 "paging":{
@@ -274,13 +277,13 @@ export default {
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
-                    this.allFileSourceObjs = response.data.content
+                    this.allConnectionObjs = response.data.content
                     this.$refs.filter.totalPages = response.data.totalPages
                 } else {
-                    this.allFileSourceObjs = response.data
+                    this.allConnectionObjs = response.data
                     this.$refs.filter.totalPages = 1
                 }
-                this.clearSelectedFileSourceRecord()
+                this.clearSelectedConnectionRecord()
             })
             .catch(error => {
                 if(e){
@@ -318,28 +321,28 @@ export default {
                 this.operation = which
                 this.editCategoryWindowAlive = !this.editCategoryWindowAlive
             }else{
-                if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== ''){
+                if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && this.selectedCategoryRecord.conncategoryuid !== ''){
                     this.operation = which
                     this.editCategoryWindowAlive = !this.editCategoryWindowAlive
                 }
             }
         },
-        changeFileSourceWindowStatus(which){
+        changeConnectionWindowStatus(which){
             if(which != 'add'){
-                if(this.selectedFileSourceRecord && this.selectedFileSourceRecord.filesourceuid && this.selectedFileSourceRecord.filesourceuid !== ''){
+                if(this.selectedConnectionRecord && this.selectedConnectionRecord.connectionuid && this.selectedConnectionRecord.connectionuid !== ''){
                     this.operation = which
-                    this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+                    this.editConnectionWindowAlive = !this.editConnectionWindowAlive
                 }
             }else{
                 this.operation = which
-                this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+                this.editConnectionWindowAlive = !this.editConnectionWindowAlive
             } 
         },
         saveCategoryWindowContentForAdd(new_content){
-            if(new_content){    //new_content !== undefined, it means from File Source Category Window Save Click
+            if(new_content){    //new_content !== undefined, it means from Connection Category Window Save Click
                 this.allCategoryObjs.unshift(new_content) //add object to the top of array
                 this.clearSelectedCategoryRecord()
-                this.getFileSources()   //refresh file sources content
+                this.getConnections()   //refresh Connections content
 
                 /*
                  * if add category record success, scroll to top
@@ -350,7 +353,7 @@ export default {
             this.editCategoryWindowAlive = !this.editCategoryWindowAlive
         },
         saveCategoryWindowContentForEdit(new_content){
-            //new_content !== undefined, it means from File Source Category Window Save Click
+            //new_content !== undefined, it means from Connection Category Window Save Click
             if(new_content && this.selectedCategoryRecord && (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0)){
                 new_content.index = this.selectedCategoryRecord.index   //asign old index prop to new content
                 this.allCategoryObjs[this.selectedCategoryRecord.index] = new_content   //replace object to the array
@@ -358,47 +361,47 @@ export default {
             }
             this.editCategoryWindowAlive = !this.editCategoryWindowAlive
         },
-        saveFileSourceWindowContentForAdd(new_content){
-            if(new_content){    //new_content !== undefined, it means from File Source Window Save Click
-                this.allFileSourceObjs.unshift(new_content) //add object to the top of array
-                this.clearSelectedFileSourceRecord()
+        saveConnectionWindowContentForAdd(new_content){
+            if(new_content){    //new_content !== undefined, it means from Connection Window Save Click
+                this.allConnectionObjs.unshift(new_content) //add object to the top of array
+                this.clearSelectedConnectionRecord()
             }
-            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+            this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
-        saveFileSourceWindowContentForEdit(new_content){
-            //new_content !== undefined, it means from File Source Window Save Click
-            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){
-                new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
-                this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
-                this.selectedFileSourceRecord = new_content
+        saveConnectionWindowContentForEdit(new_content){
+            //new_content !== undefined, it means from Connection Window Save Click
+            if(new_content && this.selectedConnectionRecord && (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0)){
+                new_content.index = this.selectedConnectionRecord.index   //asign old index prop to new content
+                this.allConnectionObjs[this.selectedConnectionRecord.index] = new_content   //replace object to the array
+                this.selectedConnectionRecord = new_content
             }
-            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+            this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
-        saveFileSourceWindowContentForCopy(fscategoryuid, new_content){
-            if(new_content){    //new_content !== undefined, it means from File Source Window Save Click
-                //如果相等, 表示copy過去的目標category, 即目前所在的category(即目前所選擇的category), 則立刻在最上列加一筆filesource
-                if(this.selectedCategoryRecord.fscategoryuid === fscategoryuid){
-                    this.allFileSourceObjs.unshift(new_content) //add object to the top of array
+        saveConnectionWindowContentForCopy(conncategoryuid, new_content){
+            if(new_content){    //new_content !== undefined, it means from Connection Window Save Click
+                //如果相等, 表示copy過去的目標category, 即目前所在的category(即目前所選擇的category), 則立刻在最上列加一筆connection
+                if(this.selectedCategoryRecord.conncategoryuid === conncategoryuid){
+                    this.allConnectionObjs.unshift(new_content) //add object to the top of array
                 }
-                this.clearSelectedFileSourceRecord()
+                this.clearSelectedConnectionRecord()
             }
-            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+            this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
-        saveFileSourceWindowContentForMove(fscategoryuid, new_content){
-            //new_content !== undefined, it means from File Source Window Save Click
-            if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){
-                if(this.selectedCategoryRecord.fscategoryuid === fscategoryuid){
+        saveConnectionWindowContentForMove(conncategoryuid, new_content){
+            //new_content !== undefined, it means from Connection Window Save Click
+            if(new_content && this.selectedConnectionRecord && (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0)){
+                if(this.selectedCategoryRecord.conncategoryuid === conncategoryuid){
                     alert('if')
-                    new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
-                    this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
-                    this.selectedFileSourceRecord = new_content
+                    new_content.index = this.selectedConnectionRecord.index   //asign old index prop to new content
+                    this.allConnectionObjs[this.selectedConnectionRecord.index] = new_content   //replace object to the array
+                    this.selectedConnectionRecord = new_content
                 }else{
                     alert('else')
-                    this.allFileSourceObjs.splice(this.selectedFileSourceRecord.index, 1)
-                    this.clearSelectedFileSourceRecord()
+                    this.allConnectionObjs.splice(this.selectedConnectionRecord.index, 1)
+                    this.clearSelectedConnectionRecord()
                 }
             }
-            this.editFileSourceWindowAlive = !this.editFileSourceWindowAlive
+            this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
 
         /*
@@ -408,19 +411,19 @@ export default {
             if(this.deleteWhich === 'Category')
                 this.deleteCategory()
             else
-                this.deleteFileSource()
+                this.deleteConnection()
         },
         deleteCategory(){
-            HTTPRepo.get(`file-source-category/delete`, {
+            HTTPRepo.get(`connection-category/delete`, {
                 params: {
-                    uid: this.selectedCategoryRecord.fscategoryuid
+                    uid: this.selectedCategoryRecord.conncategoryuid
                 }
             })
             .then(response => {
                 this.allCategoryObjs.splice(this.selectedCategoryRecord.index, 1)
                 this.clearSelectedCategoryRecord()
                 this.closeDeleteWindow()
-                this.getFileSources()   //refresh file sources content
+                this.getConnections()   //refresh Connections content
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -438,15 +441,15 @@ export default {
                 }
             })
         },
-        deleteFileSource(){
-            HTTPRepo.get(`file-source/delete`, {
+        deleteConnection(){
+            HTTPRepo.get(`connection/delete`, {
                 params: {
-                    uid: this.selectedFileSourceRecord.filesourceuid
+                    uid: this.selectedConnectionRecord.connectionuid
                 }
             })
             .then(response => {
-                this.allFileSourceObjs.splice(this.selectedFileSourceRecord.index, 1)
-                this.clearSelectedFileSourceRecord()
+                this.allConnectionObjs.splice(this.selectedConnectionRecord.index, 1)
+                this.clearSelectedConnectionRecord()
                 this.closeDeleteWindow()
             })
             .catch(error => {
@@ -467,18 +470,18 @@ export default {
         },
         showDeleteCategoryWindow(){
             if( (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0) 
-                    && this.selectedCategoryRecord.fscategoryname) {
+                    && this.selectedCategoryRecord.conncategoryname) {
                 this.deleteWindowAlive = true
-                this.deleteName = this.selectedCategoryRecord.fscategoryname
+                this.deleteName = this.selectedCategoryRecord.conncategoryname
                 this.deleteWhich = 'Category'
             }
         },
-        showDeleteFileSourceWindow(){
-            if( (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0) 
-                    && this.selectedFileSourceRecord.filesourcename) {
+        showdeleteConnectionWindow(){
+            if( (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0) 
+                    && this.selectedConnectionRecord.connectionname) {
                 this.deleteWindowAlive = true
-                this.deleteName = this.selectedFileSourceRecord.filesourcename
-                this.deleteWhich = 'FileSource'
+                this.deleteName = this.selectedConnectionRecord.connectionname
+                this.deleteWhich = 'Connection'
             }
         },
         closeDeleteWindow(){
@@ -496,21 +499,20 @@ export default {
             }
             this.selectedCategoryRecord = new Object()
         },
-        clearSelectedFileSourceRecord(tr){
-            let table = document.getElementById('filesourceTable')
-            for(var i=0;i<table.childNodes.length;i++){  //先重設所有filesource row的class
+        clearSelectedConnectionRecord(tr){
+            let table = document.getElementById('connectionTable')
+            for(var i=0;i<table.childNodes.length;i++){  //先重設所有connection row的class
                 if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
                     table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
             }
-            this.selectedFileSourceRecord = new Object()
+            this.selectedConnectionRecord = new Object()
         }
     },
     components: {
         'filter-panel': FilterPanel,
-        'file-source-category-edit-window': FileSourceCategoryEditWindow,
-        'file-source-edit-window': FileSourceEditWindow,
+        'connection-category-edit-window': ConnectionCategoryEditWindow,
+        'connection-edit-window': ConnectionEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow
     }
 }
 </script>
-
