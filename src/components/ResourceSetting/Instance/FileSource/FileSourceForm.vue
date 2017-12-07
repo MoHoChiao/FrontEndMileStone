@@ -1,6 +1,5 @@
 <template>
     <div class="w3-container w3-small">
-        <div></div>
         <div v-if="urlOp === 'add' || urlOp === 'edit'" class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
@@ -320,7 +319,7 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }
             })
-        },
+        }
     },
     components: {
         'directory-asign-form': DirectoryAsignForm,

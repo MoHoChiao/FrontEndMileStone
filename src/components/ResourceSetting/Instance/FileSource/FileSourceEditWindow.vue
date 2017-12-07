@@ -15,11 +15,6 @@ import FileSourceForm from './FileSourceForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
-    // data() {
-    //     return {
-    //         windowTitle: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    //     }
-    // },
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')

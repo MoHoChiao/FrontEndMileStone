@@ -6,7 +6,7 @@
                 <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" placeholder="Root Path">
             </div>
             <div class="w3-col m4">
-                <button class="w3-button w3-blue-grey" @click="applyRoot" style="padding-top:6px;padding-bottom:6px">Generate</button>
+                <button class="w3-button w3-blue-grey w3-round" @click="applyRoot" style="padding-top:6px;padding-bottom:6px">Generate</button>
             </div>
             <div class="w3-col m2">&nbsp;</div>
         </div>

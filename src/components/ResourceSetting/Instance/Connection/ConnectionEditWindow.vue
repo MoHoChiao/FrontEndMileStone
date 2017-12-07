@@ -15,11 +15,6 @@ import ConnectionForm from './ConnectionForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
-    // data() {
-    //     return {
-    //         windowTitle: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-    //     }
-    // },
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
@@ -46,47 +41,39 @@ export default {
             type: Object,
             default () {
                 return {
-                    filesourceuid: '',
-                    filesourcename: '',
+                    connectionuid: '',
+                    connectionname: '',
                     description: '',
-                    rootdir: '',
-                    receivedir: '',
+                    connectiontype: 'D',
+                    pimendpointtype: '',
+                    pimendpointname: '',
+                    pimaccountcontainer: '',
+                    pimaccountname: '',
+                    withpim: '0',
+                    userid: '',
+                    server: '',
+                    password: '',
                     targetdir: '',
-                    completedir: '',
-                    corruptdir: '',
-                    duplicatedir: '',
-                    errordir: '',
-                    filename: '',
-                    pattern: '1',
-                    startposition: 0,
-                    endposition: 0,
-                    filetype: 'D',
-                    cfImpClass: 'com.netpro.filesource.ctrl.MatchFileSizeCtrlFileHandler',
-                    datafilecountmode: 'R',
-                    checkduplicate: 0,
-                    filterduplicate: '1',
-                    checksum: 0,
-                    checksumalg: 'M',
-                    checksumfe: '.checksum',
-                    minfile: 1,
-                    maxfile: 5,
-                    timeout: 3,
-                    bypasszero: 0,
-                    appendUid: 0,
-                    ftpget: 0,
-                    sftp: 0,
-                    ftpbinary: 0,
-                    passive: 0,
-                    ftpconnectionuid: '',
-                    ftppostaction: '0',
-                    ftpremotedir: '',
-                    ftpmovedir: '',
-                    checkrow: 0,
-                    filetrigger: 0,
-                    triggerjobuid: '',
-                    txdateformat: '',
-                    txdatestartpos: 0,
-                    txdateendpos: 0
+                    jdbc_dbType: 'AS400',
+                    jdbc_url: 'jdbc:as400://host/libname',
+                    jdbc_driver: 'com.ibm.as400.access.AS400JDBCDriver',
+                    jdbc_userid: '',
+                    jdbc_password: '',
+                    host: '',
+                    port: 25,
+                    mailssl: '0',
+                    mailtls: '0',
+                    user: '',
+                    notesHostIP: '',
+                    notesIor: '',
+                    notesServerName: '',
+                    notesDBName: '',
+                    SAPLANGUAGE: '',
+                    sapSystemNumber: '',
+                    sapSystemName: '',
+                    sapHostIP: '',
+                    sapCodePage: '',
+                    sapClient: '',
                 }
             }
         },
@@ -94,8 +81,8 @@ export default {
             type: Object,
             default () {
                 return {
-                    fscategoryuid: '',
-                    fscategoryname: '',
+                    conncategoryuid: '',
+                    conncategoryname: '',
                     description: ''
                 }
             }
