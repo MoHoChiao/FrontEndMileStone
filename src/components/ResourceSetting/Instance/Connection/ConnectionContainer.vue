@@ -108,8 +108,8 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all w3-small">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%">Name</th>
-                            <th class="w3-center" width="46%">Description</th>
+                            <th class="w3-center" width="36%">Name</th>
+                            <th class="w3-center" width="42%">Description</th>
                             <th class="w3-center" width="22%">Update Time</th>
                         </tr>
                     </table>
@@ -117,10 +117,12 @@
                 <div id="connectionContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
                     <table id="connectionTable" class="w3-table-all w3-small">
                         <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
-                            <td class="w3-center" width="32%">
+                            <td width="36%">
+                                <span class="w3-badge w3-indigo">{{ content.connectiontype }}</span>
+                                &nbsp;
                                 <span>{{ content.connectionname }}</span>
                             </td>
-                            <td width="46%">
+                            <td width="42%">
                                 <span>{{ content.description }}</span>
                             </td>
                             <td class="w3-center" width="22%">

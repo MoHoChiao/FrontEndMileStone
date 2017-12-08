@@ -57,8 +57,6 @@ export default {
                     jdbc_dbType: 'AS400',
                     jdbc_url: 'jdbc:as400://host/libname',
                     jdbc_driver: 'com.ibm.as400.access.AS400JDBCDriver',
-                    jdbc_userid: '',
-                    jdbc_password: '',
                     host: '',
                     port: 25,
                     mailssl: '0',
