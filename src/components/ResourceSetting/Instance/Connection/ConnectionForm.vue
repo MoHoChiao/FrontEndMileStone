@@ -1,5 +1,5 @@
 <template>
-    <div class="w3-container w3-small">
+    <div class="w3-container w3-small" style="overflow:auto;max-height:485px">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
@@ -169,13 +169,47 @@
         </div>
         <div class="w3-row-padding w3-section">
             <hr class="w3-border-black">
-            <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Connection Account</label>
+            <div class="w3-col m4">
+                <span class="w3-text-red">*</span><label>Account</label>
                 <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="Please Input Account">
             </div>
-            <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Connection Password</label>
+            <div class="w3-col m4">
+                <span class="w3-text-red">*</span><label>Password</label>
                 <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="Please Input Password">
+            </div>
+            <div class="w3-col m4">
+                <div style="margin-top:16px;margin-right:16px">
+                    <input class="w3-check" v-model="new_content.withpim" type="checkbox">
+                    <label>PIM</label>
+                </div>
+            </div>
+        </div>
+        <div v-show="new_content.withpim">
+            <hr class="w3-border-black">
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m6">
+                    <span class="w3-text-red">*</span><label>Endpoint Type</label>
+                    <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="Please Input Endpoint Type">
+                </div>
+                <div class="w3-col m6">
+                    <span class="w3-text-red">*</span><label>Endpoint Name</label>
+                    <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="password" placeholder="Please Input Endpoint Name">
+                </div>
+            </div>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m6">
+                    <span class="w3-text-red">*</span><label>Account Container</label>
+                    <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="Please Input Account Container">
+                </div>
+                <div class="w3-col m6">
+                    <span class="w3-text-red">*</span><label>Account Name</label>
+                    <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="password" placeholder="Please Input Account Name">
+                </div>
+            </div>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m6">
+                    <button class="w3-button w3-blue-grey w3-round">Get Password</button>
+                </div>
             </div>
         </div>
     </div>
@@ -209,7 +243,11 @@ export default {
                 notesDBName: ['w3-input','w3-border'],
                 notesIor: ['w3-input','w3-border'],
                 userid: ['w3-input','w3-border'],
-                password: ['w3-input','w3-border']
+                password: ['w3-input','w3-border'],
+                pimendpointtype: ['w3-input','w3-border'],
+                pimendpointname: ['w3-input','w3-border'],
+                pimaccountcontainer: ['w3-input','w3-border'],
+                pimaccountname: ['w3-input','w3-border']
             },
             fscategoryuid: '',  //store categoryuid for copy/move operation
             allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
@@ -227,7 +265,7 @@ export default {
                 pimendpointname: this.content.pimendpointname,
                 pimaccountcontainer: this.content.pimaccountcontainer,
                 pimaccountname: this.content.pimaccountname,
-                withpim: this.content.withpim,
+                withpim: Number(this.content.withpim),
                 userid: this.content.userid,
                 server: this.content.server,
                 password: this.content.password,
@@ -276,15 +314,15 @@ export default {
             })
 
         if(this.urlOp === 'copy' || this.urlOp === 'move'){
-            this.getCategories()    //取得所有可供選擇的file source categories
-
             if(this.urlOp === 'copy'){
                 //copy動作, 把name和description設空值
-                this.new_content.filesourcename = ''
+                this.new_content.connectionname = ''
                 this.new_content.description = ''
-            }else if(this.urlOp === 'move'){
-                // this.tabsFlag.fill(false)    //disable all tabs, because of move operation can not be modified
             }
+        }
+
+        if(this.urlOp !== 'add'){    //如果不是add, 表示connectiontype必定有值,要把typeFlag中對應的connectiontype值改為true
+            this.clickType()
         }
     },
     props: {
@@ -369,6 +407,22 @@ export default {
                 return
             }
 
+            if(this.new_content.withpim){
+                if(this.new_content.pimendpointtype === undefined || this.new_content.pimendpointtype.trim().length <= 0){
+                    this.inputClassList.pimendpointtype.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.pimendpointname === undefined || this.new_content.pimendpointname.trim().length <= 0){
+                    this.inputClassList.pimendpointname.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.pimaccountcontainer === undefined || this.new_content.pimaccountcontainer.trim().length <= 0){
+                    this.inputClassList.pimaccountcontainer.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.pimaccountname === undefined || this.new_content.pimaccountname.trim().length <= 0){
+                    this.inputClassList.pimaccountname.splice(2, 1, 'w3-red')
+                    return
+                }
+            }
+
             if(this.new_content.connectiontype === 'D'){
                 if(this.new_content.server === undefined || this.new_content.server.trim().length <= 0){
                     this.inputClassList.server.splice(2, 1, 'w3-red')
@@ -419,57 +473,62 @@ export default {
             let returnValue = {
                 "connectionuid":this.new_content.connectionuid,
                 "connectionname":this.new_content.connectionname,
+                "connectiontype":this.new_content.connectiontype,
                 "description":this.new_content.description,
-                "userid":this.new_content.userid,
-                "password":this.new_content.password
+                "withpim":Number(this.new_content.withpim),
+                "pimendpointtype":this.new_content.pimendpointtype,
+                "pimendpointname":this.new_content.pimendpointname,
+                "pimaccountcontainer":this.new_content.pimaccountcontainer,
+                "pimaccountname":this.new_content.pimaccountname,
             }
             
-            //conncategoryuid這個值只為了如果是move/copy的情況下, 需要傳回去,才能知道目前選擇的是那一個category
+            //conncategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
             if(this.conncategoryuid && this.conncategoryuid.trim().length > 0)
                 returnValue.conncategoryuid = this.conncategoryuid
 
             //collect form value(to be continue)
             if(this.new_content.connectiontype === 'D'){
                 returnValue.server = this.new_content.server
+                returnValue.password = this.new_content.password
+                returnValue.userid = this.new_content.userid
             }else if(this.new_content.connectiontype === 'F'){
-                if(this.new_content.server === undefined || this.new_content.server.trim().length <= 0){
-                    this.inputClassList.server.splice(2, 1, 'w3-red')
-                    return
-                }
+                returnValue.server = this.new_content.server
+                returnValue.password = this.new_content.password
+                returnValue.userid = this.new_content.userid
+                returnValue.targetdir = this.new_content.targetdir
             }else if(this.new_content.connectiontype === 'J'){
-                if(this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0){
-                    this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0){
-                    this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
-                    return
-                }
+                returnValue.jdbc_dbType = this.new_content.jdbc_dbType
+                returnValue.jdbc_password = this.new_content.password
+                returnValue.jdbc_driver = this.new_content.jdbc_driver
+                returnValue.jdbc_url = this.new_content.jdbc_url
+                returnValue.jdbc_userid = this.new_content.userid
             }else if(this.new_content.connectiontype === 'M'){
-        
+                returnValue.mailssl = Number(this.new_content.mailssl)
+                returnValue.password = this.new_content.password
+                returnValue.mailtls = Number(this.new_content.mailtls)
+                returnValue.port = this.new_content.port
+                returnValue.host = this.new_content.host
+                returnValue.user = this.new_content.userid
             }else if(this.new_content.connectiontype === 'O'){
-
+                returnValue.password = this.new_content.password
+                returnValue.port = this.new_content.port
+                returnValue.userid = this.new_content.userid
             }else if(this.new_content.connectiontype === 'S'){
-                if(this.new_content.sapSystemName === undefined || this.new_content.sapSystemName.trim().length <= 0){
-                    this.inputClassList.sapSystemName.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.sapHostIP === undefined || this.new_content.sapHostIP.trim().length <= 0){
-                    this.inputClassList.sapHostIP.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.sapClient === undefined || this.new_content.sapClient.trim().length <= 0){
-                    this.inputClassList.sapClient.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.sapSystemNumber === undefined || this.new_content.sapSystemNumber.trim().length <= 0){
-                    this.inputClassList.sapSystemNumber.splice(2, 1, 'w3-red')
-                    return
-                }
+                returnValue.sapCodePage = this.new_content.sapCodePage
+                returnValue.sapSystemNumber = this.new_content.sapSystemNumber
+                returnValue.sapSystemName = this.new_content.sapSystemName
+                returnValue.sapHostIP = this.new_content.sapHostIP
+                returnValue.sapClient = this.new_content.sapClient
+                returnValue.userid = this.new_content.userid
+                returnValue.password = this.new_content.password
+                returnValue.SAPLANGUAGE = this.new_content.SAPLANGUAGE
             }else if(this.new_content.connectiontype === 'N'){
-                if(this.new_content.notesHostIP === undefined || this.new_content.notesHostIP.trim().length <= 0){
-                    this.inputClassList.notesHostIP.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.notesDBName === undefined || this.new_content.notesDBName.trim().length <= 0){
-                    this.inputClassList.notesDBName.splice(2, 1, 'w3-red')
-                    return
-                }
+                returnValue.notesIor = this.new_content.notesIor
+                returnValue.notesHostIP = this.new_content.notesHostIP
+                returnValue.notesServerName = this.new_content.notesServerName
+                returnValue.password = this.new_content.password
+                returnValue.notesDBName = this.new_content.notesDBName
+                returnValue.userid = this.new_content.userid
             }
 
             return returnValue
@@ -529,6 +588,10 @@ export default {
             this.inputClassList.sapSystemNumber.splice(2, 1)
             this.inputClassList.notesHostIP.splice(2, 1)
             this.inputClassList.notesDBName.splice(2, 1)
+            this.inputClassList.pimendpointtype.splice(2, 1)
+            this.inputClassList.pimendpointname.splice(2, 1)
+            this.inputClassList.pimaccountcontainer.splice(2, 1)
+            this.inputClassList.pimaccountname.splice(2, 1)
         }
     },
     components: {

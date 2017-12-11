@@ -103,36 +103,36 @@ export default {
         },
         save(){
             let postContent = this.$refs.connectionForm.save()
-            
+
             let urlPath = ''
-            if(this.urlOp === 'add'){   //新增一筆file source
-                if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && 
-                        this.selectedCategoryRecord.fscategoryuid !== ''){  //在某個file source category底下新增一筆file source
-                    urlPath = this.urlOp + '?categoryUid=' + this.selectedCategoryRecord.fscategoryuid
-                }else{  //在root位置新增一筆file source
+            if(this.urlOp === 'add'){   //新增一筆connection
+                if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && 
+                        this.selectedCategoryRecord.conncategoryuid !== ''){  //在某個connection category底下新增一筆connection
+                    urlPath = this.urlOp + '?categoryUid=' + this.selectedCategoryRecord.conncategoryuid
+                }else{  //在root位置新增一筆connection
                     urlPath = this.urlOp
                 }
-            } else if(this.urlOp === 'edit'){   //編輯一筆已存在的file source
+            } else if(this.urlOp === 'edit'){   //編輯一筆已存在的connection
                 urlPath = this.urlOp
-            } else if(this.urlOp === 'copy'){   //複制一筆已存在的file source, 到某個file source category底下
+            } else if(this.urlOp === 'copy'){   //複制一筆已存在的connection, 到某個connection category底下
                 /*
                  * 寫死add方法,因為其實copy就等於是add方法的行為
-                 * 沒有回傳fscategoryuid則表示是在root底下新增file source, 此時urlPath只需'add'路徑
+                 * 沒有回傳conncategoryuid則表示是在root底下新增connection, 此時urlPath只需'add'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.fscategoryuid && postContent.fscategoryuid.trim().length > 0)    //當fscategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'add?categoryUid=' + postContent.fscategoryuid
+                    if(postContent.conncategoryuid && postContent.conncategoryuid.trim().length > 0)    //當conncategoryuid有值, 表示有選擇某一個category
+                        urlPath = 'add?categoryUid=' + postContent.conncategoryuid
                     else    //如果選擇'/'表示根目錄, 只需要add即可
                         urlPath = 'add'
                 }
-            } else if(this.urlOp === 'move'){   //移動一筆已存在的file source, 到某個file source category底下
+            } else if(this.urlOp === 'move'){   //移動一筆已存在的connection, 到某個connection category底下
                 /*
                  * 寫死edit方法,因為其實move就等於是edit方法的行為
-                 * 沒有回傳fscategoryuid則表示是把file source移動到root底下, 此時urlPath只需'edit'路徑
+                 * 沒有回傳conncategoryuid則表示是把connection移動到root底下, 此時urlPath只需'edit'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.fscategoryuid && postContent.fscategoryuid.trim().length > 0)    //當fscategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'edit?categoryUid=' + postContent.fscategoryuid
+                    if(postContent.conncategoryuid && postContent.conncategoryuid.trim().length > 0)    //當conncategoryuid有值, 表示有選擇某一個category
+                        urlPath = 'edit?categoryUid=' + postContent.conncategoryuid
                     else    //表示選擇'/'表示根目錄, categoryUid代為空字串
                         urlPath = 'edit?categoryUid='
                 }
@@ -141,16 +141,16 @@ export default {
             }
             
             if(postContent){
-                HTTPRepo.post(`file-source/` + urlPath, postContent)
+                HTTPRepo.post(`connection/` + urlPath, postContent)
                 .then(response => {
                     if(this.urlOp === 'add'){ //add operation
                         this.$emit('closeAdd', response.data)
                     }else if(this.urlOp === 'edit'){    //edit operation
                         this.$emit('closeEdit', response.data)
                     }else if(this.urlOp === 'copy'){  //copy operation
-                        this.$emit('closeCopy', postContent.fscategoryuid, response.data)
+                        this.$emit('closeCopy', postContent.conncategoryuid, response.data)
                     }else if(this.urlOp === 'move'){  //move operation
-                        this.$emit('closeMove', postContent.fscategoryuid, response.data)
+                        this.$emit('closeMove', postContent.conncategoryuid, response.data)
                     }
                 })
                 .catch(error => {

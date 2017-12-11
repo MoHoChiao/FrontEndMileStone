@@ -230,7 +230,7 @@ export default {
                 "description":this.new_content.description
             }
             
-            //fscategoryuid這個值只為了如果是move/copy的情況下, 需要傳回去,才能知道目前選擇的是那一個category
+            //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
             if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
                 returnValue.fscategoryuid = this.fscategoryuid
 
