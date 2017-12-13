@@ -1,11 +1,30 @@
 <template>
     <div class="w3-container w3-small" style="overflow:auto;max-height:485px">
-        <div class="w3-row w3-section">
+        <div v-if="urlOp === 'add' || urlOp === 'edit'" class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name">
+            </div>
+        </div>
+        <div v-else class="w3-row w3-section">
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+            </div>
+            <div class="w3-col m4">
+                <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name">
+            </div>
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+            </div>
+            <div class="w3-col m3">
+                <select :class="inputClassList.conncategoryuid" v-model="conncategoryuid" style="padding:0px">
+                    <option value="" selected>/</option>
+                    <template v-for="category in allCategoryObjs">
+                        <option :value="category.conncategoryuid">{{ category.conncategoryname }}</option>
+                    </template>
+                </select>
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -20,7 +39,7 @@
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Type</label>
             </div>
-            <div class="w3-col m6">
+            <div class="w3-col m9">
                 <select :class="inputClassList.connectiontype" v-model="new_content.connectiontype" @click="clickType" style="padding:0px">
                     <option value="D">Database</option>
                     <option value="F">FTP</option>
@@ -56,14 +75,14 @@
                 <div class="w3-col m8">
                     <span class="w3-text-red">*</span><label>Database Type</label>
                     <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
-                        <template v-for="info in jdbcDriverInfo">
-                            <option :value="info.name" >{{ info.name }}</option>
+                        <template v-for="(info, key) in jdbcDriverInfo">
+                            <option :value="key" >{{ key }}</option>
                         </template>
                         <option value="Generic" >Generic</option>
                     </select>
                 </div>
                 <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px">Test Connection</button>
+                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
@@ -111,7 +130,7 @@
                     <input :class="inputClassList.sapSystemName" v-model="new_content.sapSystemName" type="text" placeholder="Please Input System Name">
                 </div>
                 <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px">Test Connection</button>
+                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
@@ -135,7 +154,7 @@
                 </div>
                 <div class="w3-col m4">
                     <label>Language</label>
-                    <input :class="inputClassList.SAPLANGUAGE" v-model="new_content.SAPLANGUAGE" type="text" placeholder="Please Input Language">
+                    <input :class="inputClassList.saplanguage" v-model="new_content.saplanguage" type="text" placeholder="Please Input Language">
                 </div>
             </div>
         </div>
@@ -147,7 +166,7 @@
                     <input :class="inputClassList.notesHostIP" v-model="new_content.notesHostIP" type="text" placeholder="Please Input Host IP">
                 </div>
                 <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px">Test Connection</button>
+                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
@@ -193,7 +212,7 @@
                 </div>
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Endpoint Name</label>
-                    <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="password" placeholder="Please Input Endpoint Name">
+                    <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="Please Input Endpoint Name">
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
@@ -203,7 +222,7 @@
                 </div>
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Account Name</label>
-                    <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="password" placeholder="Please Input Account Name">
+                    <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="Please Input Account Name">
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
@@ -237,7 +256,7 @@ export default {
                 sapClient: ['w3-input','w3-border'],
                 sapSystemNumber: ['w3-input','w3-border'],
                 sapCodePage: ['w3-input','w3-border'],
-                SAPLANGUAGE: ['w3-input','w3-border'],
+                saplanguage: ['w3-input','w3-border'],
                 notesHostIP: ['w3-input','w3-border'],
                 notesServerName: ['w3-input','w3-border'],
                 notesDBName: ['w3-input','w3-border'],
@@ -247,9 +266,10 @@ export default {
                 pimendpointtype: ['w3-input','w3-border'],
                 pimendpointname: ['w3-input','w3-border'],
                 pimaccountcontainer: ['w3-input','w3-border'],
-                pimaccountname: ['w3-input','w3-border']
+                pimaccountname: ['w3-input','w3-border'],
+                conncategoryuid: ['w3-select','w3-border','w3-round']
             },
-            fscategoryuid: '',  //store categoryuid for copy/move operation
+            conncategoryuid: '',  //store categoryuid for copy/move operation
             allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
             jdbcDriverInfo: new Object(),
             new_content: {
@@ -282,7 +302,7 @@ export default {
                 notesIor: this.content.notesIor,
                 notesServerName: this.content.notesServerName,
                 notesDBName: this.content.notesDBName,
-                SAPLANGUAGE: this.content.SAPLANGUAGE,
+                saplanguage: this.content.saplanguage,
                 sapSystemNumber: this.content.sapSystemNumber,
                 sapSystemName: this.content.sapSystemName,
                 sapHostIP: this.content.sapHostIP,
@@ -293,27 +313,11 @@ export default {
     },
     created() {
         //Get all jdbc connection info
-        HTTPRepo.get(`connection/findJDBCDriverInfo`)
-            .then(response => {
-                this.jdbcDriverInfo = response.data
-            })
-            .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
-
+        this.getJDBCInfo()
+        
         if(this.urlOp === 'copy' || this.urlOp === 'move'){
+            this.getCategories()    //取得所有可供選擇的connection categories
+
             if(this.urlOp === 'copy'){
                 //copy動作, 把name和description設空值
                 this.new_content.connectionname = ''
@@ -324,6 +328,13 @@ export default {
         if(this.urlOp !== 'add'){    //如果不是add, 表示connectiontype必定有值,要把typeFlag中對應的connectiontype值改為true
             this.clickType()
         }
+
+        /*
+         *因為JDBC Connection時, 一樣是userid卻叫jdbc_userid, 而password叫jdbc_password
+         *因為Mail Connection時, 一樣是userid卻叫user
+         *由於以上兩點, 所以才需下面這個function來作一些很不自然的轉換動作, 這樣的設計是標準的UI相依於後端邏輯, very suck!!!
+        */
+        this.convertUserIdAndPassword()
     },
     props: {
         content: {
@@ -355,7 +366,7 @@ export default {
                     notesIor: '',
                     notesServerName: '',
                     notesDBName: '',
-                    SAPLANGUAGE: '',
+                    saplanguage: '',
                     sapSystemNumber: '',
                     sapSystemName: '',
                     sapHostIP: '',
@@ -375,16 +386,13 @@ export default {
             this.typeFlag[this.new_content.connectiontype] = true
         },
         clickJDBCType() {
-            if(this.new_content.jdbc_dbType === 'Generic'){
-                this.new_content.jdbc_driver = ''
-                this.new_content.jdbc_url = ''
-            }else{
-                for (let i = 0, len = this.jdbcDriverInfo.length; i < len; i++) {
-                    if(this.new_content.jdbc_dbType === this.jdbcDriverInfo[i].name){
-                        this.new_content.jdbc_driver = this.jdbcDriverInfo[i].driver
-                        this.new_content.jdbc_url = this.jdbcDriverInfo[i].url
-                        break
-                    }
+            if(this.new_content.jdbc_dbType !== this.content.jdbc_dbType){
+                if(this.new_content.jdbc_dbType === 'Generic'){
+                    this.new_content.jdbc_driver = ''
+                    this.new_content.jdbc_url = ''
+                }else{
+                    this.new_content.jdbc_driver = this.jdbcDriverInfo[this.new_content.jdbc_dbType].driver
+                    this.new_content.jdbc_url = this.jdbcDriverInfo[this.new_content.jdbc_dbType].url
                 }
             }
         },
@@ -521,7 +529,7 @@ export default {
                 returnValue.sapClient = this.new_content.sapClient
                 returnValue.userid = this.new_content.userid
                 returnValue.password = this.new_content.password
-                returnValue.SAPLANGUAGE = this.new_content.SAPLANGUAGE
+                returnValue.saplanguage = this.new_content.saplanguage
             }else if(this.new_content.connectiontype === 'N'){
                 returnValue.notesIor = this.new_content.notesIor
                 returnValue.notesHostIP = this.new_content.notesHostIP
@@ -533,47 +541,190 @@ export default {
 
             return returnValue
         },
+        testConnection(){
+            if(this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0){
+                this.inputClassList.userid.splice(2, 1, 'w3-red')
+                return
+            }
+
+            if(this.new_content.password === undefined || this.new_content.password.trim().length <= 0){
+                this.inputClassList.password.splice(2, 1, 'w3-red')
+                return
+            }
+
+            let postData = new Object()
+            let urlPath = ``
+
+            if(this.new_content.connectiontype === 'J'){
+                if(this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0){
+                    this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0){
+                    this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
+                    return
+                }
+                urlPath = `connection/test-jdbc-conn`
+                postData.jdbc_url = this.new_content.jdbc_url
+                postData.jdbc_driver = this.new_content.jdbc_driver
+                postData.jdbc_userid = this.new_content.userid
+                postData.jdbc_password = this.new_content.password
+                postData.jdbc_dbType = this.new_content.jdbc_dbType
+            }else if(this.new_content.connectiontype === 'N'){
+                if(this.new_content.notesHostIP === undefined || this.new_content.notesHostIP.trim().length <= 0){
+                    this.inputClassList.notesHostIP.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.notesDBName === undefined || this.new_content.notesDBName.trim().length <= 0){
+                    this.inputClassList.notesDBName.splice(2, 1, 'w3-red')
+                    return
+                }
+                urlPath = `connection/test-notes-conn`
+                postData.notesIor = this.new_content.notesIor
+                postData.notesHostIP = this.new_content.notesHostIP
+                postData.notesServerName = this.new_content.notesServerName
+                postData.password = this.new_content.password
+                postData.notesDBName = this.new_content.notesDBName
+                postData.userid = this.new_content.userid
+            }else if(this.new_content.connectiontype === 'S'){
+
+            }else{
+                return
+            }
+
+            HTTPRepo.post(urlPath, postData)
+                .then(response => {
+                    let newStatus = {
+                        "msg": response.data,
+                        "status": "Success"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                })
+                .catch(error => {
+                    if (error.response && error.response.data) {
+                        let msg = error.response.data
+
+                        if(error.response.data.message){
+                            msg = error.response.data.message
+                            if(error.response.data.exception)
+                                msg = error.response.data.exception + ' [' + msg +']'
+                        }
+
+                        let newStatus = {
+                            "msg": msg,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    } else {
+                        let newStatus = {
+                            "msg": error.message,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                })
+        },
+        testNotesConnection(){
+            if(this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0){
+                this.inputClassList.userid.splice(2, 1, 'w3-red')
+                return
+            }
+
+            if(this.new_content.password === undefined || this.new_content.password.trim().length <= 0){
+                this.inputClassList.password.splice(2, 1, 'w3-red')
+                return
+            }
+
+            if(this.new_content.connectiontype === 'J'){
+                if(this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0){
+                    this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
+                    return
+                }else if(this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0){
+                    this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
+                    return
+                }
+                
+                let postData = {
+                    "jdbc_url":this.new_content.jdbc_url,
+                    "jdbc_driver":this.new_content.jdbc_driver,
+                    "jdbc_userid":this.new_content.userid,
+                    "jdbc_password":this.new_content.password,
+                    "jdbc_dbType":this.new_content.jdbc_dbType
+                }
+
+                HTTPRepo.post(`connection/test-jdbc-conn`, postData)
+                .then(response => {
+                    let newStatus = {
+                        "msg": response.data,
+                        "status": "Success"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                })
+                .catch(error => {
+                    if (error.response && error.response.data) {
+                        let newStatus = {
+                            "msg": error.response.data,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    } else {
+                        let newStatus = {
+                            "msg": error.message,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                })
+            }
+        },
         reset(){
             //clear red font
             this.clearInValid()
 
             //reset value to initial
-            if(this.urlOp !== 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
-                this.new_content.connectionuid = this.content.filesourceuid
-                this.new_content.connectionname = this.content.filesourcename
+            if(this.urlOp === 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
+                this.new_content.connectionname = ''
+                this.new_content.description = ''
+            }else{
+                this.new_content.connectionname = this.content.connectionname
                 this.new_content.description = this.content.description
             }
 
+            this.new_content.connectionuid = this.content.connectionuid
             this.new_content.connectiontype = this.content.connectiontype,
             this.new_content.pimendpointtype = this.content.pimendpointtype,
             this.new_content.pimendpointname = this.content.pimendpointname,
             this.new_content.pimaccountcontainer = this.content.pimaccountcontainer,
             this.new_content.pimaccountname = this.content.pimaccountname,
-            this.new_content.withpim = this.content.withpim,
-            this.new_content.userid = this.content.userid,
+            this.new_content.withpim = Number(this.content.withpim),
             this.new_content.server = this.content.server,
-            this.new_content.password = this.content.password,
             this.new_content.targetdir = this.content.targetdir,
             this.new_content.jdbc_dbType = this.content.jdbc_dbType,
             this.new_content.jdbc_url = this.content.jdbc_url,
             this.new_content.jdbc_driver = this.content.jdbc_driver,
-            this.new_content.jdbc_userid = this.content.jdbc_userid,
-            this.new_content.jdbc_password = this.content.jdbc_password,
             this.new_content.host = this.content.host,
             this.new_content.port = this.content.port,
-            this.new_content.mailssl = this.content.mailssl,
-            this.new_content.mailtls = this.content.mailtls,
+            this.new_content.mailssl = Number(this.content.mailssl),
+            this.new_content.mailtls = Number(this.content.mailtls),
             this.new_content.user = this.content.user,
             this.new_content.notesHostIP = this.content.notesHostIP,
             this.new_content.notesIor = this.content.notesIor,
             this.new_content.notesServerName = this.content.notesServerName,
             this.new_content.notesDBName = this.content.notesDBName,
-            this.new_content.SAPLANGUAGE = this.content.SAPLANGUAGE,
+            this.new_content.saplanguage = this.content.saplanguage,
             this.new_content.sapSystemNumber = this.content.sapSystemNumber,
             this.new_content.sapSystemName = this.content.sapSystemName,
             this.new_content.sapHostIP = this.content.sapHostIP,
             this.new_content.sapCodePage = this.content.sapCodePage,
             this.new_content.sapClient = this.content.sapClient
+
+            /*
+             *因為JDBC Connection時, 一樣是userid卻叫jdbc_userid, 而password叫jdbc_password
+             *因為Mail Connection時, 一樣是userid卻叫user
+             *由於以上兩點, 所以才需下面這個function來作一些很不自然的轉換動作, 這樣的設計是標準的UI相依於後端邏輯, very suck!!!
+            */
+            this.convertUserIdAndPassword()
+
+            //當connectiontype值變了之後, 尚需要改變UI的功能選項
+            this.clickType()
         },
         clearInValid(){
             this.inputClassList.connectionname.splice(2, 1)
@@ -592,6 +743,67 @@ export default {
             this.inputClassList.pimendpointname.splice(2, 1)
             this.inputClassList.pimaccountcontainer.splice(2, 1)
             this.inputClassList.pimaccountname.splice(2, 1)
+        },
+        getCategories(){    //Get all connection category
+            let params = {
+                "ordering":{
+                    "orderType":"ASC",
+                    "orderField":"conncategoryname"
+                }
+            }
+
+            HTTPRepo.post(`connection-category/findByFilter`, params)
+            .then(response => {
+                this.allCategoryObjs = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        },
+        getJDBCInfo(){  //Get all jdbc connection info
+            HTTPRepo.get(`connection/findJDBCDriverInfo`)
+            .then(response => {
+                this.jdbcDriverInfo = response.data
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        },
+        convertUserIdAndPassword(){
+            if(this.new_content.connectiontype === 'J'){    //因為JDBC Connection時, 一樣是userid卻叫jdbc_userid, 而password叫jdbc_password, so suck!
+                this.new_content.userid = this.content.jdbc_userid
+                this.new_content.password = this.content.jdbc_password
+            }else if(this.new_content.connectiontype === 'M'){  //因為Mail Connection時, 一樣是userid卻叫user, so suck!
+                this.new_content.userid = this.content.user
+                this.new_content.password = this.content.password
+            }else{
+                this.new_content.userid = this.content.userid
+                this.new_content.password = this.content.password
+            }
         }
     },
     components: {

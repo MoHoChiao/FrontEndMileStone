@@ -173,7 +173,7 @@ export default {
     },
     mounted() {
         this.getCategories()
-        this.getConnections()
+        // this.getConnections()
     },
     methods: {
         /*
@@ -216,7 +216,7 @@ export default {
                     "orderField":"conncategoryname"
                 }
             }
-
+            console.log('getCategories():'+params)
             HTTPRepo.post(`connection-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
@@ -232,7 +232,6 @@ export default {
                 categoryContainer.scrollTop = -categoryContainer.scrollHeight
             })
             .catch(error => {
-                alert(error)
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
@@ -275,7 +274,8 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-
+            console.log(urlPath)
+            console.log(params)
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
@@ -393,12 +393,10 @@ export default {
             //new_content !== undefined, it means from Connection Window Save Click
             if(new_content && this.selectedConnectionRecord && (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0)){
                 if(this.selectedCategoryRecord.conncategoryuid === conncategoryuid){
-                    alert('if')
                     new_content.index = this.selectedConnectionRecord.index   //asign old index prop to new content
                     this.allConnectionObjs[this.selectedConnectionRecord.index] = new_content   //replace object to the array
                     this.selectedConnectionRecord = new_content
                 }else{
-                    alert('else')
                     this.allConnectionObjs.splice(this.selectedConnectionRecord.index, 1)
                     this.clearSelectedConnectionRecord()
                 }

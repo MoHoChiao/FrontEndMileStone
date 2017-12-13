@@ -277,8 +277,11 @@ export default {
             this.clearInValid()
 
             //reset value to initial
-            if(this.urlOp !== 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
-                this.new_content.filesourceuid = this.content.filesourceuid
+            this.new_content.filesourceuid = this.content.filesourceuid
+            if(this.urlOp === 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
+                this.new_content.filesourcename = ''
+                this.new_content.description = ''
+            }else{
                 this.new_content.filesourcename = this.content.filesourcename
                 this.new_content.description = this.content.description
             }

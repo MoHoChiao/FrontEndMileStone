@@ -169,7 +169,7 @@ export default {
     },
     mounted() {
         this.getCategories()
-        this.getFileSources()
+        // this.getFileSources()
     },
     methods: {
         /*
@@ -212,7 +212,7 @@ export default {
                     "orderField":"fscategoryname"
                 }
             }
-
+            console.log('getCategories():'+params)
             HTTPRepo.post(`file-source-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
@@ -270,7 +270,7 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-
+            console.log('getFileSources()'+params+'/'+e)
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
@@ -388,12 +388,10 @@ export default {
             //new_content !== undefined, it means from File Source Window Save Click
             if(new_content && this.selectedFileSourceRecord && (this.selectedFileSourceRecord.index || this.selectedFileSourceRecord.index === 0)){
                 if(this.selectedCategoryRecord.fscategoryuid === fscategoryuid){
-                    alert('if')
                     new_content.index = this.selectedFileSourceRecord.index   //asign old index prop to new content
                     this.allFileSourceObjs[this.selectedFileSourceRecord.index] = new_content   //replace object to the array
                     this.selectedFileSourceRecord = new_content
                 }else{
-                    alert('else')
                     this.allFileSourceObjs.splice(this.selectedFileSourceRecord.index, 1)
                     this.clearSelectedFileSourceRecord()
                 }

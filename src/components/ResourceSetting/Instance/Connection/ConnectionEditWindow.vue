@@ -66,7 +66,7 @@ export default {
                     notesIor: '',
                     notesServerName: '',
                     notesDBName: '',
-                    SAPLANGUAGE: '',
+                    saplanguage: '',
                     sapSystemNumber: '',
                     sapSystemName: '',
                     sapHostIP: '',
