@@ -163,7 +163,7 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-
+            console.log('getVRAgents()'+params+'/'+e)
             HTTPRepo.post(`vragent/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form

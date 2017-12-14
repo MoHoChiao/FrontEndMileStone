@@ -173,7 +173,7 @@ export default {
     },
     mounted() {
         this.getCategories()
-        // this.getConnections()
+        // this.getConnections()    //不需要, 因為getCategories()裡就會呼叫到getConnections()
     },
     methods: {
         /*
@@ -216,7 +216,7 @@ export default {
                     "orderField":"conncategoryname"
                 }
             }
-            console.log('getCategories():'+params)
+
             HTTPRepo.post(`connection-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
@@ -274,8 +274,7 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-            console.log(urlPath)
-            console.log(params)
+            console.log('getConnections()'+params+'/'+e)
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {

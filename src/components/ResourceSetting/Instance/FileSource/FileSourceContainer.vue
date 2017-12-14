@@ -169,7 +169,7 @@ export default {
     },
     mounted() {
         this.getCategories()
-        // this.getFileSources()
+        // this.getFileSources()    //不需要, 因為getCategories()裡就會呼叫到getFileSources()
     },
     methods: {
         /*
@@ -212,7 +212,7 @@ export default {
                     "orderField":"fscategoryname"
                 }
             }
-            console.log('getCategories():'+params)
+
             HTTPRepo.post(`file-source-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data

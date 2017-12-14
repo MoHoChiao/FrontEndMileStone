@@ -386,7 +386,7 @@ export default {
             this.typeFlag[this.new_content.connectiontype] = true
         },
         clickJDBCType() {
-            if(this.new_content.jdbc_dbType !== this.content.jdbc_dbType){
+            if(this.new_content.jdbc_dbType !== this.content.jdbc_dbType){  //不相等, 表示才是由使用者操作所選擇的jdbc type, 此時才需要代入預設值
                 if(this.new_content.jdbc_dbType === 'Generic'){
                     this.new_content.jdbc_driver = ''
                     this.new_content.jdbc_url = ''

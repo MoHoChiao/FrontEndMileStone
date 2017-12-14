@@ -16,9 +16,9 @@
             </p>
             <p class="w3-center">Page Num</p>
             <p>
-                <select class="w3-select w3-border w3-round" v-model="selectedNum" @change="changeNum">
+                <select :class="inputClassList.selectedNum" v-model="selectedNum" @change="changeNum">
                     <option value="-1" disabled selected>Num</option>
-                    <option :value="index" v-for="(page, index) in totalPages">{{ index + 1 }}</option>
+                    <option :value="index-1" v-for="index in totalPages">{{ index }}</option>
                 </select>
             </p>
         </div>
@@ -90,6 +90,9 @@ import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
+            inputClassList: {
+                selectedNum: ['w3-select','w3-border','w3-round'],
+            },
             //for pagging
             selectedNum: 0,
             selectedSize: 10,
@@ -123,7 +126,7 @@ export default {
             this.selectedNum = 0
             this.$emit('fromFilter', e)
         },
-        changeNum(e){
+        changeNum(e){            
             this.$emit('fromFilter', e)
         },
         applyOrder(e){
