@@ -16,10 +16,18 @@
             </p>
             <p class="w3-center">Page Num</p>
             <p>
-                <select :class="inputClassList.selectedNum" v-model="selectedNum" @change="changeNum">
+                <div class="w3-bar w3-border w3-round">
+                    <template v-for="index in totalPages">
+                        <a class="w3-bar-item w3-button w3-border" 
+                            :id="index" :key="index" 
+                            style="margin-bottom:0px;padding:6px 6px 6px 6px" 
+                            @click="changeNum($event, index)">{{ index }}</a>
+                    </template>
+                </div>
+                <!--select :class="inputClassList.selectedNum" v-model="selectedNum" @change="changeNum">
                     <option value="-1" disabled selected>Num</option>
                     <option :value="index-1" v-for="index in totalPages">{{ index }}</option>
-                </select>
+                </select-->
             </p>
         </div>
     </div>
@@ -90,9 +98,6 @@ import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
-            inputClassList: {
-                selectedNum: ['w3-select','w3-border','w3-round'],
-            },
             //for pagging
             selectedNum: 0,
             selectedSize: 10,
@@ -123,27 +128,53 @@ export default {
     },
     methods: {
         changeSize(e){
-            this.selectedNum = 0
+            //每一次的查詢, 都要讓page number先回到第一頁
+            this.pageNumSelected('1')
             this.$emit('fromFilter', e)
         },
-        changeNum(e){            
+        changeNum(e, index){
+            //紀錄現在點擊的是那一頁
+            this.pageNumSelected(index)
             this.$emit('fromFilter', e)
         },
         applyOrder(e){
             this.isOrder = true
+            //每一次的查詢, 都要讓page number先回到第一頁
+            this.pageNumSelected('1')
             this.$emit('fromFilter', e)
         },
         applyQuery(e){
             this.isQuery = true
+            //每一次的查詢, 都要讓page number先回到第一頁
+            this.pageNumSelected('1')
             this.$emit('fromFilter', e)
         },
         cancelOrder(e){
             this.isOrder = false
+            //每一次的查詢, 都要讓page number先回到第一頁
+            this.pageNumSelected('1')
             this.$emit('fromFilter', e)
         },
         cancelQuery(e){
             this.isQuery = false
+            //每一次的查詢, 都要讓page number先回到第一頁
+            this.pageNumSelected('1')
             this.$emit('fromFilter', e)
+        },
+        pageNumSelected(index){
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            let pageNumBtn = document.getElementById(index)
+            let pageNumBar = pageNumBtn.parentElement;
+
+            //先恢復所有page number button的class
+            for(var i=0;i<pageNumBar.childNodes.length;i++){
+                pageNumBar.childNodes[i].className = 'w3-bar-item w3-button w3-border'
+            }
+
+            //再讓目標page number button為灰色背景
+            if (pageNumBtn.className.indexOf('w3-grey') == -1) {
+                pageNumBtn.className = pageNumBtn.className + ' w3-grey'
+            }
         }
     }
 }

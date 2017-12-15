@@ -191,6 +191,7 @@ export default {
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
+            this.$refs.filter.pageNumSelected('1')  //每次'點擊'category刷新時, 重載connections都讓filter的page number回到第一頁
             this.getConnections()   //refresh Connections content
         },
         clickOnConnection(id, index){
@@ -223,6 +224,7 @@ export default {
 
                 this.clearSelectedCategoryRecord()
                 this.clearSelectedConnectionRecord()
+                this.$refs.filter.pageNumSelected('1')  //每次category刷新時, 重載connections都讓filter的page number回到第一頁
                 this.getConnections()   //refresh Connections content
                 
                 /*

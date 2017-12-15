@@ -187,6 +187,7 @@ export default {
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
+            this.$refs.filter.pageNumSelected('1')  //每次'點擊'category刷新時, 重載filesources都讓filter的page number回到第一頁
             this.getFileSources()   //refresh file sources content
         },
         clickOnFileSource(id, index){
@@ -219,6 +220,7 @@ export default {
 
                 this.clearSelectedCategoryRecord()
                 this.clearSelectedFileSourceRecord()
+                this.$refs.filter.pageNumSelected('1')  //每次category刷新時, 重載filesources都讓filter的page number回到第一頁
                 this.getFileSources()   //refresh file sources content
                 
                 /*
