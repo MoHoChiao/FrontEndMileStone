@@ -125,34 +125,31 @@
         <div v-show="typeFlag['S']">
             <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
-                <div class="w3-col m8">
+                <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>System Name</label>
                     <input :class="inputClassList.sapSystemName" v-model="new_content.sapSystemName" type="text" placeholder="Please Input System Name">
                 </div>
-                <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
-                </div>
-            </div>
-            <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Host IP</label>
                     <input :class="inputClassList.sapHostIP" v-model="new_content.sapHostIP" type="text" placeholder="Please Input Host IP">
                 </div>
+            </div>
+            <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Client</label>
                     <input :class="inputClassList.sapClient" v-model="new_content.sapClient" type="text" placeholder="Please Input Client">
                 </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m4">
+                <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>System #</label>
                     <input :class="inputClassList.sapSystemNumber" v-model="new_content.sapSystemNumber" type="text" placeholder="Please Input System Number">
                 </div>
-                <div class="w3-col m4">
+            </div>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m6">
                     <label>Code Page</label>
                     <input :class="inputClassList.sapCodePage" v-model="new_content.sapCodePage" type="text" placeholder="Please Input Code Page">
                 </div>
-                <div class="w3-col m4">
+                <div class="w3-col m6">
                     <label>Language</label>
                     <input :class="inputClassList.saplanguage" v-model="new_content.saplanguage" type="text" placeholder="Please Input Language">
                 </div>
@@ -161,26 +158,21 @@
         <div v-show="typeFlag['N']">
             <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
-                <div class="w3-col m8">
+                <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Host IP</label>
                     <input :class="inputClassList.notesHostIP" v-model="new_content.notesHostIP" type="text" placeholder="Please Input Host IP">
                 </div>
-                <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
-                </div>
-            </div>
-            <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <label>Server Name</label>
                     <input :class="inputClassList.notesServerName" v-model="new_content.notesServerName" type="text" placeholder="Please Input Server Name">
                 </div>
+            </div>
+            <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Database Name</label>
                     <input :class="inputClassList.notesDBName" v-model="new_content.notesDBName" type="text" placeholder="Please Input Database Name">
                 </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m12">
+                <div class="w3-col m6">
                     <label>IOR String</label>
                     <input :class="inputClassList.notesIor" v-model="new_content.notesIor" type="text" placeholder="Please Input IOR String">
                 </div>
@@ -569,23 +561,6 @@ export default {
                 postData.jdbc_userid = this.new_content.userid
                 postData.jdbc_password = this.new_content.password
                 postData.jdbc_dbType = this.new_content.jdbc_dbType
-            }else if(this.new_content.connectiontype === 'N'){
-                if(this.new_content.notesHostIP === undefined || this.new_content.notesHostIP.trim().length <= 0){
-                    this.inputClassList.notesHostIP.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.notesDBName === undefined || this.new_content.notesDBName.trim().length <= 0){
-                    this.inputClassList.notesDBName.splice(2, 1, 'w3-red')
-                    return
-                }
-                urlPath = `connection/test-notes-conn`
-                postData.notesIor = this.new_content.notesIor
-                postData.notesHostIP = this.new_content.notesHostIP
-                postData.notesServerName = this.new_content.notesServerName
-                postData.password = this.new_content.password
-                postData.notesDBName = this.new_content.notesDBName
-                postData.userid = this.new_content.userid
-            }else if(this.new_content.connectiontype === 'S'){
-
             }else{
                 return
             }
@@ -621,59 +596,6 @@ export default {
                         this.$store.dispatch('setSystemStatus', newStatus)
                     }
                 })
-        },
-        testNotesConnection(){
-            if(this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0){
-                this.inputClassList.userid.splice(2, 1, 'w3-red')
-                return
-            }
-
-            if(this.new_content.password === undefined || this.new_content.password.trim().length <= 0){
-                this.inputClassList.password.splice(2, 1, 'w3-red')
-                return
-            }
-
-            if(this.new_content.connectiontype === 'J'){
-                if(this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0){
-                    this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
-                    return
-                }else if(this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0){
-                    this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
-                    return
-                }
-                
-                let postData = {
-                    "jdbc_url":this.new_content.jdbc_url,
-                    "jdbc_driver":this.new_content.jdbc_driver,
-                    "jdbc_userid":this.new_content.userid,
-                    "jdbc_password":this.new_content.password,
-                    "jdbc_dbType":this.new_content.jdbc_dbType
-                }
-
-                HTTPRepo.post(`connection/test-jdbc-conn`, postData)
-                .then(response => {
-                    let newStatus = {
-                        "msg": response.data,
-                        "status": "Success"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                })
-                .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
-                })
-            }
         },
         reset(){
             //clear red font

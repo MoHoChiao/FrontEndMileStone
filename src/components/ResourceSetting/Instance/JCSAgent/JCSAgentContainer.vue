@@ -142,7 +142,7 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-            console.log('getAgents()'+params+'/'+e)
+
             HTTPRepo.post(`jcsagent/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form

@@ -276,11 +276,13 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-            console.log('getConnections()'+params+'/'+e)
+
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
                     this.allConnectionObjs = response.data.content
+                    if(response.data.totalPages <= 0)
+                        response.data.totalPages = 1
                     this.$refs.filter.totalPages = response.data.totalPages
                 } else {
                     this.allConnectionObjs = response.data

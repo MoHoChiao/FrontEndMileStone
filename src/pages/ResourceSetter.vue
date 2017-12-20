@@ -72,7 +72,7 @@
                                 <p>
                                     <div class="w3-bar-block">
                                         <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
+                                        <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
                                         <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>Exclude Freq</a>
                                     </div>
                                 </p>
@@ -168,6 +168,9 @@ export default {
         },
         getConnections(e){
             this.$router.push({ name: 'Connection'})
+        },
+        getFrequencies(e){
+            this.$router.push({ name: 'Frequency'})
         }
     },
     components: {

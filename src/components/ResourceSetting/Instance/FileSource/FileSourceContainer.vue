@@ -272,11 +272,13 @@ export default {
                     "ignoreCase":this.$refs.filter.ignoreCase
                 }
             }
-            console.log('getFileSources()'+params+'/'+e)
+            
             HTTPRepo.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
                     this.allFileSourceObjs = response.data.content
+                    if(response.data.totalPages <= 0)
+                        response.data.totalPages = 1
                     this.$refs.filter.totalPages = response.data.totalPages
                 } else {
                     this.allFileSourceObjs = response.data
