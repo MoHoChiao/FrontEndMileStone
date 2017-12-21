@@ -41,14 +41,7 @@
                   <div v-if="content.wcalendarlist.length > 0">
                     <div class="w3-responsive w3-card w3-round">
                         <input :id="content.wcalendaruid+'SearchInput'" :key="content.wcalendaruid+'SearchInput'" 
-                            class="w3-input w3-border" type="text" placeholder="Search For List.." @keyup="searchForList(content.wcalendaruid)">
-                    </div>
-                    <div class="w3-responsive w3-card w3-round">
-                        <table class="w3-table-all w3-small">
-                            <tr class="w3-teal">
-                                <th class="w3-center" width="100%">Workinf Calendar List</th>
-                            </tr>
-                        </table>
+                            class="w3-input w3-border w3-border-camo-black w3-grey" type="text" placeholder="Search For Workinf Calendar List..." @keyup="searchForList(content.wcalendaruid)">
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                         <table :id="content.wcalendaruid+'ListTable'" :key="content.wcalendaruid+'ListTable'" class="w3-table-all w3-small">

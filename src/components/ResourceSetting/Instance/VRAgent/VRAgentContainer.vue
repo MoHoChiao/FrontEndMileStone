@@ -40,32 +40,34 @@
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <p>
-                  <div class="w3-responsive w3-card w3-round">
-                    <table class="w3-table-all w3-small">
-                        <tr class="w3-teal">
-                            <th class="w3-center" width="7%">Seq</th>
-                            <th class="w3-center" width="33%">Name</th>
-                            <th class="w3-center" width="10%">Activate</th>
-                            <th class="w3-center" width="50%">Description</th>
-                        </tr>
-                    </table>
-                  </div>
-                  <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
-                    <table class="w3-table-all w3-small">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
-                            <td width="7%">{{ list_index + 1 }}</td>
-                            <td class="w3-center" width="33%">
-                                <span>{{ list_info.agentname }}</span>
-                            </td>
-                            <td class="w3-center" width="10%">
-                                <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>
-                                <i v-else class="fa fa-square-o" title="Deactivate" aria-hidden="true"></i>
-                            </td>
-                            <td width="50%">
-                                <span>{{ list_info.description }}</span>
-                            </td>
-                        </tr>
-                    </table>
+                  <div v-if="content.agentlist.length > 0">
+                    <div class="w3-responsive w3-card w3-round">
+                        <table class="w3-table-all w3-small">
+                            <tr class="w3-teal">
+                                <th class="w3-center" width="7%">Seq</th>
+                                <th class="w3-center" width="33%">Name</th>
+                                <th class="w3-center" width="10%">Activate</th>
+                                <th class="w3-center" width="50%">Description</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
+                        <table class="w3-table-all w3-small">
+                            <tr class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
+                                <td width="7%">{{ list_index + 1 }}</td>
+                                <td class="w3-center" width="33%">
+                                    <span>{{ list_info.agentname }}</span>
+                                </td>
+                                <td class="w3-center" width="10%">
+                                    <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>
+                                    <i v-else class="fa fa-square-o" title="Deactivate" aria-hidden="true"></i>
+                                </td>
+                                <td width="50%">
+                                    <span>{{ list_info.description }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                   </div>
                 </p>
                 <hr class="w3-border-black w3-clear">
