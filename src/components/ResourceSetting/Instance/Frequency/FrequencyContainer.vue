@@ -3,7 +3,7 @@
     <!-- for Vue 2.0 -->
     <div class="row">
       <span>Departure Date：</span>
-      <!--date-picker :date="startTime" :option="option" :limit="limit" :inputMode='false'></date-picker-->
+      <date-picker :date="startTime" :option="option" :limit="limit" :inputMode='false'></date-picker>
     </div>
 
   </div>

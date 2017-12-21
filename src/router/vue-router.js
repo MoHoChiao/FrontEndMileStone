@@ -6,6 +6,7 @@ import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/J
 import VRAgentContainer from '../components/ResourceSetting/Instance/VRAgent/VRAgentContainer.vue'
 import FileSourceContainer from '../components/ResourceSetting/Instance/FileSource/FileSourceContainer.vue'
 import ConnectionContainer from '../components/ResourceSetting/Instance/Connection/ConnectionContainer.vue'
+import WorkingCalendarContainer from '../components/ResourceSetting/Instance/WorkingCalendar/WorkingCalendarContainer.vue'
 import FrequencyContainer from '../components/ResourceSetting/Instance/Frequency/FrequencyContainer.vue'
 
 Vue.use(VueRouter);
@@ -44,6 +45,13 @@ export default new VueRouter({
                     path: 'Connection',
                     components: {
                         content: ConnectionContainer
+                    }
+                },
+                {
+                    name: 'WorkingCalendar',
+                    path: 'WorkingCalendar',
+                    components: {
+                        content: WorkingCalendarContainer
                     }
                 },
                 {

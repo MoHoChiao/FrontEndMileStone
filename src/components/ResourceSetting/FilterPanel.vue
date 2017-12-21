@@ -16,23 +16,7 @@
             </p>
             <p class="w3-center">Page Num</p>
             <p>
-                <!--div class="w3-bar w3-round">
-                    <template v-for="index in totalPages">
-                        <a class="w3-bar-item w3-button w3-border" 
-                            :id="index" :key="index" 
-                            style="margin-bottom:0px;padding:6px 6px 6px 6px" 
-                            @click="changeNum($event, index)">{{ index }}</a>
-                    </template>
-                </div-->
                 <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
-                <!--select>
-                    <option value="-1" disabled selected>Num</option>
-                    <option :value="index-1" 
-                        v-for="index in totalPages" 
-                        :id="index" :key="index" 
-                        @change="changeNum($event, index)">{{ index }}
-                    </option>
-                </select-->
             </p>
         </div>
     </div>

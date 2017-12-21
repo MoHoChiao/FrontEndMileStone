@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <vr-agent-form slot="content" ref="vrAgentForm"></vr-agent-form>
+        <working-calendar-form slot="content" ref="wcForm"></working-calendar-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import VRAgentForm from './VRAgentForm.vue'
+import WorkingCalendarForm from './WorkingCalendarForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -32,10 +32,10 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.wcForm.save()
             
             if(postContent){
-                HTTPRepo.post(`vragent/add`, postContent)
+                HTTPRepo.post(`working-calendar/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })
@@ -57,12 +57,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.wcForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'vr-agent-form': VRAgentForm,
+        'working-calendar-form': WorkingCalendarForm,
         'form-button': FormButton
     }
 }

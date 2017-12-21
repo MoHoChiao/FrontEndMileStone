@@ -56,7 +56,7 @@ export default {
     },
     pageLinkClass: {
       type: String,
-      default: 'w3-bar-item w3-button w3-round'
+      default: 'w3-bar-item w3-button w3-round-small'
     },
     prevLinkClass: {
       type: String,

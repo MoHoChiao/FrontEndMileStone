@@ -1,13 +1,13 @@
 <template>
     <div>
-        <vr-agent-form ref="vrAgentForm" :index="index" :content="content"></vr-agent-form>
+        <working-calendar-form ref="wcForm" :index="index" :content="content"></working-calendar-form>
         <hr class="w3-border-grey">
         <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
-import VRAgentForm from './VRAgentForm.vue'
+import WorkingCalendarForm from './WorkingCalendarForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -16,12 +16,10 @@ export default {
             type: Object,
             default () {
                 return {
-                    virtualagentuid: '',
-                    virtualagentname: '',
+                    wcalendaruid: '',
+                    wcalendarname: '',
                     description: '',
-                    maximumjob: 5,
-                    activate: '0',
-                    mode: '0'
+                    activate: '0'
                 }
             }
         },
@@ -32,10 +30,10 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.wcForm.save()
             
             if(postContent){
-                HTTPRepo.post(`vragent/edit`, postContent)
+                HTTPRepo.post(`working-calendar/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })
@@ -57,11 +55,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.wcForm.reset()
         }
     },
     components: {
-        'vr-agent-form': VRAgentForm,
+        'working-calendar-form': WorkingCalendarForm,
         'form-button': FormButton
     }
 }
