@@ -1,53 +1,65 @@
 <template>
-  <div class="w3-card-4">
-    <div class="w3-row w3-teal">
-      <div class="w3-col m2" @click="nextMonth('pre')" style="padding-top:8px;padding-bottom:8px">
-        <button class="w3-button w3-left w3-hover-none">
-          <i class="fa fa-arrow-left" title="pre month" aria-hidden="true"></i>
-        </button>
-      </div>
-      <div class="w3-col m8 w3-center">
-        <button class="w3-button w3-hover-none" style="padding-top:6px;padding-bottom:3px" @click="showYear">{{checked.year}}</button>
-        <br>
-        <button class="w3-button w3-hover-none" style="padding-top:0px;padding-bottom:6px" @click="showMonth">{{displayInfo.month}}</button>
-      </div>
-      <div class="w3-col m2" @click="nextMonth('next')" style="padding-top:8px;padding-bottom:8px">
-        <button class="w3-button w3-right w3-hover-none"><i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i></button>
-      </div>
+  <div class="cov-vue-date" :class="option.wrapperClass ? option.wrapperClass : {}">
+    <div class="datepickbox">
+      <input type="text" title="input date" class="cov-datepicker" readonly="readonly" :placeholder="option.placeholder" v-model="date.time" :required="required" @click="showCheck" @focus="showCheck" :style="option.inputStyle ? option.inputStyle : {}" :class="option.inputClass ? option.inputClass : {}"/>
     </div>
-    <div v-if="showInfo.day" class="w3-row w3-section">
-      <div class="w3-col m1">&nbsp;</div>
-      <div class="w3-col m10">
-        <div class="week">
-          <ul class="w3-text-indigo">
-            <li v-for="weekie in library.week">{{weekie}}</li>
-          </ul>
+    <div class="datepicker-overlay" v-if="showInfo.check" @click="dismiss($event)" v-bind:style="{'background' : option.overlayOpacity? 'rgba(0,0,0,'+option.overlayOpacity+')' : 'rgba(0,0,0,0.5)'}">
+      <div class="cov-date-body" :style="{'background-color': option.color ? option.color.header : '#3f51b5'}">
+        <div class="cov-date-monthly">
+          <div class="cov-date-previous" @click="nextMonth('pre')">«</div>
+          <div class="cov-date-caption" :style="{'color': option.color ? option.color.headerText : '#fff'}">
+            <span @click="showYear"><small>{{checked.year}}</small></span>
+            <br>
+            <span @click="showMonth">{{displayInfo.month}}</span>
+          </div>
+          <div class="cov-date-next" @click="nextMonth('next')">»</div>
         </div>
-        <div class="day w3-hover-flat-silver" v-for="day in dayList" track-by="$index" @click="checkDay(day)" :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}" 
-              :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">
-              {{day.value}}
+        <div class="cov-date-box" v-if="showInfo.day">
+          <div class="cov-picker-box">
+            <div class="week">
+              <ul>
+                <li v-for="weekie in library.week">{{weekie}}</li>
+              </ul>
+            </div>
+            <div class="day" v-for="day in dayList" track-by="$index" @click="checkDay(day)" :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}" :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">{{day.value}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box" v-if="showInfo.year">
+          <div class="cov-picker-box date-list" id="yearList">
+            <div class="date-item" v-for="yearItem in library.year" track-by="$index" @click="setYear(yearItem)">{{yearItem}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box" v-if="showInfo.month">
+          <div class="cov-picker-box date-list">
+            <div class="date-item" v-for="monthItem in library.month" track-by="$index" @click="setMonth(monthItem)">{{monthItem}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box" v-if="showInfo.hour">
+          <div class="cov-picker-box date-list">
+            <div class="watch-box">
+              <div class="hour-box">
+                <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                <ul>
+                  <li class="hour-item" v-for="hitem in hours" @click="setTime('hour', hitem, hours)" :class="{'active':hitem.checked}">{{hitem.value}}</li>
+                </ul>
+              </div>
+              <div class="min-box">
+                <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                <div class="min-item" v-for="mitem in mins" @click="setTime('min',mitem, mins)" :class="{'active':mitem.checked}">{{mitem.value}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-box">
+          <span @click="showInfo.check=false">{{option.buttons? option.buttons.cancel : 'Cancel' }}</span>
+          <span @click="picked">{{option.buttons? option.buttons.ok : 'Ok'}}</span>
         </div>
       </div>
-      <div class="w3-col m1">&nbsp;</div>
-    </div>
-    <div v-if="showInfo.day" class="w3-row w3-section"></div>
-    <div v-if="showInfo.year" class="w3-row">
-      <div class="w3-col m1">&nbsp;</div>
-      <div class="w3-col m10 cov-picker-box date-list" id="yearList">
-        <div class="date-item" v-for="yearItem in library.year" track-by="$index" @click="setYear(yearItem)">{{yearItem}}</div>
-      </div>
-      <div class="w3-col m1">&nbsp;</div>
-    </div>
-    <div v-if="showInfo.month" class="w3-row">
-      <div class="w3-col m1">&nbsp;</div>
-      <div class="w3-col m10 cov-picker-box date-list">
-        <div class="date-item" v-for="monthItem in library.month" track-by="$index" @click="setMonth(monthItem)">{{monthItem}}</div>
-      </div>
-      <div class="w3-col m1">&nbsp;</div>
     </div>
   </div>
 </template>
 <script>
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -60,12 +72,7 @@ var _moment2 = _interopRequireDefault(_moment);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-  mounted(){
-    if(!this.inputMode)
-      this.showCheck();
-  },
   props: {
-    inputMode: true,
     required: false,
     date: {
       type: Object,
@@ -320,7 +327,6 @@ exports.default = {
       }
       if (!obj.inMonth) {
         this.nextMonth(obj.action);
-        return
       }
       if (this.option.type === 'day' || this.option.type === 'min') {
         this.dayList.forEach(function (x) {
@@ -333,8 +339,8 @@ exports.default = {
         var ctime = this.checked.year + '-' + this.checked.month + '-' + day;
         if (obj.checked === true) {
           obj.checked = false;
-          var index = this.selectedDays.indexOf(ctime);
-          this.selectedDays.splice(index, 1);
+          var index = this.selectedDays.indexOf(ctime)
+          this.selectedDays.splice(index, 1)
         } else {
           this.selectedDays.push(ctime);
           obj.checked = true;
@@ -591,6 +597,7 @@ exports.default = {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 .cov-picker-box {
+  background: #fff;
   width: 100%;
   display: inline-block;
   padding: 25px;
@@ -598,8 +605,9 @@ exports.default = {
   -moz-box-sizing: border-box !important;
   -webkit-box-sizing: border-box !important;
   -ms-box-sizing: border-box !important;
+  width: 400px;
   max-width: 100%;
-  height: 202.5px;
+  height: 280px;
   text-align: start!important;
 }
 .cov-picker-box td {
@@ -625,9 +633,11 @@ table {
   display: inline-block;
   text-align: center;
   cursor: pointer;
-  height: 30px;
+  height: 34px;
   padding: 0;
-  line-height: 30px;
+  line-height: 34px;
+  color: #000;
+  background: #fff;
   vertical-align: middle;
 }
 .week ul {
@@ -640,6 +650,7 @@ table {
   display: inline-block;
   text-align: center;
   background: transparent;
+  color: #000;
   font-weight: bold;
 }
 .passive-day {
@@ -688,6 +699,9 @@ table {
 .cov-date-previous:hover,
 .cov-date-next:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+.day:hover {
+  background: #EAEAEA;
 }
 .unavailable:hover {
   background: none;
@@ -741,7 +755,8 @@ table {
 }
 .date-item {
   text-align: center;
-  padding: 6px 0;
+  font-size: 20px;
+  padding: 10px 0;
   cursor: pointer;
 }
 .date-item:hover {

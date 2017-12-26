@@ -7,7 +7,7 @@
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
-                    window-bg-color="highway-schoolbus"
+                    window-bg-color="highway-schoolbus" 
                     btn-color="signal-white" 
                     @closeDelete="changeDeleteWindowStatus" 
                     @confirmDelete="deleteWC" 
@@ -22,14 +22,13 @@
                         <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Working Calendar</i>
                         <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                         <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus"></i>
+                        <i class="fa fa-plus w3-button w3-right" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                         <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getWCs"></i>
                     </p>
                 </div>
             </div>
         </div>
     </div>
-
     <div v-if="showMode">
         <div :key="content.wcalendaruid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allWCObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
@@ -83,7 +82,6 @@
             <working-calendar-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></working-calendar-edit-panel>
         </li>
     </ul>
-
   </div>
   <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getWCs"></filter-panel>
 </div>
@@ -184,6 +182,16 @@ export default {
             })
         },
         changeEditable(index, content){
+            if(this.allWCObjs[index] && this.allWCObjs[index].wcalendaruid && 
+                this.allWCObjs[index].wcalendaruid.trim() === 'SYSTEMDAY'){
+                let newStatus = {
+                    "msg": "System day can not be edited!",
+                    "status": "Warn"
+                }
+                this.$store.dispatch('setSystemStatus', newStatus)
+                return
+            }
+
             /*
                 this.$set is for above :
                 http://www.jianshu.com/p/358c1974d9a5
@@ -238,7 +246,6 @@ export default {
         },
         changeAddWindowStatus(content){
             this.addWindowAlive = !this.addWindowAlive
-            this.editable
             if(content !== undefined){
                 this.allWCObjs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
@@ -246,6 +253,15 @@ export default {
             }
         },
         changeDeleteWindowStatus(index, wcalendaruid, wcalendarname){
+            if(wcalendaruid && wcalendaruid.trim() === 'SYSTEMDAY'){
+                let newStatus = {
+                    "msg": "System day can not be removed!",
+                    "status": "Warn"
+                }
+                this.$store.dispatch('setSystemStatus', newStatus)
+                return
+            }
+            
             this.deleteWindowAlive = !this.deleteWindowAlive
 
             /*

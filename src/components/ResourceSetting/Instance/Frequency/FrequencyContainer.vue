@@ -3,14 +3,14 @@
     <!-- for Vue 2.0 -->
     <div class="row">
       <span>Departure Date：</span>
-      <date-picker :date="startTime" :option="option" :limit="limit" :inputMode='false'></date-picker>
+      <date-picker :date="startTime" :option="option" :limit="limit"></date-picker>
     </div>
 
   </div>
 </template>
 <script>
 // for Vue 2.0
-import myDatepicker from '../../DatetimePicker.vue'
+import myDatepicker from '../../DatetimePicker.1.vue'
 
 export default {
   data () {

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <working-calendar-form ref="wcForm" :index="index" :content="content"></working-calendar-form>
+        <working-calendar-form ref="wcForm" :index="index" :content="content" @save="save"></working-calendar-form>
         <hr class="w3-border-grey">
-        <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
+        <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="picked"></form-button>
     </div>
 </template>
 <script>
@@ -19,7 +19,8 @@ export default {
                     wcalendaruid: '',
                     wcalendarname: '',
                     description: '',
-                    activate: '0'
+                    activate: '0',
+                    wcalendarlist: []
                 }
             }
         },
@@ -29,9 +30,10 @@ export default {
         cancel(){
             this.$emit('closeEdit', this.index)
         },
-        save(){
-            let postContent = this.$refs.wcForm.save()
-            
+        picked(){
+            this.$refs.wcForm.picked()
+        },
+        save(postContent){
             if(postContent){
                 HTTPRepo.post(`working-calendar/edit`, postContent)
                 .then(response => {

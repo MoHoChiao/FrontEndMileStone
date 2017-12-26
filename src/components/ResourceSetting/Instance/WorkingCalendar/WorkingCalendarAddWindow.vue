@@ -1,8 +1,8 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <working-calendar-form slot="content" ref="wcForm"></working-calendar-form>
+        <working-calendar-form slot="content" ref="wcForm" @save="save"></working-calendar-form>
         <div slot="footer">
-            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
+            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="picked"></form-button>
         </div>
     </modal-window>
 </template>
@@ -31,9 +31,10 @@ export default {
         cancel(){
             this.$emit('closeAdd')
         },
-        save(){
-            let postContent = this.$refs.wcForm.save()
-            
+        picked(){
+            this.$refs.wcForm.picked()
+        },
+        save(postContent){
             if(postContent){
                 HTTPRepo.post(`working-calendar/add`, postContent)
                 .then(response => {
