@@ -1,4 +1,9 @@
 <template>
+  <div>
+    <working-calendar-pattern-window :windowAlive="patternWindowAlive" 
+                    window-title="Generate Date By Pattern" 
+                    @closeAdd="changePatternWindowStatus" 
+    ></working-calendar-pattern-window>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
@@ -20,18 +25,28 @@
                 <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
-        <div class="w3-row w3-section">
+        <div class="w3-row w3-container">
             <div class="w3-col m1">&nbsp;</div>
             <div class="w3-col m10">
-                <datetime-picker ref="datetimePicker" :date="startTime" :option="option" :limit="limit" @change="save"></datetime-picker>
+                <datetime-picker ref="datetimePicker" :date="startTime" :option="option" :limit="limit" :inputMode="false" @change="save"></datetime-picker>
+            </div>
+            <div class="w3-col m1">&nbsp;</div>
+        </div>
+        <div class="w3-row w3-container">
+            <div class="w3-col m1">&nbsp;</div>
+            <div class="w3-col m10 w3-center">
+                <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">By Pattern</button>
+                <button class="w3-button w3-round w3-teal" @click="clearAllDate">Clear All</button>
             </div>
             <div class="w3-col m1">&nbsp;</div>
         </div>
     </div>
+  </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import myDatepicker from '../../DatetimePicker.vue'
+import WorkingCalendarPatternWindow from './WorkingCalendarPatternWindow.vue'
 
 export default {
     data() {
@@ -40,6 +55,7 @@ export default {
                 name: ['w3-input','w3-border'],
                 desc: ['w3-input','w3-border'],
             },
+            patternWindowAlive: false,  //for add Working Calendar modal windows
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
@@ -52,10 +68,7 @@ export default {
                 wcalendarlist: this.content.wcalendarlist
             },
             startTime: {
-                time: ''
-            },
-            endtime: {
-                time: ''
+                time: '[]'
             },
             option: {
                 type: 'multi-day',
@@ -84,25 +97,12 @@ export default {
                 overlayOpacity: 0.5, // 0.5 as default
                 dismissible: true // as true as default
             },
-            timeoption: {
-                type: 'min',
-                week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                format: 'YYYY-MM-DD HH:mm'
-            },
-            multiOption: {
-                type: 'multi-day',
-                week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                format:"YYYY-MM-DD HH:mm"
-            },
-            limit: [{type: '', available: [1, 2, 3, 4, 5]}, {type: 'fromto', from: '', to: ''}],
+            limit: [{type: '', available: [1, 2, 3, 4, 5]}, {type: 'fromto', from: '', to: ''}]
             
         }
     },
-    created() {
-        this.startTime.time = JSON.stringify(this.convertYMDObjtoArray())
-        // this.startTime.time = '["2017-11-30"]'
+    mounted() {
+        this.setDatetimePicker(JSON.stringify(this.convertYMDObjtoArray()))
     },
     props: {
         content: {
@@ -164,8 +164,7 @@ export default {
             this.new_content.activate = Number(this.content.activate)
 
             //reset working calendar list to default
-            this.startTime.time = JSON.stringify(this.convertYMDObjtoArray())
-            this.$refs.datetimePicker.showCheck()
+            this.setDatetimePicker(JSON.stringify(this.convertYMDObjtoArray()))
         },
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
@@ -183,10 +182,24 @@ export default {
                 ymdArr.push(year + '-' + month + '-' + day)
             });
             return ymdArr
+        },
+        clearAllDate(){
+            this.setDatetimePicker('[]')
+        },
+        setDatetimePicker(date){
+            this.startTime.time = date
+            this.$refs.datetimePicker.showCheck()
+        },
+        changePatternWindowStatus(){
+            this.patternWindowAlive = !this.patternWindowAlive
+        },
+        fetchDateByPattern(){
+
         }
     },
     components: {
-        'datetime-picker': myDatepicker
+        'datetime-picker': myDatepicker,
+        'working-calendar-pattern-window': WorkingCalendarPatternWindow
     }
 }
 </script>

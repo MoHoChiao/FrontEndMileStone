@@ -1,5 +1,7 @@
 <template>
-  <div class="w3-card-4">
+<div>
+  <!-- For Select Mutiple Date Card UI -->
+  <div v-if="!inputMode" class="w3-card-4">
     <div class="w3-row w3-teal">
       <div class="w3-col m2" @click="nextMonth('pre')" style="padding-top:8px;padding-bottom:8px">
         <button class="w3-button w3-left w3-hover-none">
@@ -46,24 +48,72 @@
       <div class="w3-col m1">&nbsp;</div>
     </div>
   </div>
+  <!-- For Select Date InputBox UI -->
+  <div v-else class="cov-vue-date" :class="option.wrapperClass ? option.wrapperClass : {}">
+    <div class="datepickbox">
+      <input type="text" :title="option.placeholder" class="w3-input w3-border" readonly="readonly" :placeholder="option.placeholder" v-model="date.time" :required="required" @click="showCheck" @focus="showCheck" :style="option.inputStyle ? option.inputStyle : {}" :class="option.inputClass ? option.inputClass : {}"/>
+    </div>
+    <div class="datepicker-overlay" v-if="showInfo.check" @click="dismiss($event)" v-bind:style="{'background' : option.overlayOpacity? 'rgba(0,0,0,'+option.overlayOpacity+')' : 'rgba(0,0,0,0.5)'}">
+      <div class="cov-date-body" :style="{'background-color': option.color ? option.color.header : '#3f51b5'}">
+        <div class="cov-date-monthly">
+          <div class="cov-date-previous" @click="nextMonth('pre')">«</div>
+          <div class="cov-date-caption" :style="{'color': option.color ? option.color.headerText : '#fff'}">
+            <span @click="showYear"><small>{{checked.year}}</small></span>
+            <br>
+            <span @click="showMonth">{{displayInfo.month}}</span>
+          </div>
+          <div class="cov-date-next" @click="nextMonth('next')">»</div>
+        </div>
+        <div class="cov-date-box w3-white" v-if="showInfo.day">
+          <div class="cov-picker-box">
+            <div class="week">
+              <ul>
+                <li v-for="weekie in library.week">{{weekie}}</li>
+              </ul>
+            </div>
+            <div class="day" v-for="day in dayList" track-by="$index" @click="checkDay(day)" :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}" :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">{{day.value}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box w3-white" v-if="showInfo.year">
+          <div class="cov-picker-box date-list" id="yearList">
+            <div class="date-item" v-for="yearItem in library.year" track-by="$index" @click="setYear(yearItem)">{{yearItem}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box w3-white" v-if="showInfo.month">
+          <div class="cov-picker-box date-list">
+            <div class="date-item" v-for="monthItem in library.month" track-by="$index" @click="setMonth(monthItem)">{{monthItem}}</div>
+          </div>
+        </div>
+        <div class="cov-date-box list-box" v-if="showInfo.hour">
+          <div class="cov-picker-box date-list">
+            <div class="watch-box">
+              <div class="hour-box">
+                <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                <ul>
+                  <li class="hour-item" v-for="hitem in hours" @click="setTime('hour', hitem, hours)" :class="{'active':hitem.checked}">{{hitem.value}}</li>
+                </ul>
+              </div>
+              <div class="min-box">
+                <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                <div class="min-item" v-for="mitem in mins" @click="setTime('min',mitem, mins)" :class="{'active':mitem.checked}">{{mitem.value}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-box"></div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 <script>
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 var _moment = require('moment');
-
 var _moment2 = _interopRequireDefault(_moment);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 exports.default = {
-  mounted(){
-    if(!this.inputMode)
-      this.showCheck();
-  },
   props: {
     inputMode: true,
     required: false,
@@ -170,7 +220,6 @@ exports.default = {
       selectedDays: []
     };
   },
-
   methods: {
     pad: function pad(n) {
       n = Math.floor(n);
@@ -232,11 +281,9 @@ exports.default = {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
-
         try {
           for (var _iterator = this.limit[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var li = _step.value;
-
             switch (li.type) {
               case 'fromto':
                 days = this.limitFromTo(li, days);
@@ -277,7 +324,6 @@ exports.default = {
     },
     checkBySelectDays: function checkBySelectDays(d, days) {
       var _this = this;
-
       this.selectedDays.forEach(function (day) {
         if (_this.checked.year === (0, _moment2.default)(day).format('YYYY') && _this.checked.month === (0, _moment2.default)(day).format('MM') && d === Math.ceil((0, _moment2.default)(day).format('D'))) {
           days[d - 1].checked = true;
@@ -294,7 +340,6 @@ exports.default = {
     },
     limitFromTo: function limitFromTo(limit, days) {
       var _this2 = this;
-
       if (limit.from || limit.to) {
         days.map(function (day) {
           if (_this2.getLimitCondition(limit, day)) {
@@ -320,7 +365,8 @@ exports.default = {
       }
       if (!obj.inMonth) {
         this.nextMonth(obj.action);
-        return
+        if(!this.inputMode)
+          return
       }
       if (this.option.type === 'day' || this.option.type === 'min') {
         this.dayList.forEach(function (x) {
@@ -353,7 +399,6 @@ exports.default = {
     },
     showYear: function showYear() {
       var _this3 = this;
-
       var year = (0, _moment2.default)(this.checked.currentMoment).year();
       this.library.year = [];
       var yearTmp = [];
@@ -406,7 +451,6 @@ exports.default = {
     },
     addYear: function addYear() {
       var _this4 = this;
-
       var listDom = document.getElementById('yearList');
       listDom.addEventListener('scroll', function (e) {
         if (listDom.scrollTop < listDom.scrollHeight - 100) {
@@ -451,11 +495,9 @@ exports.default = {
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
-
       try {
         for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var item = _step2.value;
-
           item.checked = false;
           if (item.value === obj.value) {
             item.checked = true;
@@ -758,11 +800,7 @@ table {
 }
 .button-box {
   background: #fff;
-  vertical-align: top;
-  height: 50px;
-  line-height: 50px;
-  text-align: right;
-  padding-right: 20px;
+  height: 20px;
 }
 .button-box span {
   cursor: pointer;
@@ -811,5 +849,8 @@ table {
 ::-webkit-scrollbar-thumb {
   background: #C1C1C1;
   border-radius: 2px;
+}
+input {
+  height: 30px
 }
 </style>
