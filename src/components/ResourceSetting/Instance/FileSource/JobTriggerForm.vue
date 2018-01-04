@@ -84,11 +84,11 @@
             </div>
             <div class="w3-col m4">
                 <span class="w3-text-red">*</span><label>Start Position</label>
-                <input :class="inputClassList.txdatestartpos" v-model="new_content.txdatestartpos" type="number">
+                <input :class="inputClassList.txdatestartpos" v-model="new_content.txdatestartpos" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m4">
                 <span class="w3-text-red">*</span><label>End Position</label>
-                <input :class="inputClassList.txdateendpos" v-model="new_content.txdateendpos" type="number">
+                <input :class="inputClassList.txdateendpos" v-model="new_content.txdateendpos" type="number" min="0" max="32767">
             </div>
         </div>
     </div>

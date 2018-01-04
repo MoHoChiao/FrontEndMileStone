@@ -25,7 +25,7 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Max Jobs</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.maxjobs" v-model="new_content.maximumjob" type="number" placeholder="Please Input 1~2048">
+                <input :class="inputClassList.maxjobs" v-model="new_content.maximumjob" type="number" min="0" max="2048">
             </div>
             <div class="w3-col m6 w3-right">
                 <span>

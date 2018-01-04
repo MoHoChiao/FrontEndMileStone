@@ -107,7 +107,7 @@
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <label>Port</label>
-                    <input :class="inputClassList.port" v-model="new_content.port" type="number" placeholder="Please Input Port">
+                    <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
                 </div>
                 <div class="w3-col m6">
                     <div class="w3-left" style="margin-top:16px;margin-right:16px;">

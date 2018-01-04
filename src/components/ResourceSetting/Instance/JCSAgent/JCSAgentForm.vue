@@ -54,7 +54,7 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Port</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.port" v-model="new_content.port" type="number" placeholder="Please Input Port">
+                <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -105,13 +105,13 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>CPU Weight</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.cpu" v-model="new_content.cpuweight" type="number" placeholder="Please Cpu Weight">
+                <input :class="inputClassList.cpu" v-model="new_content.cpuweight" type="number" min="0" max="999">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>MEM Weight</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.mem" v-model="new_content.memweight" type="number" placeholder="Please Memory Weight">
+                <input :class="inputClassList.mem" v-model="new_content.memweight" type="number" min="0" max="999">
             </div>
         </div>
     </div>
@@ -189,7 +189,7 @@ export default {
             }else if(this.new_content.host.trim().length <= 0){
                 this.inputClassList.host.splice(2, 1, 'w3-red')
             }else if(this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port) || 
-                        this.new_content.port < 0 || this.new_content.port > 32767){
+                        this.new_content.port < 0 || this.new_content.port > 65535){
                 this.inputClassList.port.splice(2, 1, 'w3-red')
             }else if(this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight) || 
                         this.new_content.cpuweight < 0){

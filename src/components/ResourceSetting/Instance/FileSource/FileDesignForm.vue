@@ -24,11 +24,11 @@
         <div v-if="new_content.pattern === '3'" class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Start Position</label>
-                <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" placeholder="Start Position">
+                <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>End Position</label>
-                <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" placeholder="End Position">
+                <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" min="0" max="32767">
             </div>
         </div>
         <div v-if="new_content.filetype === 'D'" class="w3-row-padding w3-section">
@@ -102,17 +102,17 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Min Amount of Files</label>
-                <input :class="inputClassList.minfile" v-model="new_content.minfile" type="number">
+                <input :class="inputClassList.minfile" v-model="new_content.minfile" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Max Amount of Files</label>
-                <input :class="inputClassList.maxfile" v-model="new_content.maxfile" type="number">
+                <input :class="inputClassList.maxfile" v-model="new_content.maxfile" type="number" min="0" max="32767">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Timeout (In Minutes)</label>
-                <input :class="inputClassList.timeout" v-model="new_content.timeout" type="number">
+                <input :class="inputClassList.timeout" v-model="new_content.timeout" type="number" min="0" max="32767">
             </div>
             <div v-if="new_content.filetype === 'C'" class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Control File Amount Mode</label>
