@@ -70,11 +70,11 @@
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.wcalendarname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.wcalendaruid, content.wcalendarname)">
+                <button title="Delete This Working Calendar" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.wcalendaruid, content.wcalendarname)">
                     <i class="fa fa-trash-o"></i>
                     <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
-                <button type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                <button title="Edit This Working Calendar" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
                     <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>

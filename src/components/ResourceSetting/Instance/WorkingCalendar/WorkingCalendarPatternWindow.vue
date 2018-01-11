@@ -67,33 +67,33 @@
                 </div>
                 <div class="w3-row w3-section">
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('1')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('1')" type="checkbox" v-model="weekly_days">
                         <label>SUN</label>
                     </div>
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('2')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('2')" type="checkbox" v-model="weekly_days">
                         <label>MON</label>
                     </div>
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('3')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('3')" type="checkbox" v-model="weekly_days">
                         <label>TUE</label>
                     </div>
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('4')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('4')" type="checkbox" v-model="weekly_days">
                         <label>WED</label>
                     </div>
                 </div>
                 <div class="w3-row w3-section">
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('5')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('5')" type="checkbox" v-model="weekly_days">
                         <label>THU</label>
                     </div>
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('6')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('6')" type="checkbox" v-model="weekly_days">
                         <label>FRI</label>
                     </div>
                     <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('7')" type="checkbox" v-model="days">
+                        <input class="w3-check" :value="Number('7')" type="checkbox" v-model="weekly_days">
                         <label>SAT</label>
                     </div>
                 </div>
@@ -293,7 +293,7 @@ export default {
             dailyType: 'Days',
             daily_day: 1,
             weekly_week: 1,
-            days: [],
+            weekly_days: [],
             monthlyType: 'DayOfEveryMonth',
             monthly_day: 1,
             monthly_month: 1,
@@ -388,109 +388,101 @@ export default {
                     "status": "Error"
                 }
                 this.$store.dispatch('setSystemStatus', newStatus)
+                return
             }
-
 
             let patternValue = {
-                "endDateType":this.endDateType,
-                "startDate":this.startTime.time
+                "endDateType": this.endDateType,
+                "startDate": this.startTime.time
             }
 
+            if(this.endDateType === 'EndBy'){   //end by
+                patternValue.endDate = this.endTime.time
+            }else{  //end after
+                patternValue.occurences = this.occurences
+            }
+            
+
             if(this.tabsFlag[0]){
-                if(this.daily_day <= 0){
-                    this.inputClassList.daily_day.splice(2, 1, 'w3-red')
-                    return
+                if(this.dailyType === 'Days'){  //days
+                    if(this.daily_day <= 0){
+                        this.inputClassList.daily_day.splice(2, 1, 'w3-red')
+                        return
+                    }
+                    patternValue.day = this.daily_day
+                }else{  //WeekDay
+                    //do nothing
                 }
+
+                patternValue.patternType = "Daily"
+                patternValue.dailyType = this.dailyType
+
             }else if(this.tabsFlag[1]){
                 if(this.weekly_week <= 0){
                     this.inputClassList.weekly_week.splice(2, 1, 'w3-red')
                     return
                 }
-                if(this.days.length <= 0){
+                if(this.weekly_days.length <= 0){
                     let newStatus = {
                         "msg": 'The day of week can not be empty!',
                         "status": "Error"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
+                    return
                 }
+
+                patternValue.patternType = 'Weekly'
+                patternValue.week = this.weekly_week
+                patternValue.days = this.weekly_days
+
             }else if(this.tabsFlag[2]){
-                if(this.monthlyType === 'DayOfEveryMonth'){
+                if(this.monthly_month <= 0){
+                    this.inputClassList.monthly_month.splice(2, 1, 'w3-red')
+                    return
+                }
+
+                if(this.monthlyType === 'DayOfEveryMonth'){ //DayOfEveryMonth
                     if(this.monthly_day <= 0){
                         this.inputClassList.monthly_day.splice(2, 1, 'w3-red')
                         return
                     }
-                    if(this.monthly_month <= 0){
-                        this.inputClassList.monthly_month.splice(2, 1, 'w3-red')
-                        return
-                    }
-                }else{
-                    if(this.monthly_month <= 0){
-                        this.inputClassList.monthly_month.splice(2, 1, 'w3-red')
-                        return
-                    }
-                    if(this.monthly_plusOrMinus <= 0)
-                        alert(this.monthly_plusOrMinus)
+                    
+                    patternValue.monthlyType = 'DayOfEveryMonth'
+                    patternValue.day = this.monthly_day
+
+                }else{  //TheDayOfEveryMonth
+                    patternValue.monthlyType = 'TheDayOfEveryMonth'
+                    patternValue.seq = this.monthly_seq
+                    patternValue.dayType = this.monthly_dayType
+                    patternValue.plusOrMinus = this.monthly_plusOrMinus
                 }
+
+                patternValue.patternType = 'Monthly'
+                patternValue.month = this.monthly_month
+
             }else if(this.tabsFlag[3]){
-                if(this.yearlyType === 'DayOfEveryYear'){
+                if(this.yearlyType === 'DayOfEveryYear'){   //DayOfEveryYear
                     if(this.yearly_day <= 0){
                         this.inputClassList.yearly_day.splice(2, 1, 'w3-red')
                         return
                     }
+
+                    patternValue.yearlyType = 'DayOfEveryYear'
+                    patternValue.month = this.yearly_month1
+                    patternValue.day = this.yearly_day
+                }else{  //TheDayOfEveryYear
+                    patternValue.yearlyType = 'TheDayOfEveryYear'
+                    patternValue.month = this.yearly_month2
+                    patternValue.seq = this.yearly_seq
+                    patternValue.dayType = this.yearly_dayType
                 }
+
+                patternValue.patternType = 'Yearly'
             }else{
                 return
             }
 
-            return;
-            //collect basic necessary value
-            let returnValue = {
-                "filesourceuid":this.new_content.filesourceuid,
-                "filesourcename":this.new_content.filesourcename,
-                "description":this.new_content.description
-            }
-            
-            //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
-            if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
-                returnValue.fscategoryuid = this.fscategoryuid
-
-            //call Directory Asign form to check value
-            let directoryAsignContent = this.$refs.directoryAsignForm.save()
-            //collect all necessary value from Directory Asign form
-            if(directoryAsignContent){
-                for(let key in directoryAsignContent){
-                    returnValue[key] = directoryAsignContent[key]
-                }
-            }else{
-                this.openTab(0)
-                return
-            }
-
-            //call File Design form to check value
-            let fileDesignContent = this.$refs.fileDesignForm.save()
-            //collect all necessary value from File Design form
-            if(fileDesignContent){
-                for(let key in fileDesignContent){
-                    returnValue[key] = fileDesignContent[key]
-                }
-            }else{
-                this.openTab(1)
-                return
-            }
-            
-            //call Job Trigger form to check value
-            let jobTriggerContent = this.$refs.jobTriggerForm.save()
-            //collect all necessary value from Job Trigger form
-            if(jobTriggerContent){
-                for(let key in jobTriggerContent){
-                    returnValue[key] = jobTriggerContent[key]
-                }
-            }else{
-                this.openTab(2)
-                return
-            }
-
-            return returnValue
+            this.$emit('generate', patternValue)
         },
         reset(){
             //clear red font

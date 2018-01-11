@@ -1,30 +1,24 @@
 <template>
     <div class="w3-container w3-small" style="overflow:auto;max-height:485px">
-        <div v-if="urlOp === 'add' || urlOp === 'edit'" class="w3-row w3-section">
+        <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
-            <div class="w3-col m6">
+            <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
                 <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name">
             </div>
-        </div>
-        <div v-else class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
-            </div>
-            <div class="w3-col m4">
-                <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name">
-            </div>
-            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
-            </div>
-            <div class="w3-col m3">
-                <select :class="inputClassList.conncategoryuid" v-model="conncategoryuid" style="padding:0px">
-                    <option value="" selected>/</option>
-                    <template v-for="category in allCategoryObjs">
-                        <option :value="category.conncategoryuid">{{ category.conncategoryname }}</option>
-                    </template>
-                </select>
+            <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
+                <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                    <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+                </div>
+                <div class="w3-col m3">
+                    <select :class="inputClassList.conncategoryuid" v-model="conncategoryuid" style="padding:0px">
+                        <option value="" selected>/</option>
+                        <template v-for="category in allCategoryObjs">
+                            <option :value="category.conncategoryuid">{{ category.conncategoryname }}</option>
+                        </template>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -51,15 +45,14 @@
                 </select>
             </div>
         </div>
+        <hr class="w3-border-black">
         <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
-            <hr class="w3-border-black">
             <div class="w3-col m12">
                 <span class="w3-text-red">*</span><label>Server Name</label>
                 <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
             </div>
         </div>
         <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
-            <hr class="w3-border-black">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>Server Name</label>
                 <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
@@ -70,7 +63,6 @@
             </div>
         </div>
         <div v-show="typeFlag['J']">
-            <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m8">
                     <span class="w3-text-red">*</span><label>Database Type</label>
@@ -97,7 +89,6 @@
             </div>
         </div>
         <div v-show="typeFlag['M']">
-            <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m12">
                     <label>Mail Server</label>
@@ -123,7 +114,6 @@
         </div>
         <div v-show="typeFlag['O']"></div>
         <div v-show="typeFlag['S']">
-            <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>System Name</label>
@@ -156,7 +146,6 @@
             </div>
         </div>
         <div v-show="typeFlag['N']">
-            <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Host IP</label>
@@ -179,7 +168,6 @@
             </div>
         </div>
         <div class="w3-row-padding w3-section">
-            <hr class="w3-border-black">
             <div class="w3-col m4">
                 <span class="w3-text-red">*</span><label>Account</label>
                 <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="Please Input Account">
@@ -196,7 +184,6 @@
             </div>
         </div>
         <div v-show="new_content.withpim">
-            <hr class="w3-border-black">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>Endpoint Type</label>
@@ -727,9 +714,6 @@ export default {
                 this.new_content.password = this.content.password
             }
         }
-    },
-    components: {
-
     }
 }
 </script>

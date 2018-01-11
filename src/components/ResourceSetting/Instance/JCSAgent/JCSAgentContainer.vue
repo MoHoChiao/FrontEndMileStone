@@ -62,13 +62,13 @@
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <button type="button" title="Delete" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
+                <button type="button" title="Delete This Agent" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
                     <i class="fa fa-trash-o"></i>
                 </button>
-                <button type="button" title="Edit" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                <button type="button" title="Edit This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
                 </button>
-                <button type="button" title="Copy" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeAddWindowStatus(content)">
+                <button type="button" title="Copy This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeAddWindowStatus(content)">
                     <i class="fa fa-clone"></i>
                 </button>
             </div>

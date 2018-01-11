@@ -261,7 +261,8 @@ exports.default = {
           moment: (0, _moment2.default)(currentMoment).date(i)
         });
         if (i === Math.ceil((0, _moment2.default)(currentMoment).format('D')) && (0, _moment2.default)(oldtime, this.option.format).year() === (0, _moment2.default)(currentMoment).year() && (0, _moment2.default)(oldtime, this.option.format).month() === (0, _moment2.default)(currentMoment).month()) {
-          days[i - 1].checked = true;
+          if(this.inputMode)  //當clear time時, 時間為空, 此時會預設插入一筆當日日期, 當不是inputMode時, 不應該有預設勾選的日期
+            days[i - 1].checked = true;
         }
         this.checkBySelectDays(i, days);
       }

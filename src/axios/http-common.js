@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const HTTP = axios.create({
     baseURL: `http://192.168.27.63:8080/frontend-trinity-service/`,
-    timeout: 5000,
+    timeout: 10000,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
@@ -15,7 +15,7 @@ export const HTTP = axios.create({
 })
 export const HTTPRepo = axios.create({
     baseURL: `http://192.168.27.63:8080/backend-trinity-repository/`,
-    timeout: 5000,
+    timeout: 10000,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'

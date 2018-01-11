@@ -3,6 +3,7 @@
     <working-calendar-pattern-window :windowAlive="patternWindowAlive" 
                     window-title="Generate Date By Pattern" 
                     @closeAdd="changePatternWindowStatus" 
+                    @generate="generateByPattern"
     ></working-calendar-pattern-window>
     <div class="w3-small">
         <div class="w3-row w3-section">
@@ -68,7 +69,7 @@ export default {
                 wcalendarlist: this.content.wcalendarlist
             },
             startTime: {
-                time: '[]'
+                time: '[""]'
             },
             option: {
                 type: 'multi-day',
@@ -136,12 +137,19 @@ export default {
                         "status": "Warn"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
+                }else if(datetimeArr.length > 2000){
+                    let newStatus = {
+                        "msg": "The total number of days selected can not exceed 2000 days!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
                     let wcalendarlist = new Array()
                     for(let i=0;i<datetimeArr.length;i++){
                         let ymdArr =  datetimeArr[i].split('-')
                         if(ymdArr.length === 3){
                             let ymdObj = {
+                                "wcalendaruid":this.new_content.wcalendaruid,
                                 "yearnum":ymdArr[0],
                                 "monthnum":ymdArr[1],
                                 "daynum":ymdArr[2]
@@ -193,8 +201,27 @@ export default {
         changePatternWindowStatus(){
             this.patternWindowAlive = !this.patternWindowAlive
         },
-        fetchDateByPattern(){
-
+        generateByPattern(postContent){
+            HTTPRepo.post(`working-calendar/getWCPattern`, postContent)
+                .then(response => {
+                    this.setDatetimePicker(JSON.stringify(response.data))
+                    this.changePatternWindowStatus()
+                })
+                .catch(error => {
+                    if (error.response && error.response.data) {
+                        let newStatus = {
+                            "msg": error.response.data,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    } else {
+                        let newStatus = {
+                            "msg": error.message,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                })
         }
     },
     components: {

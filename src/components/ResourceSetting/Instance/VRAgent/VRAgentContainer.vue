@@ -89,11 +89,11 @@
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
+                <button title="Delete This Virtual Agent" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i>
                     <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
-                <button type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                <button title="Edit This Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
                     <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
