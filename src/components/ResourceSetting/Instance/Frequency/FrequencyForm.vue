@@ -23,10 +23,10 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Type</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Date Type</label>
             </div>
             <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m6' : 'w3-col m4']">
-                <select :class="inputClassList.frequencytype" v-model="frequencytype" @click="clickType" style="padding:0px">
+                <select :class="inputClassList.datetype" v-model="datetype" @click="clickDateType" style="padding:0px">
                     <option value="Daily">Daily</option>
                     <option value="Weekly">Weekly</option>
                     <option value="Monthly">Monthly</option>
@@ -49,24 +49,67 @@
             </div>
         </div>
         <hr class="w3-border-black">
-        <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
+        <div v-show="dateTypeFlag['Daily']" class="w3-row"></div>
+        <div v-show="dateTypeFlag['Weekly']">
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Monday" value="1" v-model="checkedWeekday">
+                    <label for="Monday">Monday</label>
+                </div>
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Tuesday" value="2" v-model="checkedWeekday">
+                    <label for="Tuesday">Tuesday</label>
+                </div>
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Wednesday" value="3" v-model="checkedWeekday">
+                    <label for="Wednesday">Wednesday</label>
+                </div>
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Thursday" value="4" v-model="checkedWeekday">
+                    <label for="Thursday">Thursday</label>
+                </div>
+            </div>
+            <div class="w3-row-padding w3-section">
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Friday" value="5" v-model="checkedWeekday">
+                    <label for="Friday">Friday</label>
+                </div>
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Saturday" value="6" v-model="checkedWeekday">
+                    <label for="Saturday">Saturday</label>
+                </div>
+                <div class="w3-col m3">
+                    <input class="w3-check" type="checkbox" id="Sunday" value="0" v-model="checkedWeekday">
+                    <label for="Sunday">Sunday</label>
+                </div>
+            </div>
+            <span>Checked Weekday: {{ checkedWeekday }}</span>
+        </div>
+        <div v-show="dateTypeFlag['Monthly']">
             
         </div>
-        <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
+        <div v-show="dateTypeFlag['Calendar']">
             
         </div>
-        <div v-show="typeFlag['J']">
+        <div v-show="dateTypeFlag['WorkingCalendar']">
+
+        </div>
+        <div v-show="dateTypeFlag['Pattern']">
             
         </div>
-        <div v-show="typeFlag['M']">
+        <div v-show="dateTypeFlag['Manually']">
             
         </div>
-        <div v-show="typeFlag['O']"></div>
-        <div v-show="typeFlag['S']">
-            
-        </div>
-        <div v-show="typeFlag['N']">
-            
+        <div v-if="datetype != 'Manually'" class="w3-row">
+            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                <label class="w3-right">Time Type</label>
+            </div>
+            <div class="w3-col m4">
+                <select :class="inputClassList.timetype" v-model="timetype" @click="clickTimeType" style="padding:0px">
+                    <option value="EveryHour">Every Hour</option>
+                    <option value="SelectedTime">Selected Time</option>
+                </select>
+            </div>
         </div>
     </div>
 </template>
@@ -76,40 +119,21 @@ import { HTTPRepo } from '../../../../axios/http-common'
 export default {
     data() {
         return {
-            typeFlag: { D:true, F:false, J:false, M:false, O:false, S:false, N:false },
+            dateTypeFlag: { Daily:true, Weekly:false, Monthly:false, Calendar:false, WorkingCalendar:false, Pattern:false, Manually:false },
+            timeTypeFlag: { EveryHour:true, SelectedTime:false },
             inputClassList: {
                 frequencyname: ['w3-input','w3-border'],
                 description: ['w3-input','w3-border'],
-                frequencytype: ['w3-select','w3-border','w3-round'],
-                server: ['w3-input','w3-border'],
-                targetdir: ['w3-input','w3-border'],
-                jdbc_dbType: ['w3-select','w3-border','w3-round'],
-                jdbc_driver: ['w3-input','w3-border'],
-                jdbc_url: ['w3-input','w3-border'],
-                host: ['w3-input','w3-border'],
-                port: ['w3-input','w3-border'],
-                sapSystemName: ['w3-input','w3-border'],
-                sapHostIP: ['w3-input','w3-border'],
-                sapClient: ['w3-input','w3-border'],
-                sapSystemNumber: ['w3-input','w3-border'],
-                sapCodePage: ['w3-input','w3-border'],
-                saplanguage: ['w3-input','w3-border'],
-                notesHostIP: ['w3-input','w3-border'],
-                notesServerName: ['w3-input','w3-border'],
-                notesDBName: ['w3-input','w3-border'],
-                notesIor: ['w3-input','w3-border'],
-                userid: ['w3-input','w3-border'],
-                password: ['w3-input','w3-border'],
-                pimendpointtype: ['w3-input','w3-border'],
-                pimendpointname: ['w3-input','w3-border'],
-                pimaccountcontainer: ['w3-input','w3-border'],
-                pimaccountname: ['w3-input','w3-border'],
+                datetype: ['w3-select','w3-border','w3-round'],
+                timetype: ['w3-select','w3-border','w3-round'],
                 freqcategoryuid: ['w3-select','w3-border','w3-round']
             },
             freqcategoryuid: '',  //store categoryuid for copy/move operation
-            frequencytype: 'Daily',
-            allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
-            jdbcDriverInfo: new Object(),
+            datetype: 'Daily',
+            timetype: 'EveryHour',
+            allCategoryObjs: new Object(), //store all remote data.(Frequency Categories) for copy/move operation
+            allFrequencyLists: new Object(),    //store all remote data.(Frequency Lists)
+            checkedWeekday: [],
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
@@ -126,6 +150,8 @@ export default {
         }
     },
     created() {
+        this.getFrequencyList()
+
         if(this.urlOp === 'copy' || this.urlOp === 'move'){
             this.getCategories()    //取得所有可供選擇的frequency categories
 
@@ -136,8 +162,8 @@ export default {
             }
         }
 
-        if(this.urlOp !== 'add'){    //如果不是add, 表示frequencytype必定有值,要把typeFlag中對應的frequencytype值改為true
-            this.clickType()
+        if(this.urlOp !== 'add'){    //如果不是add, 表示datetype必定有值,要把dateTypeFlag中對應的datetype值改為true
+            this.clickDateType()
         }
     },
     props: {
@@ -161,9 +187,13 @@ export default {
         }
     },
     methods: {
-        clickType() {
-            this.typeFlag = new Array()
-            this.typeFlag[this.new_content.frequencytype] = true
+        clickDateType() {
+            this.dateTypeFlag = new Array()
+            this.dateTypeFlag[this.datetype] = true
+        },
+        clickTimeType() {
+            this.timeTypeFlag = new Array()
+            this.timeTypeFlag[this.timetype] = true
         },
         save(){
             this.clearInValid()
@@ -324,14 +354,13 @@ export default {
             }
 
             this.new_content.frequencyuid = this.content.frequencyuid
-            this.new_content.frequencytype = this.content.frequencytype,
             this.new_content.activate = this.content.activate,
             this.new_content.manuallyedit = this.content.manuallyedit,
             this.new_content.bywcalendar = this.content.bywcalendar,
             this.new_content.wcalendaruid = this.content.wcalendaruid
 
             //當connectiontype值變了之後, 尚需要改變UI的功能選項
-            this.clickType()
+            this.clickDateType()
         },
         clearInValid(){
             this.inputClassList.frequencyname.splice(2, 1)
@@ -364,17 +393,39 @@ export default {
                 }
             })
         },
-        getWCList(){    //Get all frequency list by freqUid
-            let params = {
-                "ordering":{
-                    "orderType":"ASC",
-                    "orderField":"freqcategoryuid"
-                }
+        getFrequencyList(){    //Get frequency list by freqUid
+            if(this.new_content.manuallyedit === "0" || this.new_content.manuallyedit === "2"){
+                this.getDistinctDateFrequencyList()
+            }else if(this.new_content.manuallyedit === "1"){
+                this.getAllFrequencyList()
             }
-
-            HTTPRepo.post(`frequency-category/findByFilter`, params)
+        },
+        getDistinctDateFrequencyList(){
+            HTTPRepo.get(`frequency-list/findDistinctDateByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
             .then(response => {
-                this.allCategoryObjs = response.data
+                // console.log(response.data)
+                this.allFrequencyLists = response.data
+                if(!this.allFrequencyLists[0])  //if empth array
+                    return
+                    
+                if(this.allFrequencyLists[0].yearnum != -1 && this.allFrequencyLists[0].monthnum != -1 && this.allFrequencyLists[0].daynum != -1 && 
+                        this.allFrequencyLists[0].weekdaynum === -1 && this.new_content.manuallyedit !== "2"){ //by calendar
+                    this.datetype = "Calendar"
+                }else if(this.allFrequencyLists[0].yearnum === -1 && this.allFrequencyLists[0].monthnum === -1 && 
+                        this.allFrequencyLists[0].daynum != -1 && this.allFrequencyLists[0].weekdaynum === -1){   //by month
+                    this.datetype = "Monthly"
+                }else if(this.allFrequencyLists[0].yearnum === -1 && this.allFrequencyLists[0].monthnum === -1 && 
+                        this.allFrequencyLists[0].daynum === -1 && this.allFrequencyLists[0].weekdaynum != -1){   //by week
+                    this.datetype = "Weekly"
+                }else if(this.allFrequencyLists[0].yearnum === -1 && this.allFrequencyLists[0].monthnum === -1 && 
+                        this.allFrequencyLists[0].daynum === -1 && this.allFrequencyLists[0].weekdaynum === -1){   //by day
+                    this.datetype = "Daily"
+                }else if(this.allFrequencyLists[0].yearnum === -2 && this.allFrequencyLists[0].monthnum === -2 && 
+                        this.allFrequencyLists[0].daynum === -2 && this.allFrequencyLists[0].weekdaynum === -2){   //by working calendar
+                    this.datetype = "WorkingCalendar"
+                }else if(this.new_content.bywcalendar === "2"){
+                    this.datetype = "Pattern"
+                }
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -392,6 +443,28 @@ export default {
                 }
             })
         },
+        getAllFrequencyList(){
+            HTTPRepo.get(`frequency-list/findByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
+            .then(response => {
+                this.allFrequencyLists = response.data
+                this.datetype = "Manually"
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        }
     }
 }
 </script>
