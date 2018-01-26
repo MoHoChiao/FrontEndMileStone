@@ -264,10 +264,10 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
-import myDatepicker from '../../DatetimePicker.vue'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import FormButton from '../../FormButton.vue'
+import { HTTPRepo } from '../../axios/http-common'
+import myDatepicker from './DatetimePicker.vue'
+import ModalWindow from '../Common/window/ModalWindow.vue'
+import FormButton from './FormButton.vue'
 
 var moment = require('moment')
 

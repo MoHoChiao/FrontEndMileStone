@@ -1,5 +1,5 @@
 <template>
-    <div class="w3-container w3-small" style="overflow:auto;max-height:485px">
+    <div class="w3-container w3-small" style="overflow:auto;max-height:440px">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
@@ -361,7 +361,7 @@ export default {
     },
     methods: {
         clickType() {
-            this.typeFlag = new Array()
+            this.typeFlag = []
             this.typeFlag[this.new_content.connectiontype] = true
         },
         clickJDBCType() {

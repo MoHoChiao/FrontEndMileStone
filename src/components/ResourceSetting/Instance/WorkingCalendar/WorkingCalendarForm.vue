@@ -1,10 +1,10 @@
 <template>
   <div>
-    <working-calendar-pattern-window :windowAlive="patternWindowAlive" 
+    <calendar-pattern-window :windowAlive="patternWindowAlive" 
                     window-title="Generate Date By Pattern" 
                     @closeAdd="changePatternWindowStatus" 
                     @generate="generateByPattern"
-    ></working-calendar-pattern-window>
+    ></calendar-pattern-window>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
@@ -47,7 +47,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import myDatepicker from '../../DatetimePicker.vue'
-import WorkingCalendarPatternWindow from './WorkingCalendarPatternWindow.vue'
+import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
 export default {
     data() {
@@ -121,7 +121,7 @@ export default {
         index: Number
     },
     methods: {
-        picked(e, datetime){
+        picked(){
             this.$refs.datetimePicker.picked()
         },
         save(datetime){
@@ -139,17 +139,16 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else if(datetimeArr.length > 2000){
                     let newStatus = {
-                        "msg": "The total number of days selected can not exceed 2000 days!",
+                        "msg": "The total number of date selected can not exceed 2000!",
                         "status": "Warn"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
-                    let wcalendarlist = new Array()
+                    let wcalendarlist = []
                     for(let i=0;i<datetimeArr.length;i++){
                         let ymdArr =  datetimeArr[i].split('-')
                         if(ymdArr.length === 3){
                             let ymdObj = {
-                                "wcalendaruid":this.new_content.wcalendaruid,
                                 "yearnum":ymdArr[0],
                                 "monthnum":ymdArr[1],
                                 "daynum":ymdArr[2]
@@ -159,7 +158,7 @@ export default {
                     }
                     this.new_content.wcalendarlist = wcalendarlist
                     this.new_content.activate = Number(this.new_content.activate)
-                    this.$emit('save', this.new_content);
+                    this.$emit('save', this.new_content)
                 }
             }
         },
@@ -178,7 +177,7 @@ export default {
             this.inputClassList.name.splice(2, 1)
         },
         convertYMDObjtoArray(){
-            let ymdArr = new Array()
+            let ymdArr = []
             this.new_content.wcalendarlist.forEach(function(element) {  //activate value must be cast to integer 0 or 1
                 let year = element.yearnum
                 let month = element.monthnum
@@ -226,7 +225,7 @@ export default {
     },
     components: {
         'datetime-picker': myDatepicker,
-        'working-calendar-pattern-window': WorkingCalendarPatternWindow
+        'calendar-pattern-window': CalendarPatternWindow
     }
 }
 </script>

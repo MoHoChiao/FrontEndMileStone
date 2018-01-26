@@ -59,7 +59,7 @@
                             <td width="7%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="30%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <select class="w3-select w3-border w3-round w3-tiny" v-model="list_info.agentuid" style="height:32px;width:100%" @change="changeAgent(list_info.agentuid,index)">
+                                    <select class="w3-select w3-border w3-round" v-model="list_info.agentuid" style="width:100%;padding:0px" @change="changeAgent(list_info.agentuid,index)">
                                         <template v-for="(jcsagent, index) in allJCSAgents">
                                             <option v-if="jcsagent.agentuid === list_info.agentuid" :value="jcsagent.agentuid" selected>{{ jcsagent.agentname }}</option>
                                             <option v-else-if="!jcsAgentUids.includes(jcsagent.agentuid)" :value="jcsagent.agentuid">{{ jcsagent.agentname }}</option>
@@ -68,11 +68,11 @@
                                 </span>
                             </td>
                             <td class="w3-center" width="10%">
-                                <input class="w3-check" style="height:16px" type="checkbox" v-model="list_info.activate">
+                                <input class="w3-check" type="checkbox" v-model="list_info.activate">
                             </td>
-                            <td width="45%" style="padding:7px 0px 0px 0px">
+                            <td width="45%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <input class="w3-input w3-border" style="height:32px;width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
+                                    <input class="w3-input w3-border" style="width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
                                 </span>
                             </td>
                             <td class="w3-center" width="8%">
@@ -111,7 +111,8 @@ export default {
             },
             dragIndex: 0,
             allJCSAgents: [],   //store all jcsagent in the db
-            jcsAgentUids: null //Array for keeping the selected jcsagent uids
+            jcsAgentUids: null, //Array for keeping the selected jcsagent uids
+            jcsAgentMap: new Map()
         }
     },
     mounted() {
@@ -121,13 +122,16 @@ export default {
         //Initial to get all jcsagent for select boxes
         let params = {
                 "ordering":{
-                    "orderType":'DESC',
-                    "orderField":'lastupdatetime'
+                    "orderType":'ASC',
+                    "orderField":'agentname'
                 }
             }
         HTTPRepo.post(`jcsagent/findByFilter`, params)
             .then(response => {
                 this.allJCSAgents = response.data
+                for(let i=0;i<this.allJCSAgents.length;i++){
+                    this.jcsAgentMap.set(this.allJCSAgents[i].agentuid, this.allJCSAgents[i].agentname)
+                }
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -200,7 +204,6 @@ export default {
         },
         save(){
             this.clearInValid()
-
             if(this.new_content.virtualagentname.trim().length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else if(this.new_content.maximumjob.toString().trim() === '' || isNaN(this.new_content.maximumjob) || 
@@ -216,9 +219,16 @@ export default {
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
-                    this.new_content.agentlist.forEach(function(element) {  //activate value must be cast to integer 0 or 1
-                        element.activate = Number(element.activate)
-                    });
+                    for(let i=0;i<this.new_content.agentlist.length;i++){
+                        //補agent name給list, 這是為了回傳回來的list資料中, agent name不為null
+                        this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
+                        //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
+                        this.new_content.agentlist[i].virtualagentuid = null
+                        //activate value must be cast to integer 0 or 1
+                        this.new_content.agentlist[i].activate = Number(this.new_content.agentlist[i].activate)
+                        //重新取得按照UI次序之seq之值
+                        this.new_content.agentlist[i].seq = i + 1
+                    }
                     return this.new_content
                 }
             }                
@@ -270,6 +280,6 @@ export default {
         height: 30px
     }
     input.w3-check,input.w3-radio {
-        height: 20px
+        height: 16px
     }
 </style>

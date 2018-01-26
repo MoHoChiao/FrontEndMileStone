@@ -107,8 +107,8 @@ export default {
                 txdateendpos: ['w3-input','w3-border']
             },
             selectedEntityRecord: new Object(), //store which is selected entity
-            selectedCategoryRecord: new Object(), //store which is selected category
-            selectedJobRecord: new Object(), //store which is selected category
+            selectedCategoryRecord: new Object(), //store which is selected job category
+            selectedJobRecord: new Object(), //store which is selected job
             namePath: '',   //store "entityname:categoryname.jobname"
             isOverrideTxDate: false,
             new_content: {

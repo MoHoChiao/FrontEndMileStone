@@ -8,6 +8,7 @@ import FileSourceContainer from '../components/ResourceSetting/Instance/FileSour
 import ConnectionContainer from '../components/ResourceSetting/Instance/Connection/ConnectionContainer.vue'
 import WorkingCalendarContainer from '../components/ResourceSetting/Instance/WorkingCalendar/WorkingCalendarContainer.vue'
 import FrequencyContainer from '../components/ResourceSetting/Instance/Frequency/FrequencyContainer.vue'
+import ExclFrequencyContainer from '../components/ResourceSetting/Instance/ExclFrequency/ExclFrequencyContainer.vue'
 
 Vue.use(VueRouter);
 
@@ -59,6 +60,13 @@ export default new VueRouter({
                     path: 'Frequency',
                     components: {
                         content: FrequencyContainer
+                    }
+                },
+                {
+                    name: 'ExclFrequency',
+                    path: 'ExclFrequency',
+                    components: {
+                        content: ExclFrequencyContainer
                     }
                 }
             ]

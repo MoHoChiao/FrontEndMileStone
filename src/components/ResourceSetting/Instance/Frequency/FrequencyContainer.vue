@@ -442,7 +442,7 @@ export default {
                 }
             })
         },
-        deleteConnection(){
+        deleteFrequency(){
             HTTPRepo.get(`frequency/delete`, {
                 params: {
                     uid: this.selectedFrequencyRecord.frequencyuid

@@ -37,13 +37,13 @@
                 <p>{{ content.wcalendarname }}</p>
                 <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <p>
-                  <div v-if="content.wcalendarlist.length > 0">
+                  <div v-if="content.wcalendarlist.length > 0" class="w3-small">
                     <div class="w3-responsive w3-card w3-round">
                         <input :id="content.wcalendaruid+'SearchInput'" :key="content.wcalendaruid+'SearchInput'" 
                             class="w3-input w3-border w3-border-camo-black w3-grey" type="text" placeholder="Search For Workinf Calendar List..." @keyup="searchForList(content.wcalendaruid)">
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                        <table :id="content.wcalendaruid+'ListTable'" :key="content.wcalendaruid+'ListTable'" class="w3-table-all w3-small">
+                        <table :id="content.wcalendaruid+'ListTable'" :key="content.wcalendaruid+'ListTable'" class="w3-table-all">
                             <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in content.wcalendarlist">
                                 <td class="w3-center" width="100%">
                                     {{ list_info.yearnum + '-' + list_info.monthnum + '-' + list_info.daynum }}

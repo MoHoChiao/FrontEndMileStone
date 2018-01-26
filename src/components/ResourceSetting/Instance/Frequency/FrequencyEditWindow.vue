@@ -1,9 +1,9 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <frequency-form v-if="urlOp === 'add'" slot="content" ref="frequencyForm"></frequency-form>
-        <frequency-form v-else slot="content" ref="frequencyForm" :content="content" :urlOp="urlOp"></frequency-form>
+        <frequency-form v-if="urlOp === 'add'" slot="content" ref="frequencyForm" @save="save"></frequency-form>
+        <frequency-form v-else slot="content" ref="frequencyForm" :content="content" :urlOp="urlOp" @save="save"></frequency-form>
         <div slot="footer">
-            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
+            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="picked"></form-button>
         </div>
         
     </modal-window>
@@ -77,9 +77,10 @@ export default {
             }else if(this.urlOp === 'move')
                 this.$emit('closeMove')
         },
-        save(){
-            let postContent = this.$refs.frequencyForm.save()
-
+        picked(){
+            this.$refs.frequencyForm.picked()
+        },
+        save(postContent){
             let urlPath = ''
             if(this.urlOp === 'add'){   //新增一筆connection
                 if(this.selectedCategoryRecord && this.selectedCategoryRecord.freqcategoryuid && 
@@ -124,9 +125,9 @@ export default {
                     }else if(this.urlOp === 'edit'){    //edit operation
                         this.$emit('closeEdit', response.data)
                     }else if(this.urlOp === 'copy'){  //copy operation
-                        this.$emit('closeCopy', postContent.conncategoryuid, response.data)
+                        this.$emit('closeCopy', postContent.freqcategoryuid, response.data)
                     }else if(this.urlOp === 'move'){  //move operation
-                        this.$emit('closeMove', postContent.conncategoryuid, response.data)
+                        this.$emit('closeMove', postContent.freqcategoryuid, response.data)
                     }
                 })
                 .catch(error => {

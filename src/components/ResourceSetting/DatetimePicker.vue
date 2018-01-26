@@ -84,7 +84,7 @@
             <div class="date-item" v-for="monthItem in library.month" track-by="$index" @click="setMonth(monthItem)">{{monthItem}}</div>
           </div>
         </div>
-        <div class="cov-date-box list-box" v-if="showInfo.hour">
+        <div class=" w3-white cov-date-box list-box" v-if="showInfo.hour">
           <div class="cov-picker-box date-list">
             <div class="watch-box">
               <div class="hour-box">
@@ -505,6 +505,10 @@ exports.default = {
             this.checked[type] = item.value;
           }
         }
+
+        if(type === 'min')  //為了不需要按ok按鈕加的
+            this.picked()
+            
       } catch (err) {
         _didIteratorError2 = true;
         _iteratorError2 = err;
@@ -800,7 +804,7 @@ table {
   color: #5D5D5D;
 }
 .button-box {
-  background: #fff;
+  background: #2a6592;
   height: 20px;
 }
 .button-box span {
@@ -842,7 +846,7 @@ table {
   color: #FFF !important;
 }
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #E3E3E3;

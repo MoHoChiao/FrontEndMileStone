@@ -1,13 +1,13 @@
 <template>
     <div>
-        <vr-agent-form ref="vrAgentForm" :index="index" :content="content"></vr-agent-form>
+        <excl-frequency-form ref="exclFreqForm" :index="index" :content="content"></excl-frequency-form>
         <hr class="w3-border-grey">
         <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
-import VRAgentForm from './VRAgentForm.vue'
+import ExclFrequencyForm from './ExclFrequencyForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -16,12 +16,11 @@ export default {
             type: Object,
             default () {
                 return {
-                    virtualagentuid: '',
-                    virtualagentname: '',
+                    excludefrequencyuid: '',
+                    excludefrequencyname: '',
                     description: '',
-                    maximumjob: 5,
                     activate: '0',
-                    mode: '0'
+                    excludefrequencylist: []
                 }
             }
         },
@@ -32,9 +31,10 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.vrAgentForm.save()
+            let postContent = this.$refs.exclFreqForm.save()
+            
             if(postContent){
-                HTTPRepo.post(`vragent/edit`, postContent)
+                HTTPRepo.post(`excl-frequency/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })
@@ -56,11 +56,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.vrAgentForm.reset()
+            this.$refs.exclFreqForm.reset()
         }
     },
     components: {
-        'vr-agent-form': VRAgentForm,
+        'excl-frequency-form': ExclFrequencyForm,
         'form-button': FormButton
     }
 }
