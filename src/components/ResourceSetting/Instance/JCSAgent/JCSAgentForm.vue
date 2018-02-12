@@ -5,7 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.agentname" type="text" maxlength="32" placeholder="Please Input Agent Name">
+                <input :class="inputClassList.name" v-model="new_content.agentname" type="text" 
+                    maxlength="32" placeholder="Please Input Agent Name" style="text-transform:uppercase">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" type="checkbox">
@@ -198,6 +199,7 @@ export default {
                         this.new_content.memweight < 0){
                 this.inputClassList.mem.splice(2, 1, 'w3-red')
             }else{
+                this.new_content.agentname = this.new_content.agentname.trim().toUpperCase()
                 this.new_content.activate = Number(this.new_content.activate)
                 this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
                 return this.new_content

@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <excl-frequency-form slot="content" ref="exclFreqForm"></excl-frequency-form>
+        <domain-form slot="content" ref="domainForm" :content="content"></domain-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import ExclFrequencyForm from './ExclFrequencyForm.vue'
+import DomainForm from './DomainForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -25,6 +25,18 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
+        },
+        content: {
+            type: Object,
+            default () {
+                return {
+                    domainuid: '',
+                    name: '',
+                    description: '',
+                    domainVars: [],
+                    domainResources: []
+                }
+            }
         }
     },
     methods: {
@@ -32,10 +44,10 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.exclFreqForm.save()
-
+            let postContent = this.$refs.domainForm.save()
+            
             if(postContent){
-                HTTPRepo.post(`excl-frequency/add`, postContent)
+                HTTPRepo.post(`domain/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })
@@ -57,12 +69,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.exclFreqForm.reset()
+            this.$refs.domainForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'excl-frequency-form': ExclFrequencyForm,
+        'domain-form': DomainForm,
         'form-button': FormButton
     }
 }

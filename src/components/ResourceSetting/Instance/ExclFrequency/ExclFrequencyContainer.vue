@@ -12,6 +12,15 @@
                             @closeDelete="changeDeleteWindowStatus" 
                             @confirmDelete="deleteExclFreq" 
         ></confirm-delete-window>
+        <excl-frequency-apply-window :windowAlive="applyWindowAlive" 
+                            window-title="Apply Exclude Frequency To Other Object"
+                            :applyTimes="selectedExclFreqRecord.excludefrequencylist" 
+                            :excludefrequencyuid="selectedExclFreqRecord.excludefrequencyuid" 
+                            @closeApply="changeApplyWindowStatus" 
+        ></excl-frequency-apply-window>
+        <router-view name="content">
+        <!--Global Excl Freq Window組件內容會在這裡渲染-->
+        </router-view>
         <div class="w3-col m7 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -34,13 +43,14 @@
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/exclude_frequency.png" alt="Exclude Frequency" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                        <p>{{ content.excludefrequencyname }}</p>
-                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                         <p>
-                            <excl-frequency-apply-panel :key="content.excludefrequencyuid+'ApplyPanel'" ref="applyPanel" 
-                                :index="index" :applyTimes="content.excludefrequencylist" :excludefrequencyuid="content.excludefrequencyuid">
-                            </excl-frequency-apply-panel>
+                            <i v-if="content.excludefrequencyuid.trim() === 'global'" class="fa fa-globe fa-fw w3-text-blue"></i>
+                            {{ content.excludefrequencyname }}
                         </p>
+                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
+                        <excl-frequency-apply-panel :key="content.excludefrequencyuid+'ApplyPanel'" 
+                            :applyTimes="content.excludefrequencylist" :excludefrequencyuid="content.excludefrequencyuid">
+                        </excl-frequency-apply-panel>
                         <hr class="w3-border-black w3-clear">
                         <p class="w3-small">{{ content.description }}</p>
                         <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
@@ -48,22 +58,25 @@
                         <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.excludefrequencyuid, content.excludefrequencyname)">
                             <i class="fa fa-trash-o"></i> Delete</button>
                     </div>
-                    <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel'" 
+                    <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel1'" 
                         :index="index" :content="content" @closeEdit="changeEditable"></excl-frequency-edit-panel>
                 </div>
             </div>
             <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li class="w3-bar w3-border-camo-black" v-for="(content, index) in allExclFreqObjs">
+                <li :key="content.excludefrequencyuid+'li'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allExclFreqObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/exclude_frequency.png" alt="Exclude Frequency" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                        <p>{{ content.excludefrequencyname }}</p>
+                        <p>
+                            <i v-if="content.excludefrequencyuid.trim() === 'global'" class="fa fa-globe fa-fw w3-text-blue"></i>
+                            {{ content.excludefrequencyname }}
+                        </p>
                         <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                         <button title="Delete This Exclude Frequency" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.excludefrequencyuid, content.excludefrequencyname)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
                         </button>
-                        <button title="Apply To Frequency/Job/Flow" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                        <button title="Apply To Frequency/Job/Flow" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeApplyWindowStatus(content)">
                             <i class="fa fa-hand-lizard-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Apply</span>
                         </button>
@@ -71,13 +84,8 @@
                             <i class="fa fa-pencil"></i>
                             <span class="w3-hide-medium w3-hide-small"> Edit</span>
                         </button>
-                        <p>
-                            <excl-frequency-apply-panel :key="content.excludefrequencyuid+'ApplyPanel'" ref="applyPanel" 
-                                :index="index" :excludefrequencyuid="content.excludefrequencyuid">
-                            </excl-frequency-apply-panel>
-                        </p>
                     </div>
-                    <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel'" 
+                    <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel2'" 
                         :index="index" :content="content" @closeEdit="changeEditable"></excl-frequency-edit-panel>
                 </li>
             </ul>
@@ -92,18 +100,21 @@ import ExclFrequencyEditPanel from './ExclFrequencyEditPanel.vue'
 import ExclFrequencyApplyPanel from './ExclFrequencyApplyPanel.vue'
 import ExclFrequencyAddWindow from './ExclFrequencyAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import ExclFrequencyApplyWindow from './ExclFrequencyApplyWindow.vue'
 
 export default {
     data() {
         return {
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add Exclude Frequency modal windows
+            applyWindowAlive: false, //for modify Exclude Frequency Apply modal windows(Frequency, Job, Flow)
             deleteWindowAlive: false,  //for delete Exclude Frequency modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
             allExclFreqObjs: [], //store all Exclude Frequency
             editable: [],   //for all Exclude Frequency content edit panel
+            selectedExclFreqRecord: new Object(),   //store which excl freq apply button has been clicked.
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},
                 {name: "Name",value: "excludefrequencyname"},
@@ -198,6 +209,11 @@ export default {
                 this.allExclFreqObjs[index] = content
             }
         },
+        changeApplyWindowStatus(record){
+            if(record)
+                this.selectedExclFreqRecord = record
+            this.applyWindowAlive = !this.applyWindowAlive
+        },
         deleteExclFreq(){
             if(this.deleteIndex === -1)
                 return
@@ -259,7 +275,8 @@ export default {
         'excl-frequency-edit-panel': ExclFrequencyEditPanel,
         'excl-frequency-apply-panel': ExclFrequencyApplyPanel,
         'excl-frequency-add-window': ExclFrequencyAddWindow,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'excl-frequency-apply-window': ExclFrequencyApplyWindow
     }
 }
 </script>

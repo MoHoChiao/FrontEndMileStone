@@ -1,16 +1,16 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <excl-frequency-form slot="content" ref="exclFreqForm" @save="save"></excl-frequency-form>
-        <div slot="footer">
-            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
-        </div>
+        <excl-frequency-apply-panel slot="content" 
+                :applyTimes="applyTimes" 
+                :excludefrequencyuid="excludefrequencyuid" 
+        ></excl-frequency-apply-panel>
+        <div slot="footer"></div>
     </modal-window>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import ExclFrequencyForm from './ExclFrequencyForm.vue'
-import FormButton from '../../FormButton.vue'
+import ExclFrequencyApplyPanel from './ExclFrequencyApplyPanel.vue'
 
 export default {
     props: {
@@ -25,45 +25,20 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
-        }
+        },
+        applyTimes:{
+            type: Array
+        },
+        excludefrequencyuid: ''
     },
     methods: {
         cancel(){
-            this.$emit('closeAdd')
-        },
-        save(){
-            let postContent = this.$refs.exclFreqForm.save()
-
-            if(postContent){
-                HTTPRepo.post(`excl-frequency/add`, postContent)
-                .then(response => {
-                    this.$emit('closeAdd', response.data)
-                })
-                .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
-                })
-            }
-        },
-        reset(){
-            this.$refs.exclFreqForm.reset()
+            this.$emit('closeApply')
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'excl-frequency-form': ExclFrequencyForm,
-        'form-button': FormButton
+        'excl-frequency-apply-panel': ExclFrequencyApplyPanel
     }
 }
 </script>

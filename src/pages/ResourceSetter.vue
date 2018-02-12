@@ -49,8 +49,8 @@
                             <div id="Demo1" class="w3-hide w3-container">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>Alias Reference</a>
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>Domain</a>
+                                        <a @click="getAlias" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>Alias Reference</a>
+                                        <a @click="getDomains" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>Domain</a>
                                         <a @click="getConnections" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-plug fa-fw w3-margin-right"></i>Connection</a>
                                         <a @click="getFileSources" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-files-o fa-fw w3-margin-right"></i>File Source</a>
                                         <a @click="getAgents" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cog fa-fw w3-margin-right"></i>JCS Agent</a>
@@ -81,20 +81,20 @@
                     </div>
                     <br>
 
-                    <!-- Interests -->
+                    <!-- Global -->
                     <div class="w3-card-4 w3-round w3-signal-white">
                         <div class="w3-container">
                             <p><i class="fa fa-globe fa-fw w3-margin-right"></i>Global</p>
                             <p>
-                                <button class="w3-button w3-tag w3-small w3-theme-d3">Domain</button>
-                                <button class="w3-button w3-tag w3-small w3-theme-l1">Alias</button>
-                                <button class="w3-button w3-tag w3-small w3-theme-l4">Exclude Freq</button>
+                                <button @click="getGlobalDomain" class="w3-button w3-tag w3-small w3-theme-d3">Domain</button>
+                                <button @click="getGlobalAlias" class="w3-button w3-tag w3-small w3-theme-l1">Alias</button>
+                                <button @click="getGlobalExclFrequency" class="w3-button w3-tag w3-small w3-theme-l4">Exclude Freq</button>
                             </p>
                         </div>
                     </div>
                     <br>
 
-                    <!-- Alert Box -->
+                    <!-- Setting -->
                     <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom">
                         <p><i class="fa fa-wrench fa-fw w3-margin-right"></i>Setting</p>
                         <p>
@@ -157,6 +157,18 @@ export default {
             }
         },
         //以下為頁面中間的部份, 各種Resources都會在這裡
+        getAlias(e){
+            this.$router.push({ name: 'AliasReference'})
+        },
+        getGlobalAlias(e){
+            this.$router.push({ name: 'GlobalAliasReference'})
+        },
+        getDomains(e){
+            this.$router.push({ name: 'Domain'})
+        },
+        getGlobalDomain(e){
+            this.$router.push({ name: 'GlobalDomain'})
+        },
         getAgents(e){
             this.$router.push({ name: 'JCSAgent'})
         },
@@ -177,6 +189,9 @@ export default {
         },
         getExclFrequencies(e){
             this.$router.push({ name: 'ExclFrequency'})
+        },
+        getGlobalExclFrequency(e){
+            this.$router.push({ name: 'GlobalExclFrequency'})
         }
     },
     components: {

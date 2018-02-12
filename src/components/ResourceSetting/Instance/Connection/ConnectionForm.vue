@@ -5,7 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
-                <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" 
+                    placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
             <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
@@ -459,7 +460,7 @@ export default {
             //collect basic necessary value
             let returnValue = {
                 "connectionuid":this.new_content.connectionuid,
-                "connectionname":this.new_content.connectionname,
+                "connectionname":this.new_content.connectionname.trim().toUpperCase(),
                 "connectiontype":this.new_content.connectiontype,
                 "description":this.new_content.description,
                 "withpim":Number(this.new_content.withpim),

@@ -21,7 +21,7 @@
             @confirmDelete="deleteApply" 
         ></confirm-delete-window>
         <div class="w3-small">
-            <div class="w3-row">
+            <div v-if="excludefrequencyuid.trim().toUpperCase() !== 'GLOBAL'" class="w3-row">
                 <a href="javascript:void(0)" @click="openTab(0)">
                     <div :class="tabsClass[0]">Time List</div>
                 </a>
@@ -38,23 +38,16 @@
             <br>
             <div v-show="tabsFlag[0]">
                 <div class="w3-row">
-                    <div class="w3-col m10">
+                    <div class="w3-col m12">
                         <input id="SearchTimeInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Exclude Frequency List..." @keyup="searchForList('Time')">
-                    </div>
-                    <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
-                        <i class="fa fa-plus-square w3-button w3-hover-none" title="Apply Frequency" aria-hidden="true" @click="changeApplyWindowStatus"></i>
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                     <table id="TimeListTable" class="w3-table-all">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyTimes">
-                            <td class="w3-center" width="84%">
+                        <tr :key="list_index+'TimeListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyTimes">
+                            <td class="w3-center" width="100%">
                                 <span>{{ compositionTime(list_info) }}</span>
-                            </td>
-                            <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
-                                    aria-hidden="true" @click="changeDeleteWindowStatus(list_index, list_info)"></i>
                             </td>
                         </tr>
                     </table>
@@ -72,7 +65,7 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                     <table id="FreqListTable" class="w3-table-all">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFrequencies">
+                        <tr :key="list_index+'FreqListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFrequencies">
                             <td class="w3-center" width="84%">
                                 <span>{{ compositionName(list_info) }}</span>
                             </td>
@@ -87,7 +80,7 @@
             <div v-show="tabsFlag[2]">
                 <div class="w3-row">
                     <div class="w3-col m10">
-                        <input id="SearchFreqInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input id="SearchJobInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Apply Job..." @keyup="searchForList('Job')">
                     </div>
                     <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
@@ -95,8 +88,8 @@
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="FreqListTable" class="w3-table-all">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyJobs">
+                    <table id="JobListTable" class="w3-table-all">
+                        <tr :key="list_index+'JobListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyJobs">
                             <td class="w3-center" width="84%">
                                 <span>{{ compositionName(list_info) }}</span>
                             </td>
@@ -111,7 +104,7 @@
             <div v-show="tabsFlag[3]">
                 <div class="w3-row">
                     <div class="w3-col m10">
-                        <input id="SearchFreqInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input id="SearchFlowInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Apply Flow..." @keyup="searchForList('Flow')">
                     </div>
                     <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
@@ -119,8 +112,8 @@
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="FreqListTable" class="w3-table-all">
-                        <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFlows">
+                    <table id="FlowListTable" class="w3-table-all">
+                        <tr :key="list_index+'FlowListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFlows">
                             <td class="w3-center" width="84%">
                                 <span>{{ compositionName(list_info) }}</span>
                             </td>
@@ -167,6 +160,15 @@ export default {
             type: Array
         },
         excludefrequencyuid: ''
+    },
+    watch: {
+        /*
+         * 這是為了在父元件中只要按下reload相關的功能時, applyTimes會改變, 利用這個改變來使用watch
+         * 使得每次按下reload相關的功能時, 都能讓tab回到第一個
+        */
+        applyTimes: function(newValue) {
+            this.openTab(0)
+        }
     },
     methods: {
         openTab(numOfTab) {

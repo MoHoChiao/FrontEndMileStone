@@ -5,7 +5,9 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.conncategoryname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.conncategoryname" type="text" 
+                    maxlength="32" placeholder="Please Input Name" 
+                    style="text-transform:uppercase">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -58,6 +60,7 @@ export default {
             if(this.new_content.conncategoryname === undefined || this.new_content.conncategoryname.trim().length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else{
+                this.new_content.conncategoryname = this.new_content.conncategoryname.trim().toUpperCase()
                 return this.new_content
             }                
         },

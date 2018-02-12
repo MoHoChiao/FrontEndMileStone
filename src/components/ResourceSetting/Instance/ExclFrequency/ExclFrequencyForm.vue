@@ -5,7 +5,13 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.excludefrequencyname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input v-if="this.new_content.excludefrequencyuid.trim() === 'global'" 
+                        :class="inputClassList.name" v-model="new_content.excludefrequencyname" 
+                        type="text" maxlength="32" placeholder="Please Input Name" readonly 
+                        style="text-transform:uppercase">
+                <input v-else :class="inputClassList.name" v-model="new_content.excludefrequencyname" 
+                        type="text" maxlength="32" placeholder="Please Input Name" 
+                        style="text-transform:uppercase">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
@@ -36,7 +42,7 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table">
-                        <tr :key="list_info.agentuid" draggable="true" @dragover.prevent @drag="dragTime(index)" @drop="dropTime(index)" v-for="(list_info, index) in new_content.excludefrequencylist">
+                        <tr :key="index+'TimeEdit'" draggable="true" @dragover.prevent @drag="dragTime(index)" @drop="dropTime(index)" v-for="(list_info, index) in new_content.excludefrequencylist">
                             <td width="10%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="40%" style="padding:6px 0px 0px 0px">
                                 <datetime-picker :date="list_info.starttime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
@@ -124,6 +130,17 @@ export default {
             }
         }
     },
+    watch: {    //這段主要是為了Global excl freq window所寫, 讓content異動後的值, 即時更新到new_content中
+        content: function(newValue) {
+            if(newValue.excludefrequencyuid.trim() === 'global'){
+                this.new_content.excludefrequencyuid = newValue.excludefrequencyuid
+                this.new_content.excludefrequencyname = newValue.excludefrequencyname
+                this.new_content.description = newValue.description
+                this.new_content.activate = Number(newValue.activate)
+                this.new_content.excludefrequencylist = this.initialNewTimeList()
+            }            
+        }
+    },
     methods: {
         initialNewTimeList(){
             let new_excludefrequencylist = []
@@ -145,7 +162,9 @@ export default {
         save(){
             this.clearInValid()
 
-            if(this.new_content.excludefrequencyname.trim().length <= 0){
+            this.new_content.excludefrequencyname = this.new_content.excludefrequencyname.trim().toUpperCase()
+
+            if(this.new_content.excludefrequencyname.length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else{
                 if(this.new_content.excludefrequencylist.length > 2000){
@@ -156,19 +175,50 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
                     /*
-                     * 這裡要再創一個object的原因是需要讓this.new_content保持starttime及endtime是object的格式, 因為這種格式是DatetimePicker元件吃的
+                     * 這裡要再創一個return_content之object的原因是需要讓this.new_content保持starttime及endtime是object的格式, 因為這種格式是DatetimePicker元件吃的
                      * 當starttime改變成後端所吃的Json格式, 即例如"starttime": 201801191004, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
                      * 當endtime改變成後端所吃的格式, 即例如"endtime": 201801191005, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
                     */
                     let return_content = new Object()
+                    return_content.excludefrequencyuid = this.new_content.excludefrequencyuid
+                    return_content.excludefrequencyname = this.new_content.excludefrequencyname
+                    return_content.description = this.new_content.description
+                    return_content.activate = Number(this.new_content.activate)
+                    let return_lists = []   //新的excludefrequencylist
+                    let timeTemp = []   //這單純是為了檢查是否有重覆時間用的
                     for(let i=0;i<this.new_content.excludefrequencylist.length;i++){
                         let starttime =  this.new_content.excludefrequencylist[i].starttime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
                         let endtime =  this.new_content.excludefrequencylist[i].endtime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
-                        this.new_content.excludefrequencylist[i].starttime = starttime
-                        this.new_content.excludefrequencylist[i].endtime = endtime
+                        
+                        if(starttime > endtime){    //Check Start time can not be greater than the end time
+                            let newStatus = {
+                                "msg": "Start time can not be greater than the end time!",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                            return 
+                        }
+
+                        if(timeTemp.includes(starttime+"~"+endtime)){   //Check duplicate time
+                            let newStatus = {
+                                "msg": "Duplicate time!",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                            return 
+                        }else{
+                            timeTemp.push(starttime+"~"+endtime)
+                        }
+
+                        let return_list = {
+                            "seq": i+1,
+                            "starttime": starttime,
+                            "endtime": endtime
+                        }
+                        return_lists.push(return_list)
                     }
-                    this.new_content.activate = Number(this.new_content.activate)
-                    return this.new_content
+                    return_content.excludefrequencylist = return_lists
+                    return return_content
                 }
             }
         },
@@ -196,11 +246,9 @@ export default {
                 }
             }
             this.new_content.excludefrequencylist.push(new_timeObj)
-            console.log(this.new_content.excludefrequencylist)
         },
         delTime(index){
             this.new_content.excludefrequencylist.splice(index, 1)
-            console.log(this.new_content.excludefrequencylist)
         },
         dragTime(index){
             this.dragIndex = index

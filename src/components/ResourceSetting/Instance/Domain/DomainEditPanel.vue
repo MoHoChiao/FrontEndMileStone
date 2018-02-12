@@ -1,13 +1,13 @@
 <template>
     <div>
-        <excl-frequency-form ref="exclFreqForm" :content="content"></excl-frequency-form>
+        <domain-form ref="domainForm" :index="index" :content="content"></domain-form>
         <hr class="w3-border-grey">
         <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
-import ExclFrequencyForm from './ExclFrequencyForm.vue'
+import DomainForm from './DomainForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -16,11 +16,11 @@ export default {
             type: Object,
             default () {
                 return {
-                    excludefrequencyuid: '',
-                    excludefrequencyname: '',
+                    domainuid: '',
+                    name: '',
                     description: '',
-                    activate: '0',
-                    excludefrequencylist: []
+                    domainVars: [],
+                    domainResources: []
                 }
             }
         },
@@ -31,10 +31,10 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.exclFreqForm.save()
+            let postContent = this.$refs.domainForm.save()
             
             if(postContent){
-                HTTPRepo.post(`excl-frequency/edit`, postContent)
+                HTTPRepo.post(`domain/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })
@@ -56,11 +56,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.exclFreqForm.reset()
+            this.$refs.domainForm.reset()
         }
     },
     components: {
-        'excl-frequency-form': ExclFrequencyForm,
+        'domain-form': DomainForm,
         'form-button': FormButton
     }
 }

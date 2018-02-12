@@ -11,7 +11,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.wcalendarname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.wcalendarname" type="text" 
+                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
@@ -127,7 +128,9 @@ export default {
         save(datetime){
             this.clearInValid()
 
-            if(this.new_content.wcalendarname.trim().length <= 0){
+            this.new_content.wcalendarname = this.new_content.wcalendarname.trim().toUpperCase()
+
+            if(this.new_content.wcalendarname.length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else{
                 let datetimeArr = JSON.parse(datetime)

@@ -5,7 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" 
+                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
         </div>
         <div v-else class="w3-row w3-section">
@@ -226,7 +227,7 @@ export default {
             //collect basic necessary value
             let returnValue = {
                 "filesourceuid":this.new_content.filesourceuid,
-                "filesourcename":this.new_content.filesourcename,
+                "filesourcename":this.new_content.filesourcename.trim().toUpperCase(),
                 "description":this.new_content.description
             }
             

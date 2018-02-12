@@ -11,7 +11,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
-                <input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text" 
+                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
             <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
@@ -425,7 +426,7 @@ export default {
             //collect basic necessary value
             let returnValue = {
                 "frequencyuid":this.new_content.frequencyuid,
-                "frequencyname":this.new_content.frequencyname,
+                "frequencyname":this.new_content.frequencyname.trim().toUpperCase(),
                 "description":this.new_content.description,
                 "activate":Number(this.new_content.activate),
                 "xmldata":'',

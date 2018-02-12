@@ -5,7 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.virtualagentname" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.virtualagentname" type="text" 
+                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
@@ -55,7 +56,7 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.agentuid" class="w3-hover-blue-grey w3-hover-opacity" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
+                        <tr :key="list_info.agentuid" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
                             <td width="7%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="30%" style="padding:6px 0px 0px 0px">
                                 <span>
@@ -204,7 +205,10 @@ export default {
         },
         save(){
             this.clearInValid()
-            if(this.new_content.virtualagentname.trim().length <= 0){
+
+            this.new_content.virtualagentname = this.new_content.virtualagentname.trim().toUpperCase()
+
+            if(this.new_content.virtualagentname.length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else if(this.new_content.maximumjob.toString().trim() === '' || isNaN(this.new_content.maximumjob) || 
                         (this.new_content.maximumjob <1 || this.new_content.maximumjob >2048)){
@@ -220,7 +224,7 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
                     for(let i=0;i<this.new_content.agentlist.length;i++){
-                        //補agent name給list, 這是為了回傳回來的list資料中, agent name不為null
+                        //補agent name給list, 這是為了回傳回來的list資料中, 讓agent name不為null
                         this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
                         //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
                         this.new_content.agentlist[i].virtualagentuid = null
@@ -273,9 +277,6 @@ export default {
 }
 </script>
 <style scoped>
-    th {
-        padding-top:13px
-    }
     input,select {
         height: 30px
     }

@@ -1,17 +1,16 @@
 <template>
 <div>
-  <vr-agent-add-window :windowAlive="addWindowAlive" 
-                    window-title="Add Virtual Agent" 
-                    @closeAdd="changeAddWindowStatus" 
-  ></vr-agent-add-window>
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
                     window-bg-color="highway-schoolbus"
                     btn-color="signal-white" 
                     @closeDelete="changeDeleteWindowStatus" 
-                    @confirmDelete="deleteAgent" 
+                    @confirmDelete="deleteAlias" 
   ></confirm-delete-window>
+  <router-view name="content">
+  <!--Global Alias Reference組件內容會在這裡渲染-->
+  </router-view>
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -19,11 +18,10 @@
                 <div class="w3-container">
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Virtual Agent</i>
+                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Alias Reference</i>
                         <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                         <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i>
+                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getEntities"></i>
                     </p>
                 </div>
             </div>
@@ -31,86 +29,70 @@
     </div>
 
     <div v-if="showMode">
-        <div :key="content.virtualagentuid+'table'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allVRAgentObjs">
+        <div :key="content.busentityuid+'table'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allEntityObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/entity.png" alt="Entity Name" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.virtualagentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <p>
-                  <div v-if="content.agentlist.length > 0">
+                <p>{{ content.busentityname }}</p>
+                <br>
+                <div v-if="content.alias.length > 0">
                     <div class="w3-responsive w3-card w3-round">
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
-                                <th class="w3-center" width="7%">Seq</th>
-                                <th class="w3-center" width="33%">Name</th>
-                                <th class="w3-center" width="10%">Activate</th>
-                                <th class="w3-center" width="50%">Description</th>
+                                <th class="w3-center" width="25%">Alias Name</th>
+                                <th class="w3-center" width="15%">Type</th>
+                                <th class="w3-center" width="25%">Target</th>
+                                <th class="w3-center" width="35%">Description</th>
                             </tr>
                         </table>
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
                         <table class="w3-table-all w3-small">
-                            <tr :key="list_info.virtualagentuid+':'+list_info.agentuid" class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
-                                <td width="7%">{{ list_index + 1 }}</td>
-                                <td class="w3-center" width="33%">
-                                    <span>{{ list_info.agentname }}</span>
-                                </td>
-                                <td class="w3-center" width="10%">
-                                    <i v-if="list_info.activate === '1'" class="fa fa-check-square-o" title="Activate" aria-hidden="true"></i>
-                                    <i v-else class="fa fa-square-o" title="Deactivate" aria-hidden="true"></i>
-                                </td>
-                                <td width="50%">
-                                    <span>{{ list_info.description }}</span>
-                                </td>
+                            <tr :key="list_info.parentuid+':'+list_info.aliasname" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in content.alias">
+                                <td class="w3-center" width="25%"><span>{{ list_info.aliasname }}</span></td>
+                                <td class="w3-center" width="15%"><span>{{ list_info.aliastype }}</span></td>
+                                <td class="w3-center" width="25%"><span>{{ list_info.objectname }}</span></td>
+                                <td width="35%"><span>{{ list_info.description }}</span></td>
                             </tr>
                         </table>
                     </div>
-                  </div>
-                </p>
+                </div>
                 <hr class="w3-border-black w3-clear">
                 <p class="w3-small">{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i> Edit</button>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
+                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.busentityuid, content.busentityname)">
                     <i class="fa fa-trash-o"></i> Delete</button>
             </div>
-            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
+            <alias-table-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></alias-table-edit-panel>
         </div>
     </div>
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-        <li :key="content.virtualagentuid+'list'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allVRAgentObjs">
+        <li :key="content.busentityuid+'list'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allEntityObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
+                <img src="/src/assets/images/resource_setter/entity.png" alt="Entity Name" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.virtualagentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <button title="Delete This Virtual Agent" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
+                <p>{{ content.busentityname }}</p>
+                <button title="Delete This Alias Reference" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.busentityuid, content.busentityname)">
                     <i class="fa fa-trash-o"></i>
                     <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
-                <button title="Edit This Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                <button title="Edit This Alias Reference" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
                     <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
             </div>
-            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
+            <alias-table-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></alias-table-edit-panel>
         </li>
     </ul>
-
   </div>
-  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getVRAgents"></filter-panel>
+  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getEntities"></filter-panel>
 </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
 import FilterPanel from '../../FilterPanel.vue'
-import VRAgentEditPanel from './VRAgentEditPanel.vue'
-import VRAgentAddWindow from './VRAgentAddWindow.vue'
+import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
 export default {
@@ -122,27 +104,23 @@ export default {
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            allVRAgentObjs: new Object(), //store all virtual agents
+            allEntityObjs: [], //store all Entities
             editable: [],   //for all virtual agents content edit panel
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "virtualagentname"},
-                {name: "Activate",value: "activate"},
-                {name: "Mode",value: "mode"}
+                {name: "Name",value: "busentityname"}
             ],
             queryFields: [  //for querying filter fields
-                {name: "Name",value: "virtualagentname"},
-                {name: "Activate",value: "activate"},
-                {name: "Mode",value: "mode"},
+                {name: "Name",value: "busentityname"},
                 {name: "Desc",value: "Description"}
             ]
         }
     },
     mounted() {
-        this.getVRAgents()
+        this.getEntities()
     },
     methods: {
-        getVRAgents(e){
+        getEntities(e){
             let params = {
                 "paging":{
                     "number":this.$refs.filter.selectedNum,
@@ -166,14 +144,14 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`vragent/findByFilter`, params)
+            HTTPRepo.post(`busentity/findByFilter?withAlias=true`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
-                    this.allVRAgentObjs = response.data.content
+                    this.allEntityObjs = response.data.content
                     this.$refs.filter.totalPages = response.data.totalPages
                 } else {
-                    this.allVRAgentObjs = response.data
+                    this.allEntityObjs = response.data
                     this.$refs.filter.totalPages = 1
                 }
             })
@@ -217,23 +195,28 @@ export default {
             }
             
             if(content !== undefined){
-                this.allVRAgentObjs[index] = content
+                this.allEntityObjs[index].alias = content
             }
         },
-        deleteAgent(){
+        deleteAlias(){
             if(this.deleteIndex === -1)
                 return
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`vragent/delete`, {
+            if(this.allEntityObjs[this.deleteIndex].alias.length <= 0){
+                this.changeDeleteWindowStatus(-1, '', '')
+                return
+            }
+
+            HTTPRepo.get(`objectalias/deleteByParentUid`, {
                 params: {
-                    uid: this.deleteUid
+                    parentUid: this.deleteUid
                 }
             })
             .then(response => {
-                this.allVRAgentObjs.splice(this.deleteIndex, 1)
-                this.editable.splice(this.deleteIndex, 1)
+                this.allEntityObjs[this.deleteIndex].alias = []
+                console.log('delete')
                 this.editable.fill(false) //close all edit form
                 this.changeDeleteWindowStatus(-1, '', '')
             })
@@ -257,31 +240,21 @@ export default {
         changeShowMode(){
             this.showMode = !this.showMode
         },
-        changeAddWindowStatus(content){
-            this.addWindowAlive = !this.addWindowAlive
-            if(content !== undefined){
-                this.allVRAgentObjs.unshift(content) //add object to the top of array
-                this.editable.fill(false) //close all edit form
-                // this.editable.unshift(false)
-            }
-        },
-        changeDeleteWindowStatus(index, vr_agentuid, vr_agentname){
+        changeDeleteWindowStatus(index, busentityuid, busentityname){
             this.deleteWindowAlive = !this.deleteWindowAlive
 
             /*
                 store which obj be delete
             */
             this.deleteIndex = index
-            this.deleteUid = vr_agentuid
-            this.deleteName = vr_agentname
+            this.deleteUid = busentityuid
+            this.deleteName = 'all aliases under ' + busentityname
         }
     },
     components: {
         'filter-panel': FilterPanel,
-        'vr-agent-edit-panel': VRAgentEditPanel,
-        'vr-agent-add-window': VRAgentAddWindow,
+        'alias-table-edit-panel': AliasTableEditPanel,
         'confirm-delete-window': ConfirmDeleteWindow
     }
 }
 </script>
-

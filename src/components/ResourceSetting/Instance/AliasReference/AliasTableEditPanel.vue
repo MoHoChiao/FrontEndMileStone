@@ -1,13 +1,13 @@
 <template>
     <div>
-        <excl-frequency-form ref="exclFreqForm" :content="content"></excl-frequency-form>
+        <alias-form ref="aliasForm" :content="content"></alias-form>
         <hr class="w3-border-grey">
         <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../../axios/http-common'
-import ExclFrequencyForm from './ExclFrequencyForm.vue'
+import AliasForm from './AliasForm.vue'
 import FormButton from '../../FormButton.vue'
 
 export default {
@@ -16,11 +16,9 @@ export default {
             type: Object,
             default () {
                 return {
-                    excludefrequencyuid: '',
-                    excludefrequencyname: '',
-                    description: '',
-                    activate: '0',
-                    excludefrequencylist: []
+                    busentityuid: '',
+                    busentityname: '',
+                    alias: []
                 }
             }
         },
@@ -31,10 +29,9 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.exclFreqForm.save()
-            
+            let postContent = this.$refs.aliasForm.save()
             if(postContent){
-                HTTPRepo.post(`excl-frequency/edit`, postContent)
+                HTTPRepo.post(`objectalias/modify?parentUid=`+this.content.busentityuid, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })
@@ -56,11 +53,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.exclFreqForm.reset()
+            this.$refs.aliasForm.reset()
         }
     },
     components: {
-        'excl-frequency-form': ExclFrequencyForm,
+        'alias-form': AliasForm,
         'form-button': FormButton
     }
 }
