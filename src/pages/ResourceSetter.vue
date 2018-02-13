@@ -1,7 +1,10 @@
 <template>
     <div>
         <!-- msg window -->
-        <modal-msg></modal-msg>
+        <trinity-config-window :windowAlive="trinityconfigAlive" 
+                    window-title="Trinity Configuration Setting" 
+                    @closeAdd="changeConfigWindowStatus" 
+        ></trinity-config-window>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -98,11 +101,10 @@
                     <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom">
                         <p><i class="fa fa-wrench fa-fw w3-margin-right"></i>Setting</p>
                         <p>
-                            <button class="w3-button w3-tag w3-small w3-theme-d3">Configuration</button>
-                            <button class="w3-button w3-tag w3-small w3-theme-l1">Resource</button>
+                            <button @click="changeConfigWindowStatus" class="w3-button w3-tag w3-small w3-theme-d3">Configuration</button>
+                            <button class="w3-button w3-tag w3-small w3-theme-l1">Resource Monitor</button>
                         </p>
                     </div>
-
                     <!-- End Left Column -->
                 </div>
 
@@ -128,12 +130,12 @@
     </div>
 </template>
 <script>
-import ModalMsg from '../components/Common/window/ModalMsg.vue'
+import TrinityconfigWindow from '../components/ResourceSetting/Instance/TrinityConfiguration/TrinityconfigWindow.vue'
 
 export default {
     data() {
         return {
-            obj: null,
+            trinityconfigAlive: false,
         }
     },
     methods: {
@@ -155,6 +157,9 @@ export default {
             } else {
                 x.className = x.className.replace(" w3-show", "");
             }
+        },
+        changeConfigWindowStatus(){
+            this.trinityconfigAlive = !this.trinityconfigAlive
         },
         //以下為頁面中間的部份, 各種Resources都會在這裡
         getAlias(e){
@@ -195,7 +200,7 @@ export default {
         }
     },
     components: {
-        'modal-msg': ModalMsg
+        'trinity-config-window': TrinityconfigWindow
     }
 }
 </script>
