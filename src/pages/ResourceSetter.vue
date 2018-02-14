@@ -5,6 +5,10 @@
                     window-title="Trinity Configuration Setting" 
                     @closeAdd="changeConfigWindowStatus" 
         ></trinity-config-window>
+        <resource-monitor-window :windowAlive="resourceMonitorAlive" 
+                    window-title="Resource Monitor Setting" 
+                    @closeAdd="changeMonitorWindowStatus" 
+        ></resource-monitor-window>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -102,7 +106,7 @@
                         <p><i class="fa fa-wrench fa-fw w3-margin-right"></i>Setting</p>
                         <p>
                             <button @click="changeConfigWindowStatus" class="w3-button w3-tag w3-small w3-theme-d3">Configuration</button>
-                            <button class="w3-button w3-tag w3-small w3-theme-l1">Resource Monitor</button>
+                            <button @click="changeMonitorWindowStatus" class="w3-button w3-tag w3-small w3-theme-l1">Resource Monitor</button>
                         </p>
                     </div>
                     <!-- End Left Column -->
@@ -130,12 +134,14 @@
     </div>
 </template>
 <script>
-import TrinityconfigWindow from '../components/ResourceSetting/Instance/TrinityConfiguration/TrinityconfigWindow.vue'
+import TrinityconfigWindow from '../components/ResourceSetting/TrinityConfiguration/TrinityconfigWindow.vue'
+import ResourceMonitorWindow from '../components/ResourceSetting/ResourceMonitor/ResourceMonitorWindow.vue'
 
 export default {
     data() {
         return {
             trinityconfigAlive: false,
+            resourceMonitorAlive: false,
         }
     },
     methods: {
@@ -160,6 +166,9 @@ export default {
         },
         changeConfigWindowStatus(){
             this.trinityconfigAlive = !this.trinityconfigAlive
+        },
+        changeMonitorWindowStatus(){
+            this.resourceMonitorAlive = !this.resourceMonitorAlive
         },
         //以下為頁面中間的部份, 各種Resources都會在這裡
         getAlias(e){
@@ -200,7 +209,8 @@ export default {
         }
     },
     components: {
-        'trinity-config-window': TrinityconfigWindow
+        'trinity-config-window': TrinityconfigWindow,
+        'resource-monitor-window': ResourceMonitorWindow
     }
 }
 </script>

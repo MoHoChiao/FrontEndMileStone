@@ -1,16 +1,16 @@
 <template>
     <modal-window v-if="windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <trinity-config-form slot="content" ref="configForm"></trinity-config-form>
+        <resource-monitor-form slot="content" ref="monitorForm"></resource-monitor-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import TrinityconfigForm from './TrinityconfigForm.vue'
-import FormButton from '../../FormButton.vue'
+import { HTTPRepo } from '../../../axios/http-common'
+import ModalWindow from '../../Common/window/ModalWindow.vue'
+import ResourceMonitorForm from './ResourceMonitorForm.vue'
+import FormButton from '../FormButton.vue'
 
 export default {
     props: {
@@ -32,7 +32,7 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.configForm.save()
+            let postContent = this.$refs.monitorForm.save()
             if(postContent){
                 HTTPRepo.post(`trinity-config/edit`, postContent)
                 .then(response => {
@@ -60,12 +60,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.configForm.reset()
+            this.$refs.monitorForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'trinity-config-form': TrinityconfigForm,
+        'resource-monitor-form': ResourceMonitorForm,
         'form-button': FormButton
     }
 }
