@@ -47,7 +47,7 @@
                     <table id="TimeListTable" class="w3-table-all">
                         <tr :key="list_index+'TimeListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyTimes">
                             <td class="w3-center" width="100%">
-                                <span>{{ compositionTime(list_info) }}</span>
+                                {{ compositionTime(list_info) }}
                             </td>
                         </tr>
                     </table>
@@ -67,7 +67,7 @@
                     <table id="FreqListTable" class="w3-table-all">
                         <tr :key="list_index+'FreqListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFrequencies">
                             <td class="w3-center" width="84%">
-                                <span>{{ compositionName(list_info) }}</span>
+                                {{ compositionName(list_info) }}
                             </td>
                             <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
@@ -91,7 +91,7 @@
                     <table id="JobListTable" class="w3-table-all">
                         <tr :key="list_index+'JobListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyJobs">
                             <td class="w3-center" width="84%">
-                                <span>{{ compositionName(list_info) }}</span>
+                                {{ compositionName(list_info) }}
                             </td>
                             <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
@@ -115,7 +115,7 @@
                     <table id="FlowListTable" class="w3-table-all">
                         <tr :key="list_index+'FlowListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFlows">
                             <td class="w3-center" width="84%">
-                                <span>{{ compositionName(list_info) }}</span>
+                                {{ compositionName(list_info) }}
                             </td>
                             <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 

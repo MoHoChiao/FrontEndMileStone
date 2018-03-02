@@ -223,16 +223,23 @@ export default {
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }else{
+                    let new_agentlist = []
                     for(let i=0;i<this.new_content.agentlist.length;i++){
-                        //補agent name給list, 這是為了回傳回來的list資料中, 讓agent name不為null
-                        this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
-                        //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
-                        this.new_content.agentlist[i].virtualagentuid = null
-                        //activate value must be cast to integer 0 or 1
-                        this.new_content.agentlist[i].activate = Number(this.new_content.agentlist[i].activate)
-                        //重新取得按照UI次序之seq之值
-                        this.new_content.agentlist[i].seq = i + 1
+                        if(this.new_content.agentlist[i].agentuid){
+                            //補agent name給list, 這是為了回傳回來的list資料中, 讓agent name不為null
+                            this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
+                            //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
+                            this.new_content.agentlist[i].virtualagentuid = null
+                            //activate value must be cast to integer 0 or 1
+                            this.new_content.agentlist[i].activate = Number(this.new_content.agentlist[i].activate)
+                            //重新取得按照UI次序之seq之值
+                            this.new_content.agentlist[i].seq = i + 1
+
+                            new_agentlist.push(this.new_content.agentlist[i])
+                        }
                     }
+                    this.new_content.agentlist = []
+                    this.new_content.agentlist = new_agentlist
                     return this.new_content
                 }
             }                

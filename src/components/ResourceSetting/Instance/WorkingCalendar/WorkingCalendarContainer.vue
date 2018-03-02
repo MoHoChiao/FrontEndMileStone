@@ -44,7 +44,8 @@
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                         <table :id="content.wcalendaruid+'ListTable'" :key="content.wcalendaruid+'ListTable'" class="w3-table-all">
-                            <tr class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in content.wcalendarlist">
+                            <tr :id="list_info.wcalendaruid + ':' + list_info.yearnum + '-' + list_info.monthnum + '-' + list_info.daynum" :key="list_info.wcalendaruid + ':' + list_info.yearnum + '-' + list_info.monthnum + '-' + list_info.daynum" 
+                                class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in content.wcalendarlist">
                                 <td class="w3-center" width="100%">
                                     {{ list_info.yearnum + '-' + list_info.monthnum + '-' + list_info.daynum }}
                                 </td>
@@ -64,7 +65,7 @@
         </div>
     </div>
     <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-        <li class="w3-bar w3-border-camo-black" v-for="(content, index) in allWCObjs">
+        <li :id="content.wcalendaruid+'List'" :key="content.wcalendaruid+'List'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allWCObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/WorkingCalendar.png" alt="Working Calendar" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>

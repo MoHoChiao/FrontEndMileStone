@@ -17,7 +17,7 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:238px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.agentuid" draggable="true" v-for="(list_info, index) in new_content.alias">
+                        <tr :key="list_info.agentuid" v-for="(list_info, index) in new_content.alias">
                             <td class="w3-center" width="25%">
                                 <input v-if="list_info.addFlag" class="w3-input w3-border" v-model="list_info.aliasname" type="text" 
                                     maxlength="32" style="text-transform:uppercase" placeholder="Please Input Alias Name">
