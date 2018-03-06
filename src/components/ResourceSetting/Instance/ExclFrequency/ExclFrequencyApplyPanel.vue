@@ -214,7 +214,6 @@ export default {
                 HTTPRepo.get(`freq-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
                 .then(response => {
                     this.applyFrequencies = response.data
-                    console.log(response.data)
                     this.frequencyUids = []
                     for(let i=0; i<this.applyFrequencies.length; i++){
                         this.frequencyUids.push(this.applyFrequencies[i].frequencyuid)

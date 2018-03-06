@@ -8,8 +8,10 @@
                 <div :class="tabsClass[1]">Notification</div>
             </a>
         </div>
-        <monitor-config-form v-show="tabsFlag[0]"></monitor-config-form>            
-        <notification-form v-show="tabsFlag[1]"></notification-form>
+        <div class="w3-row" style="overflow:auto;height:410px">
+            <monitor-config-form v-show="tabsFlag[0]"></monitor-config-form>            
+            <notification-form v-show="tabsFlag[1]"></notification-form>
+        </div>
     </div>
 </template>
 <script>

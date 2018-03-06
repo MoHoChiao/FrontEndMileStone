@@ -4,7 +4,7 @@
             <div class="w3-half">
                 <input id="SearchJCSInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                         placeholder="Search For JCS List..." @keyup="searchForList()">
-                <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;min-height:346px;max-height:312px">
+                <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;height:346px">
                     <table id="JCSListTable" class="w3-table-all w3-small">
                         <tr id="JCSServer" key="JCSServer" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnJCS('JCSServer', 'JCSServer', 0)">
                             <td class="w3-center">
