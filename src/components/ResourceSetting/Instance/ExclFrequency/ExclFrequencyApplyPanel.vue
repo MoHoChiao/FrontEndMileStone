@@ -39,12 +39,12 @@
             <div v-show="tabsFlag[0]">
                 <div class="w3-row">
                     <div class="w3-col m12">
-                        <input id="SearchTimeInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input :id="'SearchTimeInput' + excludefrequencyuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Exclude Frequency List..." @keyup="searchForList('Time')">
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="TimeListTable" class="w3-table-all">
+                    <table :id="'TimeListTable' + excludefrequencyuid" class="w3-table-all">
                         <tr :key="list_index+'TimeListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyTimes">
                             <td class="w3-center" width="100%">
                                 {{ compositionTime(list_info) }}
@@ -56,7 +56,7 @@
             <div v-show="tabsFlag[1]">
                 <div class="w3-row">
                     <div class="w3-col m10">
-                        <input id="SearchFreqInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input :id="'SearchFreqInput' + excludefrequencyuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Apply Frequency List..." @keyup="searchForList('Freq')">
                     </div>
                     <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="FreqListTable" class="w3-table-all">
+                    <table :id="'FreqListTable' + excludefrequencyuid" class="w3-table-all">
                         <tr :key="list_index+'FreqListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFrequencies">
                             <td class="w3-center" width="84%">
                                 {{ compositionName(list_info) }}
@@ -80,7 +80,7 @@
             <div v-show="tabsFlag[2]">
                 <div class="w3-row">
                     <div class="w3-col m10">
-                        <input id="SearchJobInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input :id="'SearchJobInput' + excludefrequencyuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Apply Job..." @keyup="searchForList('Job')">
                     </div>
                     <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="JobListTable" class="w3-table-all">
+                    <table :id="'JobListTable' + excludefrequencyuid" class="w3-table-all">
                         <tr :key="list_index+'JobListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyJobs">
                             <td class="w3-center" width="84%">
                                 {{ compositionName(list_info) }}
@@ -104,7 +104,7 @@
             <div v-show="tabsFlag[3]">
                 <div class="w3-row">
                     <div class="w3-col m10">
-                        <input id="SearchFlowInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                        <input :id="'SearchFlowInput' + excludefrequencyuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
                             placeholder="Search For Apply Flow..." @keyup="searchForList('Flow')">
                     </div>
                     <div class="w3-col m2 w3-border w3-border-camo-black w3-grey w3-center">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
-                    <table id="FlowListTable" class="w3-table-all">
+                    <table :id="'FlowListTable' + excludefrequencyuid" class="w3-table-all">
                         <tr :key="list_index+'FlowListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyFlows">
                             <td class="w3-center" width="84%">
                                 {{ compositionName(list_info) }}
@@ -197,9 +197,9 @@ export default {
         },
         searchForList(which) {
             let input, filter, table, i
-            input = document.getElementById('Search'+which+'Input')
+            input = document.getElementById('Search'+which+'Input'+this.excludefrequencyuid)
             filter = input.value.toUpperCase()
-            table = document.getElementById(which+'ListTable')
+            table = document.getElementById(which+'ListTable'+this.excludefrequencyuid)
             for (i = 0; i < table.rows.length; i++) {
                 let text = table.rows[i].cells[0].innerHTML
                 if (text.toUpperCase().indexOf(filter) > -1) {
