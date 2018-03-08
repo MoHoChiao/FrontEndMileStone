@@ -43,8 +43,8 @@
                             <p class="w3-center"><img src="/src/assets/images/resource_setter/Edit-Male-User_64.png" class="w3-circle" style="height:64px;width:64px" alt="User Set"></p>
                             <hr class="w3-border-black">
                             <p><a href="#"><i class="fa fa-users fa-fw w3-margin-right w3-text-theme"></i>User Account</a></p>
-                            <p><a href="#"><i class="fa fa-user-secret fa-fw w3-margin-right w3-text-theme"></i>User Role</a></p>
-                            <p><a href="#"><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i>User Group</a></p>
+                            <p><a href="javascript:void(0)" @click="getRole"><i class="fa fa-user-secret fa-fw w3-margin-right w3-text-theme"></i>User Role</a></p>
+                            <p><a href="javascript:void(0)" @click="getUserGroup"><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i>User Group</a></p>
                         </div>
                     </div>
                     <br>
@@ -182,6 +182,12 @@ export default {
         },
         getGlobalDomain(e){
             this.$router.push({ name: 'GlobalDomain'})
+        },
+        getRole(e){
+            this.$router.push({ name: 'Role'})
+        },
+        getUserGroup(e){
+            this.$router.push({ name: 'UserGroup'})
         },
         getAgents(e){
             this.$router.push({ name: 'JCSAgent'})

@@ -6,6 +6,8 @@ import DomainContainer from '../components/ResourceSetting/Instance/Domain/Domai
 import GlobalDomainWindow from '../components/ResourceSetting/Instance/Domain/GlobalDomainWindow.vue'
 import AliasContainer from '../components/ResourceSetting/Instance/AliasReference/AliasContainer.vue'
 import GlobalAliasWindow from '../components/ResourceSetting/Instance/AliasReference/GlobalAliasWindow.vue'
+import RoleContainer from '../components/ResourceSetting/Instance/Role/RoleContainer.vue'
+import UserGroupContainer from '../components/ResourceSetting/Instance/UserGroup/UserGroupContainer.vue'
 import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
 import VRAgentContainer from '../components/ResourceSetting/Instance/VRAgent/VRAgentContainer.vue'
 import FileSourceContainer from '../components/ResourceSetting/Instance/FileSource/FileSourceContainer.vue'
@@ -52,6 +54,20 @@ export default new VueRouter({
                             content: GlobalDomainWindow
                         }
                     }]
+                },
+                {
+                    name: 'Role',
+                    path: 'Role',
+                    components: {
+                        content: RoleContainer
+                    }
+                },
+                {
+                    name: 'UserGroup',
+                    path: 'UserGroup',
+                    components: {
+                        content: UserGroupContainer
+                    }
                 },
                 {
                     name: 'JCSAgent',

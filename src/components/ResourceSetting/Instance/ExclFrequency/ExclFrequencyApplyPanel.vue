@@ -356,11 +356,11 @@ export default {
                 
             let urlPath = ''
             if(this.tabsFlag[1]){
-                urlPath = 'freq-exclude/deleteByFrequencyUid?uid='+this.deleteUid
+                urlPath = 'freq-exclude/deleteByPKUids?excludeFreqUid='+this.excludefrequencyuid+'&freqUid='+this.deleteUid
             }else if(this.tabsFlag[2]){
-                urlPath = 'job-exclude/deleteByJobUid?uid='+this.deleteUid
+                urlPath = 'job-exclude/deleteByPKUids?excludeFreqUid='+this.excludefrequencyuid+'&jobUid='+this.deleteUid
             }else if(this.tabsFlag[3]){
-                urlPath = 'jobflow-exclude/deleteByFlowUid?uid='+this.deleteUid
+                urlPath = 'jobflow-exclude/deleteByPKUids?excludeFreqUid='+this.excludefrequencyuid+'&flowUid='+this.deleteUid
             }
             
             HTTPRepo.get(urlPath)
