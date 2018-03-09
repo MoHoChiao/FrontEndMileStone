@@ -39,7 +39,10 @@
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/domain.png" alt="Domain" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.name }}</p>
+                <p>
+                    <i v-if="content.domainuid.trim() === 'global'" class="fa fa-globe fa-fw w3-text-blue"></i>
+                    {{ content.name }}
+                </p>
                 <br>
                 <var-resource-panel :domainuid="content.domainuid" :domainVars="content.domainVars" :domainResources="content.domainResources" :viewMode="true"></var-resource-panel>
                 <hr class="w3-border-black w3-clear">

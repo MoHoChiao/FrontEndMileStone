@@ -40,6 +40,7 @@
                         <img src="/src/assets/images/resource_setter/Role.png" alt="Role" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                         <p>
+                            <i v-if="content.roleuid.startsWith('Role')" class="fa fa-user-circle fa-fw w3-text-blue"></i>
                             {{ content.rolename }}
                         </p>
                         <br>
@@ -61,6 +62,7 @@
                         <img src="/src/assets/images/resource_setter/Role.png" alt="Role" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                         <p>
+                            <i v-if="content.roleuid.startsWith('Role')" class="fa fa-user-circle fa-fw w3-text-blue"></i>
                             {{ content.rolename }}
                         </p>
                         <button title="Delete This Role" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.roleuid, content.rolename)">
