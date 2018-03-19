@@ -6,6 +6,7 @@ import DomainContainer from '../components/ResourceSetting/Instance/Domain/Domai
 import GlobalDomainWindow from '../components/ResourceSetting/Instance/Domain/GlobalDomainWindow.vue'
 import AliasContainer from '../components/ResourceSetting/Instance/AliasReference/AliasContainer.vue'
 import GlobalAliasWindow from '../components/ResourceSetting/Instance/AliasReference/GlobalAliasWindow.vue'
+import UserContainer from '../components/ResourceSetting/Instance/TrinityUser/UserContainer.vue'
 import RoleContainer from '../components/ResourceSetting/Instance/Role/RoleContainer.vue'
 import UserGroupContainer from '../components/ResourceSetting/Instance/UserGroup/UserGroupContainer.vue'
 import JCSAgentContainer from '../components/ResourceSetting/Instance/JCSAgent/JCSAgentContainer.vue'
@@ -54,6 +55,13 @@ export default new VueRouter({
                             content: GlobalDomainWindow
                         }
                     }]
+                },
+                {
+                    name: 'User',
+                    path: 'User',
+                    components: {
+                        content: UserContainer
+                    }
                 },
                 {
                     name: 'Role',
