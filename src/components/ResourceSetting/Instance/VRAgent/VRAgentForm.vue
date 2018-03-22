@@ -62,8 +62,8 @@
                                 <span>
                                     <select class="w3-select w3-border w3-round" v-model="list_info.agentuid" style="width:100%;padding:0px" @change="changeAgent(list_info.agentuid,index)">
                                         <template v-for="(jcsagent, index) in allJCSAgents">
-                                            <option v-if="jcsagent.agentuid === list_info.agentuid" :value="jcsagent.agentuid" selected>{{ jcsagent.agentname }}</option>
-                                            <option v-else-if="!jcsAgentUids.includes(jcsagent.agentuid)" :value="jcsagent.agentuid">{{ jcsagent.agentname }}</option>
+                                            <option :key="jcsagent.agentuid" v-if="jcsagent.agentuid === list_info.agentuid" :value="jcsagent.agentuid" selected>{{ jcsagent.agentname }}</option>
+                                            <option :key="jcsagent.agentuid" v-else-if="!jcsAgentUids.includes(jcsagent.agentuid)" :value="jcsagent.agentuid">{{ jcsagent.agentname }}</option>
                                         </template>
                                     </select>
                                 </span>

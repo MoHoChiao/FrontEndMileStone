@@ -12,11 +12,17 @@
                             @closeDelete="changeDeleteWindowStatus" 
                             @confirmDelete="deleteRole" 
         ></confirm-delete-window>
-        <role-member-window :windowAlive="applyWindowAlive" 
+        <role-member-window :windowAlive="applyMemberWindowAlive" 
                             window-title="Apply Members To Role"
                             :roleuid="selectedRoleRecord.roleuid" 
                             @closeApply="changeMemberWindowStatus" 
         ></role-member-window>
+        <role-permission-window :windowAlive="applyPermissionWindowAlive" 
+                            window-title="Apply Permission To "
+                            :peopleUid="selectedRoleRecord.roleuid" 
+                            :peopleName="selectedRoleRecord.rolename" 
+                            @closeApply="changePermissionWindowStatus" 
+        ></role-permission-window>
         <div class="w3-col m7 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -49,6 +55,8 @@
                         <p class="w3-small">{{ content.description }}</p>
                         <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                             <i class="fa fa-pencil"></i> Edit</button>
+                        <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePermissionWindowStatus(content)">
+                            <i class="fa fa-universal-access"></i> Permission</button>   
                         <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.roleuid, content.rolename)">
                             <i class="fa fa-trash-o"></i> Delete</button>
                     </div>
@@ -68,6 +76,10 @@
                         <button title="Delete This Role" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.roleuid, content.rolename)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
+                        </button>
+                        <button title="Apply Permission To Role" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
+                            <i class="fa fa-universal-access"></i>
+                            <span class="w3-hide-medium w3-hide-small"> Permission</span>
                         </button>
                         <button title="Apply Members To Role" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeMemberWindowStatus(content)">
                             <i class="fa fa-hand-lizard-o"></i>
@@ -94,13 +106,15 @@ import RoleMemberPanel from './RoleMemberPanel.vue'
 import RoleAddWindow from './RoleAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import RoleMemberWindow from './RoleMemberWindow.vue'
+import RolePermissionWindow from './RolePermissionWindow.vue'
 
 export default {
     data() {
         return {
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add Role modal windows
-            applyWindowAlive: false, //for modify Role Member modal windows
+            applyMemberWindowAlive: false, //for modify Role Member modal windows
+            applyPermissionWindowAlive: false, //for modify Role Functional Permission modal windows
             deleteWindowAlive: false,  //for delete Role modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
@@ -203,7 +217,12 @@ export default {
         changeMemberWindowStatus(record){
             if(record)
                 this.selectedRoleRecord = record
-            this.applyWindowAlive = !this.applyWindowAlive
+            this.applyMemberWindowAlive = !this.applyMemberWindowAlive
+        },
+        changePermissionWindowStatus(record){
+            if(record)
+                this.selectedRoleRecord = record
+            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         },
         deleteRole(){
             if(this.deleteIndex === -1)
@@ -277,7 +296,8 @@ export default {
         'role-member-panel': RoleMemberPanel,
         'role-add-window': RoleAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'role-member-window': RoleMemberWindow
+        'role-member-window': RoleMemberWindow,
+        'role-permission-window': RolePermissionWindow
     }
 }
 </script>
