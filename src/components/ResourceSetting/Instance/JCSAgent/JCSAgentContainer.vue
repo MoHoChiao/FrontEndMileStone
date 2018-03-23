@@ -13,6 +13,12 @@
                     @closeDelete="changeDeleteWindowStatus" 
                     @confirmDelete="deleteAgent" 
   ></confirm-delete-window>
+  <permission-window :windowAlive="applyPermissionWindowAlive" 
+                    window-title="Apply Permission To "
+                    :objectUid="selectedRecord.agentuid" 
+                    :objectName="selectedRecord.agentname" 
+                    @closeApply="changePermissionWindowStatus" 
+  ></permission-window>
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -47,6 +53,8 @@
                     <i class="fa fa-clone"></i> Copy</button>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i> Edit</button>
+                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePermissionWindowStatus(content)">
+                            <i class="fa fa-universal-access"></i> Permission</button>
                 <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
                     <i class="fa fa-trash-o"></i> Delete</button>
             </div>
@@ -64,6 +72,9 @@
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <button type="button" title="Delete This Agent" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
                     <i class="fa fa-trash-o"></i>
+                </button>
+                <button title="Apply Permission To Role" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
+                    <i class="fa fa-universal-access"></i>
                 </button>
                 <button type="button" title="Edit This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
@@ -86,6 +97,7 @@ import FilterPanel from '../../FilterPanel.vue'
 import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
 import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import PermissionWindow from './PermissionWindow.vue'
 
 export default {
     data() {
@@ -93,6 +105,7 @@ export default {
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add agent modal windows
             deleteWindowAlive: false,  //for delete agent modal windows
+            applyPermissionWindowAlive: false, //for modify Permission modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
@@ -112,7 +125,8 @@ export default {
                 {name: "Port",value: "port"},
                 {name: "Desc",value: "Description"}
             ],
-            copyContent: undefined   //for copy click, pass copyContent to Add Window
+            copyContent: undefined,   //for copy click, pass copyContent to Add Window
+            selectedRecord: new Object()   //store which JCSAgent has been clicked.
         }
     },
     mounted() {
@@ -271,13 +285,19 @@ export default {
             this.deleteIndex = index
             this.deleteUid = agentuid
             this.deleteName = agentname
+        },
+        changePermissionWindowStatus(record){
+            if(record)
+                this.selectedRecord = record
+            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         }
     },
     components: {
         'filter-panel': FilterPanel,
         'agent-edit-panel': JCSAgentEditPanel,
         'agent-add-window': JCSAgentAddWindow,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'permission-window': PermissionWindow
     }
 }
 </script>
