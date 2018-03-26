@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <permission-form slot="content" ref="permissionForm" :peopleUid="objectUid"></permission-form>
+        <permission-form slot="content" ref="permissionForm" :objectUid="objectUid"></permission-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -42,7 +42,7 @@ export default {
             let postContent = this.$refs.permissionForm.save()
             
             if(postContent){
-                HTTPRepo.post(`access-right/modifyByPeopleUid?peopleUid=`+this.peopleUid, postContent)
+                HTTPRepo.post(`access-right/modifyByObjectUid?objectUid=`+this.objectUid, postContent)
                 .then(response => {
                     this.$emit('closeApply')
                 })

@@ -206,7 +206,7 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                     return
                 }else{
-                    this.functionalList[i].peopleUid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
+                    this.functionalList[i].peopleuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
                     this.functionalList[i].view = Number(this.functionalList[i].view)
                     this.functionalList[i].add = Number(this.functionalList[i].add)
                     this.functionalList[i].delete = Number(this.functionalList[i].delete)
@@ -217,7 +217,6 @@ export default {
                     this.functionalList[i].import_export = '0'
                 }
             }
-
             return this.functionalList
         },
         reset(){

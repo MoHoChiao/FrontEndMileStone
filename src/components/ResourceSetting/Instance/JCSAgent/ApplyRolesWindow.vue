@@ -7,19 +7,19 @@
                     <th class="w3-center" width="10%" style="padding-top:4px">
                         <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click="onClickCheckAll">
                     </th>
-                    <th class="w3-center" width="90%">Trinity User List</th>
+                    <th class="w3-center" width="90%">Role List</th>
                 </tr>
             </table>
         </div>
         <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;max-height:200px">
             <table id="freqCategoryTable" class="w3-table-all w3-small">
-                <template v-for="(user, index) in trinityusers">
-                    <tr :id="user.useruid" :key="user.useruid">
+                <template v-for="(role, index) in roles">
+                    <tr :id="role.roleuid" :key="role.roleuid">
                         <td class="w3-center" width="10%" style="padding-top:4px">
-                            <input class="w3-check" type="checkbox" v-model="user.checked" @click="onClickCheck(user, index)">
+                            <input class="w3-check" type="checkbox" v-model="role.checked" @click="onClickCheck(role, index)">
                         </td>
                         <td class="w3-center" width="90%">
-                            <span>{{ user.username }} ({{ user.userid }})</span>
+                            <span>{{ role.rolename }}</span>
                         </td>
                     </tr>
                 </template>
@@ -39,16 +39,12 @@ import FormButton from '../../FormButton.vue'
 export default {
     data() {
         return {
-            selectedRecords: [],
-            checkAllFlag: false,      
-            trinityusers: []
+            selectedRecords: [], 
+            checkAllFlag: false, 
+            roles: []
         }
     },
     props: {
-        tabsFlag: {
-            type: Array,
-            default: () => []
-        },
         windowTitle: {
             type: String,
             default: ''
@@ -61,14 +57,13 @@ export default {
             type: Boolean,
             default: false
         },
-        roleuid: '',
-        memberUids: {
+        roleUids: {
             type: Array,
             default: () => []
         }
     },
-    created(){
-        this.getTrinityUser()
+    mounted(){
+        this.getRole()
     },
     methods: {
         cancel(){
@@ -77,40 +72,41 @@ export default {
         onClickCheckAll(){
             this.selectedRecords =[]
             if(this.checkAllFlag){
-                for(let i=0;i<this.trinityusers.length;i++){
-                    this.trinityusers[i].checked = true //單純為了在UI把checkbox勾起來而已
-                    this.onClickCheck(this.trinityusers[i], i)
+                for(let i=0;i<this.roles.length;i++){
+                    this.roles[i].checked = true //單純為了在UI把checkbox勾起來而已
+                    this.onClickCheck(this.roles[i], i)
                 }
             }else{
-                for(let i=0;i<this.trinityusers.length;i++){
-                    this.trinityusers[i].checked = false //單純為了在UI把checkbox取消而已
+                for(let i=0;i<this.roles.length;i++){
+                    this.roles[i].checked = false //單純為了在UI把checkbox取消而已
                 }
             }
         },
-        onClickCheck(user, index){
-            if(user.checked){
+        onClickCheck(role, index){
+            if(role.checked){
                 let new_member = {
-                    "useruid": user.useruid
+                    "roleuid": role.roleuid,
+                    "rolename": role.rolename
                 }
                 this.selectedRecords.splice(index, 1, new_member)
             }else{
                 this.selectedRecords.splice(index, 1)
             }
         },
-        getTrinityUser(){
+        getRole(){
             let params = {
                 "ordering":{
                     "orderType":"ASC",
-                    "orderField":"username"
+                    "orderField":"roleame"
                 }
             }
 
-            HTTPRepo.post(`trinity-user/findByFilter`, params)
+            HTTPRepo.post(`role/findByFilter`, params)
             .then(response => {
-                this.trinityusers = []
+                this.roles = []
                 for(let i=0;i<response.data.length;i++){
-                    if(!this.memberUids.includes(response.data[i].useruid) && response.data[i].useruid.trim() !== 'trinity'){
-                        this.trinityusers.push(response.data[i])
+                    if(!this.roleUids.includes(response.data[i].roleuid.trim())){
+                        this.roles.push(response.data[i])
                     }
                 }
             })
@@ -133,31 +129,11 @@ export default {
         reset(){
             this.checkAllFlag = false
             this.selectedRecords = []
-            this.getTrinityUser()
+            this.getRole()
         },
         save(){
-            if(this.selectedRecords && this.selectedRecords.length > 0){ 
-                HTTPRepo.post('role-member/addBatch?roleUid='+this.roleuid, this.selectedRecords)
-                .then(response => {
-                    this.$emit('applyMembers')
-                    this.cancel()
-                })
-                .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
-                })
-            }
+            this.$emit('applyMembers', this.selectedRecords)
+            this.cancel()
         }
     },
     components: {

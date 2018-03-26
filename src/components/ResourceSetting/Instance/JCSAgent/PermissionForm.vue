@@ -1,63 +1,48 @@
 <template>
 <div>
-    <apply-account-window v-if="applyWindowAlive" :windowAlive="applyAccountWindowAlive" 
-            window-title="Apply Accounts To " 
-            :memberUids="memberUids" 
-            :groupuid="groupuid"  
-            @closeApply="changeApplyWindowStatus" 
-            @applyMembers="getMembers" 
+    <apply-account-window v-if="applyAccountWindowAlive" :windowAlive="applyAccountWindowAlive" 
+            window-title="Apply Accounts Window" 
+            :userUids="userUids" 
+            @closeApply="changeApplyAccountWindowStatus" 
+            @applyMembers="addUsers" 
     ></apply-account-window>
-    <apply-role-window v-if="applyWindowAlive" :windowAlive="applyRoleWindowAlive" 
-            window-title="Apply Roles To " 
-            :memberUids="memberUids" 
-            :groupuid="groupuid"  
-            @closeApply="changeApplyWindowStatus" 
-            @applyMembers="getMembers" 
+    <apply-role-window v-if="applyRoleWindowAlive" :windowAlive="applyRoleWindowAlive" 
+            window-title="Apply Roles Window" 
+            :roleUids="roleUids" 
+            @closeApply="changeApplyRoleWindowStatus" 
+            @applyMembers="addRoles" 
     ></apply-role-window>
-    <confirm-delete-window v-if="deleteWindowAlive" :windowAlive="deleteWindowAlive" 
-            :deleteName="deleteName" 
-            window-title="Confirm window" 
-            window-bg-color="highway-schoolbus" 
-            btn-color="signal-white" 
-            @closeDelete="changeDeleteWindowStatus" 
-            @confirmDelete="deleteApply" 
-    ></confirm-delete-window>
     <div class="w3-small">
-        <div class="w3-row w3-section">
-            <div class="w3-col m1">&nbsp;</div>
-            <div class="w3-col m10 w3-center">
-                <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">Add Acount</button>
-                <button class="w3-button w3-round w3-teal" @click="clearAllDate">Add Role</button>
-            </div>
-            <div class="w3-col m1">&nbsp;</div>
+        <div class="w3-row">
+            <a href="javascript:void(0)" @click="openTab(0)">
+                <div :class="tabsClass[0]">Apply Acounts</div>
+            </a>
+            <a href="javascript:void(0)" @click="openTab(1)">
+                <div :class="tabsClass[1]">Applay Roles</div>
+            </a>
         </div>
         <div class="w3-row w3-section">
-            <div class="w3-col m12">
+            <div v-if="tabsFlag[0]" class="w3-col m12">
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">Name</th>
+                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">User Name (ID)</th>
                             <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">View</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Add</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Use</th>
                             <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Delete</th>
                             <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Edit</th>
                             <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Grant</th>
-                            <th class="w3-center" width="8%" style="padding-top:12px;padding-bottom:12px"></th>
+                            <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
+                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Trinity Users" aria-hidden="true" @click="changeApplyAccountWindowStatus"></i>
+                            </th>
                         </tr>
                     </table>
                 </div>
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
+                <div id="usersContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.peopleuid+':'+list_info.objectuid" v-for="(list_info, index) in permissionList">
-                            <td class="w3-center" width="32%" style="padding:6px 0px 0px 6px">
-                                <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.peopleuid" style="width:100%;padding:0px" @change="changeFunction(list_info.objectuid, index)">
-                                        <template v-for="(user, index) in trinityusers">
-                                            <option :key="user.useruid" v-if="user.useruid === list_info.peopleuid" :value="user.useruid" selected>{{ user.name }} ({{user.userid}})</option>
-                                            <option :key="user.useruid" v-else-if="!objUids.includes(user.useruid)" :value="obj.id">{{ obj.name }}</option>
-                                        </template>
-                                    </select>
-                                </span>
+                        <tr :key="list_info.peopleuid+':'+list_info.objectuid" v-for="(list_info, index) in permissionListForUser">
+                            <td class="w3-center" width="32%" style="padding-top:12px">
+                                {{ list_info.peoplename }} ({{list_info.peopleid}})
                             </td>
                             <td class="w3-center" width="12%">
                                 <input class="w3-check" type="checkbox" v-model="list_info.view">
@@ -75,7 +60,51 @@
                                 <input class="w3-check" type="checkbox" v-model="list_info.grant">
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="deleteWindowAlive(index, user)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delUser(index)"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div v-if="tabsFlag[1]" class="w3-col m12">
+                <div class="w3-responsive w3-card w3-round">
+                    <table class="w3-table-all">
+                        <tr class="w3-teal">
+                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">Role Name</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">View</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Use</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Delete</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Edit</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Grant</th>
+                            <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
+                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Roles" aria-hidden="true" @click="changeApplyRoleWindowStatus"></i>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="rolesContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
+                    <table class="w3-table-all">
+                        <tr :key="list_info.peopleuid+':'+list_info.objectuid" v-for="(list_info, index) in permissionListForRole">
+                            <td class="w3-center" width="32%" style="padding-top:12px">
+                                {{ list_info.peoplename }}
+                            </td>
+                            <td class="w3-center" width="12%">
+                                <input class="w3-check" type="checkbox" v-model="list_info.view">
+                            </td>
+                            <td class="w3-center" width="12%">
+                                <input class="w3-check" type="checkbox" v-model="list_info.add">
+                            </td>
+                            <td class="w3-center" width="12%">
+                                <input class="w3-check" type="checkbox" v-model="list_info.delete">
+                            </td>
+                            <td class="w3-center" width="12%">
+                                <input class="w3-check" type="checkbox" v-model="list_info.edit">
+                            </td>
+                            <td class="w3-center" width="12%">
+                                <input class="w3-check" type="checkbox" v-model="list_info.grant">
+                            </td>
+                            <td class="w3-center" width="8%">
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delRole(index)"></i>
                             </td>
                         </tr>
                     </table>
@@ -89,7 +118,6 @@
 import { HTTPRepo } from '../../../../axios/http-common'
 import ApplyAccountsWindow from './ApplyAccountsWindow.vue'
 import ApplyRolesWindow from './ApplyRolesWindow.vue'
-import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
 export default {
     data() {
@@ -99,20 +127,17 @@ export default {
             tabsFlag: [true, false],
             applyAccountWindowAlive: false,
             applyRoleWindowAlive: false,
-            deleteWindowAlive: false,
             trinityusers: [],
             roles: [],
-            permissionList: [],
-            userUids: null //Array for keeping the selected functional object uids
+            permissionListForUser: [],  //Array for keeping the permission for user
+            permissionListForRole: [],  //Array for keeping the permission for role
+            userUids: [], //Array for keeping the user uids
+            roleUids: [] //Array for keeping the role uids
         }
     },
-    created() {
-        this.getTrinityUser()
-        this.getRole()
-    },
     mounted() {
-        
-
+        this.getPermissionOnlyForUser()
+        this.getPermissionOnlyForRole()
         // this.getFunctions()
     },
     props: {
@@ -134,90 +159,127 @@ export default {
                 this.$set(this.tabsClass, i, this.tabsClass[i].replace(" w3-border-theme", ""))
             }
             this.$set(this.tabsClass, this.whichTab, this.tabsClass[this.whichTab] + " w3-border-theme")
-
-            if(this.tabsFlag[1]){
-                this.getFreqExclude()
-            }else if(this.tabsFlag[2]){
-                this.getJobExclude()
-            }else if(this.tabsFlag[3]){
-                this.getFlowExclude()
-            }
         },
-        getTrinityUser(){
-            let params = {
-                "ordering":{
-                    "orderType":"ASC",
-                    "orderField":"username"
-                }
-            }
-
-            HTTPRepo.post(`trinity-user/findByFilter`, params)
-            .then(response => {
-                this.trinityusers = response.data
-            })
-            .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
+        delUser(index){
+            this.permissionListForUser.splice(index, 1)
+            this.userUids.splice(index, 1)
         },
-        getRole(){
-            let params = {
-                "ordering":{
-                    "orderType":"ASC",
-                    "orderField":"roleame"
-                }
-            }
-
-            HTTPRepo.post(`role/findByFilter`, params)
-            .then(response => {
-                this.roles = response.data
-            })
-            .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
-        },
-        getPermission(){
-            HTTPRepo.get(`access-right/findByObjectUid?objectUid=`+this.objectUid)
-            .then(response => {
-                this.permissionList = response.data
-                this.objUids = []
-                for (var i = 0, len = this.permissionList.length; i < len; i++) {
-                    this.permissionList[i] = {
-                        peopleuid: this.permissionList[i].peopleuid,
-                        objectuid: this.objectUid,
-                        view: Number(this.permissionList[i].view),
-                        add: Number(this.permissionList[i].add),
-                        delete: Number(this.permissionList[i].delete),
-                        edit: Number(this.permissionList[i].edit),
-                        run: Number(this.permissionList[i].run),
-                        reRun: Number(this.permissionList[i].reRun),
-                        grant: Number(this.permissionList[i].grant),
-                        import_export: Number(this.permissionList[i].import_export)
+        addUsers(selectedUserRecords){
+            if(selectedUserRecords){
+                for(let i=0;i<selectedUserRecords.length;i++){
+                    let new_user= {
+                        peopleuid: selectedUserRecords[i].useruid.trim(),
+                        peopleid: selectedUserRecords[i].userid.trim(),
+                        peoplename: selectedUserRecords[i].username,
+                        objectuid: '',
+                        view: 1,
+                        add: 1,
+                        delete: 1,
+                        edit: 1,
+                        run: 0,
+                        reRun: 0,
+                        grant: 0,
+                        import_export: 0
                     };
-                    this.objUids.push(this.permissionList[i].objectuid)
+                    this.permissionListForUser.unshift(new_user)
+                    this.userUids.unshift(selectedUserRecords[i].useruid.trim())
+                }
+                /*
+                 * if add user records success, scroll to top
+                */
+                var usersContainer = this.$el.querySelector("#usersContainer")
+                usersContainer.scrollTop = -usersContainer.scrollTop
+            }   
+        },
+        delRole(index){
+            this.permissionListForRole.splice(index, 1)
+            this.roleUids.splice(index, 1)
+        },
+        addRoles(selectedRoleRecords){
+            if(selectedRoleRecords){
+                for(let i=0;i<selectedRoleRecords.length;i++){
+                    let new_role= {
+                        peopleuid: selectedRoleRecords[i].roleuid.trim(),
+                        peoplename: selectedRoleRecords[i].rolename,
+                        objectuid: '',
+                        view: 1,
+                        add: 1,
+                        delete: 1,
+                        edit: 1,
+                        run: 0,
+                        reRun: 0,
+                        grant: 0,
+                        import_export: 0
+                    };
+                    this.permissionListForRole.unshift(new_role)
+                    this.roleUids.unshift(selectedRoleRecords[i].roleuid.trim())
+                }
+                /*
+                 * if add user records success, scroll to top
+                */
+                var rolesContainer = this.$el.querySelector("#rolesContainer")
+                rolesContainer.scrollTop = -rolesContainer.scrollTop
+            }
+        },
+        getPermissionOnlyForUser(){
+            HTTPRepo.get(`access-right/findUserExByObjectUid?objectUid=`+this.objectUid)
+            .then(response => {
+                this.permissionListForUser = response.data
+                this.userUids = []
+                for (var i = 0, len = this.permissionListForUser.length; i < len; i++) {
+                    this.permissionListForUser[i] = {
+                        peopleuid: this.permissionListForUser[i].peopleuid,
+                        peoplename: this.permissionListForUser[i].peoplename,
+                        peopleid: this.permissionListForUser[i].peopleid,
+                        objectuid: this.objectUid,
+                        view: Number(this.permissionListForUser[i].view),
+                        add: Number(this.permissionListForUser[i].add),
+                        delete: Number(this.permissionListForUser[i].delete),
+                        edit: Number(this.permissionListForUser[i].edit),
+                        run: Number(this.permissionListForUser[i].run),
+                        reRun: Number(this.permissionListForUser[i].reRun),
+                        grant: Number(this.permissionListForUser[i].grant),
+                        import_export: Number(this.permissionListForUser[i].import_export)
+                    };
+                    this.userUids.push(this.permissionListForUser[i].peopleuid)
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+        },
+        getPermissionOnlyForRole(){
+            HTTPRepo.get(`access-right/findRoleExByObjectUid?objectUid=`+this.objectUid)
+            .then(response => {
+                this.permissionListForRole = response.data
+                this.roleUids = []
+                for (var i = 0, len = this.permissionListForRole.length; i < len; i++) {
+                    this.permissionListForRole[i] = {
+                        peopleuid: this.permissionListForRole[i].peopleuid,
+                        peoplename: this.permissionListForRole[i].peoplename,
+                        objectuid: this.objectUid,
+                        view: Number(this.permissionListForRole[i].view),
+                        add: Number(this.permissionListForRole[i].add),
+                        delete: Number(this.permissionListForRole[i].delete),
+                        edit: Number(this.permissionListForRole[i].edit),
+                        run: Number(this.permissionListForRole[i].run),
+                        reRun: Number(this.permissionListForRole[i].reRun),
+                        grant: Number(this.permissionListForRole[i].grant),
+                        import_export: Number(this.permissionListForRole[i].import_export)
+                    };
+                    this.roleUids.push(this.permissionListForRole[i].peopleuid)
                 }
             })
             .catch(error => {
@@ -242,55 +304,47 @@ export default {
         changeApplyRoleWindowStatus(){
             this.applyRoleWindowAlive = !this.applyRoleWindowAlive
         },
-        changeDeleteWindowStatus(index, list_info){
-            this.deleteWindowAlive = !this.deleteWindowAlive
-
-            /*
-                store which obj be delete
-            */
-            if(list_info){
-                this.deleteIndex = index
-
-                this.deleteUid = list_info.useruid
-                this.deleteName = 'Member - ' + this.compositionName(list_info)
-            }else{
-                this.deleteIndex = -1
-                this.deleteUid = ''
-                this.deleteName = ''
-            }
-        },
         save(){
-            for(let i=0;i<this.functionalList.length;i++){
-                if(this.functionalList[i].objectuid === undefined || this.functionalList[i].objectuid.trim() === ''){
-                    let newStatus = {
-                        "msg": "Function Name can not be empty!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    return
-                }else{
-                    this.functionalList[i].peopleUid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
-                    this.functionalList[i].view = Number(this.functionalList[i].view)
-                    this.functionalList[i].add = Number(this.functionalList[i].add)
-                    this.functionalList[i].delete = Number(this.functionalList[i].delete)
-                    this.functionalList[i].edit = Number(this.functionalList[i].edit)
-                    this.functionalList[i].run = '0'
-                    this.functionalList[i].reRun = '0'
-                    this.functionalList[i].grant = '0'
-                    this.functionalList[i].import_export = '0'
-                }
+            var retPermissionList = []
+            for(let i=0;i<this.permissionListForUser.length;i++){
+                this.permissionListForUser[i].objectuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
+                this.permissionListForUser[i].view = Number(this.permissionListForUser[i].view)
+                this.permissionListForUser[i].add = Number(this.permissionListForUser[i].add)
+                this.permissionListForUser[i].delete = Number(this.permissionListForUser[i].delete)
+                this.permissionListForUser[i].edit = Number(this.permissionListForUser[i].edit)
+                this.permissionListForUser[i].run = '0'
+                this.permissionListForUser[i].reRun = '0'
+                this.permissionListForUser[i].grant = Number(this.permissionListForUser[i].grant)
+                this.permissionListForUser[i].import_export = '0'
+                retPermissionList.push(this.permissionListForUser[i])
             }
+            console.log(this.permissionListForUser)
 
-            return this.functionalList
+            for(let i=0;i<this.permissionListForRole.length;i++){
+                this.permissionListForRole[i].objectuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
+                this.permissionListForRole[i].view = Number(this.permissionListForRole[i].view)
+                this.permissionListForRole[i].add = Number(this.permissionListForRole[i].add)
+                this.permissionListForRole[i].delete = Number(this.permissionListForRole[i].delete)
+                this.permissionListForRole[i].edit = Number(this.permissionListForRole[i].edit)
+                this.permissionListForRole[i].run = '0'
+                this.permissionListForRole[i].reRun = '0'
+                this.permissionListForRole[i].grant = Number(this.permissionListForRole[i].grant)
+                this.permissionListForRole[i].import_export = '0'
+                retPermissionList.push(this.permissionListForRole[i])
+            }
+            console.log(this.permissionListForRole)
+
+            return retPermissionList
         },
         reset(){
-            this.getFunctions()
+            this.openTab(0)
+            this.getPermissionOnlyForUser()
+            this.getPermissionOnlyForRole()
         }
     },
     components: {
-        'apply-accounts-window': ApplyAccountsWindow,
-        'apply-roles-window': ApplyRolesWindow,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'apply-account-window': ApplyAccountsWindow,
+        'apply-role-window': ApplyRolesWindow
     }
 }
 </script>

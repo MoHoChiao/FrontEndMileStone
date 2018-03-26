@@ -289,6 +289,7 @@ export default {
         changePermissionWindowStatus(record){
             if(record)
                 this.selectedRecord = record
+
             this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         }
     },

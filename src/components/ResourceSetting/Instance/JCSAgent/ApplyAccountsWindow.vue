@@ -45,10 +45,6 @@ export default {
         }
     },
     props: {
-        tabsFlag: {
-            type: Array,
-            default: () => []
-        },
         windowTitle: {
             type: String,
             default: ''
@@ -61,13 +57,12 @@ export default {
             type: Boolean,
             default: false
         },
-        roleuid: '',
-        memberUids: {
+        userUids: {
             type: Array,
             default: () => []
         }
     },
-    created(){
+    mounted(){
         this.getTrinityUser()
     },
     methods: {
@@ -90,7 +85,9 @@ export default {
         onClickCheck(user, index){
             if(user.checked){
                 let new_member = {
-                    "useruid": user.useruid
+                    "useruid": user.useruid,
+                    "userid": user.userid,
+                    "username": user.username
                 }
                 this.selectedRecords.splice(index, 1, new_member)
             }else{
@@ -109,7 +106,7 @@ export default {
             .then(response => {
                 this.trinityusers = []
                 for(let i=0;i<response.data.length;i++){
-                    if(!this.memberUids.includes(response.data[i].useruid) && response.data[i].useruid.trim() !== 'trinity'){
+                    if(!this.userUids.includes(response.data[i].useruid.trim()) && response.data[i].useruid.trim() !== 'trinity'){
                         this.trinityusers.push(response.data[i])
                     }
                 }
@@ -136,28 +133,8 @@ export default {
             this.getTrinityUser()
         },
         save(){
-            if(this.selectedRecords && this.selectedRecords.length > 0){ 
-                HTTPRepo.post('role-member/addBatch?roleUid='+this.roleuid, this.selectedRecords)
-                .then(response => {
-                    this.$emit('applyMembers')
-                    this.cancel()
-                })
-                .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
-                })
-            }
+            this.$emit('applyMembers', this.selectedRecords)
+            this.cancel()
         }
     },
     components: {
