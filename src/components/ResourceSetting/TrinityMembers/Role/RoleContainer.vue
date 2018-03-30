@@ -17,12 +17,12 @@
                             :roleuid="selectedRoleRecord.roleuid" 
                             @closeApply="changeMemberWindowStatus" 
         ></role-member-window>
-        <role-permission-window :windowAlive="applyPermissionWindowAlive" 
+        <functional-permission-window :windowAlive="applyPermissionWindowAlive" 
                             window-title="Apply Permission To "
                             :peopleUid="selectedRoleRecord.roleuid" 
                             :peopleName="selectedRoleRecord.rolename" 
                             @closeApply="changePermissionWindowStatus" 
-        ></role-permission-window>
+        ></functional-permission-window>
         <div class="w3-col m7 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -106,7 +106,7 @@ import RoleMemberPanel from './RoleMemberPanel.vue'
 import RoleAddWindow from './RoleAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import RoleMemberWindow from './RoleMemberWindow.vue'
-import RolePermissionWindow from './RolePermissionWindow.vue'
+import FunctionalPermissionWindow from '../../PermissionSetting/FunctionalPermissionWindow.vue'
 
 export default {
     data() {
@@ -220,8 +220,11 @@ export default {
             this.applyMemberWindowAlive = !this.applyMemberWindowAlive
         },
         changePermissionWindowStatus(record){
-            if(record)
+            if(record){
                 this.selectedRoleRecord = record
+                this.selectedRoleRecord.roleuid = this.selectedRoleRecord.roleuid.trim()
+            }
+            
             this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         },
         deleteRole(){
@@ -297,7 +300,7 @@ export default {
         'role-add-window': RoleAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
         'role-member-window': RoleMemberWindow,
-        'role-permission-window': RolePermissionWindow
+        'functional-permission-window': FunctionalPermissionWindow
     }
 }
 </script>

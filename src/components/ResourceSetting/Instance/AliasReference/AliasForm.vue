@@ -15,7 +15,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:238px">
+                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:238px;word-break:break-all">
                     <table class="w3-table-all">
                         <tr :key="list_info.agentuid" v-for="(list_info, index) in new_content.alias">
                             <td class="w3-center" width="25%">

@@ -81,15 +81,19 @@
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <button type="button" title="Delete This User" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.useruid, content.username, content.userid)">
                     <i class="fa fa-trash-o"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
                 <button v-if="content.lock === '0'" type="button" title="Lock This User" class="w3-button w3-theme-d2 w3-round w3-small w3-right" style="margin-right:3px" @click="changeLockWindowStatus(index, content.username, content.userid, true)">
                     <i class="fa fa-lock"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Lock</span>
                 </button>
                 <button v-else type="button" title="Unlock This User" class="w3-button w3-theme-d2 w3-round w3-small w3-right" style="margin-right:3px" @click="changeLockWindowStatus(index, content.username, content.userid, false)">
                     <i class="fa fa-unlock"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Unlock</span>
                 </button>
                 <button type="button" title="Edit This User" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
             </div>
             <user-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></user-edit-panel>

@@ -8,6 +8,13 @@
                     @closeDelete="changeDeleteWindowStatus" 
                     @confirmDelete="deleteAlias" 
   ></confirm-delete-window>
+  <permission-window :windowAlive="applyPermissionWindowAlive" 
+                    window-title="Apply Permission To "
+                    :objectUid="selectedRecord.parentuid + selectedRecord.aliasname" 
+                    :objectName="selectedRecord.aliasname" 
+                    whichForm="USE"
+                    @closeApply="changePermissionWindowStatus" 
+  ></permission-window>
   <router-view name="content">
   <!--Global Alias Reference組件內容會在這裡渲染-->
   </router-view>
@@ -40,19 +47,30 @@
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
                                 <th class="w3-center" width="25%">Alias Name</th>
-                                <th class="w3-center" width="15%">Type</th>
-                                <th class="w3-center" width="25%">Target</th>
-                                <th class="w3-center" width="35%">Description</th>
+                                <th class="w3-center" width="10%">Type</th>
+                                <th class="w3-center" width="27%">Target</th>
+                                <th class="w3-center" width="30%">Description</th>
+                                <th class="w3-center" width="8%">Permission</th>
                             </tr>
                         </table>
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
                         <table class="w3-table-all w3-small">
-                            <tr :key="list_info.parentuid+':'+list_info.aliasname" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in content.alias">
+                            <tr :key="list_info.parentuid+':'+list_info.aliasname" v-for="(list_info, list_index) in content.alias">
                                 <td class="w3-center" width="25%"><span>{{ list_info.aliasname }}</span></td>
-                                <td class="w3-center" width="15%"><span>{{ list_info.aliastype }}</span></td>
-                                <td class="w3-center" width="25%"><span>{{ list_info.objectname }}</span></td>
-                                <td width="35%"><span>{{ list_info.description }}</span></td>
+                                <td class="w3-center" width="10%">
+                                    <span v-if="list_info.aliastype == 'Agent'" class="w3-badge w3-red" title="Agent">A</span>
+                                    <span v-if="list_info.aliastype == 'Connection'" class="w3-badge w3-indigo" title="Connection">C</span>
+                                    <span v-if="list_info.aliastype == 'Domain'" class="w3-badge w3-flat-turquoise" title="Domain">D</span>
+                                    <span v-if="list_info.aliastype == 'Filesource'" class="w3-badge w3-dark-grey" title="Filesource">F</span>
+                                    <span v-if="list_info.aliastype == 'Frequency'" class="w3-badge w3-grey" title="Frequency">F</span>
+                                </td>
+                                <td class="w3-center" width="27%"><span>{{ list_info.objectname }}</span></td>
+                                <td width="30%"><span>{{ list_info.description }}</span></td>
+                                <td class="w3-center" width="8%" style="padding-top:3px;padding-bottom:0px">
+                                    <i class="fa fa-universal-access w3-button w3-hover-none" title="Apply Use Permission to Alias" 
+                                        aria-hidden="true" @click="changePermissionWindowStatus(list_info)"></i>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -94,6 +112,7 @@ import { HTTPRepo } from '../../../../axios/http-common'
 import FilterPanel from '../../FilterPanel.vue'
 import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 
 export default {
     data() {
@@ -101,6 +120,7 @@ export default {
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add virtual agent modal windows
             deleteWindowAlive: false,  //for delete virtual agent modal windows
+            applyPermissionWindowAlive: false, //for modify Permission modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
@@ -113,7 +133,8 @@ export default {
             queryFields: [  //for querying filter fields
                 {name: "Name",value: "busentityname"},
                 {name: "Desc",value: "Description"}
-            ]
+            ],
+            selectedRecord: new Object()   //store which Alias has been clicked.
         }
     },
     mounted() {
@@ -249,12 +270,21 @@ export default {
             this.deleteIndex = index
             this.deleteUid = busentityuid
             this.deleteName = 'all aliases under ' + busentityname
+        },
+        changePermissionWindowStatus(record){
+            if(record){
+                this.selectedRecord = record
+                this.selectedRecord.parentuid = this.selectedRecord.parentuid.trim()
+            }
+
+            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         }
     },
     components: {
         'filter-panel': FilterPanel,
         'alias-table-edit-panel': AliasTableEditPanel,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'permission-window': PermissionWindow
     }
 }
 </script>

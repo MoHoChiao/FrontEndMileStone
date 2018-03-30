@@ -52,7 +52,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo } from '../../../axios/http-common'
 
 export default {
     data() {

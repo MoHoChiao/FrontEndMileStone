@@ -65,15 +65,6 @@
                                     </div>
                                 </p>
                             </div>
-                            <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-universal-access fa-fw w3-margin-right"></i>Permissions</button>
-                            <div id="Demo2" class="w3-hide w3-container">
-                                <p>
-                                    <div class="w3-bar-block">
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-pencil-square fa-fw w3-margin-right"></i>Access</a>
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-keyboard-o fa-fw w3-margin-right"></i>Execution</a>
-                                    </div>
-                                </p>
-                            </div>
                             <button @click="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Frequency Events</button>
                             <div id="Demo3" class="w3-hide w3-container">
                                 <p>
@@ -81,6 +72,15 @@
                                         <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
                                         <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
                                         <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>Exclude Freq</a>
+                                    </div>
+                                </p>
+                            </div>
+                            <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-upload fa-fw w3-margin-right"></i>File Upload</button>
+                            <div id="Demo2" class="w3-hide w3-container">
+                                <p>
+                                    <div class="w3-bar-block">
+                                        <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
+                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
                                     </div>
                                 </p>
                             </div>
@@ -215,7 +215,10 @@ export default {
         },
         getGlobalExclFrequency(e){
             this.$router.push({ name: 'GlobalExclFrequency'})
-        }
+        },
+        getDrivers(e){
+            this.$router.push({ name: 'DriverManager'})
+        },
     },
     components: {
         'trinity-config-window': TrinityconfigWindow,

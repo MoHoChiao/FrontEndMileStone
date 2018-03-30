@@ -1,23 +1,18 @@
 <template>
-    <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <role-permission-form slot="content" ref="rolePermissionForm" :peopleUid="peopleUid"></role-permission-form>
+    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <driver-form slot="content" ref="userGroupForm"></driver-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import RolePermissionForm from './RolePermissionForm.vue'
-import FormButton from '../../FormButton.vue'
+import { HTTPRepo } from '../../../axios/http-common'
+import ModalWindow from '../../Common/window/ModalWindow.vue'
+import DriverForm from './DriverForm.vue'
+import FormButton from '../FormButton.vue'
 
 export default {
-    computed: {
-        _windowTitle() {
-            return this.windowTitle + this.peopleName;
-        },
-    },
     props: {
         windowTitle: {
             type: String,
@@ -30,21 +25,19 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
-        },
-        peopleUid: '',
-        peopleName: ''
+        }
     },
     methods: {
         cancel(){
-            this.$emit('closeApply')
+            this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.rolePermissionForm.save()
-            
+            let postContent = this.$refs.userGroupForm.save()
+
             if(postContent){
-                HTTPRepo.post(`access-right/modifyByPeopleUid?peopleUid=`+this.peopleUid, postContent)
+                HTTPRepo.post(`user-group/add`, postContent)
                 .then(response => {
-                    this.$emit('closeApply')
+                    this.$emit('closeAdd', response.data)
                 })
                 .catch(error => {
                     if (error.response && error.response.data) {
@@ -64,12 +57,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.rolePermissionForm.reset()
+            this.$refs.userGroupForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'role-permission-form': RolePermissionForm,
+        'driver-form': DriverForm,
         'form-button': FormButton
     }
 }

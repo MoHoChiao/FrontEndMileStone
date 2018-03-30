@@ -45,6 +45,10 @@ export default {
         }
     },
     props: {
+        tabsFlag: {
+            type: Array,
+            default: () => []
+        },
         windowTitle: {
             type: String,
             default: ''
@@ -57,12 +61,13 @@ export default {
             type: Boolean,
             default: false
         },
-        userUids: {
+        roleuid: '',
+        memberUids: {
             type: Array,
             default: () => []
         }
     },
-    mounted(){
+    created(){
         this.getTrinityUser()
     },
     methods: {
@@ -85,13 +90,11 @@ export default {
         onClickCheck(user, index){
             if(user.checked){
                 let new_member = {
-                    "useruid": user.useruid,
-                    "userid": user.userid,
-                    "username": user.username
+                    "useruid": user.useruid
                 }
-                this.selectedRecords.splice(index, 1, new_member)
+                this.selectedRecords[index] = new_member
             }else{
-                this.selectedRecords.splice(index, 1)
+                delete this.selectedRecords[index]
             }
         },
         getTrinityUser(){
@@ -106,7 +109,7 @@ export default {
             .then(response => {
                 this.trinityusers = []
                 for(let i=0;i<response.data.length;i++){
-                    if(!this.userUids.includes(response.data[i].useruid.trim()) && response.data[i].useruid.trim() !== 'trinity'){
+                    if(!this.memberUids.includes(response.data[i].useruid) && response.data[i].useruid.trim() !== 'trinity'){
                         this.trinityusers.push(response.data[i])
                     }
                 }
@@ -133,8 +136,40 @@ export default {
             this.getTrinityUser()
         },
         save(){
-            this.$emit('applyMembers', this.selectedRecords)
-            this.cancel()
+            if(this.selectedRecords && this.selectedRecords.length > 0){
+                var retRecords = []
+                for(let i=0;i<this.selectedRecords.length;i++){
+                    if(this.selectedRecords[i] && this.selectedRecords[i].useruid)
+                        retRecords.push(this.selectedRecords[i])
+                }
+                
+                if(retRecords.length > 0){
+                    HTTPRepo.post('role-member/addBatch?roleUid='+this.roleuid, retRecords)
+                    .then(response => {
+                        this.$emit('applyMembers')
+                        this.cancel()
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.data) {
+                            let newStatus = {
+                                "msg": error.response.data,
+                                "status": "Error"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        } else {
+                            let newStatus = {
+                                "msg": error.message,
+                                "status": "Error"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        }
+                    })
+                }else{
+                    this.cancel()
+                }
+            }else{
+                this.cancel()
+            }
         }
     },
     components: {

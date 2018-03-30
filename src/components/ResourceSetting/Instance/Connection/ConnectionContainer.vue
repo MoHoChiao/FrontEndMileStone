@@ -27,6 +27,13 @@
                     @closeDelete="closeDeleteWindow" 
                     @confirmDelete="deleteObj" 
   ></confirm-delete-window>
+  <!-- For Apply Permission Window -->
+  <permission-window :windowAlive="applyPermissionWindowAlive" 
+                    window-title="Apply Permission To "
+                    :objectUid="selectedConnectionRecord.connectionuid" 
+                    :objectName="selectedConnectionRecord.connectionname" 
+                    @closeApply="changePermissionWindowStatus" 
+  ></permission-window>
   <!-- Connection Path Header -->
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
@@ -95,10 +102,20 @@
                     <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
                         <span class="w3-medium">Connections</span> ({{ selectedCategoryRecord.conncategoryname }})</span>
                     <span v-else class="w3-medium">Connections</span>
-                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
-                    <i class="fa fa-clipboard w3-button w3-right" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
-                    <i class="fa fa-clone w3-button w3-right" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
+                    <span class="w3-dropdown-hover w3-right w3-hide-large">
+                        <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
+                        <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+                            <i class="w3-bar-item fa fa-clone w3-button" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
+                            <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
+                            <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
+                            <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"> Delete Connection</i>
+                        </div>
+                    </span>
+                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
+                    <i class="fa fa-universal-access w3-button w3-right" title="Apply Permission To Connection" aria-hidden="true" @click="changePermissionWindowStatus()"></i>
+                    <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
+                    <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
+                    <i class="fa fa-clone w3-button w3-right w3-hide-medium w3-hide-small" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
                     <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
                     <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="getConnections"></i>
                 </div>
@@ -145,6 +162,7 @@ import FilterPanel from '../../FilterPanel.vue'
 import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategoryEditWindow.vue'
 import ConnectionEditWindow from './ConnectionEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 
 export default {
     data() {
@@ -153,6 +171,7 @@ export default {
             selectedConnectionRecord: new Object(),   //store which record has been selected.(Connections)
             editCategoryWindowAlive: false,  //for add/edit Connection category modal windows
             editConnectionWindowAlive: false,  //for add/edit Connection modal windows
+            applyPermissionWindowAlive: false, //for modify Permission modal windows
             operation: 'add',   //keep which operation(add,edit,copy,move) will be execute
             deleteWindowAlive: false,  //show or not show delete modal windows
             deleteName: '', //store delete object name
@@ -343,6 +362,12 @@ export default {
                 this.editConnectionWindowAlive = !this.editConnectionWindowAlive
             } 
         },
+        changePermissionWindowStatus(){
+            if(this.selectedConnectionRecord && this.selectedConnectionRecord.connectionuid && this.selectedConnectionRecord.connectionuid !== ''){
+                this.selectedConnectionRecord.connectionuid = this.selectedConnectionRecord.connectionuid.trim()
+                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+            }
+        },
         saveCategoryWindowContentForAdd(new_content){
             if(new_content){    //new_content !== undefined, it means from Connection Category Window Save Click
                 this.allCategoryObjs.unshift(new_content) //add object to the top of array
@@ -515,7 +540,8 @@ export default {
         'filter-panel': FilterPanel,
         'connection-category-edit-window': ConnectionCategoryEditWindow,
         'connection-edit-window': ConnectionEditWindow,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'permission-window': PermissionWindow
     }
 }
 </script>

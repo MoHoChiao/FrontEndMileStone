@@ -115,7 +115,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo } from '../../../axios/http-common'
 import ApplyAccountsWindow from './ApplyAccountsWindow.vue'
 import ApplyRolesWindow from './ApplyRolesWindow.vue'
 
@@ -138,7 +138,6 @@ export default {
     mounted() {
         this.getPermissionOnlyForUser()
         this.getPermissionOnlyForRole()
-        // this.getFunctions()
     },
     props: {
         objectUid: ''
@@ -306,6 +305,8 @@ export default {
         },
         save(){
             var retPermissionList = []
+
+            //permission only users
             for(let i=0;i<this.permissionListForUser.length;i++){
                 this.permissionListForUser[i].objectuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
                 this.permissionListForUser[i].view = Number(this.permissionListForUser[i].view)
@@ -318,8 +319,8 @@ export default {
                 this.permissionListForUser[i].import_export = '0'
                 retPermissionList.push(this.permissionListForUser[i])
             }
-            console.log(this.permissionListForUser)
 
+            //permission only roles
             for(let i=0;i<this.permissionListForRole.length;i++){
                 this.permissionListForRole[i].objectuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
                 this.permissionListForRole[i].view = Number(this.permissionListForRole[i].view)
@@ -332,7 +333,6 @@ export default {
                 this.permissionListForRole[i].import_export = '0'
                 retPermissionList.push(this.permissionListForRole[i])
             }
-            console.log(this.permissionListForRole)
 
             return retPermissionList
         },

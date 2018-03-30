@@ -92,9 +92,9 @@ export default {
                 let new_member = {
                     "useruid": user.useruid
                 }
-                this.selectedRecords.splice(index, 1, new_member)
+                this.selectedRecords[index] = new_member
             }else{
-                this.selectedRecords.splice(index, 1)
+                delete this.selectedRecords[index]
             }
         },
         getTrinityUser(){
@@ -137,26 +137,38 @@ export default {
         },
         save(){
             if(this.selectedRecords && this.selectedRecords.length > 0){ 
-                HTTPRepo.post('group-member/addBatch?groupUid='+this.groupuid, this.selectedRecords)
-                .then(response => {
-                    this.$emit('applyMembers')
+                var retRecords = []
+                for(let i=0;i<this.selectedRecords.length;i++){
+                    if(this.selectedRecords[i] && this.selectedRecords[i].useruid)
+                        retRecords.push(this.selectedRecords[i])
+                }
+                
+                if(retRecords.length > 0){
+                    HTTPRepo.post('group-member/addBatch?groupUid='+this.groupuid, retRecords)
+                    .then(response => {
+                        this.$emit('applyMembers')
+                        this.cancel()
+                    })
+                    .catch(error => {
+                        if (error.response && error.response.data) {
+                            let newStatus = {
+                                "msg": error.response.data,
+                                "status": "Error"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        } else {
+                            let newStatus = {
+                                "msg": error.message,
+                                "status": "Error"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        }
+                    })
+                }else{
                     this.cancel()
-                })
-                .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
-                })
+                }
+            }else{
+                this.cancel()
             }
         }
     },

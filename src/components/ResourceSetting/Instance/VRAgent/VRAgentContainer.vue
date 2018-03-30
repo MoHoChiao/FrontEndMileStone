@@ -12,6 +12,12 @@
                     @closeDelete="changeDeleteWindowStatus" 
                     @confirmDelete="deleteAgent" 
   ></confirm-delete-window>
+  <permission-window :windowAlive="applyPermissionWindowAlive" 
+                    window-title="Apply Permission To "
+                    :objectUid="selectedRecord.virtualagentuid" 
+                    :objectName="selectedRecord.virtualagentname" 
+                    @closeApply="changePermissionWindowStatus" 
+  ></permission-window>
   <div class="w3-col m7 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -74,6 +80,8 @@
                 <p class="w3-small">{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i> Edit</button>
+                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePermissionWindowStatus(content)">
+                            <i class="fa fa-universal-access"></i> Permission</button>
                 <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i> Delete</button>
             </div>
@@ -92,6 +100,10 @@
                 <button title="Delete This Virtual Agent" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
                     <i class="fa fa-trash-o"></i>
                     <span class="w3-hide-medium w3-hide-small"> Delete</span>
+                </button>
+                <button title="Apply Permission To Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
+                    <i class="fa fa-universal-access"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Permission</span>
                 </button>
                 <button title="Edit This Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
@@ -112,12 +124,14 @@ import FilterPanel from '../../FilterPanel.vue'
 import VRAgentEditPanel from './VRAgentEditPanel.vue'
 import VRAgentAddWindow from './VRAgentAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 
 export default {
     data() {
         return {
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add virtual agent modal windows
+            applyPermissionWindowAlive: false, //for modify Permission modal windows
             deleteWindowAlive: false,  //for delete virtual agent modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
@@ -135,7 +149,8 @@ export default {
                 {name: "Activate",value: "activate"},
                 {name: "Mode",value: "mode"},
                 {name: "Desc",value: "Description"}
-            ]
+            ],
+            selectedRecord: new Object()   //store which Virtual Agent has been clicked.
         }
     },
     mounted() {
@@ -274,13 +289,21 @@ export default {
             this.deleteIndex = index
             this.deleteUid = vr_agentuid
             this.deleteName = vr_agentname
+        },
+        changePermissionWindowStatus(record){
+            if(record){
+                this.selectedRecord = record
+                this.selectedRecord.virtualagentuid = this.selectedRecord.virtualagentuid.trim()
+            }
+            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         }
     },
     components: {
         'filter-panel': FilterPanel,
         'vr-agent-edit-panel': VRAgentEditPanel,
         'vr-agent-add-window': VRAgentAddWindow,
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'permission-window': PermissionWindow
     }
 }
 </script>

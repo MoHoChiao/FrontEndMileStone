@@ -65,12 +65,15 @@
                 <p>{{ content.name }}</p>
                 <button type="button" title="Delete This Domain" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.domainuid, content.name)">
                     <i class="fa fa-trash-o"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
                 <button type="button" title="Edit This Domain" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
                 <button type="button" title="Copy This Domain" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeAddWindowStatus(content)">
                     <i class="fa fa-clone"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Copy</span>
                 </button>
             </div>
             <domain-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></domain-edit-panel>

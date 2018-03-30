@@ -95,10 +95,19 @@
                     <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname">
                         <span class="w3-medium">Frequencies</span> ({{ selectedCategoryRecord.freqcategoryname }})</span>
                     <span v-else class="w3-medium">Frequencies</span>
-                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Frequency" aria-hidden="true" @click="showdeleteFrequencyWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('edit')"></i>
-                    <i class="fa fa-clipboard w3-button w3-right" title="Move Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('move')"></i>
-                    <i class="fa fa-clone w3-button w3-right" title="Copy Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('copy')"></i>
+                    <span class="w3-dropdown-hover w3-right w3-hide-large">
+                        <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
+                        <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+                            <i class="w3-bar-item fa fa-clone w3-button" title="Copy Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('copy')"> Copy Frequency</i>
+                            <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('move')"> Move Frequency</i>
+                            <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('edit')"> Edit Frequency</i>
+                            <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Frequency" aria-hidden="true" @click="showdeleteFrequencyWindow"> Delete Frequency</i>
+                        </div>
+                    </span>
+                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Frequency" aria-hidden="true" @click="showdeleteFrequencyWindow"></i>
+                    <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('edit')"></i>
+                    <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('move')"></i>
+                    <i class="fa fa-clone w3-button w3-right w3-hide-medium w3-hide-small" title="Copy Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('copy')"></i>
                     <i class="fa fa-plus w3-button w3-right" title="Add Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('add')"></i>
                     <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency" aria-hidden="true" @click="getFrequencies"></i>
                 </div>

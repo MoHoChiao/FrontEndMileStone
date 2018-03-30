@@ -8,7 +8,7 @@
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
-                    window-bg-color="highway-schoolbus"
+                    window-bg-color="highway-schoolbus" 
                     btn-color="signal-white" 
                     @closeDelete="changeDeleteWindowStatus" 
                     @confirmDelete="deleteAgent" 
@@ -72,15 +72,19 @@
                 <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <button type="button" title="Delete This Agent" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
                     <i class="fa fa-trash-o"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Delete</span>
                 </button>
-                <button title="Apply Permission To Role" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
+                <button title="Apply Permission To JCSAgent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
                     <i class="fa fa-universal-access"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Permissiob</span>
                 </button>
                 <button type="button" title="Edit This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Edit</span>
                 </button>
                 <button type="button" title="Copy This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeAddWindowStatus(content)">
                     <i class="fa fa-clone"></i>
+                    <span class="w3-hide-medium w3-hide-small"> Copy</span>
                 </button>
             </div>
             <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
@@ -97,7 +101,7 @@ import FilterPanel from '../../FilterPanel.vue'
 import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
 import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
-import PermissionWindow from './PermissionWindow.vue'
+import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 
 export default {
     data() {
@@ -287,8 +291,10 @@ export default {
             this.deleteName = agentname
         },
         changePermissionWindowStatus(record){
-            if(record)
+            if(record){
                 this.selectedRecord = record
+                this.selectedRecord.agentuid = this.selectedRecord.agentuid.trim()
+            }
 
             this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         }
