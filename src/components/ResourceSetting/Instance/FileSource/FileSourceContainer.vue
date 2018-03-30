@@ -97,11 +97,13 @@
                     <span v-else class="w3-medium">File Sources</span>
                     <span class="w3-dropdown-hover w3-right w3-hide-large">
                         <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
-                        <div class="w3-dropdown-content w3-card-4 w3-bar-block">
-                            <i class="w3-bar-item fa fa-clone w3-button" title="Copy File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('copy')"> Copy File Source</i>
-                            <i class="w3-bar-item fa fa-clipboard w3-button" title="Move File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('move')"> Move File Source</i>
-                            <i class="w3-bar-item fa fa-pencil w3-button" title="Edit File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('edit')"> Edit File Source</i>
-                            <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete File Source" aria-hidden="true" @click="showDeleteFileSourceWindow"> Delete File Source</i>
+                        <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
+                            <div>
+                                <i class="w3-bar-item fa fa-clone w3-button" title="Copy File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('copy')"> Copy File Source</i>
+                                <i class="w3-bar-item fa fa-clipboard w3-button" title="Move File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('move')"> Move File Source</i>
+                                <i class="w3-bar-item fa fa-pencil w3-button" title="Edit File Source" aria-hidden="true" @click="changeFileSourceWindowStatus('edit')"> Edit File Source</i>
+                                <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete File Source" aria-hidden="true" @click="showDeleteFileSourceWindow"> Delete File Source</i>
+                            </div>
                         </div>
                     </span>
                     <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete File Source" aria-hidden="true" @click="showDeleteFileSourceWindow"></i>

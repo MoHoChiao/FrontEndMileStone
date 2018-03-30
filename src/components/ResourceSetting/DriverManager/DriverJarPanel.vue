@@ -100,11 +100,10 @@ export default {
                 return
             if(!this.deleteUid || this.deleteUid === '')
                 return
-            
-            HTTPRepo.get('group-member/deleteByPKUids?groupUid='+this.groupuid+'&userUid='+this.deleteUid)
+            console.log('driver-manager/deleteDriverJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
+            HTTPRepo.get('driver-manager/deleteDriverJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
             .then(response => {
-                this.applyMembers.splice(this.deleteIndex, 1)
-                this.memberUids.splice(this.deleteIndex, 1)
+                this.new_jarFiles.splice(this.deleteIndex, 1)
                 
                 this.changeDeleteWindowStatus()
             })

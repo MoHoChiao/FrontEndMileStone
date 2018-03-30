@@ -14,7 +14,8 @@
         ></confirm-delete-window>
         <driver-jar-window :windowAlive="attachWindowAlive" 
                             window-title="Attach Jar To Driver" 
-                            :groupuid="selectedUserGroupRecord.groupuid" 
+                            :driverName="selectedDriverRecord.name" 
+                            :jarFiles="selectedDriverRecord.jarFiles" 
                             @closeApply="changeJarWindowStatus" 
         ></driver-jar-window>
         <div class="w3-col m9 w3-animate-opacity">
@@ -28,18 +29,20 @@
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-file-archive-o w3-button" title="Import Drivers" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-bar-block w3-small">
-                                        <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
-                                        <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true"> Export Drivers</i>
-                                        <i class="w3-bar-item fa fa-plus w3-button w3-right" title="Publish Drivers" aria-hidden="true"> Publish Drivers</i>
+                                    <i class="fa fa-file-archive-o w3-button" title="Import/Export/Publish" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
+                                        <div>
+                                            <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
+                                            <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true"> Export Drivers</i>
+                                            <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Drivers" aria-hidden="true"> Publish Drivers</i>
+                                        </div>
                                     </div>
                                 </span>
                                 <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getDrivers"></i>
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-search w3-button" title="Search Driver By Name" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-bar-block w3-small">
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
                                         <div class="w3-row w3-panel">
                                             <div class="w3-col m8">
                                                 <input class=" w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
@@ -89,7 +92,7 @@
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
                         </button>
                         <button title="Attach Jar To Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeJarWindowStatus(content)">
-                            <i class="fa fa-hand-lizard-o"></i>
+                            <i class="fa fa-paperclip"></i>
                             <span class="w3-hide-medium w3-hide-small"> Attach</span>
                         </button>
                         <button title="Edit This Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
@@ -116,15 +119,15 @@ export default {
     data() {
         return {
             showMode: true, //switch content list or table list
-            addWindowAlive: false,  //for add User Group modal windows
+            addWindowAlive: false,  //for add driver modal windows
             attachWindowAlive: false, //for upload jar file modal windows
-            deleteWindowAlive: false,  //for delete User Group modal windows
+            deleteWindowAlive: false,  //for delete driver modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            allDriverObjs: [], //store all User Group
-            editable: [],   //for all User Group content edit panel
-            selectedUserGroupRecord: new Object(),   //store which user group members button has been clicked.
+            allDriverObjs: [], //store all drivers info
+            editable: [],   //for all driver content edit panel
+            selectedDriverRecord: new Object(),   //store which driver attach button has been clicked.
             searchText: ''
         }
     },
@@ -172,7 +175,7 @@ export default {
         },
         changeJarWindowStatus(record){
             if(record)
-                this.selectedUserGroupRecord = record
+                this.selectedDriverRecord = record
             this.attachWindowAlive = !this.attachWindowAlive
         },
         deleteDriver(){

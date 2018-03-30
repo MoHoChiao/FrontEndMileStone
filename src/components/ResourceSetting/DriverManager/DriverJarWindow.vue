@@ -1,7 +1,7 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <driver-jar-panel slot="content" 
-                :groupuid="groupuid" 
+                :driverName="driverName" :jarFiles="jarFiles" 
         ></driver-jar-panel>
         <div slot="footer"></div>
     </modal-window>
@@ -25,7 +25,12 @@ export default {
             type: Boolean,
             default: false
         },
-        groupuid: ''
+        driverName: '',
+        jarFiles: {
+            type: Array,
+            default: () => [],
+            required: true
+        }
     },
     methods: {
         cancel(){
