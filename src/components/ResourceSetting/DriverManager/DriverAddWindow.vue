@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <driver-form slot="content" ref="userGroupForm"></driver-form>
+        <driver-add-form slot="content" ref="driverAddForm"></driver-add-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo } from '../../../axios/http-common'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
-import DriverForm from './DriverForm.vue'
+import DriverAddForm from './DriverAddForm.vue'
 import FormButton from '../FormButton.vue'
 
 export default {
@@ -32,10 +32,11 @@ export default {
             this.$emit('closeAdd')
         },
         save(){
-            let postContent = this.$refs.userGroupForm.save()
+            let postContent = this.$refs.driverAddForm.save()
 
             if(postContent){
-                HTTPRepo.post(`user-group/add`, postContent)
+                HTTPRepo.post(`driver-manager/addDriverInformation?driverName=`+postContent.name+'&driverURL='+postContent.url, 
+                    postContent.formData)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })
@@ -57,12 +58,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.userGroupForm.reset()
+            this.$refs.driverAddForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'driver-form': DriverForm,
+        'driver-add-form': DriverAddForm,
         'form-button': FormButton
     }
 }

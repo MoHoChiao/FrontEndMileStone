@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div v-if="showMode">
-                <div :key="content.groupuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allDriverObjs">
+                <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allDriverObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{content.owner}}</span>
@@ -100,7 +100,7 @@
                             <span class="w3-hide-medium w3-hide-small"> Edit</span>
                         </button>
                     </div>
-                    <driver-edit-panel v-else :key="content.groupuid+'EditPanel2'" 
+                    <driver-edit-panel v-else :key="content.name+'EditPanel2'" 
                         :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
                 </li>
             </ul>

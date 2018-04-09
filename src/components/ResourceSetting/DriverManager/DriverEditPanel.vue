@@ -1,13 +1,13 @@
 <template>
     <div>
-        <driver-form ref="userGroupForm" :content="content"></driver-form>
+        <driver-edit-form ref="driverEditForm" :content="content"></driver-edit-form>
         <hr class="w3-border-grey">
         <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
     </div>
 </template>
 <script>
 import { HTTPRepo } from '../../../axios/http-common'
-import DriverForm from './DriverForm.vue'
+import DriverEditForm from './DriverEditForm.vue'
 import FormButton from '../FormButton.vue'
 
 export default {
@@ -29,7 +29,7 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.userGroupForm.save()
+            let postContent = this.$refs.driverEditForm.save()
             
             if(postContent){
                 HTTPRepo.post(`user-group/edit`, postContent)
@@ -54,11 +54,11 @@ export default {
             }
         },
         reset(){
-            this.$refs.userGroupForm.reset()
+            this.$refs.driverEditForm.reset()
         }
     },
     components: {
-        'driver-form': DriverForm,
+        'driver-edit-form': DriverEditForm,
         'form-button': FormButton
     }
 }
