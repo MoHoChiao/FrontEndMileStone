@@ -92,7 +92,7 @@ export default {
             uploadedFiles: [],
             uploadError: null,
             currentStatus: null,
-            uploadFieldName: 'drivers',
+            uploadFieldName: 'files',
             formData: new FormData()
         }
     },
@@ -127,7 +127,7 @@ export default {
     methods: {
         save(){
             this.clearInValid()
-            
+
             if(this.new_content.name === undefined || this.new_content.name.trim().length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
             }else if(this.new_content.url === undefined || this.new_content.url.trim().length <= 0){
@@ -153,10 +153,19 @@ export default {
                         return
                     }
 
-                    sizeCount += this.uploadedFiles[i].size
-                    if(Math.round(sizeCount / 1024 / 1024) > 100 ){
+                    if(Math.round(this.uploadedFiles[i].size / 1024 / 1024) > 10){
                         let newStatus = {
-                            "msg": "The number of File capacity cannot be greater than 100MB!",
+                            "msg": "Each file must be less than 10MB!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                        return
+                    }
+
+                    sizeCount += this.uploadedFiles[i].size
+                    if(Math.round(sizeCount / 1024 / 1024) > 50 ){
+                        let newStatus = {
+                            "msg": "The number of File capacity cannot be greater than 50MB!",
                             "status": "Warn"
                         }
                         this.$store.dispatch('setSystemStatus', newStatus)
@@ -165,6 +174,8 @@ export default {
                 }
 
                 this.new_content.formData = this.formData
+                
+                // return
                 return this.new_content
             }                
         },
@@ -173,6 +184,8 @@ export default {
             
             this.new_content.name = this.content.name
             this.new_content.url = this.content.url
+
+            this.resetFileUploadObj()
         },
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
@@ -188,7 +201,6 @@ export default {
         filesPreview() {
             // upload data to the server
             this.currentStatus = STATUS_SAVING;
-
             upload(this.formData)
             .then(wait(1500)) // DEV ONLY: wait for 1.5s 
             .then(x => {

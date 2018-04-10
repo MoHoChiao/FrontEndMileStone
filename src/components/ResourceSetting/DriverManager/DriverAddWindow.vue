@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../axios/http-common'
+import { HTTPUpload } from '../../../axios/http-common'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import DriverAddForm from './DriverAddForm.vue'
 import FormButton from '../FormButton.vue'
@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.driverAddForm.save()
 
             if(postContent){
-                HTTPRepo.post(`driver-manager/addDriverInformation?driverName=`+postContent.name+'&driverURL='+postContent.url, 
+                HTTPUpload.post(`driver-manager/add?driverName=`+postContent.name+'&driverURL='+postContent.url, 
                     postContent.formData)
                 .then(response => {
                     this.$emit('closeAdd', response.data)

@@ -136,7 +136,7 @@ export default {
     },
     methods: {
         getDrivers(e){
-            HTTPRepo.get(`driver-manager/findDriversInfo?driverName=` + this.searchText.trim())
+            HTTPRepo.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 this.allDriverObjs = response.data
@@ -184,9 +184,9 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`user-group/delete`, {
+            HTTPRepo.get(`driver-manager/deleteDriverFolderAndProp`, {
                 params: {
-                    uid: this.deleteUid
+                    driverName: this.deleteUid
                 }
             })
             .then(response => {

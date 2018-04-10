@@ -1,5 +1,5 @@
 function upload(formData) {
-    const drivers = formData.getAll('drivers');
+    const drivers = formData.getAll('files');
     const promises = drivers.map((x) => getFiles(x)
         .then(fileObj => ({
             originalName: x.name,
