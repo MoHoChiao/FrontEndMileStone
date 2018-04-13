@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.driverAddForm.save()
 
             if(postContent){
-                HTTPUpload.post(`driver-manager/add?driverName=`+postContent.name+'&driverURL='+postContent.url, 
+                HTTPUpload.post(`driver-manager/addDriverFolderAndProp?driverName=`+postContent.name+'&driverURL='+postContent.url, 
                     postContent.formData)
                 .then(response => {
                     this.$emit('closeAdd', response.data)

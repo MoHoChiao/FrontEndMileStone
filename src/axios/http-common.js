@@ -28,7 +28,7 @@ export const HTTPRepo = axios.create({
 })
 export const HTTPUpload = axios.create({
     baseURL: `http://192.168.27.63:8080/zuul/backend-trinity-repository/`,
-    timeout: 10000,
+    timeout: 30000,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'

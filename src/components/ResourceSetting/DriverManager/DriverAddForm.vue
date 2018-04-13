@@ -19,13 +19,14 @@
         </div>
         <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
             <div class="dropbox">
-            <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                accept=".jar" class="input-file">
+                <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" 
+                    @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                    accept=".jar" class="input-file">
                 <p v-if="isInitial">
                 Drag Your Jar File(s) here to begin<br> or click to browse
                 </p>
                 <p v-if="isSaving">
-                Uploading {{ fileCount }} Files...
+                Preview {{ fileCount }} Files...
                 </p>
             </div>
         </form>
@@ -69,8 +70,7 @@
 <script>
 import { HTTPRepo } from '../../../axios/http-common'
 import { upload } from './file-upload.fake.service'; // fake service
-// import { upload } from './file-upload.service';   // real service
-import { wait } from './utils';
+import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 
@@ -199,10 +199,9 @@ export default {
             this.formData = new FormData()
         },
         filesPreview() {
-            // upload data to the server
             this.currentStatus = STATUS_SAVING;
             upload(this.formData)
-            .then(wait(1500)) // DEV ONLY: wait for 1.5s 
+            .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
             .then(x => {
                 this.uploadedFiles = [].concat(x);
                 this.currentStatus = STATUS_SUCCESS;

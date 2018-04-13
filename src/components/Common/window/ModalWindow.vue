@@ -1,20 +1,20 @@
 <template>
-<div class="w3-modal" style="display:block">
-    <div :class="_classList">
-        <header :class="_windowBgColor">
-            <span @click="closeModalWindow" class="w3-button w3-hover-none w3-display-topright">
-                <i class="fa fa-window-close"></i>
-            </span>
-            <h4 class="w3-center winTitle">{{ _windowTitle }}</h4>
-        </header>
-        <div class="w3-padding">
-            <slot name="content"></slot>
+    <div class="w3-modal" style="display:block">
+        <div :class="_classList">
+            <header :class="_windowBgColor">
+                <span @click="closeModalWindow" class="w3-button w3-hover-none w3-display-topright">
+                    <i class="fa fa-window-close"></i>
+                </span>
+                <h4 class="w3-center winTitle">{{ _windowTitle }}</h4>
+            </header>
+            <div class="w3-padding">
+                <slot name="content"></slot>
+            </div>
+            <footer :class="_windowBgColor">
+                <slot name="footer"></slot>
+            </footer>
         </div>
-        <footer :class="_windowBgColor">
-            <slot name="footer"></slot>
-        </footer>
     </div>
-</div>
 </template>
 <script>
 export default {

@@ -4,7 +4,8 @@
                             window-title="Add New Driver" 
                             @closeAdd="changeAddWindowStatus" 
         ></driver-add-window>
-        <confirm-delete-window :windowAlive="deleteWindowAlive" 
+        <confirm-delete-window ref="confirmWindow" 
+                            :windowAlive="deleteWindowAlive" 
                             :deleteName="deleteName" 
                             window-title="Confirm window" 
                             window-bg-color="highway-schoolbus" 
@@ -59,27 +60,29 @@
                 </div>
             </div>
             <div v-if="showMode">
-                <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allDriverObjs">
-                    <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{content.owner}}</span>
-                        <p>
-                            {{ content.name }}
-                        </p>
-                        <p><span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span></p>
-                        <driver-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></driver-jar-panel>
-                        <br>
-                        <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                            <i class="fa fa-pencil"></i> Edit</button>
-                        <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.name)">
-                            <i class="fa fa-trash-o"></i> Delete</button>
-                    </div>
+                <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allDriverObjs">
+                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]" ref="loadingDIV">
+                        <div slot="content">
+                            <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                            <span class="w3-right w3-opacity">{{content.owner}}</span>
+                            <p>
+                                {{ content.name }}
+                            </p>
+                            <p><span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span></p>
+                            <driver-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></driver-jar-panel>
+                            <br>
+                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
+                                <i class="fa fa-pencil"></i> Edit</button>
+                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.name)">
+                                <i class="fa fa-trash-o"></i> Delete</button>
+                        </div>
+                    </over-lay-loading-div>
                     <driver-edit-panel v-else :key="content.name+'EditPanel1'" 
                         :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
                 </div>
             </div>
             <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li :key="content.name+'li'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allDriverObjs">
+                <li :key="content.name+'li'" class="w3-bar w3-border-camo-black loading-area" v-for="(content, index) in allDriverObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.owner }}</span>
@@ -114,6 +117,7 @@ import DriverJarPanel from './DriverJarPanel.vue'
 import DriverAddWindow from './DriverAddWindow.vue'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
 import DriverJarWindow from './DriverJarWindow.vue'
+import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 
 export default {
     data() {
@@ -170,6 +174,7 @@ export default {
             }
             
             if(content !== undefined){
+                content.jarFiles = this.allDriverObjs[index].jarFiles   //由於後端不會再回傳jar files, 因此這裡把舊的代入
                 this.allDriverObjs[index] = content
             }
         },
@@ -179,11 +184,13 @@ export default {
             this.attachWindowAlive = !this.attachWindowAlive
         },
         deleteDriver(){
+            this.$refs.confirmWindow.overLayLoading(true)
+            return
             if(this.deleteIndex === -1)
                 return
             if(this.deleteUid === '')
                 return
-            
+
             HTTPRepo.get(`driver-manager/deleteDriverFolderAndProp`, {
                 params: {
                     driverName: this.deleteUid
@@ -231,8 +238,7 @@ export default {
             this.deleteIndex = index
             this.deleteUid = name
             this.deleteName = name
-        },
-        
+        }
     },
     components: {
         //'filter-panel': FilterPanel,
@@ -240,13 +246,17 @@ export default {
         'driver-jar-panel': DriverJarPanel,
         'driver-add-window': DriverAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'driver-jar-window': DriverJarWindow
+        'driver-jar-window': DriverJarWindow,
+        'over-lay-loading-div': OverlayLoadingDIV
     }
 }
 </script>
 <style scoped>
     input {
         height: 34px
+    }
+    .loading-area {
+        position: relative
     }
 </style>
 

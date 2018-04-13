@@ -16,7 +16,14 @@
                             <tr class="w3-teal">
                                 <th class="w3-center" width="80%" style="padding-top:12px;padding-bottom:12px">Jar Name</th>
                                 <th class="w3-center" width="20%" style="padding-top:7px;padding-bottom:7px">
-                                    <i class="fa fa-upload w3-button w3-hover-none" title="Upload Files" aria-hidden="true" @click="changeApplyWindowStatus"></i>
+                                    <form enctype="multipart/form-data" novalidate>
+                                        <label>
+                                            <i class="fa fa-upload w3-button w3-hover-none" title="Upload Files" aria-hidden="true"></i>
+                                            <input type="file" multiple :name="uploadFieldName" 
+                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                                accept=".jar" class="input-file">
+                                        </label>
+                                    </form>
                                 </th>
                             </tr>
                         </table>
@@ -40,8 +47,10 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../axios/http-common'
+import { HTTPRepo,HTTPUpload } from '../../../axios/http-common'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
+import { upload } from './file-upload.fake.service'; // fake service
+import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 export default {
     data() {
@@ -52,7 +61,9 @@ export default {
             deleteWindowAlive: false,  //for delete windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
-            deleteName: ''     //store which obj name will be delete
+            deleteName: '',     //store which obj name will be delete
+            uploadFieldName: 'files',
+            uploadedFiles: []
         }
     },
     props:{
@@ -73,11 +84,6 @@ export default {
         }
     },
     methods: {
-        changeApplyWindowStatus(){
-            this.new_jarFiles.unshift('aaaaaaaaaaaaaa')
-            var jarsContainer = this.$el.querySelector("#jarsContainer")
-            jarsContainer.scrollTop = -jarsContainer.scrollTop
-        },
         changeDeleteWindowStatus(index, file){
             this.deleteWindowAlive = !this.deleteWindowAlive
 
@@ -100,8 +106,7 @@ export default {
                 return
             if(!this.deleteUid || this.deleteUid === '')
                 return
-            console.log('driver-manager/deleteDriverJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
-            HTTPRepo.get('driver-manager/deleteDriverJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
+            HTTPRepo.get('driver-manager/deleteJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
             .then(response => {
                 this.new_jarFiles.splice(this.deleteIndex, 1)
                 
@@ -122,6 +127,121 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }
             })
+        },
+        filesChange(fieldName, fileList) {
+            // handle file changes
+            var formData = new FormData()
+
+            if (!fileList.length) return
+
+            // append the files to FormData
+            Array
+            .from(Array(fileList.length).keys())
+            .map(x => {
+                formData.append(fieldName, fileList[x], fileList[x].name);
+            });
+
+            // preview it
+            this.filesPreview(formData);
+        },
+        filesPreview(formData) {
+            upload(formData)
+            .then(x => {
+                this.uploadedFiles = [].concat(x);
+
+                if(this.uploadedFiles.length <= 0){
+                    let newStatus = {
+                        "msg": "The number of jar files cannot be equal to zero!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                    return
+                }
+
+                var sizeCount = 0
+                for(let i=0;i<this.uploadedFiles.length;i++){
+                    if(this.uploadedFiles[i].originalName.indexOf('jar') === -1){
+                        let newStatus = {
+                            "msg": "Uploaded file can only be jar file!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                        return
+                    }
+
+                    if(Math.round(this.uploadedFiles[i].size / 1024 / 1024) > 10){
+                        let newStatus = {
+                            "msg": "Each file must be less than 10MB!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                        return
+                    }
+
+                    sizeCount += this.uploadedFiles[i].size
+                    if(Math.round(sizeCount / 1024 / 1024) > 50 ){
+                        let newStatus = {
+                            "msg": "The number of File capacity cannot be greater than 50MB!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                        return
+                    }
+                }
+
+                this.$parent.loadingText = "Upload " + this.uploadedFiles.length + " file(s)..."
+                this.$parent.isLoading = true
+                
+                this.filesUpload(formData)
+            })
+            .catch(error => {
+                this.$parent.isLoading = false
+                if (error.response && error.response.data) {
+                    let newStatus = {
+                        "msg": error.response.data,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let newStatus = {
+                        "msg": error.message,
+                        "status": "Error"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            });
+        },
+        filesUpload(formData){
+            HTTPUpload.post(`driver-manager/addJarFileByDriverName?driverName=`+this.driverName, formData)
+                .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
+                .then(response => {
+                    if(response.data.fileNameList){
+                        for(let i=0;i<response.data.fileNameList.length;i++){
+                            let fileName = response.data.fileNameList[i]
+                            if(!this.new_jarFiles.includes(fileName))
+                                this.new_jarFiles.unshift(fileName)
+                        }
+                    }
+                    this.$parent.isLoading = false
+                    var jarsContainer = this.$el.querySelector("#jarsContainer")
+                    jarsContainer.scrollTop = -jarsContainer.scrollTop
+                })
+                .catch(error => {
+                    this.$parent.isLoading = false
+                    if (error.response && error.response.data) {
+                        let newStatus = {
+                            "msg": error.response.data,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    } else {
+                        let newStatus = {
+                            "msg": error.message,
+                            "status": "Error"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                })
         }
     },
     components: {
@@ -132,6 +252,13 @@ export default {
 <style scoped>
     input {
         height: 30px
+    }
+    .input-file {
+        opacity: 0; /* invisible but it's there! */
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        visibility:hidden
     }
 </style>
 
