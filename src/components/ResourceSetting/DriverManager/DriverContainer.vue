@@ -1,12 +1,12 @@
 <template>
     <div>
-        <driver-add-window :windowAlive="addWindowAlive" 
+        <driver-add-window  :windowAlive="addWindowAlive" 
                             window-title="Add New Driver" 
                             @closeAdd="changeAddWindowStatus" 
         ></driver-add-window>
-        <confirm-delete-window ref="confirmWindow" 
-                            :windowAlive="deleteWindowAlive" 
+        <confirm-delete-window :windowAlive="deleteWindowAlive" 
                             :deleteName="deleteName" 
+                            :is-loading="delButtonLoading" 
                             window-title="Confirm window" 
                             window-bg-color="highway-schoolbus" 
                             btn-color="signal-white" 
@@ -32,9 +32,9 @@
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-file-archive-o w3-button" title="Import/Export/Publish" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
-                                        <div>
+                                        <div v-if="!allOverlayLoading">
                                             <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
-                                            <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true"> Export Drivers</i>
+                                            <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true" @click="exportJDBC"> Export Drivers</i>
                                             <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Drivers" aria-hidden="true"> Publish Drivers</i>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
             </div>
             <div v-if="showMode">
                 <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allDriverObjs">
-                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]" ref="loadingDIV">
+                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]">
                         <div slot="content">
                             <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                             <span class="w3-right w3-opacity">{{content.owner}}</span>
@@ -108,20 +108,26 @@
                 </li>
             </ul>
         </div>
+        <over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../axios/http-common'
+import { HTTPRepo,HTTPDownload } from '../../../axios/http-common'
 import DriverEditPanel from './DriverEditPanel.vue'
 import DriverJarPanel from './DriverJarPanel.vue'
 import DriverAddWindow from './DriverAddWindow.vue'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
 import DriverJarWindow from './DriverJarWindow.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
+import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
+import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 export default {
     data() {
         return {
+            delButtonLoading: false,    //control the status of delete window buttons 
+            allOverlayLoading: false,    //control the status of all page overlay loading
+            allOverlayLoadingText: 'Loading',    //control the status of all page overlay loading
             showMode: true, //switch content list or table list
             addWindowAlive: false,  //for add driver modal windows
             attachWindowAlive: false, //for upload jar file modal windows
@@ -184,25 +190,27 @@ export default {
             this.attachWindowAlive = !this.attachWindowAlive
         },
         deleteDriver(){
-            this.$refs.confirmWindow.overLayLoading(true)
-            return
             if(this.deleteIndex === -1)
                 return
             if(this.deleteUid === '')
                 return
 
+            this.delButtonLoading = true
             HTTPRepo.get(`driver-manager/deleteDriverFolderAndProp`, {
                 params: {
                     driverName: this.deleteUid
                 }
             })
+            .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.allDriverObjs.splice(this.deleteIndex, 1)
                 this.editable.splice(this.deleteIndex, 1)
                 this.editable.fill(false) //close all edit form
+                this.delButtonLoading = false
                 this.changeDeleteWindowStatus(-1, '')
             })
             .catch(error => {
+                this.delButtonLoading = false
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
@@ -223,7 +231,18 @@ export default {
         },
         changeAddWindowStatus(content){
             this.addWindowAlive = !this.addWindowAlive
+            let index = -1
             if(content !== undefined){
+                for(let i=0;i<this.allDriverObjs.length;i++){
+                    if(this.allDriverObjs[i].name === content.name){
+                        index = i
+                        break
+                    }
+                }
+                if(index !== -1){   //若不為-1, 表示UI上有driver name相同的紀錄
+                    this.allDriverObjs.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
+                }
+                    
                 this.allDriverObjs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
                 // this.editable.unshift(false)
@@ -238,6 +257,30 @@ export default {
             this.deleteIndex = index
             this.deleteUid = name
             this.deleteName = name
+        },
+        exportJDBC(){
+            this.allOverlayLoadingText = 'Download ZIP File - jdbc.zip...'
+            this.allOverlayLoading = true
+
+            HTTPDownload.get(`driver-manager/exportDriverZIP`)
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'jdbc.zip');
+                document.body.appendChild(link);
+                link.click();
+                this.allOverlayLoading = false
+            })
+            .catch(error => {
+                this.allOverlayLoading = false
+                // this.delButtonLoading = false
+                let newStatus = {
+                    "msg": 'Download jdbc.zip error! Please look at the error log.',
+                    "status": "Error"
+                }
+                this.$store.dispatch('setSystemStatus', newStatus)
+            })
         }
     },
     components: {
@@ -247,7 +290,8 @@ export default {
         'driver-add-window': DriverAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
         'driver-jar-window': DriverJarWindow,
-        'over-lay-loading-div': OverlayLoadingDIV
+        'over-lay-loading-div': OverlayLoadingDIV,
+        'over-lay-loading': OverlayLoading
     }
 }
 </script>

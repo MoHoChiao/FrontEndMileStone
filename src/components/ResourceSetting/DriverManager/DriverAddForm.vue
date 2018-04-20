@@ -6,7 +6,7 @@
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.name" type="text" 
-                    maxlength="128" placeholder="Please Input Driver Name">
+                    maxlength="128" placeholder="Please Input Driver Name" autocomplete="off">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -14,19 +14,20 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>JDBC URL</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.url" v-model="new_content.url" type="text" maxlength="1024" placeholder="Please Input JDBC URL">
+                <input :class="inputClassList.url" v-model="new_content.url" type="text" 
+                    maxlength="1024" placeholder="Please Input JDBC URL" autocomplete="off">
             </div>
         </div>
-        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
+        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving" autocomplete="off">
             <div class="dropbox">
                 <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" 
                     @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
                     accept=".jar" class="input-file">
                 <p v-if="isInitial">
-                Drag Your Jar File(s) here to begin<br> or click to browse
+                    Drag Your Jar File(s) here to begin<br> or click to browse
                 </p>
                 <p v-if="isSaving">
-                Preview {{ fileCount }} Files...
+                    Preview {{ fileCount }} Files...
                 </p>
             </div>
         </form>
@@ -173,10 +174,10 @@ export default {
                     }
                 }
 
-                this.new_content.formData = this.formData
+                this.formData.append("driverName", this.new_content.name);
+                this.formData.append("driverURL", this.new_content.url);                
                 
-                // return
-                return this.new_content
+                return this.formData
             }                
         },
         reset(){
@@ -199,19 +200,23 @@ export default {
             this.formData = new FormData()
         },
         filesPreview() {
-            this.currentStatus = STATUS_SAVING;
+            this.currentStatus = STATUS_SAVING
             upload(this.formData)
             .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
             .then(x => {
-                this.uploadedFiles = [].concat(x);
-                this.currentStatus = STATUS_SUCCESS;
+                this.uploadedFiles = [].concat(x)
+                this.currentStatus = STATUS_SUCCESS
+                this.$emit('filePreview', false)
             })
             .catch(err => {
                 this.uploadError = err.response;
                 this.currentStatus = STATUS_FAILED;
+                this.$emit('filePreview', false)
             });
         },
         filesChange(fieldName, fileList) {
+            this.$emit('filePreview', true)
+            
             // handle file changes
             this.formData = new FormData()
 

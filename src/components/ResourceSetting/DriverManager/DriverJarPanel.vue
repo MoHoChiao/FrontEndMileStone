@@ -2,6 +2,7 @@
     <div>
         <confirm-delete-window v-if="deleteWindowAlive" :windowAlive="deleteWindowAlive" 
             :deleteName="deleteName" 
+            :is-loading="delButtonLoading" 
             window-title="Confirm window" 
             window-bg-color="highway-schoolbus" 
             btn-color="signal-white" 
@@ -47,14 +48,15 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPUpload } from '../../../axios/http-common'
-import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
+import { HTTPRepo,HTTPUpload } from '../../../axios/http-common';
+import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue';
 import { upload } from './file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 export default {
     data() {
         return {
+            delButtonLoading: false,
             new_jarFiles: this.jarFiles,
             memberUids: [],
             applyWindowAlive: false,
@@ -106,13 +108,17 @@ export default {
                 return
             if(!this.deleteUid || this.deleteUid === '')
                 return
+
+            this.delButtonLoading = true
             HTTPRepo.get('driver-manager/deleteJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
+            .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.new_jarFiles.splice(this.deleteIndex, 1)
-                
+                this.delButtonLoading = false
                 this.changeDeleteWindowStatus()
             })
             .catch(error => {
+                this.delButtonLoading = false
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
@@ -189,13 +195,13 @@ export default {
                     }
                 }
 
-                this.$parent.loadingText = "Upload " + this.uploadedFiles.length + " file(s)..."
-                this.$parent.isLoading = true
+                this.$parent.new_loadingText = "Upload " + this.uploadedFiles.length + " File(s)..."
+                this.$parent.new_isLoading = true
                 
                 this.filesUpload(formData)
             })
             .catch(error => {
-                this.$parent.isLoading = false
+                this.$parent.new_isLoading = false
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,
@@ -222,12 +228,12 @@ export default {
                                 this.new_jarFiles.unshift(fileName)
                         }
                     }
-                    this.$parent.isLoading = false
+                    this.$parent.new_isLoading = false
                     var jarsContainer = this.$el.querySelector("#jarsContainer")
                     jarsContainer.scrollTop = -jarsContainer.scrollTop
                 })
                 .catch(error => {
-                    this.$parent.isLoading = false
+                    this.$parent.new_isLoading = false
                     if (error.response && error.response.data) {
                         let newStatus = {
                             "msg": error.response.data,

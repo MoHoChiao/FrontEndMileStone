@@ -1,12 +1,7 @@
 <template>
-    <div>
-        <div class="content">
-            <slot name="content"></slot>
-        </div>
-        <div class="overlay" v-if="new_isLoading">
-            <div class="loader"></div>
-            <div class="text">{{new_loadingText}}</div>
-        </div>
+    <div v-if="new_isLoading" class="overlay">
+        <div class="loader"></div>
+        <div class="text">{{new_loadingText}}</div>
     </div>
 </template>
 <script>
@@ -42,13 +37,8 @@ export default {
 }
 </script>
 <style scoped>
-    .content {
-        display: block;
-        width: 100%;
-        height: auto;
-    }
     .overlay {
-        position: absolute;
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
@@ -61,10 +51,10 @@ export default {
     }
     .text {
         color: white;
-        font-size: 20px;
+        font-size: 36px;
         position: absolute;
-        top: 70%;
-        left: 50%;
+        top: 60%;
+        left: 55%;
         transform: translate(-50%, -50%);
         -ms-transform: translate(-50%, -50%);
         text-align: center;
@@ -73,11 +63,11 @@ export default {
         border: 16px solid white;
         border-radius: 50%;
         border-top: 16px solid lightgrey;
-        width: 80px;
-        height: 80px;
+        width: 160px;
+        height: 160px;
         position: absolute;
-        top: 20%;
-        left: 45%;
+        top: 30%;
+        left: 50%;
         -webkit-animation: spin 2s linear infinite; /* Safari */
         animation: spin 2s linear infinite;
         text-align: center;

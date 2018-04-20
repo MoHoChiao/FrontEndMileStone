@@ -75,7 +75,7 @@
                                     </div>
                                 </p>
                             </div>
-                            <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-upload fa-fw w3-margin-right"></i>File Upload</button>
+                            <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-upload fa-fw w3-margin-right"></i>File Center</button>
                             <div id="Demo2" class="w3-hide w3-container">
                                 <p>
                                     <div class="w3-bar-block">

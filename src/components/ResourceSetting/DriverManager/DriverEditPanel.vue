@@ -1,5 +1,5 @@
 <template>
-    <over-lay-loading-div ref="loadingDIV">
+    <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText">
         <div slot="content">
             <driver-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></driver-edit-form>
             <hr class="w3-border-grey">
@@ -17,7 +17,9 @@ import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 export default {
     data() {
         return {
-            driverClassList: []
+            driverClassList: [],
+            loadingText: '',
+            isLoading: false
         }
     },
     mounted(){
@@ -45,17 +47,17 @@ export default {
             let postContent = this.$refs.driverEditForm.save()
             
             if(postContent){
-                this.$refs.loadingDIV.loadingText = 'Save ' + this.content.name + '...'
-                this.$refs.loadingDIV.isLoading = true
+                this.loadingText = 'Save ' + this.content.name + '...'
+                this.isLoading = true
 
                 HTTPRepo.post(`driver-manager/modifyDriverProp`, postContent)
                 .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
-                    this.$refs.loadingDIV.isLoading = false
+                    this.isLoading = false
                 })
                 .catch(error => {
-                    this.$refs.loadingDIV.isLoading = false
+                    this.isLoading = false
                     if (error.response && error.response.data) {
                         let newStatus = {
                             "msg": error.response.data,
@@ -76,17 +78,17 @@ export default {
             this.$refs.driverEditForm.reset()
         },
         fetchDriverClass(){
-            this.$refs.loadingDIV.loadingText = 'Fetch Driver Class...'
-            this.$refs.loadingDIV.isLoading = true
+            this.loadingText = 'Fetch Driver Class...'
+            this.isLoading = true
             
             HTTPRepo.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.content.name)
             .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
             .then(response => {
                 this.driverClassList = response.data
-                this.$refs.loadingDIV.isLoading = false
+                this.isLoading = false
             })
             .catch(error => {
-                this.$refs.loadingDIV.isLoading = false
+                this.isLoading = false
                 if (error.response && error.response.data) {
                     let newStatus = {
                         "msg": error.response.data,

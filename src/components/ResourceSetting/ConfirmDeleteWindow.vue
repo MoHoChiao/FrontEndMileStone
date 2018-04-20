@@ -1,23 +1,22 @@
 <template>
-    <over-lay-loading-div ref="loadingDIV">
-        <div slot="content">
-            <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-                <p class="w3-large" slot="content">
-                    Do you really want to delete {{ deleteName }} ? 
-                </p>
-                <div slot="footer">
-                    <div class="w3-row w3-small">
-                        <button type="button" :class="classList" style="margin-right:3px" @click="confirm"><i class="fa fa-check-circle-o"></i> Sure</button>
-                        <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
-                    </div>
-                </div>
-            </modal-window>
+    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <p class="w3-large" slot="content">
+            Do you really want to delete {{ deleteName }} ? 
+        </p>
+        <div slot="footer">
+            <div v-if="isLoading" class="w3-row w3-small">
+                <button type="button" :class="classList" style="margin-right:3px" disabled><i class="w3-spin fa fa-spinner"></i> Sure</button>
+                <button type="button" :class="classList" style="margin-right:3px" disabled><i class="w3-spin fa fa-spinner"></i> Cancel</button>
+            </div>
+            <div v-else class="w3-row w3-small">
+                <button type="button" :class="classList" style="margin-right:3px" @click="confirm"><i class="fa fa-check-circle-o"></i> Sure</button>
+                <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
         </div>
-    </over-lay-loading-div>
+    </modal-window>
 </template>
 <script>
 import ModalWindow from '../Common/window/ModalWindow.vue'
-import OverlayLoadingDIV from '../Common/Loading/OverlayLoadingDIV.vue'
 
 export default {
     computed: {
@@ -53,6 +52,10 @@ export default {
         deleteName: {
             type: String,
             default: ''
+        },
+        isLoading: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {
@@ -60,22 +63,16 @@ export default {
             
         },
         cancel(){
+            if(this.isLoading)
+                return
             this.$emit('closeDelete')
         },
         confirm(){
             this.$emit('confirmDelete')
-        },
-        overLayLoading(isLoading){
-            console.log(this.$refs.loadingDIV.isLoading)
-            if(isLoading)
-                this.$refs.loadingDIV.loadingText = 'Delete ' + this.deleteName + '...'
-            this.$refs.loadingDIV.isLoading = isLoading
-            console.log(this.$refs.loadingDIV.isLoading)
         }
     },
     components: {
-        'modal-window': ModalWindow,
-        'over-lay-loading-div': OverlayLoadingDIV
+        'modal-window': ModalWindow
     }
 }
 </script>

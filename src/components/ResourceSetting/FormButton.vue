@@ -1,9 +1,17 @@
 <template>
-    <div class="w3-row w3-small">
-        <button type="button" :class="classList" style="margin-right:3px" @click="save"><i class="fa fa-clipboard"></i> Save</button>
-        <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
-        <button type="button" :class="classList" style="margin-right:3px" @click="reset"><i class="fa fa-undo"></i> Reset</button>
+    <div>
+        <div v-if="isLoading" class="w3-row w3-small">
+            <button type="button" :class="classList" style="margin-right:3px" disabled><i class="w3-spin fa fa-spinner"></i> Save</button>
+            <button type="button" :class="classList" style="margin-right:3px" disabled><i class="w3-spin fa fa-spinner"></i> Cancel</button>
+            <button type="button" :class="classList" style="margin-right:3px" disabled><i class="w3-spin fa fa-spinner"></i> Reset</button>
+        </div>
+        <div v-else class="w3-row w3-small">
+            <button type="button" :class="classList" style="margin-right:3px" @click="save"><i class="fa fa-clipboard"></i> Save</button>
+            <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
+            <button type="button" :class="classList" style="margin-right:3px" @click="reset"><i class="fa fa-undo"></i> Reset</button>
+        </div>
     </div>
+    
 </template>
 <script>
 import { HTTPRepo } from '../../axios/http-common'
@@ -34,10 +42,16 @@ export default {
         btnMarginBottom: {
             type: Boolean,
             default: false
+        },
+        isLoading: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {
         cancel(){
+            if(this.isLoading)
+                return
             this.$emit('cancel')
         },
         save(){

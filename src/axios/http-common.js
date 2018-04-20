@@ -39,3 +39,17 @@ export const HTTPUpload = axios.create({
         password: 'leoliu543'
     },
 })
+export const HTTPDownload = axios.create({
+    baseURL: `http://192.168.27.63:8080/zuul/backend-trinity-repository/`,
+    timeout: 60000,
+    withCredentials: true,
+    responseType: 'blob',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    //responseType: 'json',
+    auth: {
+        username: 'leoliu',
+        password: 'leoliu543'
+    },
+})
