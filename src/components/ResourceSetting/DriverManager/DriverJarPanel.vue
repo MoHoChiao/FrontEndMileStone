@@ -50,7 +50,7 @@
 <script>
 import { HTTPRepo,HTTPUpload,errorHandle } from '../../../axios/http-common';
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue';
-import { upload } from './file-upload.fake.service'; // fake service
+import { upload } from '../../../util_js/file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 export default {

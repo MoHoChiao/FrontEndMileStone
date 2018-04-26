@@ -70,7 +70,7 @@
 </template>
 <script>
 import { HTTPRepo } from '../../../axios/http-common'
-import { upload } from './file-upload.fake.service'; // fake service
+import { upload } from '../../../util_js/file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;

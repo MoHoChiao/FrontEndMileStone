@@ -41,8 +41,8 @@
 
 <script>
   // swap as you need
-  import { upload } from './file-upload.fake.service'; // fake service
-  // import { upload } from './file-upload.service';   // real service
+  import { upload } from '../../../utl_js/file-upload.fake.service'; // fake service
+  // import { upload } from '../../../util_js/file-upload.service';   // real service
   import { wait } from './utils';
 
   const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;

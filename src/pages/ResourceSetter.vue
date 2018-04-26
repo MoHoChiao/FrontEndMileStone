@@ -53,7 +53,7 @@
                     <div class="w3-card-4 w3-round">
                         <div class="w3-signal-white">
                             <button @click="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Instances</button>
-                            <div id="Demo1" class="w3-hide w3-container">
+                            <div id="Demo1" class="w3-hide w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getAlias" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>Alias Reference</a>
@@ -66,7 +66,7 @@
                                 </p>
                             </div>
                             <button @click="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Frequency Events</button>
-                            <div id="Demo3" class="w3-hide w3-container">
+                            <div id="Demo3" class="w3-hide w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
@@ -76,7 +76,7 @@
                                 </p>
                             </div>
                             <button @click="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-upload fa-fw w3-margin-right"></i>File Center</button>
-                            <div id="Demo2" class="w3-hide w3-container">
+                            <div id="Demo2" class="w3-hide w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
