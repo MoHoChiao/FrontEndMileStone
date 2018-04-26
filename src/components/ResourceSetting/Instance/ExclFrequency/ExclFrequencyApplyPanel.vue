@@ -129,7 +129,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 import ApplySelectionWindow from './ApplySelectionWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -220,28 +220,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let msg = error.response.data
-
-                        if(error.response.data.message){
-                            msg = error.response.data.error
-                            msg += ". " + error.response.data.message
-                            if(error.response.data.exception)
-                                msg = error.response.data.exception + ' [' + msg +']'
-                        }
-
-                        let newStatus = {
-                            "msg": msg,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             }
             
@@ -257,28 +236,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let msg = error.response.data
-
-                        if(error.response.data.message){
-                            msg = error.response.data.error
-                            msg += ". " + error.response.data.message
-                            if(error.response.data.exception)
-                                msg = error.response.data.exception + ' [' + msg +']'
-                        }
-
-                        let newStatus = {
-                            "msg": msg,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             }
             
@@ -294,28 +252,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let msg = error.response.data
-
-                        if(error.response.data.message){
-                            msg = error.response.data.error
-                            msg += ". " + error.response.data.message
-                            if(error.response.data.exception)
-                                msg = error.response.data.exception + ' [' + msg +']'
-                        }
-
-                        let newStatus = {
-                            "msg": msg,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             }
             
@@ -379,19 +316,7 @@ export default {
                 this.changeDeleteWindowStatus()
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         compositionName(list_info){

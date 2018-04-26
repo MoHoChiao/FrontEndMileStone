@@ -115,7 +115,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../axios/http-common'
 import ApplyAccountsWindow from './ApplyAccountsWindow.vue'
 import ApplyRolesWindow from './ApplyRolesWindow.vue'
 
@@ -244,19 +244,7 @@ export default {
                 }
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getPermissionOnlyForRole(){
@@ -282,19 +270,7 @@ export default {
                 }
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         changeApplyAccountWindowStatus(){

@@ -48,7 +48,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPUpload } from '../../../axios/http-common';
+import { HTTPRepo,HTTPUpload,errorHandle } from '../../../axios/http-common';
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue';
 import { upload } from './file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -119,19 +119,7 @@ export default {
             })
             .catch(error => {
                 this.delButtonLoading = false
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         filesChange(fieldName, fileList) {
@@ -202,19 +190,7 @@ export default {
             })
             .catch(error => {
                 this.$parent.new_isLoading = false
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             });
         },
         filesUpload(formData){
@@ -234,19 +210,7 @@ export default {
                 })
                 .catch(error => {
                     this.$parent.new_isLoading = false
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
         }
     },

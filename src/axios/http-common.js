@@ -28,7 +28,7 @@ export const HTTPRepo = axios.create({
 })
 export const HTTPUpload = axios.create({
     baseURL: `http://192.168.27.63:8080/zuul/backend-trinity-repository/`,
-    timeout: 30000,
+    timeout: 100000,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
@@ -53,3 +53,33 @@ export const HTTPDownload = axios.create({
         password: 'leoliu543'
     },
 })
+
+export function errorHandle(store, error) {
+    if (error.response && error.response.data) {
+        let msg = error.response.data
+
+        if (error.response.data.message) {
+            if (error.response.data.error) {
+                msg = error.response.data.error + ". "
+                msg += error.response.data.message
+            } else {
+                msg = error.response.data.message
+            }
+
+            if (error.response.data.exception)
+                msg = error.response.data.exception + ' [' + msg + ']'
+        }
+
+        let newStatus = {
+            "msg": msg,
+            "status": "Error"
+        }
+        store.dispatch('setSystemStatus', newStatus)
+    } else {
+        let newStatus = {
+            "msg": error.message,
+            "status": "Error"
+        }
+        store.dispatch('setSystemStatus', newStatus)
+    }
+}

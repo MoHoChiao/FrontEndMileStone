@@ -1,5 +1,5 @@
 <template>
-    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+    <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <driver-jar-panel slot="content" 
                 :driverName="driverName" :jarFiles="jarFiles" 
         ></driver-jar-panel>
@@ -20,10 +20,6 @@ export default {
         windowBgColor: {
             type: String,
             default: 'camo-black'
-        },
-        windowAlive: {
-            type: Boolean,
-            default: false
         },
         driverName: '',
         jarFiles: {

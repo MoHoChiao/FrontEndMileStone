@@ -94,7 +94,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 
 export default {
     data() {
@@ -213,19 +213,7 @@ export default {
                 this.entities = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getCategories(){
@@ -251,19 +239,7 @@ export default {
                 this.categories = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getJobs(){
@@ -287,19 +263,7 @@ export default {
                 this.jobs = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         changeSelectedTableStatus(){
@@ -321,19 +285,7 @@ export default {
                 }
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         clearSelectedRecord(tr, whichTable){

@@ -291,7 +291,7 @@
   </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 import myDatepicker from '../../DatetimePicker.vue'
 import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
@@ -702,19 +702,7 @@ export default {
                 this.allCategoryLists = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getFrequencyList(){    //Get frequency list by freqUid
@@ -804,35 +792,11 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getAllFrequencyList(){
@@ -842,19 +806,7 @@ export default {
                 this.datetype = "Manually"
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getAllWCs(){    //Get all working calendar
@@ -870,19 +822,7 @@ export default {
                 this.allWCLists = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         changePatternWindowStatus(){
@@ -916,19 +856,7 @@ export default {
                     this.changePatternWindowStatus()
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
         },
         getYearNumbers(){

@@ -176,7 +176,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -316,19 +316,7 @@ export default {
                 this.freqCategories = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getFreq(){
@@ -348,19 +336,7 @@ export default {
                 this.freqs = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getEntities(){
@@ -377,19 +353,7 @@ export default {
                 this.entities = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getCategories(){
@@ -415,19 +379,7 @@ export default {
                 this.categories = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getJobsOrFlows(){
@@ -461,19 +413,7 @@ export default {
                 this.jobsOrFlows = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         clearSelectedRecord(tr, whichTable){
@@ -516,19 +456,7 @@ export default {
                         this.cancel()
                     })
                     .catch(error => {
-                        if (error.response && error.response.data) {
-                            let newStatus = {
-                                "msg": error.response.data,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        } else {
-                            let newStatus = {
-                                "msg": error.message,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        }
+                        errorHandle(this.$store, error)
                     })
                 }else{
                     let newStatus = {
@@ -549,19 +477,7 @@ export default {
                         this.cancel()
                     })
                     .catch(error => {
-                        if (error.response && error.response.data) {
-                            let newStatus = {
-                                "msg": error.response.data,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        } else {
-                            let newStatus = {
-                                "msg": error.message,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        }
+                        errorHandle(this.$store, error)
                     })
                 }else{
                     let newStatus = {
@@ -582,19 +498,7 @@ export default {
                         this.cancel()
                     })
                     .catch(error => {
-                        if (error.response && error.response.data) {
-                            let newStatus = {
-                                "msg": error.response.data,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        } else {
-                            let newStatus = {
-                                "msg": error.message,
-                                "status": "Error"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        }
+                        errorHandle(this.$store, error)
                     })
                 }else{
                     let newStatus = {

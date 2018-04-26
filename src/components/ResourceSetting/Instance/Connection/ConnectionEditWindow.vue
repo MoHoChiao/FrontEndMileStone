@@ -9,7 +9,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import ConnectionForm from './ConnectionForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -154,19 +154,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             }
         },

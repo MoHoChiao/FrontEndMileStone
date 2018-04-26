@@ -8,7 +8,7 @@
     </over-lay-loading-div>
 </template>
 <script>
-import { HTTPRepo } from '../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../axios/http-common'
 import DriverEditForm from './DriverEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
@@ -58,19 +58,7 @@ export default {
                 })
                 .catch(error => {
                     this.isLoading = false
-                    if (error.response && error.response.data) {
-                        let newStatus = {
-                            "msg": error.response.data,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
             }
         },
@@ -89,19 +77,7 @@ export default {
             })
             .catch(error => {
                 this.isLoading = false
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         }
     },

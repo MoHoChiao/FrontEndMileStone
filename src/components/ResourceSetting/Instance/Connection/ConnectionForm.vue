@@ -214,7 +214,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 
 export default {
     data() {
@@ -562,27 +562,7 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                 })
                 .catch(error => {
-                    if (error.response && error.response.data) {
-                        let msg = error.response.data
-
-                        if(error.response.data.message){
-                            msg = error.response.data.message
-                            if(error.response.data.exception)
-                                msg = error.response.data.exception + ' [' + msg +']'
-                        }
-
-                        let newStatus = {
-                            "msg": msg,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let newStatus = {
-                            "msg": error.message,
-                            "status": "Error"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    }
+                    errorHandle(this.$store, error)
                 })
         },
         reset(){
@@ -667,19 +647,7 @@ export default {
                 this.allCategoryObjs = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         getJDBCInfo(){  //Get all jdbc connection info
@@ -688,19 +656,7 @@ export default {
                 this.jdbcDriverInfo = response.data
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         convertUserIdAndPassword(){

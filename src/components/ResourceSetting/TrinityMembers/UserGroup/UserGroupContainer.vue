@@ -85,7 +85,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
 import FilterPanel from '../../FilterPanel.vue'
 import UserGroupEditPanel from './UserGroupEditPanel.vue'
 import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
@@ -167,19 +167,7 @@ export default {
                         this.$refs.filter.isQuery = false
                 }
 
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         changeEditable(index, content){
@@ -221,19 +209,7 @@ export default {
                 this.changeDeleteWindowStatus(-1, '', '')
             })
             .catch(error => {
-                if (error.response && error.response.data) {
-                    let newStatus = {
-                        "msg": error.response.data,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                } else {
-                    let newStatus = {
-                        "msg": error.message,
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
+                errorHandle(this.$store, error)
             })
         },
         changeShowMode(){
