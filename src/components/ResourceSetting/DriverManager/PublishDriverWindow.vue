@@ -32,7 +32,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo, errorHandle } from '../../../axios/http-common'
+import { HTTPRepo, errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import FormButton from '../FormButton.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';

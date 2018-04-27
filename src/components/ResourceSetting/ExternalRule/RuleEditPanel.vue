@@ -1,7 +1,7 @@
 <template>
     <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText">
         <div slot="content">
-            <driver-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></driver-edit-form>
+            <rule-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></rule-edit-form>
             <hr class="w3-border-grey">
             <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 </template>
 <script>
 import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
-import DriverEditForm from './DriverEditForm.vue'
+import RuleEditForm from './RuleEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -82,7 +82,7 @@ export default {
         }
     },
     components: {
-        'driver-edit-form': DriverEditForm,
+        'rule-edit-form': RuleEditForm,
         'form-button': FormButton,
         'over-lay-loading-div': OverlayLoadingDIV
     }

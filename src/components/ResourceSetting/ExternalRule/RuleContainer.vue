@@ -1,9 +1,9 @@
 <template>
     <div>
-        <driver-add-window v-if="addWindowAlive" 
-                            window-title="Add New Driver" 
+        <rule-add-window v-if="addWindowAlive" 
+                            window-title="Add New External Rule" 
                             @closeAdd="changeAddWindowStatus" 
-        ></driver-add-window>
+        ></rule-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive" 
                             :deleteName="deleteName" 
                             :is-loading="delButtonLoading" 
@@ -11,18 +11,14 @@
                             window-bg-color="highway-schoolbus" 
                             btn-color="signal-white" 
                             @closeDelete="changeDeleteWindowStatus" 
-                            @confirmDelete="deleteDriver" 
+                            @confirmDelete="deleteRule" 
         ></confirm-delete-window>
-        <driver-jar-window v-if="attachWindowAlive"  
-                            window-title="Attach Jar To Driver" 
-                            :driverName="selectedDriverRecord.name" 
-                            :jarFiles="selectedDriverRecord.jarFiles" 
+        <rule-jar-window v-if="attachWindowAlive"  
+                            window-title="Attach External Rule Files" 
+                            :driverName="selectedRuleRecord.name" 
+                            :jarFiles="selectedRuleRecord.jarFiles" 
                             @closeApply="changeJarWindowStatus" 
-        ></driver-jar-window>
-        <publish-driver-window v-if="publishWindowAlive"  
-                            window-title="Publish Driver To JCS" 
-                            @closeApply="changePublishWindowStatus" 
-        ></publish-driver-window>
+        ></rule-jar-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -30,28 +26,21 @@
                         <div class="w3-container">
                             <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                                 <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                                <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Driver Manager</i>
+                                <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> External Rule</i>
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-file-archive-o w3-button" title="Import/Export/Publish" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
-                                        <div v-if="!allOverlayLoading">
-                                            <form enctype="multipart/form-data" novalidate>
-                                                <label>
-                                                    <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
-                                                    <input type="file" name="file" 
-                                                        @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                                                        accept=".zip" class="input-file">
-                                                </label>
-                                            </form>
-                                            <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true" @click="exportJDBC"> Export Drivers</i>
-                                            <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Drivers" aria-hidden="true" @click="changePublishWindowStatus"> Publish Drivers</i>
-                                        </div>
-                                    </div>
+                                    <form enctype="multipart/form-data" novalidate>
+                                        <label>
+                                            <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import External Rule" aria-hidden="true"></i>
+                                            <input type="file" name="file" 
+                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                                accept=".zip" class="input-file">
+                                        </label>
+                                    </form>
                                 </span>
                                 <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getDrivers"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getRules"></i>
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-search w3-button" title="Search Driver By Name" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
@@ -60,7 +49,7 @@
                                                 <input class=" w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
                                             </div>
                                             <div class="w3-col m4">
-                                                <a @click="getDrivers" class="w3-button w3-theme-d2">Go</a>
+                                                <a @click="getRules" class="w3-button w3-theme-d2">Go</a>
                                             </div>
                                         </div>
                                     </div>
@@ -79,8 +68,8 @@
                             <p>
                                 {{ content.name }}
                             </p>
-                            <p><span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span></p>
-                            <driver-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></driver-jar-panel>
+                            <br>
+                            <rule-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></rule-jar-panel>
                             <br>
                             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                                 <i class="fa fa-pencil"></i> Edit</button>
@@ -88,8 +77,8 @@
                                 <i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </over-lay-loading-div>
-                    <driver-edit-panel v-else :key="content.name+'EditPanel1'" 
-                        :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
+                    <rule-edit-panel v-else :key="content.name+'EditPanel1'" 
+                        :index="index" :content="content" @closeEdit="changeEditable"></rule-edit-panel>
                 </div>
             </div>
             <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
@@ -114,8 +103,8 @@
                             <span class="w3-hide-medium w3-hide-small"> Edit</span>
                         </button>
                     </div>
-                    <driver-edit-panel v-else :key="content.name+'EditPanel2'" 
-                        :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
+                    <rule-edit-panel v-else :key="content.name+'EditPanel2'" 
+                        :index="index" :content="content" @closeEdit="changeEditable"></rule-edit-panel>
                 </li>
             </ul>
         </div>
@@ -124,12 +113,11 @@
 </template>
 <script>
 import { HTTPRepo,HTTPDownload,HTTPUpload, errorHandle } from '../../../util_js/axios_util'
-import DriverEditPanel from './DriverEditPanel.vue'
-import DriverJarPanel from './DriverJarPanel.vue'
-import DriverAddWindow from './DriverAddWindow.vue'
-import PublishDriverWindow from './PublishDriverWindow.vue'
+import RuleEditPanel from './RuleEditPanel.vue'
+import RuleJarPanel from './RuleJarPanel.vue'
+import RuleAddWindow from './RuleAddWindow.vue'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
-import DriverJarWindow from './DriverJarWindow.vue'
+import RuleJarWindow from './RuleJarWindow.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -150,15 +138,15 @@ export default {
             deleteName: '',     //store which obj name will be delete
             allDriverObjs: [], //store all drivers info
             editable: [],   //for all driver content edit panel
-            selectedDriverRecord: new Object(),   //store which driver attach button has been clicked.
+            selectedRuleRecord: new Object(),   //store which driver attach button has been clicked.
             searchText: ''
         }
     },
     mounted() {
-        this.getDrivers()
+        this.getRules()
     },
     methods: {
-        getDrivers(e){
+        getRules(e){
             HTTPRepo.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
             .then(response => {
                 this.editable.fill(false) //close all edit form
@@ -187,20 +175,20 @@ export default {
         },
         changeJarWindowStatus(record){
             if(record)
-                this.selectedDriverRecord = record
+                this.selectedRuleRecord = record
             this.attachWindowAlive = !this.attachWindowAlive
         },
         changePublishWindowStatus(){
             this.publishWindowAlive = !this.publishWindowAlive
         },
-        deleteDriver(){
+        deleteRule(){
             if(this.deleteIndex === -1)
                 return
             if(this.deleteUid === '')
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get(`driver-manager/deleteDriverFolderAndProp`, {
+            HTTPRepo.get(`driver-manager/deleteRuleFolderAndProp`, {
                 params: {
                     driverName: this.deleteUid
                 }
@@ -289,7 +277,7 @@ export default {
                 this.allOverlayLoading = false
                 if(response.data === true){
                     this.allOverlayLoading = false
-                    this.getDrivers()
+                    this.getRules()
                     let newStatus = {
                         "msg": "Import ZIP File - jdbc.zip Success.",
                         "status": "Success"
@@ -329,12 +317,11 @@ export default {
         }
     },
     components: {
-        'driver-edit-panel': DriverEditPanel,
-        'driver-jar-panel': DriverJarPanel,
-        'driver-add-window': DriverAddWindow,
-        'publish-driver-window': PublishDriverWindow,
+        'rule-edit-panel': RuleEditPanel,
+        'rule-jar-panel': RuleJarPanel,
+        'rule-add-window': RuleAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'driver-jar-window': DriverJarWindow,
+        'rule-jar-window': RuleJarWindow,
         'over-lay-loading-div': OverlayLoadingDIV,
         'over-lay-loading': OverlayLoading
     }

@@ -18,6 +18,7 @@ import FrequencyContainer from '../components/ResourceSetting/Instance/Frequency
 import ExclFrequencyContainer from '../components/ResourceSetting/Instance/ExclFrequency/ExclFrequencyContainer.vue'
 import GlobalExclFrequencyWindow from '../components/ResourceSetting/Instance/ExclFrequency/GlobalExclFrequencyWindow.vue'
 import DriverContainer from '../components/ResourceSetting/DriverManager/DriverContainer.vue'
+import RuleContainer from '../components/ResourceSetting/ExternalRule/RuleContainer.vue'
 
 Vue.use(VueRouter);
 
@@ -139,6 +140,13 @@ export default new VueRouter({
                     path: 'DriverManager',
                     components: {
                         content: DriverContainer
+                    }
+                },
+                {
+                    name: 'RuleContainer',
+                    path: 'RuleContainer',
+                    components: {
+                        content: RuleContainer
                     }
                 }
             ]

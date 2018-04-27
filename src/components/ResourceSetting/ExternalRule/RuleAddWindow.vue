@@ -1,6 +1,6 @@
 <template>
     <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <driver-add-form slot="content" ref="driverAddForm" @filePreview="filePreview"></driver-add-form>
+        <rule-add-form slot="content" ref="driverAddForm" @filePreview="filePreview"></rule-add-form>
         <div slot="footer">
             <form-button btn-color="signal-white" :is-loading="addButtonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPUpload,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
-import DriverAddForm from './DriverAddForm.vue';
+import RuleAddForm from './RuleAddForm.vue';
 import FormButton from '../FormButton.vue';
 
 export default {
@@ -59,7 +59,7 @@ export default {
     },
     components: {
         'modal-window': ModalWindow,
-        'driver-add-form': DriverAddForm,
+        'rule-add-form': RuleAddForm,
         'form-button': FormButton
     }
 }

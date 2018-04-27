@@ -4,8 +4,8 @@
             <slot name="content"></slot>
         </div>
         <div class="overlay" v-if="new_isLoading">
-            <div class="loader"></div>
-            <div class="text">{{new_loadingText}}</div>
+            <div class="loader" :style="'width:' + loadingSize+ ';height:' + loadingSize"></div>
+            <div class="text" :style="'font-size:' +  textSize">{{new_loadingText}}</div>
         </div>
     </div>
 </template>
@@ -37,6 +37,14 @@ export default {
         loadingText: {
             type: String,
             default: 'Loading'
+        },
+        loadingSize: {
+            type: String,
+            default: '80px'
+        },
+        textSize: {
+            type: String,
+            default: '20px'
         }
     }
 }
@@ -61,7 +69,6 @@ export default {
     }
     .text {
         color: white;
-        font-size: 20px;
         position: absolute;
         top: 70%;
         left: 50%;
@@ -73,8 +80,6 @@ export default {
         border: 16px solid white;
         border-radius: 50%;
         border-top: 16px solid lightgrey;
-        width: 80px;
-        height: 80px;
         position: absolute;
         top: 20%;
         left: 45%;

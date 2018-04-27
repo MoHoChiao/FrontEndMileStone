@@ -61,7 +61,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo } from '../../../../util_js/axios_util'
 import myDatepicker from '../../DatetimePicker.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 

@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../axios/http-common'
+import { HTTPRepo } from '../../../../util_js/axios_util'
 import VarAndResourcePanel from './VarAndResourcePanel.vue'
 
 export default {

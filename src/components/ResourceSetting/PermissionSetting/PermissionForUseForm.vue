@@ -83,7 +83,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
 import ApplyAccountsWindow from './ApplyAccountsWindow.vue'
 import ApplyRolesWindow from './ApplyRolesWindow.vue'
 

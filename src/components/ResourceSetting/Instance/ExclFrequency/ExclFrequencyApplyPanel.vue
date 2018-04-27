@@ -129,7 +129,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
 import ApplySelectionWindow from './ApplySelectionWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 

@@ -81,7 +81,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo } from '../../axios/http-common'
+import { HTTPRepo } from '../../util_js/axios_util'
 import { mapGetters } from 'vuex'
 import page from './page.vue'
 

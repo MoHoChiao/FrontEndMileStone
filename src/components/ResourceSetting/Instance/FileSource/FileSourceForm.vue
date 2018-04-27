@@ -62,7 +62,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
 import DirectoryAsignForm from './DirectoryAsignForm.vue'
 import FileDesignForm from './FileDesignForm.vue'
 import JobTriggerForm from './JobTriggerForm.vue'

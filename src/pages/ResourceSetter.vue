@@ -80,7 +80,7 @@
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
-                                        <a href="#" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
+                                        <a @click="getRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
                                     </div>
                                 </p>
                             </div>
@@ -219,6 +219,9 @@ export default {
         getDrivers(e){
             this.$router.push({ name: 'DriverManager'})
         },
+        getRules(e){
+            this.$router.push({ name: 'RuleContainer'})
+        }
     },
     components: {
         'trinity-config-window': TrinityconfigWindow,

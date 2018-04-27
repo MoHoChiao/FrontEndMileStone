@@ -149,7 +149,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import FrequencyCategoryEditWindow from './FrequencyCategory/FrequencyCategoryEditWindow.vue'
 import FrequencyEditWindow from './FrequencyEditWindow.vue'

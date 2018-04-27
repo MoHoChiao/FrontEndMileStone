@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import AliasForm from './AliasForm.vue'
 import FormButton from '../../FormButton.vue'

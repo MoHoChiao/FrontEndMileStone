@@ -1,4 +1,4 @@
-import { HTTP } from '../../../axios/http-common';
+import { HTTP } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
 
 const types = {

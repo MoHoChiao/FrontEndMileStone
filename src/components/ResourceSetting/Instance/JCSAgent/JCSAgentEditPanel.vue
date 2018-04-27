@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../axios/http-common'
+import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
 import JCSAgentForm from './JCSAgentForm.vue'
 import FormButton from '../../FormButton.vue'
 
