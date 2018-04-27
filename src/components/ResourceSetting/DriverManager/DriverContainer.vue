@@ -72,7 +72,7 @@
             </div>
             <div v-if="showMode">
                 <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allDriverObjs">
-                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]">
+                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]" loadingSize="100px" textSize="30px">
                         <div slot="content">
                             <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                             <span class="w3-right w3-opacity">{{content.owner}}</span>

@@ -1,5 +1,5 @@
 <template>
-    <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText">
+    <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText" loadingSize="80px" textSize="20px">
         <div slot="content">
             <driver-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></driver-edit-form>
             <hr class="w3-border-grey">
