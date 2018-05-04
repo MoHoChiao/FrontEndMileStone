@@ -11,36 +11,77 @@
         ></confirm-delete-window>
         <div class="w3-small">
             <div class="w3-row">
-                <div class="w3-col m12">
-                    <div class="w3-responsive w3-card w3-round">
-                        <table class="w3-table-all">
-                            <tr class="w3-teal">
-                                <th class="w3-center" width="80%" style="padding-top:12px;padding-bottom:12px">Jar Name</th>
-                                <th class="w3-center" width="20%" style="padding-top:7px;padding-bottom:7px">
-                                    <form enctype="multipart/form-data" novalidate>
-                                        <label>
-                                            <i class="fa fa-upload w3-button w3-hover-none" title="Upload Files" aria-hidden="true"></i>
-                                            <input type="file" multiple :name="uploadFieldName" 
-                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                                                accept=".jar" class="input-file">
-                                        </label>
-                                    </form>
-                                </th>
-                            </tr>
-                        </table>
+                <!--All Files-->
+                <div class="w3-col m12 w3-section">
+                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                            External Library List
+                        </div>
                     </div>
-                    <div id="jarsContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:106px;word-break:break-all">
-                        <table class="w3-table-all">
-                            <tr :key="index+'JarListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(file, index) in new_jarFiles">
-                                <td class="w3-center" width="80%">
-                                    {{ file }}
+                    <div class="w3-col m12">
+                        <div class="w3-row">
+                            <div class="w3-col m10">
+                                <input :id="'SearchUserInput' + groupuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                                    placeholder="Search For Library..." @keyup="searchForUser()">
+                            </div>
+                            <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
+                                <form enctype="multipart/form-data" novalidate>
+                                    <label>
+                                        <i class="fa fa-upload w3-button w3-hover-none" title="Upload Files" aria-hidden="true"></i>
+                                        <input type="file" multiple :name="uploadFieldName" 
+                                            @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                            accept=".jar" class="input-file">
+                                    </label>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:102px;word-break:break-all">
+                            <table id="filesTable" class="w3-table-all">
+                                <tr :id="file.extjaruid" :key="index+'FileListTr'" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                    @click="clickOnFile(file.extjaruid, index)" v-for="(file, index) in new_files">
+                                <td class="w3-center" width="84%">
+                                    {{ file.filename.split('/')[1] }}
                                 </td>
-                                <td class="w3-center" width="20%" style="padding-top:0px;padding-bottom:0px">
+                                <td class="w3-center" width="16%" style="padding:3px 0px 0px 0px">
                                     <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
                                         aria-hidden="true" @click="changeDeleteWindowStatus(index, file)"></i>
                                 </td>
                             </tr>
-                        </table>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--All Rules-->
+                <div class="w3-col m12 w3-section">
+                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                            External Rule List
+                        </div>
+                    </div>
+                    <div class="w3-col m12">
+                        <div class="w3-row">
+                            <div class="w3-col m10">
+                                <input :id="'SearchUserInput' + groupuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                                    placeholder="Search For Rule..." @keyup="searchForUser()">
+                            </div>
+                            <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
+                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Apply Members" aria-hidden="true" @click="changeApplyWindowStatus"></i>
+                                <i class="fa fa-refresh w3-button w3-hover-none" title="Reload Members" aria-hidden="true" @click="getMembers"></i>
+                            </div>
+                        </div>
+                        <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
+                            <table id="rulesTable" class="w3-table-all">
+                                <tr :key="list_index+'UserListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyMembers">
+                                    <td class="w3-center" width="84%">
+                                        {{ compositionName(list_info) }}
+                                    </td>
+                                    <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
+                                        <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
+                                            aria-hidden="true" @click="changeDeleteWindowStatus(list_index, list_info)"></i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,7 +98,7 @@ export default {
     data() {
         return {
             delButtonLoading: false,
-            new_jarFiles: this.jarFiles,
+            new_files: this.files,
             memberUids: [],
             applyWindowAlive: false,
             deleteWindowAlive: false,  //for delete windows
@@ -70,7 +111,7 @@ export default {
     },
     props:{
         driverName: '',
-        jarFiles: {
+        files: {
             type: Array,
             default: () => [],
             required: true
@@ -78,14 +119,40 @@ export default {
     },
     watch: {
         /*
-         * 監視父元件的jarFiles值
-         * 一旦更新時, 則立即把子元件中的new_jarFiles也一併更新
+         * 監視父元件的files值
+         * 一旦更新時, 則立即把子元件中的new_files也一併更新
         */
-        jarFiles: function(newValue) {
-            this.new_jarFiles = newValue
+        files: function(newValue) {
+            this.new_files = newValue
         }
     },
+    created(){
+        this.new_files.concat(this.new_files)
+            this.new_files.concat(this.new_files)
+            this.new_files.concat(this.new_files)
+    },
     methods: {
+        clickOnFile(id, index){
+            let tr = document.getElementById(id)
+            this.clearSelectedFileRecord(tr)
+            
+            if (tr.className.indexOf('w3-blue-grey') == -1) {
+                tr.className = 'w3-blue-grey'
+                // this.selectedCategoryRecord = this.allCategoryObjs[index]
+                // this.selectedCategoryRecord.index = index //New prop is stores which category obj will be deleted in UI
+            } else {
+                tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+            }
+            // this.getFileSources()   //refresh file sources content
+        },
+        clearSelectedFileRecord(tr){
+            let table = document.getElementById('filesTable')
+            for(var i=0;i<table.childNodes.length;i++){  //先重設所有category row的class
+                if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                    table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+            }
+            this.selectedCategoryRecord = new Object()
+        },
         changeDeleteWindowStatus(index, file){
             this.deleteWindowAlive = !this.deleteWindowAlive
 
@@ -113,7 +180,7 @@ export default {
             HTTPRepo.get('driver-manager/deleteJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
             .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
-                this.new_jarFiles.splice(this.deleteIndex, 1)
+                this.new_files.splice(this.deleteIndex, 1)
                 this.delButtonLoading = false
                 this.changeDeleteWindowStatus()
             })
@@ -204,8 +271,8 @@ export default {
                     if(response.data.fileNameList){
                         for(let i=0;i<response.data.fileNameList.length;i++){
                             let fileName = response.data.fileNameList[i]
-                            if(!this.new_jarFiles.includes(fileName))
-                                this.new_jarFiles.unshift(fileName)
+                            if(!this.new_files.includes(fileName))
+                                this.new_files.unshift(fileName)
                         }
                     }
 
@@ -214,8 +281,8 @@ export default {
                     //above for DriverJarWindow.vue overlay
                     this.$emit('changeLoadingStatus',false)
 
-                    var jarsContainer = this.$el.querySelector("#jarsContainer")
-                    jarsContainer.scrollTop = -jarsContainer.scrollTop
+                    var filesContainer = this.$el.querySelector("#filesContainer")
+                    filesContainer.scrollTop = -filesContainer.scrollTop
                 })
                 .catch(error => {
                     //above for DriverContainer.vue overlay

@@ -4,7 +4,7 @@
         <div class="w3-container">
             <p class="w3-center">Page Size</p>
             <p>
-                <select class="w3-select w3-border w3-round" v-model="selectedSize" @chlick="changeSize">
+                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
                     <option value="-1" disabled selected>Size</option>
                     <option value="10">10</option>
                     <option value="20">20</option>

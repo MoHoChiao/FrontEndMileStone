@@ -13,14 +13,14 @@
                             @closeDelete="changeDeleteWindowStatus" 
                             @confirmDelete="deleteDriver" 
         ></confirm-delete-window>
-        <driver-jar-window v-if="attachWindowAlive"  
-                            window-title="Attach Jar To Driver" 
+        <driver-jar-window v-if="attachWindowAlive" 
+                            :window-title="'Attach Jar To ' + selectedDriverRecord.name"
                             :driverName="selectedDriverRecord.name" 
                             :jarFiles="selectedDriverRecord.jarFiles" 
                             @closeApply="changeJarWindowStatus" 
         ></driver-jar-window>
         <publish-driver-window v-if="publishWindowAlive"  
-                            window-title="Publish Driver To JCS" 
+                            window-title="Publish Drivers To JCS" 
                             @closeApply="changePublishWindowStatus" 
         ></publish-driver-window>
         <div class="w3-col m9 w3-animate-opacity">

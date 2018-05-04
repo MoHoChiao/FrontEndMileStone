@@ -54,7 +54,13 @@
             <p>
                 <div class="w3-small">
                     <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
-                    <span class="w3-medium">All Categories</span>
+                    <span>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                All Categories
+                            </div>
+                        </div>
+                    </span>
                     <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
                     <i class="fa fa-pencil w3-button w3-right" title="Edit Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
                     <i class="fa fa-plus w3-button w3-right" title="Add Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
@@ -75,7 +81,8 @@
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
                     <table id="categoryTable" class="w3-table-all w3-small">
                         <template v-for="(content, index) in allCategoryObjs">
-                        <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnCategory(content.conncategoryuid, index)">
+                        <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnCategory(content.conncategoryuid, index)">
                             <td class="w3-center" width="32%">
                                 <span>{{ content.conncategoryname }}</span>
                             </td>
@@ -100,8 +107,22 @@
                 <div class="w3-small">
                     <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
-                        <span class="w3-medium">Connections</span> ({{ selectedCategoryRecord.conncategoryname }})</span>
-                    <span v-else class="w3-medium">Connections</span>
+                        <span>
+                            <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                    Connections
+                                </div>
+                            </div>
+                        </span> 
+                        {{ selectedCategoryRecord.conncategoryname }}
+                    </span>
+                    <span v-else>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                Connections
+                            </div>
+                        </div>
+                    </span>
                     <span class="w3-dropdown-hover w3-right w3-hide-large">
                         <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
                         <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
@@ -135,7 +156,8 @@
                 </div>
                 <div id="connectionContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
                     <table id="connectionTable" class="w3-table-all w3-small">
-                        <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
+                        <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
                             <td width="36%">
                                 <span class="w3-badge w3-indigo">{{ content.connectiontype }}</span>
                                 &nbsp;

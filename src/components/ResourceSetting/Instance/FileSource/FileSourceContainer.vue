@@ -47,7 +47,13 @@
             <p>
                 <div class="w3-small">
                     <span><img src="/src/assets/images/resource_setter/filesource_category.png" alt="File Source Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
-                    <span class="w3-medium">All Categories</span>
+                    <span>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                All Categories
+                            </div>
+                        </div>
+                    </span>
                     <i class="fa fa-trash-o w3-button w3-right" title="Delete File Source Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
                     <i class="fa fa-pencil w3-button w3-right" title="Edit File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
                     <i class="fa fa-plus w3-button w3-right" title="Add File Source Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
@@ -68,7 +74,8 @@
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
                     <table id="categoryTable" class="w3-table-all w3-small">
                         <template v-for="(content, index) in allCategoryObjs">
-                        <tr :id="content.fscategoryuid" :key="content.fscategoryuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnCategory(content.fscategoryuid, index)">
+                        <tr :id="content.fscategoryuid" :key="content.fscategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnCategory(content.fscategoryuid, index)">
                             <td class="w3-center" width="32%">
                                 <span>{{ content.fscategoryname }}</span>
                             </td>
@@ -93,8 +100,22 @@
                 <div class="w3-small">
                     <span><img src="/src/assets/images/resource_setter/filesource.png" alt="File Source" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span v-if="selectedCategoryRecord && selectedCategoryRecord.fscategoryname">
-                        <span class="w3-medium">File Sources</span> ({{ selectedCategoryRecord.fscategoryname }})</span>
-                    <span v-else class="w3-medium">File Sources</span>
+                        <span>
+                            <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                    File Sources
+                                </div>
+                            </div>
+                        </span> 
+                        {{ selectedCategoryRecord.fscategoryname }}
+                    </span>
+                    <span v-else>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                File Sources
+                            </div>
+                        </div>
+                    </span>
                     <span class="w3-dropdown-hover w3-right w3-hide-large">
                         <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
                         <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
@@ -127,7 +148,8 @@
                 </div>
                 <div id="filesourceContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
                     <table id="filesourceTable" class="w3-table-all w3-small">
-                        <tr :id="content.filesourceuid" :key="content.filesourceuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnFileSource(content.filesourceuid, index)" v-for="(content, index) in allFileSourceObjs">
+                        <tr :id="content.filesourceuid" :key="content.filesourceuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnFileSource(content.filesourceuid, index)" v-for="(content, index) in allFileSourceObjs">
                             <td class="w3-center" width="32%">
                                 <span>{{ content.filesourcename }}</span>
                             </td>

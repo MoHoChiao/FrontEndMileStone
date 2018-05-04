@@ -14,9 +14,9 @@
                             @confirmDelete="deleteRule" 
         ></confirm-delete-window>
         <rule-jar-window v-if="attachWindowAlive"  
-                            window-title="Attach External Rule Files" 
-                            :driverName="selectedRuleRecord.name" 
-                            :jarFiles="selectedRuleRecord.jarFiles" 
+                            :window-title="'Attach Files To ' + selectedPackageRecord.packagename"
+                            :driverName="selectedPackageRecord.packagename" 
+                            :files="selectedPackageRecord.files" 
                             @closeApply="changeJarWindowStatus" 
         ></rule-jar-window>
         <div class="w3-col m9 w3-animate-opacity">
@@ -40,7 +40,7 @@
                                     </form>
                                 </span>
                                 <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getRules"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getPackages"></i>
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-search w3-button" title="Search Driver By Name" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
@@ -49,7 +49,7 @@
                                                 <input class=" w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
                                             </div>
                                             <div class="w3-col m4">
-                                                <a @click="getRules" class="w3-button w3-theme-d2">Go</a>
+                                                <a @click="getPackages" class="w3-button w3-theme-d2">Go</a>
                                             </div>
                                         </div>
                                     </div>
@@ -60,45 +60,45 @@
                 </div>
             </div>
             <div v-if="showMode">
-                <div :key="content.name" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allDriverObjs">
+                <div :key="content.packageuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allPackageObjs">
                     <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]">
                         <div slot="content">
-                            <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
-                            <span class="w3-right w3-opacity">{{content.owner}}</span>
+                            <img src="/src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                            <span class="w3-right w3-opacity">{{content.lastupdatetime}}</span>
                             <p>
-                                {{ content.name }}
+                                {{ content.packagename }}
                             </p>
-                            <br>
-                            <rule-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></rule-jar-panel>
-                            <br>
+                            <rule-jar-panel :key="content.packageuid+'JarPanel'" :driverName="content.packagename" :files="content.files"></rule-jar-panel>
+                            <hr class="w3-border-black w3-clear">
+                            <p class="w3-small">{{ content.description }}</p>
                             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                                 <i class="fa fa-pencil"></i> Edit</button>
-                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.name)">
+                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.packagename)">
                                 <i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </over-lay-loading-div>
-                    <rule-edit-panel v-else :key="content.name+'EditPanel1'" 
+                    <rule-edit-panel v-else :key="content.packageuid+'EditPanel1'" 
                         :index="index" :content="content" @closeEdit="changeEditable"></rule-edit-panel>
                 </div>
             </div>
             <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li :key="content.name+'li'" class="w3-bar w3-border-camo-black loading-area" v-for="(content, index) in allDriverObjs">
+                <li :key="content.packageuid+'li'" class="w3-bar w3-border-camo-black loading-area" v-for="(content, index) in allPackageObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{ content.owner }}</span>
+                        <img src="/src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
+                        <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                         <p>
-                            {{ content.name }}
+                            {{ content.packagename }}
                         </p>
-                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span>
-                        <button title="Delete This Driver" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.name)">
+                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.description }}</span>
+                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.packagename)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
                         </button>
-                        <button title="Attach Jar To Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeJarWindowStatus(content)">
+                        <button title="Attach Jar To Package" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeJarWindowStatus(content)">
                             <i class="fa fa-paperclip"></i>
                             <span class="w3-hide-medium w3-hide-small"> Attach</span>
                         </button>
-                        <button title="Edit This Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
+                        <button title="Edit This Package" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                             <i class="fa fa-pencil"></i>
                             <span class="w3-hide-medium w3-hide-small"> Edit</span>
                         </button>
@@ -136,21 +136,24 @@ export default {
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            allDriverObjs: [], //store all drivers info
+            allPackageObjs: [], //store all drivers info
             editable: [],   //for all driver content edit panel
-            selectedRuleRecord: new Object(),   //store which driver attach button has been clicked.
+            selectedPackageRecord: new Object(),   //store which driver attach button has been clicked.
             searchText: ''
         }
     },
     mounted() {
-        this.getRules()
+        this.getPackages()
     },
     methods: {
-        getRules(e){
-            HTTPRepo.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
+        getPackages(e){
+            let url = 'dm-ext-package/findAll'
+            if(this.searchText.trim().length > 0)
+                url = 'dm-ext-package/findByName?name=' + this.searchText.trim()
+            HTTPRepo.get(url)
             .then(response => {
                 this.editable.fill(false) //close all edit form
-                this.allDriverObjs = response.data
+                this.allPackageObjs = response.data
             })
             .catch(error => {
                 errorHandle(this.$store, error)
@@ -169,13 +172,13 @@ export default {
             }
             
             if(content !== undefined){
-                content.jarFiles = this.allDriverObjs[index].jarFiles   //由於後端不會再回傳jar files, 因此這裡把舊的代入
-                this.allDriverObjs[index] = content
+                content.files = this.allPackageObjs[index].files   //由於後端不會再回傳jar files, 因此這裡把舊的代入
+                this.allPackageObjs[index] = content
             }
         },
         changeJarWindowStatus(record){
             if(record)
-                this.selectedRuleRecord = record
+                this.selectedPackageRecord = record
             this.attachWindowAlive = !this.attachWindowAlive
         },
         changePublishWindowStatus(){
@@ -195,7 +198,7 @@ export default {
             })
             .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
-                this.allDriverObjs.splice(this.deleteIndex, 1)
+                this.allPackageObjs.splice(this.deleteIndex, 1)
                 this.editable.splice(this.deleteIndex, 1)
                 this.editable.fill(false) //close all edit form
                 this.delButtonLoading = false
@@ -213,17 +216,17 @@ export default {
             this.addWindowAlive = !this.addWindowAlive
             let index = -1
             if(content !== undefined){
-                for(let i=0;i<this.allDriverObjs.length;i++){
-                    if(this.allDriverObjs[i].name === content.name){
+                for(let i=0;i<this.allPackageObjs.length;i++){
+                    if(this.allPackageObjs[i].name === content.name){
                         index = i
                         break
                     }
                 }
                 if(index !== -1){   //若不為-1, 表示UI上有driver name相同的紀錄
-                    this.allDriverObjs.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
+                    this.allPackageObjs.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
                 }
                     
-                this.allDriverObjs.unshift(content) //add object to the top of array
+                this.allPackageObjs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
                 // this.editable.unshift(false)
             }
@@ -277,7 +280,7 @@ export default {
                 this.allOverlayLoading = false
                 if(response.data === true){
                     this.allOverlayLoading = false
-                    this.getRules()
+                    this.getPackages()
                     let newStatus = {
                         "msg": "Import ZIP File - jdbc.zip Success.",
                         "status": "Success"

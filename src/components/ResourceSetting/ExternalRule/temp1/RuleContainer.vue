@@ -1,15 +1,15 @@
 <template>
 <div>
   <!-- For Add/Edit Category Window -->
-  <frequency-category-edit-window :windowAlive="editCategoryWindowAlive" 
+  <jar-edit-window :windowAlive="editCategoryWindowAlive" 
                     window-title="Edit Frequency Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
                     :content="selectedCategoryRecord" 
                     :urlOp="operation" 
-  ></frequency-category-edit-window>
+  ></jar-edit-window>
   <!-- For Add/Edit Frequency Window -->
-  <frequency-edit-window :windowAlive="editFrequencyWindowAlive" 
+  <rule-edit-window :windowAlive="editFrequencyWindowAlive" 
                     @closeAdd="saveFrequencyWindowContentForAdd" 
                     @closeEdit="saveFrequencyWindowContentForEdit" 
                     @closeCopy="saveFrequencyWindowContentForCopy" 
@@ -17,7 +17,7 @@
                     :content="selectedFrequencyRecord" 
                     :selectedCategoryRecord="selectedCategoryRecord" 
                     :urlOp="operation" 
-  ></frequency-edit-window>
+  ></rule-edit-window>
   <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
@@ -35,21 +35,73 @@
                 <div class="w3-container">
                     <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                         <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Frequency</i>
+                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> External Rule</i>
                     </p>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Frequency Category Panel -->
+    <!-- Packages Panel -->
     <div>
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
                 <div class="w3-small">
                     <span><img src="/src/assets/images/resource_setter/frequency_category.png" alt="Frequency Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span>
-                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                        <div class="w3-tag w3-round w3-green" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-green w3-border w3-border-white">
+                                All Packages
+                            </div>
+                        </div>
+                    </span>
+                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Frequency Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency Category" aria-hidden="true" @click="getCategories"></i>
+                </div>
+            </p>
+            <p>
+              <div>
+                <div class="w3-responsive w3-card w3-round">
+                    <table class="w3-table-all w3-small">
+                        <tr class="w3-teal">
+                            <th class="w3-center" width="32%">Name</th>
+                            <th class="w3-center" width="46%">Description</th>
+                            <th class="w3-center" width="22%">Update Time</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
+                    <table id="categoryTable" class="w3-table-all w3-small">
+                        <template v-for="(content, index) in allCategoryObjs">
+                        <tr :id="content.freqcategoryuid" :key="content.freqcategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnCategory(content.freqcategoryuid, index)">
+                            <td class="w3-center" width="32%">
+                                <span>{{ content.freqcategoryname }}</span>
+                            </td>
+                            <td width="46%">
+                                <span>{{ content.description }}</span>
+                            </td>
+                            <td class="w3-center" width="22%">
+                                <span>{{ content.lastupdatetime }}</span>
+                            </td>
+                        </tr>
+                        </template>
+                    </table>
+                </div>
+              </div>
+            </p>
+        </div>
+    </div>
+    <!-- Jars Panel -->
+    <div>
+        <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
+            <p>
+                <div class="w3-small">
+                    <span><img src="/src/assets/images/resource_setter/frequency_category.png" alt="Frequency Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                    <span>
+                        <div class="w3-tag w3-round w3-green" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-green w3-border w3-border-white">
                                 All Categories
                             </div>
                         </div>
@@ -93,7 +145,7 @@
             </p>
         </div>
     </div>
-    <!-- Connection Panel -->
+    <!-- Rules Panel -->
     <div>
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
@@ -101,8 +153,8 @@
                     <span><img src="/src/assets/images/resource_setter/frequency.png" alt="Frequency" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
                     <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname">
                         <span>
-                            <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                            <div class="w3-tag w3-round w3-green" style="padding:3px;transform:rotate(-5deg)">
+                                <div class="w3-tag w3-round w3-green w3-border w3-border-white">
                                     Frequencies
                                 </div>
                             </div>
@@ -110,8 +162,8 @@
                         {{ selectedCategoryRecord.freqcategoryname }}
                     </span>
                     <span v-else>
-                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                        <div class="w3-tag w3-round w3-green" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-green w3-border w3-border-white">
                                 Frequencies
                             </div>
                         </div>
@@ -171,11 +223,11 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
-import FilterPanel from '../../FilterPanel.vue'
-import FrequencyCategoryEditWindow from './FrequencyCategory/FrequencyCategoryEditWindow.vue'
-import FrequencyEditWindow from './FrequencyEditWindow.vue'
-import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import FilterPanel from '../FilterPanel.vue'
+import JarEditWindow from './ExternalJar/JarEditWindow.vue'
+import RuleEditWindow from './RuleEditWindow.vue'
+import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
 
 export default {
     data() {
@@ -496,8 +548,8 @@ export default {
     },
     components: {
         'filter-panel': FilterPanel,
-        'frequency-category-edit-window': FrequencyCategoryEditWindow,
-        'frequency-edit-window': FrequencyEditWindow,
+        'jar-edit-window': JarEditWindow,
+        'rule-edit-window': RuleEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow
     }
 }

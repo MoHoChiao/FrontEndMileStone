@@ -76,7 +76,7 @@
                 </button>
                 <button title="Apply Permission To JCSAgent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
                     <i class="fa fa-universal-access"></i>
-                    <span class="w3-hide-medium w3-hide-small"> Permissiob</span>
+                    <span class="w3-hide-medium w3-hide-small"> Permission</span>
                 </button>
                 <button type="button" title="Edit This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
                     <i class="fa fa-pencil"></i>

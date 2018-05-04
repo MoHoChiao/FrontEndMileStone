@@ -35,7 +35,7 @@
                                 <td class="w3-center" width="80%">
                                     {{ file }}
                                 </td>
-                                <td class="w3-center" width="20%" style="padding-top:0px;padding-bottom:0px">
+                                <td class="w3-center" width="20%" style="padding:3px 0px 0px 0px">
                                     <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
                                         aria-hidden="true" @click="changeDeleteWindowStatus(index, file)"></i>
                                 </td>
