@@ -1,7 +1,7 @@
 <template>
     <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText">
         <div slot="content">
-            <rule-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></rule-edit-form>
+            <rule-edit-form ref="packageForm" :content="content"></rule-edit-form>
             <hr class="w3-border-grey">
             <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -12,28 +12,23 @@ import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
 import RuleEditForm from './RuleEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
-import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
+import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils'
 
 export default {
     data() {
         return {
-            driverClassList: [],
             loadingText: '',
             isLoading: false
         }
-    },
-    mounted(){
-        this.fetchDriverClass()
     },
     props: {
         content: {
             type: Object,
             default () {
                 return {
-                    name: '',
-                    url: '',
-                    driver: '',
-                    owner: ''
+                    packageuid: '',
+                    packagename: '',
+                    description: ''
                 }
             }
         },
@@ -44,7 +39,7 @@ export default {
             this.$emit('closeEdit', this.index)
         },
         save(){
-            let postContent = this.$refs.driverEditForm.save()
+            let postContent = this.$refs.packageForm.save()
             
             if(postContent){
                 this.loadingText = 'Save ' + this.content.name + '...'
@@ -63,22 +58,7 @@ export default {
             }
         },
         reset(){
-            this.$refs.driverEditForm.reset()
-        },
-        fetchDriverClass(){
-            this.loadingText = 'Fetch Driver Class...'
-            this.isLoading = true
-            
-            HTTPRepo.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.content.name)
-            .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
-            .then(response => {
-                this.driverClassList = response.data
-                this.isLoading = false
-            })
-            .catch(error => {
-                this.isLoading = false
-                errorHandle(this.$store, error)
-            })
+            this.$refs.packageForm.reset()
         }
     },
     components: {

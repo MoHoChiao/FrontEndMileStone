@@ -1,23 +1,18 @@
 <template>
     <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <rule-add-form slot="content" ref="driverAddForm" @filePreview="filePreview"></rule-add-form>
+        <rule-add-form slot="content" ref="packageAddForm"></rule-add-form>
         <div slot="footer">
-            <form-button btn-color="signal-white" :is-loading="addButtonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
+            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
 import RuleAddForm from './RuleAddForm.vue';
 import FormButton from '../FormButton.vue';
 
 export default {
-    data() {
-        return {
-            addButtonLoading: false,
-        }
-    },
     props: {
         windowTitle: {
             type: String,
@@ -30,31 +25,23 @@ export default {
     },
     methods: {
         cancel(){
-            if(this.addButtonLoading)
-                return
             this.$emit('closeAdd')
         },
-        filePreview(flag){
-            this.addButtonLoading = flag
-        },
         save(){
-            let formData = this.$refs.driverAddForm.save()
+            let postContent = this.$refs.packageAddForm.save()
 
-            if(formData){
-                this.addButtonLoading = true
-                HTTPUpload.post(`driver-manager/addDriverFolderAndProp`, formData)
+            if(postContent){
+                HTTPRepo.post(`dm-ext-package/add`, postContent)
                 .then(response => {
-                    this.addButtonLoading = false
                     this.$emit('closeAdd', response.data)
                 })
                 .catch(error => {
-                    this.addButtonLoading = false
                     errorHandle(this.$store, error)
                 })
             }
         },
         reset(){
-            this.$refs.driverAddForm.reset()
+            this.$refs.packageAddForm.reset()
         }
     },
     components: {

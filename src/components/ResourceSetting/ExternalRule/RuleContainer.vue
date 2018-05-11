@@ -11,10 +11,10 @@
                             window-bg-color="highway-schoolbus" 
                             btn-color="signal-white" 
                             @closeDelete="changeDeleteWindowStatus" 
-                            @confirmDelete="deleteRule" 
+                            @confirmDelete="deletePackage" 
         ></confirm-delete-window>
-        <rule-jar-window v-if="attachWindowAlive"  
-                            :window-title="'Attach Files To ' + selectedPackageRecord.packagename"
+        <rule-jar-window v-if="attachWindowAlive" 
+                            :window-title="'Attach Files To ' + selectedPackageRecord.packagename" 
                             :driverName="selectedPackageRecord.packagename" 
                             :files="selectedPackageRecord.files" 
                             @closeApply="changeJarWindowStatus" 
@@ -61,19 +61,19 @@
             </div>
             <div v-if="showMode">
                 <div :key="content.packageuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allPackageObjs">
-                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]">
+                    <over-lay-loading-div  v-if="editable[index] === undefined || !editable[index]" loadingSize="100px" textSize="20px">
                         <div slot="content">
                             <img src="/src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                             <span class="w3-right w3-opacity">{{content.lastupdatetime}}</span>
                             <p>
                                 {{ content.packagename }}
                             </p>
-                            <rule-jar-panel :key="content.packageuid+'JarPanel'" :driverName="content.packagename" :files="content.files"></rule-jar-panel>
+                            <rule-jar-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></rule-jar-panel>
                             <hr class="w3-border-black w3-clear">
                             <p class="w3-small">{{ content.description }}</p>
                             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
                                 <i class="fa fa-pencil"></i> Edit</button>
-                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.packagename)">
+                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content)">
                                 <i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </over-lay-loading-div>
@@ -90,7 +90,7 @@
                             {{ content.packagename }}
                         </p>
                         <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.description }}</span>
-                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.packagename)">
+                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
                         </button>
@@ -184,19 +184,18 @@ export default {
         changePublishWindowStatus(){
             this.publishWindowAlive = !this.publishWindowAlive
         },
-        deleteRule(){
+        deletePackage(){
             if(this.deleteIndex === -1)
                 return
             if(this.deleteUid === '')
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get(`driver-manager/deleteRuleFolderAndProp`, {
+            HTTPRepo.get(`dm-ext-package/delete`, {
                 params: {
-                    driverName: this.deleteUid
+                    uid: this.deleteUid
                 }
             })
-            .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.allPackageObjs.splice(this.deleteIndex, 1)
                 this.editable.splice(this.deleteIndex, 1)
@@ -216,60 +215,20 @@ export default {
             this.addWindowAlive = !this.addWindowAlive
             let index = -1
             if(content !== undefined){
-                for(let i=0;i<this.allPackageObjs.length;i++){
-                    if(this.allPackageObjs[i].name === content.name){
-                        index = i
-                        break
-                    }
-                }
-                if(index !== -1){   //若不為-1, 表示UI上有driver name相同的紀錄
-                    this.allPackageObjs.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
-                }
-                    
                 this.allPackageObjs.unshift(content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
                 // this.editable.unshift(false)
             }
         },
-        changeDeleteWindowStatus(index, name){
+        changeDeleteWindowStatus(index, p){
             this.deleteWindowAlive = !this.deleteWindowAlive
 
             /*
                 store which obj be delete
             */
             this.deleteIndex = index
-            this.deleteUid = name
-            this.deleteName = name
-        },
-        exportJDBC(){
-            this.allOverlayLoadingText = 'Export ZIP File - jdbc.zip...'
-            this.allOverlayLoading = true
-
-            HTTPDownload.get(`driver-manager/exportDriverZIP`)
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'jdbc.zip');
-                document.body.appendChild(link);
-                link.click();
-                this.allOverlayLoading = false
-
-                let newStatus = {
-                    "msg": "Export ZIP File - jdbc.zip Success.",
-                    "status": "Success"
-                }
-                this.$store.dispatch('setSystemStatus', newStatus)
-                return
-            })
-            .catch(error => {
-                this.allOverlayLoading = false
-                let newStatus = {
-                    "msg": 'Export jdbc.zip error! Please look at the error log.',
-                    "status": "Error"
-                }
-                this.$store.dispatch('setSystemStatus', newStatus)
-            })
+            this.deleteUid = p.packageuid
+            this.deleteName = p.packagename
         },
         importJDBC(formData){
             this.allOverlayLoadingText = 'Import ZIP File - jdbc.zip...'

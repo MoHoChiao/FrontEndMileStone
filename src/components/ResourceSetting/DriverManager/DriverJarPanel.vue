@@ -189,11 +189,14 @@ export default {
                 //above for DriverJarWindow.vue overlay
                 this.$emit('changeLoadingStatus',true)
 
-                
                 this.filesUpload(formData)
             })
             .catch(error => {
+                //above for DriverContainer.vue overlay
                 this.$parent.new_isLoading = false
+                //above for DriverJarWindow.vue overlay
+                this.$emit('changeLoadingStatus',false)
+
                 errorHandle(this.$store, error)
             });
         },

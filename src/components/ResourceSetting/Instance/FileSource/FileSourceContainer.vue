@@ -216,7 +216,7 @@ export default {
             if (tr.className.indexOf('w3-blue-grey') == -1) {
                 tr.className = 'w3-blue-grey'
                 this.selectedCategoryRecord = this.allCategoryObjs[index]
-                this.selectedCategoryRecord.index = index //New prop is stores which category obj will be deleted in UI
+                this.selectedCategoryRecord.index = index //New prop stores which category obj will be deleted in UI
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }

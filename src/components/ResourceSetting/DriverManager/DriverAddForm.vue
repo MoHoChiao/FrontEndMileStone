@@ -69,7 +69,6 @@
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../util_js/axios_util'
 import { upload } from '../../../util_js/file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
 

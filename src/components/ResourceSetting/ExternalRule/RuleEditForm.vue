@@ -2,22 +2,18 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>JDBC Driver</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Package Name</label>
             </div>
             <div class="w3-col m6">
-                <select class="w3-select w3-border w3-round" v-model="new_content.driver" style="padding:0px">
-                    <template v-for="(driverClass, index) in driverClassList">
-                        <option :key="index" :value="parseDriverClass(driverClass)">{{ driverClass }}</option>
-                    </template>
-                </select>
+                <input :class="inputClassList.name" v-model="new_content.packagename" type="text" maxlength="50" placeholder="Please Input Package Name">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>JDBC URL</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Description</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.url" v-model="new_content.url" type="text" maxlength="255" placeholder="Please Input URL">
+                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
     </div>
@@ -29,17 +25,17 @@ export default {
     data() {
         return {
             inputClassList: {
-                url: ['w3-input','w3-border']
+                name: ['w3-input','w3-border'],
+                description: ['w3-input','w3-border']
             },
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                name: this.content.name,
-                url: this.content.url,
-                driver: this.content.driver,
-                owner: this.content.owner,
+                packageuid: this.content.packageuid,
+                packagename: this.content.packagename,
+                description: this.content.description
             }
         }
     },
@@ -48,24 +44,19 @@ export default {
             type: Object,
             default () {
                 return {
-                    name: '',
-                    url: '',
-                    driver: '',
-                    owner: ''
+                    packageuid: '',
+                    packagename: '',
+                    description: ''
                 }
             }
-        },
-        driverClassList: {
-            type: Array,
-            default: []
         }
     },
     methods: {
         save(){
             this.clearInValid()
 
-            if(this.new_content.url === undefined || this.new_content.url.trim().length <= 0){
-                this.inputClassList.url.splice(2, 1, 'w3-red')
+            if(this.new_content.packagename === undefined || this.new_content.packagename.trim().length <= 0){
+                this.inputClassList.name.splice(2, 1, 'w3-red')
             }else{
                 return this.new_content
             }                
@@ -73,22 +64,18 @@ export default {
         reset(){
             this.clearInValid()
             
-            this.new_content.name = this.content.name
-            this.new_content.url = this.content.url
-            this.new_content.driver = this.content.driver
-            this.new_content.owner = this.content.owner
+            this.new_content.packageuid = this.content.packageuid
+            this.new_content.packagename = this.content.packagename
+            this.new_content.description = this.content.description
         },
         clearInValid(){
-            this.inputClassList.url.splice(2, 1)
-        },
-        parseDriverClass(driverClass){
-            return driverClass.substring(0,driverClass.indexOf(" "))
+            this.inputClassList.name.splice(2, 1)
         }
     }
 }
 </script>
 <style scoped>
-    input,select {
+    input {
         height: 30px
     }
 </style>
