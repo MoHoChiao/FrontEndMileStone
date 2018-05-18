@@ -1,5 +1,20 @@
 <template>
     <div>
+        <file-edit-window v-if="editFileindowAlive" 
+                            :index="this.modifyFileRecord.index" 
+                            :modifyFileRecord = "modifyFileRecord" 
+                            @closeEdit="closeEditFileWindowStatus" 
+        ></file-edit-window>
+        <rule-add-window v-if="addRuleWindowAlive" 
+                            :filename= "selectedFileRecord.filename" 
+                            :modifyRuleRecord = "modifyRuleRecord" 
+                            @closeAdd="closeAddRuleWindowStatus" 
+        ></rule-add-window>
+        <rule-edit-window v-if="editRuleWindowAlive" 
+                            :index="this.modifyRuleRecord.index" 
+                            :modifyRuleRecord = "modifyRuleRecord" 
+                            @closeEdit="closeEditRuleWindowStatus" 
+        ></rule-edit-window>
         <confirm-delete-window v-if="deleteLibFileWindowAlive" :windowAlive="deleteLibFileWindowAlive" 
             :deleteName="deleteName" 
             :is-loading="delButtonLoading" 
@@ -48,12 +63,15 @@
                             <table :id="'filesTable' + packageuid" class="w3-table-all">
                                 <tr :id="file.extjaruid" :key="index+'FileListTr'" class="w3-hover-blue-grey w3-hover-opacity" 
                                         v-for="(file, index) in new_files">
-                                <td class="w3-center" width="84%" @click="clickOnFile(file.extjaruid, index)" style="cursor: pointer">
+                                <td class="w3-center" width="40%" @click="clickOnFile(file.extjaruid, index)" style="cursor: pointer">
                                     {{ file.filename.split('/')[1] }}
+                                </td>
+                                <td class="w3-center" width="44%" @click="clickOnFile(file.extjaruid, index)" style="cursor: pointer">
+                                    {{ file.description }}
                                 </td>
                                 <td class="w3-center" width="16%" style="padding:3px 0px 0px 0px">
                                     <i class="fa fa-pencil w3-button w3-hover-none" title="Edit" 
-                                        aria-hidden="true" @click="changeDeleteLibFileWindowStatus(index, file)"></i>
+                                        aria-hidden="true" @click="clickOnEditFile(index, file)"></i>
                                     <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
                                         aria-hidden="true" @click="changeDeleteLibFileWindowStatus(index, file)"></i>
                                 </td>
@@ -63,7 +81,7 @@
                     </div>
                 </div>
                 <!--All Rules-->
-                <div v-if="this.selectedFileRecord !== null" class="w3-col m12 w3-section">
+                <div v-if="this.selectedFileRecord" class="w3-col m12 w3-section">
                     <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                             External Rule List
@@ -76,22 +94,22 @@
                                     placeholder="Search For Rule Name..." @keyup="searchForRule()">
                             </div>
                             <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Apply Members" aria-hidden="true" @click="changeAddRuleWindowStatus"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Rule" aria-hidden="true" @click="clickOnAddRule"></i>
                             </div>
                         </div>
                         <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                             <table :id="'rulesTable' + packageuid" class="w3-table-all">
                                 <tr :id="list_info.rulename" :key="list_index+'RuleListTr'" class="w3-hover-blue-grey w3-hover-opacity" 
                                             v-for="(list_info, list_index) in rules">
-                                    <td class="w3-center" width="30%" @click="clickOnRule(list_info.rulename, list_index)" style="cursor: pointer">
+                                    <td class="w3-center" width="30%">
                                         {{ list_info.rulename }}
                                     </td>
-                                    <td class="w3-center" width="54%" @click="clickOnRule(list_info.rulename, list_index)" style="cursor: pointer">
+                                    <td class="w3-center" width="54%">
                                         {{ list_info.description }}
                                     </td>
                                     <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
                                         <i class="fa fa-pencil w3-button w3-hover-none" title="Edit" 
-                                            aria-hidden="true" @click="changeDeleteRuleWindowStatus(list_index, list_info)"></i>
+                                            aria-hidden="true" @click="clickOnEditRule(list_index, list_info)"></i>
                                         <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
                                             aria-hidden="true" @click="changeDeleteRuleWindowStatus(list_index, list_info)"></i>
                                     </td>
@@ -106,6 +124,9 @@
 </template>
 <script>
 import { HTTPRepo,HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import FileEditWindow from './FileEditWindow.vue';
+import RuleAddWindow from './RuleAddWindow.vue';
+import RuleEditWindow from './RuleEditWindow.vue';
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue';
 import { upload } from '../../../util_js/file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -114,19 +135,20 @@ export default {
     data() {
         return {
             delButtonLoading: false,
-            new_files: this.files,
-            rules: [],
-            memberUids: [],
-            addRuleWindowAlive: false,
+            new_files: this.files,  //store all files in a package
+            rules: [],  //store all rules in a file
+            editFileindowAlive: false,   //for file edit windows
+            addRuleWindowAlive: false,   //for rule add windows
+            editRuleWindowAlive: false,   //for rule edit windows
             deleteLibFileWindowAlive: false,  //for lib file delete windows
             deleteRuleWindowAlive: false,  //for rule delete windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
             uploadFieldName: 'file',
-            uploadedFiles: [],
-            selectedFileRecord: null,
-            selectedRuleRecord: null
+            selectedFileRecord: undefined,  //for keeping which file has been selected
+            modifyFileRecord: undefined, //keep file data, for edit one file
+            modifyRuleRecord: undefined //keep rule data, for add or edit one rule
         }
     },
     props:{
@@ -150,7 +172,6 @@ export default {
         clickOnFile(id, index){
             let tr = document.getElementById(id)
             this.clearSelectedFileRecord(tr)
-            this.clearAllSelectedRuleRecord()
             
             if (tr.className.indexOf('w3-blue-grey') == -1) {
                 tr.className = 'w3-blue-grey'
@@ -162,18 +183,62 @@ export default {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
         },
-        clickOnRule(id, index){
-            let tr = document.getElementById(id)
-            this.clearSelectedRuleRecord(tr)
-            
-            if (tr.className.indexOf('w3-blue-grey') == -1) {
-                tr.className = 'w3-blue-grey'
-                this.selectedRuleRecord = new Object()
-                this.selectedRuleRecord = this.rules[index]
-                this.selectedRuleRecord.index = index //New prop stores which File obj will be deleted in UI
-            } else {
-                tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+        clickOnEditFile(index, file){
+            if(file){
+                this.modifyFileRecord = file
+                this.modifyFileRecord.index = index //傳現在是在編輯那一筆file至Edit Window元件
+                this.editFileindowAlive = true
             }
+        },
+        closeEditFileWindowStatus(index, new_description){
+            this.editFileindowAlive = false
+
+            if(new_description){
+                this.new_files[index].description = new_description
+            }
+            this.modifyFileRecord = undefined
+        },
+        clickOnAddRule(){
+            if(this.selectedFileRecord === undefined) 
+                    return
+            
+            HTTPRepo.get('dm-ext-rule/findNonSettingRulesByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
+            .then(response => {
+                this.modifyRuleRecord = new Object()
+                this.modifyRuleRecord.extjaruid = this.selectedFileRecord.extjaruid
+                this.modifyRuleRecord.non_setting_rules = response.data //傳送未被設定的rule至Add Rule Window元件
+
+                this.addRuleWindowAlive = true
+            })
+            .catch(error => {
+                errorHandle(this.$store, error)
+            })
+        },
+        closeAddRuleWindowStatus(new_rule){
+            this.addRuleWindowAlive = false
+
+            if(new_rule){
+                this.rules.unshift(new_rule)
+            }
+            this.modifyRuleRecord = undefined
+        },
+        clickOnEditRule(index, rule){
+            if(rule){
+                if(this.selectedFileRecord === undefined) 
+                    return
+            
+                this.modifyRuleRecord = rule
+                this.modifyRuleRecord.index = index //傳現在是在編輯那一筆rule至Edit Window元件
+                this.editRuleWindowAlive = true
+            }
+        },
+        closeEditRuleWindowStatus(index, edited_rule){
+            this.editRuleWindowAlive = false
+
+            if(edited_rule){
+                this.rules[index] = edited_rule
+            }
+            this.modifyRuleRecord = undefined
         },
         clearSelectedFileRecord(tr){
             let table = document.getElementById('filesTable' + this.packageuid)
@@ -181,7 +246,7 @@ export default {
                 if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
                     table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
             }
-            this.selectedFileRecord = null
+            this.selectedFileRecord = undefined
         },
         clearAllSelectedFileRecord(){
             let table = document.getElementById('filesTable' + this.packageuid)
@@ -190,27 +255,10 @@ export default {
                     table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
                 }
             }
-            this.selectedFileRecord = null
-        },
-        clearSelectedRuleRecord(tr){
-            let table = document.getElementById('rulesTable' + this.packageuid)
-            for(var i=0;i<table.childNodes.length;i++){  //先重設所有category row的class
-                if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
-                    table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
-            }
-            this.selectedRuleRecord = null
-        },
-        clearAllSelectedRuleRecord(){
-            let table = document.getElementById('rulesTable' + this.packageuid)
-            if(null !== table){
-                for(var i=0;i<table.childNodes.length;i++){
-                    table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
-                }
-            }
-            this.selectedRuleRecord = null
+            this.selectedFileRecord = undefined
         },
         getRules(e){
-            if(this.selectedFileRecord !== null){
+            if(this.selectedFileRecord){
                 HTTPRepo.get('dm-ext-rule/findByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
                 .then(response => {
                     this.rules = response.data
@@ -268,7 +316,6 @@ export default {
                 this.delButtonLoading = false
                 this.changeDeleteLibFileWindowStatus()
                 this.clearAllSelectedFileRecord()
-                this.clearAllSelectedRuleRecord()
             })
             .catch(error => {
                 this.delButtonLoading = false
@@ -280,7 +327,7 @@ export default {
                 return
             if(!this.deleteUid || this.deleteUid === '')
                 return
-            if(this.selectedFileRecord === null)
+            if(this.selectedFileRecord === undefined || this.selectedFileRecord === null)
                 return
 
             this.delButtonLoading = true
@@ -290,7 +337,6 @@ export default {
                 this.rules.splice(this.deleteIndex, 1)
                 this.delButtonLoading = false
                 this.changeDeleteRuleWindowStatus()
-                this.clearAllSelectedRuleRecord()
             })
             .catch(error => {
                 this.delButtonLoading = false
@@ -301,8 +347,8 @@ export default {
             // handle file changes
             var formData = new FormData()
 
-            if (fileList.length > 1 ) return
-
+            if (fileList.length !== 1) return
+           
             // append the files to FormData
             Array
             .from(Array(fileList.length).keys())
@@ -320,8 +366,7 @@ export default {
             this.uploadFile(formData);
         },
         uploadFile(formData){
-            alert(this.packageuid)
-            HTTPUpload.post(`dm-ext-jar/modify?packageUid=` + this.packageuid, formData)
+            HTTPUpload.post(`dm-ext-jar/add?packageUid=` + this.packageuid, formData)
             .then(wait(FAST_SPEED))
             .then(response => {
                 if(response.data){
@@ -334,7 +379,6 @@ export default {
                 this.$emit('changeLoadingStatus',false)
 
                 this.clearAllSelectedFileRecord()
-                this.clearAllSelectedRuleRecord()
 
                 var filesContainer = this.$el.querySelector("#filesTable" + this.packageuid)
                 filesContainer.scrollTop = -filesContainer.scrollTop
@@ -362,7 +406,6 @@ export default {
                 }
             }
             this.clearAllSelectedFileRecord()
-            this.clearAllSelectedRuleRecord()
         },
         searchForRule() {
             let input, filter, table, i
@@ -377,14 +420,13 @@ export default {
                     table.rows[i].style.display = "none";
                 }
             }
-            this.clearAllSelectedRuleRecord()
-        },
-        changeAddRuleWindowStatus(){
-            this.addRuleWindowAlive = !this.addRuleWindowAlive
         }
     },
     components: {
-        'confirm-delete-window': ConfirmDeleteWindow
+        'confirm-delete-window': ConfirmDeleteWindow,
+        'file-edit-window': FileEditWindow,
+        'rule-add-window': RuleAddWindow,
+        'rule-edit-window': RuleEditWindow
     }
 }
 </script>

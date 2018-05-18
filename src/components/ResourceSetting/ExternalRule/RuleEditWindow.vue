@@ -1,6 +1,6 @@
 <template>
-    <modal-window :window-title="'Add New Rule to ' + filename" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <rule-add-form slot="content" ref="ruleAddForm" :modifyRuleRecord="modifyRuleRecord"></rule-add-form>
+    <modal-window :window-title="'Edit Rule - ' + modifyRuleRecord.rulename" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <rule-edit-form slot="content" ref="ruleEditForm" :modifyRuleRecord="modifyRuleRecord"></rule-edit-form>
         <div slot="footer">
             <form-button btn-color="signal-white" :is-loading="buttonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
-import RuleAddForm from './RuleAddForm.vue';
+import RuleEditForm from './RuleEditForm.vue';
 import FormButton from '../FormButton.vue';
 
 export default {
@@ -23,9 +23,9 @@ export default {
             type: String,
             default: 'camo-black'
         },
-        filename: {
-            type: String,
-            default: ''
+        index:{
+            type: Number,
+            default: 0
         },
         modifyRuleRecord: {
             type: Object,
@@ -45,17 +45,17 @@ export default {
         cancel(){
             if(this.buttonLoading)
                 return
-            this.$emit('closeAdd')
+            this.$emit('closeEdit')
         },
         save(){
-            let postContent = this.$refs.ruleAddForm.save()
-
+            let postContent = this.$refs.ruleEditForm.save()
+            
             if(postContent){
                 this.buttonLoading = true
-                HTTPRepo.post(`dm-ext-rule/add`, postContent)
+                HTTPRepo.post(`dm-ext-rule/edit?targetRuleName=` + this.modifyRuleRecord.rulename, postContent)
                 .then(response => {
                     this.buttonLoading = false
-                    this.$emit('closeAdd', response.data)
+                    this.$emit('closeEdit', this.index, response.data)
                 })
                 .catch(error => {
                     this.buttonLoading = false
@@ -64,12 +64,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.ruleAddForm.reset()
+            this.$refs.ruleEditForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'rule-add-form': RuleAddForm,
+        'rule-edit-form': RuleEditForm,
         'form-button': FormButton
     }
 }

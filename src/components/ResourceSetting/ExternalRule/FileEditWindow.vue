@@ -1,6 +1,6 @@
 <template>
-    <modal-window :window-title="'Add New Rule to ' + filename" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <rule-add-form slot="content" ref="ruleAddForm" :modifyRuleRecord="modifyRuleRecord"></rule-add-form>
+    <modal-window :window-title="'Edit File - ' + modifyFileRecord.filename" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <file-edit-form slot="content" ref="fileEditForm" :modifyFileRecord="modifyFileRecord"></file-edit-form>
         <div slot="footer">
             <form-button btn-color="signal-white" :is-loading="buttonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 <script>
 import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
-import RuleAddForm from './RuleAddForm.vue';
+import FileEditForm from './FileEditForm.vue';
 import FormButton from '../FormButton.vue';
 
 export default {
@@ -23,20 +23,17 @@ export default {
             type: String,
             default: 'camo-black'
         },
-        filename: {
-            type: String,
-            default: ''
+        index:{
+            type: Number,
+            default: 0
         },
-        modifyRuleRecord: {
+        modifyFileRecord: {
             type: Object,
             default: function () {
                 return { 
-                    extjaruid: '', 
-                    rulename: '', 
-                    fullclasspath: '', 
-                    active: '1', 
-                    description: '',
-                    non_setting_rules: []
+                    extjaruid: '',
+                    filename: '',
+                    description: ''
                 }
             }
         }
@@ -45,17 +42,23 @@ export default {
         cancel(){
             if(this.buttonLoading)
                 return
-            this.$emit('closeAdd')
+            this.$emit('closeEdit')
         },
         save(){
-            let postContent = this.$refs.ruleAddForm.save()
-
+            let postContent = this.$refs.fileEditForm.save()
+            
             if(postContent){
                 this.buttonLoading = true
-                HTTPRepo.post(`dm-ext-rule/add`, postContent)
+
+                HTTPRepo.get(`dm-ext-jar/editDescriptionOnly`, {
+                    params: {
+                        extJarUid: postContent.extjaruid,
+                        description: postContent.description
+                    }
+                })
                 .then(response => {
                     this.buttonLoading = false
-                    this.$emit('closeAdd', response.data)
+                    this.$emit('closeEdit', this.index, response.data)
                 })
                 .catch(error => {
                     this.buttonLoading = false
@@ -64,12 +67,12 @@ export default {
             }
         },
         reset(){
-            this.$refs.ruleAddForm.reset()
+            this.$refs.fileEditForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'rule-add-form': RuleAddForm,
+        'file-edit-form': FileEditForm,
         'form-button': FormButton
     }
 }

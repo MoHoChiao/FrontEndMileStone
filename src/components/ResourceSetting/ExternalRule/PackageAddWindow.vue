@@ -1,23 +1,18 @@
 <template>
     <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <driver-add-form slot="content" ref="driverAddForm" @filePreview="filePreview"></driver-add-form>
+        <package-add-form slot="content" ref="packageAddForm"></package-add-form>
         <div slot="footer">
-            <form-button btn-color="signal-white" :is-loading="buttonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
+            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
-import DriverAddForm from './DriverAddForm.vue';
+import PackageAddForm from './PackageAddForm.vue';
 import FormButton from '../FormButton.vue';
 
 export default {
-    data() {
-        return {
-            buttonLoading: false,
-        }
-    },
     props: {
         windowTitle: {
             type: String,
@@ -30,36 +25,28 @@ export default {
     },
     methods: {
         cancel(){
-            if(this.buttonLoading)
-                return
             this.$emit('closeAdd')
         },
-        filePreview(flag){
-            this.buttonLoading = flag
-        },
         save(){
-            let formData = this.$refs.driverAddForm.save()
+            let postContent = this.$refs.packageAddForm.save()
 
-            if(formData){
-                this.buttonLoading = true
-                HTTPUpload.post(`driver-manager/addDriverFolderAndProp`, formData)
+            if(postContent){
+                HTTPRepo.post(`dm-ext-package/add`, postContent)
                 .then(response => {
-                    this.buttonLoading = false
                     this.$emit('closeAdd', response.data)
                 })
                 .catch(error => {
-                    this.buttonLoading = false
                     errorHandle(this.$store, error)
                 })
             }
         },
         reset(){
-            this.$refs.driverAddForm.reset()
+            this.$refs.packageAddForm.reset()
         }
     },
     components: {
         'modal-window': ModalWindow,
-        'driver-add-form': DriverAddForm,
+        'package-add-form': PackageAddForm,
         'form-button': FormButton
     }
 }

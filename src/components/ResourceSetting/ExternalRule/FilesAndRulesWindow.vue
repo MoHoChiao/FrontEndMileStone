@@ -3,9 +3,9 @@
         <div slot="content" class="loading-area">
             <over-lay-loading-div loadingSize="60px" textSize="16px">
                 <div slot="content">
-                    <rule-jar-panel  
-                        :driverName="driverName" :jarFiles="jarFiles" @changeLoadingStatus="changeLoadingStatus"
-                    ></rule-jar-panel>
+                    <files-rules-panel  
+                        :packageuid="packageuid" :files="files" @changeLoadingStatus="changeLoadingStatus"
+                    ></files-rules-panel>
                 </div>
             </over-lay-loading-div>
         </div>
@@ -15,7 +15,7 @@
 <script>
 import { HTTPRepo } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
-import RuleJarPanel from './RuleJarPanel.vue'
+import FilesAndRulesPanel from './FilesAndRulesPanel.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 
 export default {
@@ -33,8 +33,8 @@ export default {
             type: String,
             default: 'camo-black'
         },
-        driverName: '',
-        jarFiles: {
+        packageuid: '',
+        files: {
             type: Array,
             default: () => [],
             required: true
@@ -52,7 +52,7 @@ export default {
     },
     components: {
         'modal-window': ModalWindow,
-        'rule-jar-panel': RuleJarPanel,
+        'files-rules-panel': FilesAndRulesPanel,
         'over-lay-loading-div': OverlayLoadingDIV
     }
 }

@@ -2,11 +2,11 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>Package Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.freqcategoryname" type="text" 
-                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
+                <input :class="inputClassList.name" v-model="new_content.packagename" style="text-transform:uppercase" 
+                        type="text" maxlength="50" placeholder="Please Input Package Name">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -14,28 +14,26 @@
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
     </div>
 </template>
 <script>
-import { HTTPRepo } from '../../../../util_js/axios_util'
-
 export default {
     data() {
         return {
             inputClassList: {
                 name: ['w3-input','w3-border'],
-                desc: ['w3-input','w3-border']
+                description: ['w3-input','w3-border']
             },
             new_content: {
                 /*
                     javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
                     To avoid parent content to be changed.
                 */
-                freqcategoryuid: this.content.freqcategoryuid,
-                freqcategoryname: this.content.freqcategoryname,
+                packageuid: this.content.packageuid,
+                packagename: this.content.packagename,
                 description: this.content.description
             }
         }
@@ -45,8 +43,8 @@ export default {
             type: Object,
             default () {
                 return {
-                    freqcategoryuid: '',
-                    freqcategoryname: '',
+                    packageuid: '',
+                    packagename: '',
                     description: ''
                 }
             }
@@ -55,35 +53,30 @@ export default {
     methods: {
         save(){
             this.clearInValid()
-            
-            if(this.new_content.freqcategoryname === undefined || this.new_content.freqcategoryname.trim().length <= 0){
+
+            if(this.new_content.packagename === undefined || this.new_content.packagename.trim().length <= 0){
                 this.inputClassList.name.splice(2, 1, 'w3-red')
-            }else{
-                this.new_content.freqcategoryname = this.new_content.freqcategoryname.trim().toUpperCase()
+            }else{    
                 return this.new_content
-            }                
+            }
         },
         reset(){
             this.clearInValid()
             
-            this.new_content.freqcategoryuid = this.content.freqcategoryuid
-            this.new_content.freqcategoryname = this.content.freqcategoryname
+            this.new_content.name = this.content.name
             this.new_content.description = this.content.description
+
+            this.resetFileUploadObj()
         },
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
+            this.inputClassList.description.splice(2, 1)
         }
     }
 }
 </script>
-<style scoped>
-    th {
-        padding-top:13px
-    }
-    input,select {
-        height: 30px
-    }
-    input.w3-check,input.w3-radio {
-        height: 20px
-    }
+<style lang="scss">
+input {
+    height: 30px
+}
 </style>

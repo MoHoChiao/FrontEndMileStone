@@ -1,9 +1,9 @@
 <template>
     <div>
-        <rule-add-window v-if="addWindowAlive" 
-                            window-title="Add New External Rule" 
+        <package-add-window v-if="addWindowAlive" 
+                            window-title="Add New External Package" 
                             @closeAdd="changeAddWindowStatus" 
-        ></rule-add-window>
+        ></package-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive" 
                             :deleteName="deleteName" 
                             :is-loading="delButtonLoading" 
@@ -13,12 +13,12 @@
                             @closeDelete="changeDeleteWindowStatus" 
                             @confirmDelete="deletePackage" 
         ></confirm-delete-window>
-        <rule-jar-window v-if="attachWindowAlive" 
-                            :window-title="'Attach Files To ' + selectedPackageRecord.packagename" 
-                            :driverName="selectedPackageRecord.packagename" 
+        <files-rules-window v-if="attachWindowAlive" 
+                            :window-title="'Attach Rule Files To ' + selectedPackageRecord.packagename" 
+                            :packageuid="selectedPackageRecord.packageuid" 
                             :files="selectedPackageRecord.files" 
                             @closeApply="changeJarWindowStatus" 
-        ></rule-jar-window>
+        ></files-rules-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -68,7 +68,7 @@
                             <p>
                                 {{ content.packagename }}
                             </p>
-                            <rule-jar-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></rule-jar-panel>
+                            <files-rules-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></files-rules-panel>
                             <hr class="w3-border-black w3-clear">
                             <p class="w3-small">{{ content.description }}</p>
                             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
@@ -77,8 +77,8 @@
                                 <i class="fa fa-trash-o"></i> Delete</button>
                         </div>
                     </over-lay-loading-div>
-                    <rule-edit-panel v-else :key="content.packageuid+'EditPanel1'" 
-                        :index="index" :content="content" @closeEdit="changeEditable"></rule-edit-panel>
+                    <package-edit-panel v-else :key="content.packageuid+'EditPanel1'" 
+                        :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
                 </div>
             </div>
             <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
@@ -103,8 +103,8 @@
                             <span class="w3-hide-medium w3-hide-small"> Edit</span>
                         </button>
                     </div>
-                    <rule-edit-panel v-else :key="content.name+'EditPanel2'" 
-                        :index="index" :content="content" @closeEdit="changeEditable"></rule-edit-panel>
+                    <package-edit-panel v-else :key="content.name+'EditPanel2'" 
+                        :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
                 </li>
             </ul>
         </div>
@@ -113,11 +113,11 @@
 </template>
 <script>
 import { HTTPRepo,HTTPDownload,HTTPUpload, errorHandle } from '../../../util_js/axios_util'
-import RuleEditPanel from './RuleEditPanel.vue'
-import RuleJarPanel from './RuleJarPanel.vue'
-import RuleAddWindow from './RuleAddWindow.vue'
+import PackageEditPanel from './PackageEditPanel.vue'
+import FilesAndRulesPanel from './FilesAndRulesPanel.vue'
+import PackageAddWindow from './PackageAddWindow.vue'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
-import RuleJarWindow from './RuleJarWindow.vue'
+import FilesAndRulesWindow from './FilesAndRulesWindow.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -226,9 +226,11 @@ export default {
             /*
                 store which obj be delete
             */
-            this.deleteIndex = index
-            this.deleteUid = p.packageuid
-            this.deleteName = p.packagename
+            if(p){
+                this.deleteIndex = index
+                this.deleteUid = p.packageuid
+                this.deleteName = p.packagename
+            }
         },
         importJDBC(formData){
             this.allOverlayLoadingText = 'Import ZIP File - jdbc.zip...'
@@ -279,11 +281,11 @@ export default {
         }
     },
     components: {
-        'rule-edit-panel': RuleEditPanel,
-        'rule-jar-panel': RuleJarPanel,
-        'rule-add-window': RuleAddWindow,
+        'package-edit-panel': PackageEditPanel,
+        'files-rules-panel': FilesAndRulesPanel,
+        'package-add-window': PackageAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'rule-jar-window': RuleJarWindow,
+        'files-rules-window': FilesAndRulesWindow,
         'over-lay-loading-div': OverlayLoadingDIV,
         'over-lay-loading': OverlayLoading
     }

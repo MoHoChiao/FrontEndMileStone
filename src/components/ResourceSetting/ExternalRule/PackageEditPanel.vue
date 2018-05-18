@@ -1,7 +1,7 @@
 <template>
     <over-lay-loading-div :is-loading="isLoading" :loading-text="loadingText">
         <div slot="content">
-            <rule-edit-form ref="packageForm" :content="content"></rule-edit-form>
+            <package-edit-form ref="packageForm" :content="content"></package-edit-form>
             <hr class="w3-border-grey">
             <form-button :btn-margin-bottom="true" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -9,7 +9,7 @@
 </template>
 <script>
 import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
-import RuleEditForm from './RuleEditForm.vue'
+import PackageEditForm from './PackageEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils'
@@ -42,10 +42,10 @@ export default {
             let postContent = this.$refs.packageForm.save()
             
             if(postContent){
-                this.loadingText = 'Save ' + this.content.name + '...'
+                this.loadingText = 'Save ' + this.content.packagename + '...'
                 this.isLoading = true
 
-                HTTPRepo.post(`driver-manager/modifyDriverProp`, postContent)
+                HTTPRepo.post(`dm-ext-package/edit`, postContent)
                 .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
@@ -62,7 +62,7 @@ export default {
         }
     },
     components: {
-        'rule-edit-form': RuleEditForm,
+        'package-edit-form': PackageEditForm,
         'form-button': FormButton,
         'over-lay-loading-div': OverlayLoadingDIV
     }
