@@ -33,9 +33,9 @@
                                     <form enctype="multipart/form-data" novalidate>
                                         <label>
                                             <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import External Rule" aria-hidden="true"></i>
-                                            <input type="file" name="file" 
-                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                                                accept=".zip" class="input-file">
+                                            <input id="ExternalRuleInputFile" type="file" name="file" 
+                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" 
+                                                accept=".jar" class="input-file">
                                         </label>
                                     </form>
                                 </span>
@@ -232,25 +232,27 @@ export default {
                 this.deleteName = p.packagename
             }
         },
-        importJDBC(formData){
-            this.allOverlayLoadingText = 'Import ZIP File - jdbc.zip...'
+        importPackage(fileName, formData){
+            this.allOverlayLoadingText = 'Import Jar File - ' + fileName + '...'
             this.allOverlayLoading = true
 
-            HTTPUpload.post(`driver-manager/importDriverZIP`, formData)
+            HTTPUpload.post(`dm-ext-package/import`, formData)
             .then(response => {
                 this.allOverlayLoading = false
                 if(response.data === true){
                     this.allOverlayLoading = false
+                    
                     this.getPackages()
                     let newStatus = {
-                        "msg": "Import ZIP File - jdbc.zip Success.",
+                        "msg": "Import Jar File - " + fileName + " Success.",
                         "status": "Success"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
                     return
                 }else{
+                    this.getPackages()
                     let newStatus = {
-                        "msg": "Import jdbc.zip error! Please look at the error log.",
+                        "msg": "Import " + fileName + " error! Please look at the error log.",
                         "status": "Error"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
@@ -260,6 +262,7 @@ export default {
             })
             .catch(error => {
                 this.allOverlayLoading = false
+                this.getPackages()
                 errorHandle(this.$store, error)
             });
         },
@@ -267,7 +270,10 @@ export default {
             // handle file changes
             var formData = new FormData()
 
-            if (!fileList.length > 1) return
+            if (fileList.length !== 1) return
+
+            var fileName = fileList[0].name
+            if(fileName.toLowerCase().indexOf('.jar') === -1) return
 
             // append the files to FormData
             Array
@@ -276,8 +282,11 @@ export default {
                 formData.append(fieldName, fileList[x], fileList[x].name);
             });
 
-            // preview it
-            this.importJDBC(formData);
+            this.importPackage(fileName, formData);
+
+            //清掉file input內容, 讓它可以再次選擇相同的檔案名稱
+            let input = document.getElementById("ExternalRuleInputFile")
+            input.value=''
         }
     },
     components: {

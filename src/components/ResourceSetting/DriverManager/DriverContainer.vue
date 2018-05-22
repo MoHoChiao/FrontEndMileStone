@@ -40,7 +40,7 @@
                                             <form enctype="multipart/form-data" novalidate>
                                                 <label>
                                                     <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
-                                                    <input type="file" name="file" 
+                                                    <input id="DriverInputFile" type="file" name="file" 
                                                         @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
                                                         accept=".zip" class="input-file">
                                                 </label>
@@ -280,8 +280,8 @@ export default {
                 this.$store.dispatch('setSystemStatus', newStatus)
             })
         },
-        importJDBC(formData){
-            this.allOverlayLoadingText = 'Import ZIP File - jdbc.zip...'
+        importJDBC(fileName, formData){
+            this.allOverlayLoadingText = 'Import ZIP File - ' + fileName + '...'
             this.allOverlayLoading = true
 
             HTTPUpload.post(`driver-manager/importDriverZIP`, formData)
@@ -295,19 +295,18 @@ export default {
                         "status": "Success"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
-                    return
                 }else{
+                    this.getDrivers()
                     let newStatus = {
                         "msg": "Import jdbc.zip error! Please look at the error log.",
                         "status": "Error"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)
-                    return
                 }
-                
             })
             .catch(error => {
                 this.allOverlayLoading = false
+                this.getDrivers()
                 errorHandle(this.$store, error)
             });
         },
@@ -315,7 +314,10 @@ export default {
             // handle file changes
             var formData = new FormData()
 
-            if (!fileList.length > 1) return
+            if (!fileList.length !== 1) return
+
+            var fileName = fileList[0].name
+            if(fileName.toLowerCase().indexOf('.zip') === -1) return
 
             // append the files to FormData
             Array
@@ -325,7 +327,11 @@ export default {
             });
 
             // preview it
-            this.importJDBC(formData);
+            this.importJDBC(fileName, formData);
+
+            //清掉file input內容, 讓它可以再次選擇相同的檔案名稱
+            let input = document.getElementById("DriverInputFile")
+            input.value=''
         }
     },
     components: {
