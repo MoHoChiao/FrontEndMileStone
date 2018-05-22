@@ -15,7 +15,7 @@ export default {
     props: {
         windowTitle: {
             type: String,
-            default: 'Modify Global Exclude Frequency'
+            default: 'Modify Resource Monitor'
         },
         windowBgColor: {
             type: String,

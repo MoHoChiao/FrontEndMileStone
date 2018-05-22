@@ -41,7 +41,7 @@ export default {
     data() {
         return {
             selectedRecords: [],
-            checkAllFlag: false,      
+            checkAllFlag: false,
             addButtonLoading: false,
             allDriverObjs: []
         }

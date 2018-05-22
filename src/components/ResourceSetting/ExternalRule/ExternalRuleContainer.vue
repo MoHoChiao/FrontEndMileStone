@@ -19,6 +19,11 @@
                             :files="selectedPackageRecord.files" 
                             @closeApply="changeJarWindowStatus" 
         ></files-rules-window>
+        <publish-rule-window v-if="publishWindowAlive" 
+                            :window-title="'Publish Package - ' + selectedPackageRecord.packagename" 
+                            :packageUid="selectedPackageRecord.packageuid" 
+                            @closePublish="changePublishWindowStatus" 
+        ></publish-rule-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -39,10 +44,10 @@
                                         </label>
                                     </form>
                                 </span>
-                                <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeAddWindowStatus()"></i>
+                                <i class="fa fa-plus w3-button w3-right" title="Add New Package" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getPackages"></i>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-search w3-button" title="Search Driver By Name" aria-hidden="true"></i>
+                                    <i class="fa fa-search w3-button" title="Search Package By Name" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
                                         <div class="w3-row w3-panel">
                                             <div class="w3-col m8">
@@ -75,6 +80,8 @@
                                 <i class="fa fa-pencil"></i> Edit</button>
                             <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content)">
                                 <i class="fa fa-trash-o"></i> Delete</button>
+                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePublishWindowStatus(content)">
+                                <i class="fa fa-share-square"></i> Publish</button>
                         </div>
                     </over-lay-loading-div>
                     <package-edit-panel v-else :key="content.packageuid+'EditPanel1'" 
@@ -90,7 +97,11 @@
                             {{ content.packagename }}
                         </p>
                         <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.description }}</span>
-                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content)">
+                        <button title="Publish Rules To JCS Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" @click="changePublishWindowStatus(content)">
+                            <i class="fa fa-share-square"></i>
+                            <span class="w3-hide-medium w3-hide-small"> Publish</span>
+                        </button>
+                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeDeleteWindowStatus(index, content)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
                         </button>
@@ -116,6 +127,7 @@ import { HTTPRepo,HTTPDownload,HTTPUpload, errorHandle } from '../../../util_js/
 import PackageEditPanel from './PackageEditPanel.vue'
 import FilesAndRulesPanel from './FilesAndRulesPanel.vue'
 import PackageAddWindow from './PackageAddWindow.vue'
+import PublishRuleWindow from './PublishRuleWindow.vue'
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
 import FilesAndRulesWindow from './FilesAndRulesWindow.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
@@ -129,16 +141,16 @@ export default {
             allOverlayLoading: false,    //control the status of all page overlay loading
             allOverlayLoadingText: 'Loading',    //control the status of all page overlay loading
             showMode: true, //switch content list or table list
-            addWindowAlive: false,  //for add driver modal windows
+            addWindowAlive: false,  //for add Package modal windows
             attachWindowAlive: false, //for upload jar file modal windows
-            publishWindowAlive: false, //for publish driver file modal windows
-            deleteWindowAlive: false,  //for delete driver modal windows
+            publishWindowAlive: false, //for publish Package file modal windows
+            deleteWindowAlive: false,  //for delete Package modal windows
             deleteIndex: -1,    //store which index will be delete
             deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
-            allPackageObjs: [], //store all drivers info
-            editable: [],   //for all driver content edit panel
-            selectedPackageRecord: new Object(),   //store which driver attach button has been clicked.
+            allPackageObjs: [], //store all Package info
+            editable: [],   //for all Package content edit panel
+            selectedPackageRecord: new Object(),   //store which Package has been clicked.
             searchText: ''
         }
     },
@@ -181,7 +193,9 @@ export default {
                 this.selectedPackageRecord = record
             this.attachWindowAlive = !this.attachWindowAlive
         },
-        changePublishWindowStatus(){
+        changePublishWindowStatus(record){
+            if(record)
+                this.selectedPackageRecord = record
             this.publishWindowAlive = !this.publishWindowAlive
         },
         deletePackage(){
@@ -293,6 +307,7 @@ export default {
         'package-edit-panel': PackageEditPanel,
         'files-rules-panel': FilesAndRulesPanel,
         'package-add-window': PackageAddWindow,
+        'publish-rule-window': PublishRuleWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
         'files-rules-window': FilesAndRulesWindow,
         'over-lay-loading-div': OverlayLoadingDIV,
