@@ -1,6 +1,6 @@
 <template>
-    <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <publish-rule-form slot="content" ref="publishForm" :packageUid="packageUid"></publish-rule-form>
+    <modal-window window-title="Publish External Rules To JCS Agent" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <publish-rule-form slot="content" ref="publishForm"></publish-rule-form>
         <div slot="footer">
             <form-button btn-color="signal-white" :is-loading="buttonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -19,17 +19,9 @@ export default {
         }
     },
     props: {
-        windowTitle: {
-            type: String,
-            default: 'Publish Rules to JCS Agent'
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'
-        },
-        packageUid: {
-            type: String,
-            default: ""
         }
     },
     methods: {
@@ -39,14 +31,14 @@ export default {
             this.$emit('closePublish')
         },
         save(){
-            let formData = this.$refs.publishForm.save()
+            let postContent = this.$refs.publishForm.save()
 
-            if(formData){
+            if(postContent){
                 this.buttonLoading = true
-                HTTPUpload.post(`driver-manager/addDriverFolderAndProp`, formData)
+                HTTPRepo.post(`dm-ext-package/publish`, postContent)
                 .then(response => {
                     this.buttonLoading = false
-                    this.$emit('closeAdd', response.data)
+                    this.$emit('closePublish', response.data)
                 })
                 .catch(error => {
                     this.buttonLoading = false

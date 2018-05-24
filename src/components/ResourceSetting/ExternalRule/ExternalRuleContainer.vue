@@ -20,8 +20,6 @@
                             @closeApply="changeJarWindowStatus" 
         ></files-rules-window>
         <publish-rule-window v-if="publishWindowAlive" 
-                            :window-title="'Publish Package - ' + selectedPackageRecord.packagename" 
-                            :packageUid="selectedPackageRecord.packageuid" 
                             @closePublish="changePublishWindowStatus" 
         ></publish-rule-window>
         <div class="w3-col m9 w3-animate-opacity">
@@ -35,14 +33,20 @@
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <form enctype="multipart/form-data" novalidate>
-                                        <label>
-                                            <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import External Rule" aria-hidden="true"></i>
-                                            <input id="ExternalRuleInputFile" type="file" name="file" 
-                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" 
-                                                accept=".jar" class="input-file">
-                                        </label>
-                                    </form>
+                                    <i class="fa fa-file-archive-o w3-button" title="Import/Publish" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
+                                        <div v-if="!allOverlayLoading">
+                                            <form enctype="multipart/form-data" novalidate>
+                                                <label>
+                                                    <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import External Rule" aria-hidden="true"> Import Package</i>
+                                                    <input id="ExternalRuleInputFile" type="file" name="file" 
+                                                            @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" 
+                                                            accept=".jar" class="input-file">
+                                                </label>
+                                            </form>
+                                            <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Rules to JCS Agent" aria-hidden="true" @click="changePublishWindowStatus"> Publish Rules</i>
+                                        </div>
+                                    </div>
                                 </span>
                                 <i class="fa fa-plus w3-button w3-right" title="Add New Package" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getPackages"></i>
@@ -80,8 +84,6 @@
                                 <i class="fa fa-pencil"></i> Edit</button>
                             <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content)">
                                 <i class="fa fa-trash-o"></i> Delete</button>
-                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePublishWindowStatus(content)">
-                                <i class="fa fa-share-square"></i> Publish</button>
                         </div>
                     </over-lay-loading-div>
                     <package-edit-panel v-else :key="content.packageuid+'EditPanel1'" 
@@ -97,10 +99,6 @@
                             {{ content.packagename }}
                         </p>
                         <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.description }}</span>
-                        <button title="Publish Rules To JCS Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" @click="changePublishWindowStatus(content)">
-                            <i class="fa fa-share-square"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Publish</span>
-                        </button>
                         <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeDeleteWindowStatus(index, content)">
                             <i class="fa fa-trash-o"></i>
                             <span class="w3-hide-medium w3-hide-small"> Delete</span>
@@ -193,9 +191,7 @@ export default {
                 this.selectedPackageRecord = record
             this.attachWindowAlive = !this.attachWindowAlive
         },
-        changePublishWindowStatus(record){
-            if(record)
-                this.selectedPackageRecord = record
+        changePublishWindowStatus(){
             this.publishWindowAlive = !this.publishWindowAlive
         },
         deletePackage(){

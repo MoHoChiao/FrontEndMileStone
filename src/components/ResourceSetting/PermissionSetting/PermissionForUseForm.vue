@@ -15,10 +15,10 @@
     <div class="w3-small">
         <div class="w3-row">
             <a href="javascript:void(0)" @click="openTab(0)">
-                <div :class="tabsClass[0]">Apply Acounts</div>
+                <div :class="tabsClass[0]">Apply Accounts</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(1)">
-                <div :class="tabsClass[1]">Applay Roles</div>
+                <div :class="tabsClass[1]">Apply Roles</div>
             </a>
         </div>
         <div class="w3-row w3-section">

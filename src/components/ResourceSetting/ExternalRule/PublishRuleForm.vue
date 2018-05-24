@@ -1,8 +1,8 @@
 <template>
     <div class="w3-small">
         <div class="w3-row w3-section">
-            <input id="SearchJCSInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                    placeholder="Search For JCS Agent List..." @keyup="searchForList()">
+            <input id="SearchAgentInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                    placeholder="Search For JCS Agent List..." @keyup="searchForAgentList()">
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:140px">
                 <table id="AgentListTable" class="w3-table-all w3-small">
                     <template v-for="(agent, index) in allJCSAgents">
@@ -15,28 +15,32 @@
                     </template>
                 </table>
             </div>
-        </div>  
-        <div v-if="this.selectedAgent" class="w3-row w3-section">
+        </div>
+        <div v-show="this.selectedAgent" class="w3-row w3-section">
+            <div>
+                <input id="SearchPackageNameInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
+                    placeholder="Search For Package Name..." @keyup="searchForPackageName()">
+            </div>
             <div class="w3-col m12">
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="10%">Published</th>
-                            <th class="w3-center" width="30%">File Name</th>
-                            <th class="w3-center" width="30%">Rule Name</th>
-                            <th class="w3-center" width="30%">Full Class</th>
+                            <th class="w3-center" width="10%">Publish</th>
+                            <th class="w3-center" width="25%">Package Name</th>
+                            <th class="w3-center" width="25%">Rule Name</th>
+                            <th class="w3-center" width="40%">Full Class</th>
                         </tr>
                     </table>
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:140px">
-                    <table class="w3-table-all">
-                        <tr :key="rule.rulename" v-for="(rule, index) in rules">
+                    <table id="RuleListTable" class="w3-table-all">
+                        <tr :key="publication.rulename" v-for="(publication, index) in getPublication()">
                             <td class="w3-center" width="10%" style="padding-top:4px">
-                                <input class="w3-check" type="checkbox" v-model="rule.published" @click="onClickCheck(rule, index)">
+                                <input class="w3-check" type="checkbox" v-model="publication.published">
                             </td>
-                            <td class="w3-center" width="30%">{{rule.filename.split('/')[1]}}</td>
-                            <td class="w3-center" width="30%">{{rule.rulename}}</td>
-                            <td class="w3-center" width="30%">{{rule.fullclasspath}}</td>
+                            <td class="w3-center" width="25%">{{publication.packagename}}</td>
+                            <td class="w3-center" width="25%">{{publication.rulename}}</td>
+                            <td class="w3-center" width="40%">{{publication.fullclasspath}}</td>
                         </tr>
                     </table>
                 </div>
@@ -52,21 +56,15 @@ export default {
         return {
             checkAllFlag: false,
             inputClassList: ['w3-input','w3-border'],
-            selectedMonitorConfig: new Object(),
+            publications: [],
             selectedAgent: undefined,
             allJCSAgents: [],
-            rules: new Object(),
+            rules: [],
             pattern: '^([a-zA-Z]:/)|^([a-zA-Z]:\\\\)|^(\\\\)|^(/)'
         }
     },
     mounted() {
         this.getAllAgents()
-    },
-    props: {
-        packageUid: {
-            type: String,
-            default: ""
-        }
     },
     methods: {
         clickOnAgent(agent, index){
@@ -79,16 +77,6 @@ export default {
                 this.getRules()
             }
             
-        },
-        onClickCheck(driver, index){
-            if(driver.checked){
-                let new_driver = {
-                    "driverName": driver.name
-                }
-                this.selectedRecords[index] = new_driver
-            }else{
-                delete this.selectedRecords[index]
-            }
         },
         getAllAgents(){
             let params = {
@@ -106,86 +94,48 @@ export default {
                 errorHandle(this.$store, error)
             })
         },
-        getRules(uid){
-            HTTPRepo.get(`dm-ext-package/findPublicationByAgentUidAndPackageUid`, {
-                params: {
-                    agentUid: this.selectedAgent.agentuid,
-                    packageUid: this.packageUid
-                }
-            })
-            .then(response => {
-                this.rules = response.data
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
-        },
-        save(){
-            delete this.selectedMonitorConfig.lastupdatetime  //不需要傳送
-            delete this.selectedMonitorConfig.xml  //不需要傳送
-            if(!this.selectedMonitorConfig.resourcemonitor){
-                this.selectedMonitorConfig.cpu = 0
-                this.selectedMonitorConfig.memory = 0
-                this.selectedMonitorConfig.disk = []
-            }else{
-                if(this.selectedMonitorConfig.cpu < 0)
-                    this.selectedMonitorConfig.cpu = 0
-
-                if(this.selectedMonitorConfig.cpu > 100)
-                    this.selectedMonitorConfig.cpu = 100
-
-                if(this.selectedMonitorConfig.memory < 0)
-                    this.selectedMonitorConfig.memory = 0
-
-                if(this.selectedMonitorConfig.memory > 100)
-                    this.selectedMonitorConfig.memory = 100
-
-                for(let i=0;i<this.selectedMonitorConfig.disk.length;i++){
-                    if(!this.selectedMonitorConfig.disk[i].path.match(this.pattern)){
-                        let newStatus = {
-                            "msg": "File System Path Format Error!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
+        getRules(){
+            if(this.getIndexByAgentUid() === -1){
+                HTTPRepo.get(`dm-ext-package/findPublicationsByAgentUid`, {
+                    params: {
+                        agentUid: this.selectedAgent.agentuid
                     }
-                    
-                    if(this.selectedMonitorConfig.disk[i].value < 0){
-                        this.selectedMonitorConfig.disk[i].value = 0
-                    }
-
-                    if(this.selectedMonitorConfig.disk[i].value > 2147483647){
-                        this.selectedMonitorConfig.disk[i].value = 2147483647
-                    }
-                }
-            }
-
-            HTTPRepo.post(`monitor-config/modify`, this.selectedMonitorConfig)
+                })
                 .then(response => {
-                    let newStatus = {
-                        "msg": "Modify Resource Monitor - " + this.selectedMachineName + " Success.",
-                        "status": "Success"
+                    var new_publication = {
+                        "agentuid": this.selectedAgent.agentuid,
+                        "agentname": this.selectedAgent.agentname,
+                        "publishRule": response.data
                     }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    this.selectedMonitorConfig = response.data
+
+                    this.publications.push(new_publication)
                 })
                 .catch(error => {
                     errorHandle(this.$store, error)
                 })
+            }
+        },
+        getPublication(){
+            var publicationIndex = this.getIndexByAgentUid()
+            if(publicationIndex !== -1)
+                return this.publications[publicationIndex].publishRule
+            else
+                return []
+        },
+        getIndexByAgentUid(){
+            var objIndex = this.publications.findIndex((obj) => {
+                return obj.agentuid === this.selectedAgent.agentuid;
+            });
+            return objIndex
+        },
+        save(){            
+            return this.publications
         },
         reset(){
             this.clearAllSelectedRecord('AgentListTable')
+            this.publications = []
             this.selectedAgent = undefined
-        },
-        addDisk(){
-            let new_disk= {
-                path: '',
-                value: 200
-            };
-            this.selectedMonitorConfig.disk.push(new_disk)
-        },
-        delDisk(index){
-            this.selectedMonitorConfig.disk.splice(index, 1)
+            document.getElementById('SearchPackageNameInput').value = ''
         },
         clearSelectedRecord(tr, whichTable){
             let table = document.getElementById(whichTable)
@@ -200,14 +150,13 @@ export default {
                 table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
             }
         },
-        searchForList() {
+        searchForAgentList() {
             let input, filter, table, i
-            input = document.getElementById('SearchJCSInput')
+            input = document.getElementById('SearchAgentInput')
             filter = input.value.toUpperCase()
             table = document.getElementById('AgentListTable')
             for (i = 0; i < table.rows.length; i++) {
                 let text = table.rows[i].cells[0].innerHTML
-                console.log(text+'/'+filter)
                 if (text.toUpperCase().indexOf(filter) > -1) {
                     table.rows[i].style.display = "";
                 } else {
@@ -215,6 +164,20 @@ export default {
                 }
             }
         },
+        searchForPackageName() {
+            let input, filter, table, i
+            input = document.getElementById('SearchPackageNameInput')
+            filter = input.value.toUpperCase()
+            table = document.getElementById('RuleListTable')
+            for (i = 0; i < table.rows.length; i++) {
+                let text = table.rows[i].cells[1].innerHTML
+                if (text.toUpperCase().indexOf(filter) > -1) {
+                    table.rows[i].style.display = "";
+                } else {
+                    table.rows[i].style.display = "none";
+                }
+            }
+        }
     }
 }
 </script>

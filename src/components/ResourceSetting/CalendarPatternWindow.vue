@@ -60,7 +60,7 @@
                 <div class="w3-row w3-section">
                     <div class="w3-col m12">
                         <span class="w3-left" style="padding-top:6px">Every&nbsp;&nbsp;</span>
-                        <span class="w3-text-red w3-left">*</span>
+                        <span class="w3-text-red w3-left">*&nbsp;</span>
                         <span class="w3-left"><input :class="inputClassList.weekly_week" v-model="weekly_week" type="number" min="1" max="999"></span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;week(s) on : </span>
                     </div>
@@ -113,10 +113,10 @@
                 </div>
                 <div v-if="monthlyType === 'DayOfEveryMonth'" class="w3-row w3-section">
                     <div class="w3-col m12">
-                        <span class="w3-text-red w3-left">*</span>
+                        <span class="w3-text-red w3-left">*&nbsp;</span>
                         <span class="w3-left"><input :class="inputClassList.monthly_day" v-model="monthly_day" type="number" min="1" max="999"></span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;day(s) of every&nbsp;&nbsp;</span>
-                        <span class="w3-text-red w3-left">*</span>
+                        <span class="w3-text-red w3-left">*&nbsp;</span>
                         <span class="w3-left"><input :class="inputClassList.monthly_month" v-model="monthly_month" type="number" min="1" max="999"></span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;month(s)</span>
                     </div>
@@ -150,7 +150,7 @@
                                 </select>
                             </span> 
                             <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;of every&nbsp;&nbsp;</span>
-                            <span class="w3-text-red w3-left">*</span>
+                            <span class="w3-text-red w3-left">*&nbsp;</span>
                             <span class="w3-left">
                                 <input :class="inputClassList.monthly_month" v-model="monthly_month" type="number" min="1" max="999">
                             </span>
@@ -199,7 +199,7 @@
                                 <option :value="Number('11')">December</option>
                             </select>
                         </span>
-                        <span class="w3-text-red w3-left">&nbsp;&nbsp;*</span>
+                        <span class="w3-text-red w3-left">&nbsp;&nbsp;*&nbsp;</span>
                         <span class="w3-left"><input :class="inputClassList.yearly_day" v-model="yearly_day" type="number" min="1" max="999"></span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;day(s)</span>
                     </div>
