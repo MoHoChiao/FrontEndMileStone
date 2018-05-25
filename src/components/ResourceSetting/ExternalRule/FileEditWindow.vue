@@ -53,7 +53,7 @@ export default {
                 HTTPRepo.get(`dm-ext-jar/editDescriptionOnly`, {
                     params: {
                         extJarUid: postContent.extjaruid,
-                        description: postContent.description
+                        newDesc: postContent.description
                     }
                 })
                 .then(response => {
