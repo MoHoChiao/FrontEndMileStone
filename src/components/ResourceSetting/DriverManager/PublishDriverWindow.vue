@@ -16,7 +16,7 @@
                 <template v-for="(driver, index) in allDriverObjs">
                     <tr :id="driver.name" :key="driver.name">
                         <td class="w3-center" width="10%" style="padding-top:4px">
-                            <input class="w3-check" type="checkbox" v-model="driver.checked" @click="onClickCheck(driver, index)">
+                            <input class="w3-check" type="checkbox" v-model="driver.checked" @change="onClickCheck(driver, index)">
                         </td>
                         <td class="w3-center" width="90%">
                             <span>{{ driver.name }} ({{ driver.owner }})</span>

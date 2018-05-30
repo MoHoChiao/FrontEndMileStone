@@ -16,7 +16,7 @@
                 <template v-for="(role, index) in roles">
                     <tr :id="role.roleuid" :key="role.roleuid">
                         <td class="w3-center" width="10%" style="padding-top:4px">
-                            <input class="w3-check" type="checkbox" v-model="role.checked" @click="onClickCheck(role, index)">
+                            <input class="w3-check" type="checkbox" v-model="role.checked" @change="onClickCheck(role, index)">
                         </td>
                         <td class="w3-center" width="90%">
                             <span>{{ role.rolename }}</span>

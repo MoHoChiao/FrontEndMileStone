@@ -16,7 +16,7 @@
                 <template v-for="(user, index) in trinityusers">
                     <tr :id="user.useruid" :key="user.useruid">
                         <td class="w3-center" width="10%" style="padding-top:4px">
-                            <input class="w3-check" type="checkbox" v-model="user.checked" @click="onClickCheck(user, index)">
+                            <input class="w3-check" type="checkbox" v-model="user.checked" @change="onClickCheck(user, index)">
                         </td>
                         <td class="w3-center" width="90%">
                             <span>{{ user.username }} ({{ user.userid }})</span>
