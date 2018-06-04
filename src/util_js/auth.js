@@ -7,10 +7,10 @@ export function Authentication(next) {
     HTTP.get(`authc-lib/find-authc`)
         .then(response => {
             if (response.data.status === 'Success') {
-                console.log('aaaaa1111')
+                //console.log('aaaaa1111')
                 next()
             } else {
-                console.log('bbbbb1111')
+                //console.log('bbbbb1111')
                 next({ path: '/' })
             }
         })
