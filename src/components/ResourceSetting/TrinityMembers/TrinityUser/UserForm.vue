@@ -144,10 +144,10 @@ export default {
                 this.inputClassList.userid.splice(2, 1, 'w3-red')
             }else if(this.new_content.username.trim().length <= 0){
                 this.inputClassList.username.splice(2, 1, 'w3-red')
-            }else if(this.password1.trim() === '') {
-                this.inputClassList.password1.splice(2, 1, 'w3-red')
-            }else if(this.password2.trim() === '') {
-                this.inputClassList.password2.splice(2, 1, 'w3-red')
+            // }else if(this.password1.trim() === '') {
+            //     this.inputClassList.password1.splice(2, 1, 'w3-red')
+            // }else if(this.password2.trim() === '') {
+            //     this.inputClassList.password2.splice(2, 1, 'w3-red')
             }else if(this.password1 !== this.password2) {
                 let newStatus = {
                     "msg": "Passwords are not identical!",
