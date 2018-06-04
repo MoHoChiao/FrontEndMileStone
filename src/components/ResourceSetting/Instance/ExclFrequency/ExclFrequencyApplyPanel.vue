@@ -26,13 +26,13 @@
                     <div :class="tabsClass[0]">Time List</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(1)">
-                    <div :class="tabsClass[1]">Applay Freq</div>
+                    <div :class="tabsClass[1]">Apply Freq</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(2)">
-                    <div :class="tabsClass[2]">Applay Job</div>
+                    <div :class="tabsClass[2]">Apply Job</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(3)">
-                    <div :class="tabsClass[3]">Applay Flow</div>
+                    <div :class="tabsClass[3]">Apply Flow</div>
                 </a>
             </div>
             <br>
