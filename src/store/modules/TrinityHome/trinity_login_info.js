@@ -77,7 +77,7 @@ const actions = {
                 if (response.data.status === 'Success') {
                     response.data.come_from = come_from // add form element to data
                 } else {
-                    if (come_from !== 'TrinityHome') {
+                    if (come_from !== 'TrinityHome' || come_from === 'ResourceSetter') {
                         let newStatus = {
                             "msg": 'Someone has logged out of the Trinity.',
                             "status": "Warn"

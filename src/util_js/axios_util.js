@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const HTTP = axios.create({
-    baseURL: `http://` + window.location.host + `/frontend-trinity-service/`,
+    baseURL: `http://` + '127.0.0.1:8080' + `/frontend-trinity-service/`,
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -14,7 +14,7 @@ export const HTTP = axios.create({
     },
 })
 export const HTTPRepo = axios.create({
-    baseURL: `http://` + window.location.host + `/backend-trinity-repository/`,
+    baseURL: `http://` + '127.0.0.1:8080' + `/backend-trinity-repository/`,
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -27,7 +27,7 @@ export const HTTPRepo = axios.create({
     },
 })
 export const HTTPUpload = axios.create({
-    baseURL: `http://` + window.location.host + `/zuul/backend-trinity-repository/`,
+    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/backend-trinity-repository/`,
     timeout: 100000,
     withCredentials: true,
     headers: {
@@ -40,7 +40,7 @@ export const HTTPUpload = axios.create({
     },
 })
 export const HTTPDownload = axios.create({
-    baseURL: `http://` + window.location.host + `/zuul/backend-trinity-repository/`,
+    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/backend-trinity-repository/`,
     timeout: 60000,
     withCredentials: true,
     responseType: 'blob',
