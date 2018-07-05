@@ -1,4 +1,4 @@
-import { HTTP } from '../../../util_js/axios_util';
+import { HTTP_TRINITY } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
 
 const types = {
@@ -18,7 +18,7 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     fetchTrinityAPPS({ commit }) {
-        HTTP.get(`trinity-prop-setting/find-all-apps`)
+    	HTTP_TRINITY.get(`trinity-prop-setting/find-all-apps`)
             .then(response => {
                 commit(types.Fetch_Trinity_APPS, response.data);
             })

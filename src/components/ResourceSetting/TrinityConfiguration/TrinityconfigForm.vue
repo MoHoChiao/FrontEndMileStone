@@ -103,7 +103,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {
@@ -118,7 +118,7 @@ export default {
     },
     methods: {
         getTrinityconfig(){
-            HTTPRepo.get(`trinity-config/findAll`)
+            HTTP_TRINITY.get(`trinity-config/findAll`)
             .then(response => {
                 if(response.data && response.data.length > 0){
                     this.content = response.data[0]

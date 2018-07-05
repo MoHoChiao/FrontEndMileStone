@@ -176,7 +176,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -311,7 +311,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`frequency-category/findByFilter`, params)
+            HTTP_TRINITY.post(`frequency-category/findByFilter`, params)
             .then(response => {
                 this.freqCategories = response.data
             })
@@ -331,7 +331,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 this.freqs = response.data
             })
@@ -348,7 +348,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`busentity/findByFilter`, params)
+            HTTP_TRINITY.post(`busentity/findByFilter`, params)
             .then(response => {
                 this.entities = response.data
             })
@@ -374,7 +374,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 this.categories = response.data
             })
@@ -408,7 +408,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 this.jobsOrFlows = response.data
             })
@@ -447,7 +447,7 @@ export default {
             if(this.applyType[1]){  //for freq exclude
                 if(this.selectedFreqRecord && this.selectedFreqRecord.frequencyuid && 
                         this.selectedFreqRecord.frequencyuid !== '' && this.excludefrequencyuid !== ''){     
-                    HTTPRepo.post('freq-exclude/addOne', {
+                    HTTP_TRINITY.post('freq-exclude/addOne', {
                         "frequencyuid": this.selectedFreqRecord.frequencyuid,
                         "excludefrequencyuid": this.excludefrequencyuid
                     })
@@ -468,7 +468,7 @@ export default {
             }else if(this.applyType[2]){  //for job exclude
                 if(this.selectedJobOrFlowRecord && this.selectedJobOrFlowRecord.jobuid && 
                         this.selectedJobOrFlowRecord.jobuid !== '' && this.excludefrequencyuid !== ''){     
-                    HTTPRepo.post('job-exclude/addOne', {
+                    HTTP_TRINITY.post('job-exclude/addOne', {
                         "jobuid": this.selectedJobOrFlowRecord.jobuid,
                         "excludefrequencyuid": this.excludefrequencyuid
                     })
@@ -489,7 +489,7 @@ export default {
             }else if(this.applyType[3]){  //for jobflow exclude
                 if(this.selectedJobOrFlowRecord && this.selectedJobOrFlowRecord.jobflowuid && 
                         this.selectedJobOrFlowRecord.jobflowuid !== '' && this.excludefrequencyuid !== ''){     
-                    HTTPRepo.post('jobflow-exclude/addOne', {
+                    HTTP_TRINITY.post('jobflow-exclude/addOne', {
                         "jobflowuid": this.selectedJobOrFlowRecord.jobflowuid,
                         "excludefrequencyuid": this.excludefrequencyuid
                     })

@@ -171,7 +171,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import FrequencyCategoryEditWindow from './FrequencyCategory/FrequencyCategoryEditWindow.vue'
 import FrequencyEditWindow from './FrequencyEditWindow.vue'
@@ -247,7 +247,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`frequency-category/findByFilter`, params)
+            HTTP_TRINITY.post(`frequency-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
 
@@ -294,7 +294,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
                     this.allFrequencyObjs = response.data.content
@@ -424,7 +424,7 @@ export default {
                 this.deleteFrequency()
         },
         deleteCategory(){
-            HTTPRepo.get(`frequency-category/delete`, {
+            HTTP_TRINITY.get(`frequency-category/delete`, {
                 params: {
                     uid: this.selectedCategoryRecord.freqcategoryuid
                 }
@@ -440,7 +440,7 @@ export default {
             })
         },
         deleteFrequency(){
-            HTTPRepo.get(`frequency/delete`, {
+            HTTP_TRINITY.get(`frequency/delete`, {
                 params: {
                     uid: this.selectedFrequencyRecord.frequencyuid
                 }

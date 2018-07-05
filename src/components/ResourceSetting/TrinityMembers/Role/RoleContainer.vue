@@ -99,7 +99,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import RoleEditPanel from './RoleEditPanel.vue'
 import RoleMemberPanel from './RoleMemberPanel.vue'
@@ -160,7 +160,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`role/findByFilter`, params)
+            HTTP_TRINITY.post(`role/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -221,7 +221,7 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`role/delete`, {
+            HTTP_TRINITY.get(`role/delete`, {
                 params: {
                     uid: this.deleteUid
                 }

@@ -1,4 +1,4 @@
-import { HTTPRepo } from '../../../util_js/axios_util';
+import { HTTP_TRINITY } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
 
 const types = {
@@ -29,7 +29,7 @@ const actions = {
         commit(types.InitialAllParams);
     },
     fetchAgentContent({ commit }, params) {
-        HTTPRepo.get(`jcsagent/findAll`, { params })
+    	HTTP_TRINITY.get(`jcsagent/findAll`, { params })
             .then(response => {
                 commit(types.Fetch_Agent_Content, response.data);
             })

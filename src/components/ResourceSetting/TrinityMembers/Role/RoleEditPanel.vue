@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import RoleForm from './RoleForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -33,7 +33,7 @@ export default {
             let postContent = this.$refs.roleForm.save()
             
             if(postContent){
-                HTTPRepo.post(`role/edit`, postContent)
+                HTTP_TRINITY.post(`role/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import myDatepicker from '../../DatetimePicker.vue'
 import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
@@ -204,7 +204,7 @@ export default {
             this.patternWindowAlive = !this.patternWindowAlive
         },
         generateByPattern(postContent){
-            HTTPRepo.post(`working-calendar/getWCPattern`, postContent)
+            HTTP_TRINITY.post(`working-calendar/getWCPattern`, postContent)
                 .then(response => {
                     this.setDatetimePicker(JSON.stringify(response.data))
                     this.changePatternWindowStatus()

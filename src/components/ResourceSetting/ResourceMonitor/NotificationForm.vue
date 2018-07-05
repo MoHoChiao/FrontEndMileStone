@@ -81,7 +81,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {
@@ -122,7 +122,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`trinity-user/findByFilter`, params)
+            HTTP_TRINITY.post(`trinity-user/findByFilter`, params)
             .then(response => {
                 this.allUsers = response.data
 
@@ -147,7 +147,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`user-group/findByFilter`, params)
+            HTTP_TRINITY.post(`user-group/findByFilter`, params)
             .then(response => {
                 this.allGroups = response.data
 
@@ -161,7 +161,7 @@ export default {
             })
         },
         getJCSServerNotice(){
-            HTTPRepo.get(`notification/findByUid?notificationUid=JCSServer`)
+            HTTP_TRINITY.get(`notification/findByUid?notificationUid=JCSServer`)
             .then(response => {
                 this.userUids = new Array()
                 this.groupUids = new Array()
@@ -210,7 +210,7 @@ export default {
                 return 
             }
 
-            HTTPRepo.post(`notification/modify`, this.new_content)
+            HTTP_TRINITY.post(`notification/modify`, this.new_content)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Resource Notification - JCSServer Success.",

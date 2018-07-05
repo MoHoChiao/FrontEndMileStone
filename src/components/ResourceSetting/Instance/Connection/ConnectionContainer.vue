@@ -181,7 +181,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategoryEditWindow.vue'
 import ConnectionEditWindow from './ConnectionEditWindow.vue'
@@ -261,7 +261,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`connection-category/findByFilter`, params)
+            HTTP_TRINITY.post(`connection-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
 
@@ -308,7 +308,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
                     this.allConnectionObjs = response.data.content
@@ -442,7 +442,7 @@ export default {
                 this.deleteConnection()
         },
         deleteCategory(){
-            HTTPRepo.get(`connection-category/delete`, {
+            HTTP_TRINITY.get(`connection-category/delete`, {
                 params: {
                     uid: this.selectedCategoryRecord.conncategoryuid
                 }
@@ -458,7 +458,7 @@ export default {
             })
         },
         deleteConnection(){
-            HTTPRepo.get(`connection/delete`, {
+            HTTP_TRINITY.get(`connection/delete`, {
                 params: {
                     uid: this.selectedConnectionRecord.connectionuid
                 }

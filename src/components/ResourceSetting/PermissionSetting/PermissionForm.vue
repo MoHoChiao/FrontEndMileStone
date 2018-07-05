@@ -115,7 +115,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
 import ApplyAccountsWindow from './ApplyAccountsWindow.vue'
 import ApplyRolesWindow from './ApplyRolesWindow.vue'
 
@@ -221,7 +221,7 @@ export default {
             }
         },
         getPermissionOnlyForUser(){
-            HTTPRepo.get(`access-right/findUserExByObjectUid?objectUid=`+this.objectUid)
+            HTTP_AUTH.get(`authorization/findUserExByObjectUid?objectUid=`+this.objectUid)
             .then(response => {
                 this.permissionListForUser = response.data
                 this.userUids = []
@@ -248,7 +248,7 @@ export default {
             })
         },
         getPermissionOnlyForRole(){
-            HTTPRepo.get(`access-right/findRoleExByObjectUid?objectUid=`+this.objectUid)
+            HTTP_AUTH.get(`authorization/findRoleExByObjectUid?objectUid=`+this.objectUid)
             .then(response => {
                 this.permissionListForRole = response.data
                 this.roleUids = []

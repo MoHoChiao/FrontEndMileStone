@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../util_js/axios_util'
+import { HTTP_TRINITY } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import PublishRuleForm from './PublishRuleForm.vue'
 import FormButton from '../FormButton.vue';
@@ -35,7 +35,7 @@ export default {
 
             if(postContent){
                 this.buttonLoading = true
-                HTTPRepo.post(`dm-ext-package/publish`, postContent)
+                HTTP_TRINITY.post(`dm-ext-package/publish`, postContent)
                 .then(response => {
                     this.buttonLoading = false
                     this.$emit('closePublish', response.data)

@@ -114,7 +114,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {
@@ -150,7 +150,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`jcsagent/findByFilter`, params)
+            HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
             .then(response => {
                 this.allJCSAgents = response.data
             })
@@ -159,7 +159,7 @@ export default {
             })
         },
         getMonitorconfig(uid){
-            HTTPRepo.get(`monitor-config/findByUid?uid=`+uid)
+            HTTP_TRINITY.get(`monitor-config/findByUid?uid=`+uid)
             .then(response => {
                 this.selectedMonitorConfig = response.data
             })
@@ -207,7 +207,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`monitor-config/modify`, this.selectedMonitorConfig)
+            HTTP_TRINITY.post(`monitor-config/modify`, this.selectedMonitorConfig)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Resource Monitor - " + this.selectedMachineName + " Success.",

@@ -32,7 +32,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo, errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY, errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import FormButton from '../FormButton.vue'
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -94,7 +94,7 @@ export default {
             this.getDrivers()
         },
         getDrivers(e){
-            HTTPRepo.get(`driver-manager/findDriversProp`)
+            HTTP_TRINITY.get(`driver-manager/findDriversProp`)
             .then(response => {
                 this.allDriverObjs = response.data
             })
@@ -113,7 +113,7 @@ export default {
                 if(driverNames.length > 0){
                     this.addButtonLoading = true
                     console.log(driverNames)
-                    HTTPRepo.post('driver-manager/publishDriver', driverNames)
+                    HTTP_TRINITY.post('driver-manager/publishDriver', driverNames)
                     .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                     .then(response => {
                         this.addButtonLoading = false

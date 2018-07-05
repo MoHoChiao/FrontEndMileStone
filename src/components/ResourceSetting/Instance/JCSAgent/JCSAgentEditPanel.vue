@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import JCSAgentForm from './JCSAgentForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -44,7 +44,7 @@ export default {
             let postContent = this.$refs.agentForm.save()
             
             if(postContent){
-                HTTPRepo.post(`jcsagent/edit`, postContent)
+                HTTP_TRINITY.post(`jcsagent/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

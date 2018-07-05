@@ -49,7 +49,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {
@@ -86,7 +86,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`jcsagent/findByFilter`, params)
+            HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
             .then(response => {
                 this.allJCSAgents = response.data
             })
@@ -96,7 +96,7 @@ export default {
         },
         getRules(){
             if(this.getIndexByAgentUid() === -1){
-                HTTPRepo.get(`dm-ext-package/findPublicationsByAgentUid`, {
+                HTTP_TRINITY.get(`dm-ext-package/findPublicationsByAgentUid`, {
                     params: {
                         agentUid: this.selectedAgent.agentuid
                     }

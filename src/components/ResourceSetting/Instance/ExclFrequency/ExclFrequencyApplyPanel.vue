@@ -129,7 +129,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ApplySelectionWindow from './ApplySelectionWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -211,7 +211,7 @@ export default {
         },
         getFreqExclude(){
             if(this.excludefrequencyuid && this.excludefrequencyuid !== ''){
-                HTTPRepo.get(`freq-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
+                HTTP_TRINITY.get(`freq-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
                 .then(response => {
                     this.applyFrequencies = response.data
                     this.frequencyUids = []
@@ -227,7 +227,7 @@ export default {
         },
         getJobExclude(){
             if(this.excludefrequencyuid && this.excludefrequencyuid !== ''){
-                HTTPRepo.get(`job-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
+                HTTP_TRINITY.get(`job-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
                 .then(response => {
                     this.applyJobs = response.data
                     this.jobUids = []
@@ -243,7 +243,7 @@ export default {
         },
         getFlowExclude(){
             if(this.excludefrequencyuid && this.excludefrequencyuid !== ''){
-                HTTPRepo.get(`jobflow-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
+                HTTP_TRINITY.get(`jobflow-exclude/findFullPathByExcludeFrequencyUid`, {params:{uid: this.excludefrequencyuid}})
                 .then(response => {
                     this.applyFlows = response.data
                     this.flowUids = []
@@ -300,7 +300,7 @@ export default {
                 urlPath = 'jobflow-exclude/deleteByPKUids?excludeFreqUid='+this.excludefrequencyuid+'&flowUid='+this.deleteUid
             }
             
-            HTTPRepo.get(urlPath)
+            HTTP_TRINITY.get(urlPath)
             .then(response => {
                 if(this.tabsFlag[1]){
                     this.applyFrequencies.splice(this.deleteIndex, 1)

@@ -32,7 +32,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import FormButton from '../FormButton.vue'
 
@@ -101,7 +101,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`role/findByFilter`, params)
+            HTTP_TRINITY.post(`role/findByFilter`, params)
             .then(response => {
                 this.roles = []
                 for(let i=0;i<response.data.length;i++){

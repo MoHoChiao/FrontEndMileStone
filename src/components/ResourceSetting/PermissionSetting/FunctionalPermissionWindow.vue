@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import FunctionalPermissionForm from './FunctionalPermissionForm.vue'
 import FormButton from '../FormButton.vue'
@@ -42,7 +42,7 @@ export default {
             let postContent = this.$refs.rolePermissionForm.save()
             
             if(postContent){
-                HTTPRepo.post(`access-right/modifyByPeopleUid?peopleUid=`+this.peopleUid, postContent)
+                HTTP_AUTH.post(`authorization/modifyByPeopleUid?peopleUid=`+this.peopleUid, postContent)
                 .then(response => {
                     this.$emit('closeApply')
                 })

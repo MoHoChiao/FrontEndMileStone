@@ -214,7 +214,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -553,7 +553,7 @@ export default {
                 return
             }
 
-            HTTPRepo.post(urlPath, postData)
+            HTTP_TRINITY.post(urlPath, postData)
                 .then(response => {
                     let newStatus = {
                         "msg": response.data,
@@ -642,7 +642,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`connection-category/findByFilter`, params)
+            HTTP_TRINITY.post(`connection-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
             })
@@ -651,7 +651,7 @@ export default {
             })
         },
         getJDBCInfo(){  //Get all jdbc connection info
-            HTTPRepo.get(`connection/findJDBCDriverInfo`)
+            HTTP_TRINITY.get(`connection/findJDBCDriverInfo`)
             .then(response => {
                 this.jdbcDriverInfo = response.data
             })

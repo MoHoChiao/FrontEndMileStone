@@ -32,7 +32,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import FormButton from '../FormButton.vue'
 
@@ -102,7 +102,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`trinity-user/findByFilter`, params)
+            HTTP_TRINITY.post(`trinity-user/findByFilter`, params)
             .then(response => {
                 this.trinityusers = []
                 for(let i=0;i<response.data.length;i++){

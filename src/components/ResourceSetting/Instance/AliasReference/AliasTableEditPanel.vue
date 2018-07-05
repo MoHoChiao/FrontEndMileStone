@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import AliasForm from './AliasForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -31,7 +31,7 @@ export default {
         save(){
             let postContent = this.$refs.aliasForm.save()
             if(postContent){
-                HTTPRepo.post(`objectalias/modify?parentUid=`+this.content.busentityuid, postContent)
+                HTTP_TRINITY.post(`objectalias/modify?parentUid=`+this.content.busentityuid, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

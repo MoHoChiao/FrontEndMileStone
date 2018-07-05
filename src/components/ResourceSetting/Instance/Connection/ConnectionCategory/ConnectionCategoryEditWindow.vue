@@ -8,7 +8,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../../util_js/axios_util'
 import ModalWindow from '../../../../Common/window/ModalWindow.vue'
 import ConnectionCategoryForm from './ConnectionCategoryForm.vue'
 import FormButton from '../../../FormButton.vue'
@@ -58,7 +58,7 @@ export default {
             let postContent = this.$refs.connectionCategoryForm.save()
             
             if(postContent){
-                HTTPRepo.post(`connection-category/` + this.urlOp, postContent)
+                HTTP_TRINITY.post(`connection-category/` + this.urlOp, postContent)
                 .then(response => {
                     if(this.urlOp === 'add') //add operation
                         this.$emit('closeAdd', response.data)

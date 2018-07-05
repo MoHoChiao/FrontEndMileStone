@@ -88,7 +88,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import WorkingCalendarEditPanel from './WorkingCalendarEditPanel.vue'
 import WorkingCalendarAddWindow from './WorkingCalendarAddWindow.vue'
@@ -144,7 +144,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`working-calendar/findByFilter`, params)
+            HTTP_TRINITY.post(`working-calendar/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -202,7 +202,7 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`working-calendar/delete`, {
+            HTTP_TRINITY.get(`working-calendar/delete`, {
                 params: {
                     uid: this.deleteUid
                 }

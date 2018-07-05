@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import DomainForm from './DomainForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -34,7 +34,7 @@ export default {
             let postContent = this.$refs.domainForm.save()
             
             if(postContent){
-                HTTPRepo.post(`domain/edit`, postContent)
+                HTTP_TRINITY.post(`domain/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

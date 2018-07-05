@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import UserForm from './UserForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.userForm.save()
 
             if(postContent){
-                HTTPRepo.post(`trinity-user/add`, postContent)
+                HTTP_TRINITY.post(`trinity-user/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

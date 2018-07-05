@@ -85,7 +85,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import DomainEditPanel from './DomainEditPanel.vue'
 import DomainAddWindow from './DomainAddWindow.vue'
@@ -142,7 +142,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`domain/findByFilter`, params)
+            HTTP_TRINITY.post(`domain/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -208,7 +208,7 @@ export default {
                 return
             }
 
-            HTTPRepo.get(`domain/delete`, {
+            HTTP_TRINITY.get(`domain/delete`, {
                 params: {
                     uid: this.deleteUid
                 }

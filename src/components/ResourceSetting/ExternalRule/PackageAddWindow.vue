@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
 import PackageAddForm from './PackageAddForm.vue';
 import FormButton from '../FormButton.vue';
@@ -31,7 +31,7 @@ export default {
             let postContent = this.$refs.packageAddForm.save()
 
             if(postContent){
-                HTTPRepo.post(`dm-ext-package/add`, postContent)
+                HTTP_TRINITY.post(`dm-ext-package/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

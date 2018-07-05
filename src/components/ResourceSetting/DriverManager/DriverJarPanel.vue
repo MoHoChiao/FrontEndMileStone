@@ -48,7 +48,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY,HTTP_TRINITY_Upload,errorHandle } from '../../../util_js/axios_util';
 import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue';
 import { upload } from '../../../util_js/file-upload.fake.service'; // fake service
 import { wait,NON_SPEED,SLOW_SPEED,FAST_SPEED } from '../../../util_js/utils';
@@ -110,7 +110,7 @@ export default {
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get('driver-manager/deleteJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
+            HTTP_TRINITY.get('driver-manager/deleteJarFile?driverName='+this.driverName+'&jarName='+this.deleteUid)
             .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.new_jarFiles.splice(this.deleteIndex, 1)
@@ -201,7 +201,7 @@ export default {
             });
         },
         filesUpload(formData){
-            HTTPUpload.post(`driver-manager/addJarFileByDriverName?driverName=`+this.driverName, formData)
+            HTTP_TRINITY_Upload.post(`driver-manager/addJarFileByDriverName?driverName=`+this.driverName, formData)
                 .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
                 .then(response => {
                     if(response.data.fileNameList){

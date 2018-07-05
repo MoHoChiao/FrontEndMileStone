@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const HTTP = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + `/frontend-trinity-service/`,
+export const HTTP_AUTH = axios.create({
+    baseURL: `http://` + '127.0.0.1:8080' + `/auth-service/`,
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -13,8 +13,8 @@ export const HTTP = axios.create({
         password: 'leoliu543'
     },
 })
-export const HTTPRepo = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + `/backend-trinity-repository/`,
+export const HTTP_TRINITY = axios.create({
+    baseURL: `http://` + '127.0.0.1:8080' + `/trinity-service/`,
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -26,8 +26,8 @@ export const HTTPRepo = axios.create({
         password: 'leoliu543'
     },
 })
-export const HTTPUpload = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/backend-trinity-repository/`,
+export const HTTP_TRINITY_Upload = axios.create({
+    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/trinity-service/`,
     timeout: 100000,
     withCredentials: true,
     headers: {
@@ -39,8 +39,8 @@ export const HTTPUpload = axios.create({
         password: 'leoliu543'
     },
 })
-export const HTTPDownload = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/backend-trinity-repository/`,
+export const HTTP_TRINITY_Download = axios.create({
+    baseURL: `http://` + '127.0.0.1:8080' + `/zuul/trinity-service/`,
     timeout: 60000,
     withCredentials: true,
     responseType: 'blob',

@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import UserGroupForm from './UserGroupForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -32,7 +32,7 @@ export default {
             let postContent = this.$refs.userGroupForm.save()
             
             if(postContent){
-                HTTPRepo.post(`user-group/edit`, postContent)
+                HTTP_TRINITY.post(`user-group/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

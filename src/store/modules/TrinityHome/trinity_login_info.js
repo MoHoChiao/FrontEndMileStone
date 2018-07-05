@@ -1,4 +1,4 @@
-import { HTTP } from '../../../util_js/axios_util';
+import { HTTP_AUTH } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
 
 const types = {
@@ -27,7 +27,7 @@ const getters = {
 // actions 也是以 Object 形式建構。
 const actions = {
     genLoginToken({ commit }, formAttr) {
-        HTTP.post(`authc-lib/gen-authc`, {
+    	HTTP_AUTH.post(`authentication/gen-authn`, {
                 account: formAttr.account,
                 psw: formAttr.psw
             })
@@ -51,7 +51,7 @@ const actions = {
             })
     },
     removeLoginToken({ commit }) {
-        HTTP.get(`authc-lib/remove-authc`)
+    	HTTP_AUTH.get(`authentication/remove-authn`)
             .then(response => {
                 commit(types.Reomve_Login_Token, response.data);
             })
@@ -72,7 +72,7 @@ const actions = {
             })
     },
     checkLoginToken({ commit }, come_from) {
-        HTTP.get(`authc-lib/find-authc`)
+    	HTTP_AUTH.get(`authentication/find-authn`)
             .then(response => {
                 if (response.data.status === 'Success') {
                     response.data.come_from = come_from // add form element to data
@@ -105,7 +105,7 @@ const actions = {
     },
     resetLoginToken({ commit }, psw) {
         commit(types.Reset_Login_Token);
-        HTTP.post(`authc-lib/reset-authc`, psw)
+        HTTP_AUTH.post(`authentication/reset-authn`, psw)
             .then(response => {
                 let newStatus = {
                     "msg": response.data,

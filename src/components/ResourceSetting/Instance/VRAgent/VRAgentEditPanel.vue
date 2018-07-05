@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import VRAgentForm from './VRAgentForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -34,7 +34,7 @@ export default {
         save(){
             let postContent = this.$refs.vrAgentForm.save()
             if(postContent){
-                HTTPRepo.post(`vragent/edit`, postContent)
+                HTTP_TRINITY.post(`vragent/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

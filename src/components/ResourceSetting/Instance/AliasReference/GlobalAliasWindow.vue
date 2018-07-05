@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import AliasForm from './AliasForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -42,7 +42,7 @@ export default {
         save(){
             let postContent = this.$refs.aliasForm.save()
             if(postContent){
-                HTTPRepo.post(`objectalias/modify?parentUid=global`, postContent)
+                HTTP_TRINITY.post(`objectalias/modify?parentUid=global`, postContent)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Global Alias Reference Success.",
@@ -60,7 +60,7 @@ export default {
             this.$refs.aliasForm.reset()
         },
         getGlobalAlias(e){
-            HTTPRepo.get(`objectalias/findExtraByParentUid?parentUid=global`)
+            HTTP_TRINITY.get(`objectalias/findExtraByParentUid?parentUid=global`)
             .then(response => {
                 if(response.data !== ''){
                     this.content.alias = response.data

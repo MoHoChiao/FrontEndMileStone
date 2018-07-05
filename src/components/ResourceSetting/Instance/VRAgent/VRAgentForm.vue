@@ -87,7 +87,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -127,7 +127,7 @@ export default {
                     "orderField":'agentname'
                 }
             }
-        HTTPRepo.post(`jcsagent/findByFilter`, params)
+        HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
             .then(response => {
                 this.allJCSAgents = response.data
                 for(let i=0;i<this.allJCSAgents.length;i++){

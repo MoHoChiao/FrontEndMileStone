@@ -8,7 +8,7 @@
     </over-lay-loading-div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 import DriverEditForm from './DriverEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
@@ -50,7 +50,7 @@ export default {
                 this.loadingText = 'Save ' + this.content.name + '...'
                 this.isLoading = true
 
-                HTTPRepo.post(`driver-manager/modifyDriverProp`, postContent)
+                HTTP_TRINITY.post(`driver-manager/modifyDriverProp`, postContent)
                 .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
@@ -69,7 +69,7 @@ export default {
             this.loadingText = 'Fetch Driver Class...'
             this.isLoading = true
             
-            HTTPRepo.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.content.name)
+            HTTP_TRINITY.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.content.name)
             .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s 
             .then(response => {
                 this.driverClassList = response.data

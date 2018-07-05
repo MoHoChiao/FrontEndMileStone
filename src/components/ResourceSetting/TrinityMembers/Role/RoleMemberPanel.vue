@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ApplyMembersWindow from './ApplyMembersWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -82,7 +82,7 @@ export default {
         },
         getMembers(){
             if(this.roleuid && this.roleuid !== ''){
-                HTTPRepo.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
+                HTTP_TRINITY.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
                 .then(response => {
                     this.applyMembers = response.data
                     this.memberUids = []
@@ -122,7 +122,7 @@ export default {
             if(!this.deleteUid || this.deleteUid === '')
                 return
             
-            HTTPRepo.get('role-member/deleteByPKUids?roleUid='+this.roleuid+'&userUid='+this.deleteUid)
+            HTTP_TRINITY.get('role-member/deleteByPKUids?roleUid='+this.roleuid+'&userUid='+this.deleteUid)
             .then(response => {
                 this.applyMembers.splice(this.deleteIndex, 1)
                 this.memberUids.splice(this.deleteIndex, 1)

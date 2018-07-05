@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import UserGroupForm from './UserGroupForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.userGroupForm.save()
 
             if(postContent){
-                HTTPRepo.post(`user-group/add`, postContent)
+                HTTP_TRINITY.post(`user-group/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

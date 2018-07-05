@@ -94,7 +94,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -208,7 +208,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`busentity/findByFilter`, params)
+            HTTP_TRINITY.post(`busentity/findByFilter`, params)
             .then(response => {
                 this.entities = response.data
             })
@@ -234,7 +234,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 this.categories = response.data
             })
@@ -258,7 +258,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 this.jobs = response.data
             })
@@ -273,7 +273,7 @@ export default {
             if(!this.new_content.triggerjobuid || this.new_content.triggerjobuid.trim() === '')
                 return
 
-            HTTPRepo.get(`job/findJobFullPathByUid`, {params: {
+            HTTP_TRINITY.get(`job/findJobFullPathByUid`, {params: {
                 uid: this.new_content.triggerjobuid
             }})
             .then(response => {

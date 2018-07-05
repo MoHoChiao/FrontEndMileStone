@@ -121,7 +121,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPDownload,HTTPUpload, errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_TRINITY_Download,HTTP_TRINITY_Upload, errorHandle } from '../../../util_js/axios_util'
 import PackageEditPanel from './PackageEditPanel.vue'
 import FilesAndRulesPanel from './FilesAndRulesPanel.vue'
 import PackageAddWindow from './PackageAddWindow.vue'
@@ -160,7 +160,7 @@ export default {
             let url = 'dm-ext-package/findAll'
             if(this.searchText.trim().length > 0)
                 url = 'dm-ext-package/findByName?name=' + this.searchText.trim()
-            HTTPRepo.get(url)
+            HTTP_TRINITY.get(url)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 this.allPackageObjs = response.data
@@ -201,7 +201,7 @@ export default {
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get(`dm-ext-package/delete`, {
+            HTTP_TRINITY.get(`dm-ext-package/delete`, {
                 params: {
                     uid: this.deleteUid
                 }
@@ -246,7 +246,7 @@ export default {
             this.allOverlayLoadingText = 'Import Jar File - ' + fileName + '...'
             this.allOverlayLoading = true
 
-            HTTPUpload.post(`dm-ext-package/import`, formData)
+            HTTP_TRINITY_Upload.post(`dm-ext-package/import`, formData)
             .then(response => {
                 this.allOverlayLoading = false
                 if(response.data === true){

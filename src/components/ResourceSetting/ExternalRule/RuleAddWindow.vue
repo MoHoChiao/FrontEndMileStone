@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
 import RuleAddForm from './RuleAddForm.vue';
 import FormButton from '../FormButton.vue';
@@ -52,7 +52,7 @@ export default {
 
             if(postContent){
                 this.buttonLoading = true
-                HTTPRepo.post(`dm-ext-rule/add`, postContent)
+                HTTP_TRINITY.post(`dm-ext-rule/add`, postContent)
                 .then(response => {
                     this.buttonLoading = false
                     this.$emit('closeAdd', response.data)

@@ -13,7 +13,6 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import DriverJarPanel from './DriverJarPanel.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'

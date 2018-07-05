@@ -94,7 +94,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import ExclFrequencyEditPanel from './ExclFrequencyEditPanel.vue'
 import ExclFrequencyApplyPanel from './ExclFrequencyApplyPanel.vue'
@@ -155,7 +155,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`excl-frequency/findByFilter`, params)
+            HTTP_TRINITY.post(`excl-frequency/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -208,7 +208,7 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`excl-frequency/delete`, {
+            HTTP_TRINITY.get(`excl-frequency/delete`, {
                 params: {
                     uid: this.deleteUid
                 }

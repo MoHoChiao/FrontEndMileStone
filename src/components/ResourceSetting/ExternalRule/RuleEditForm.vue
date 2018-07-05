@@ -28,7 +28,6 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {

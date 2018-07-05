@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import TrinityconfigForm from './TrinityconfigForm.vue'
 import FormButton from '../FormButton.vue'
@@ -34,7 +34,7 @@ export default {
         save(){
             let postContent = this.$refs.configForm.save()
             if(postContent){
-                HTTPRepo.post(`trinity-config/edit`, postContent)
+                HTTP_TRINITY.post(`trinity-config/edit`, postContent)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Trinity Configuration Success.",

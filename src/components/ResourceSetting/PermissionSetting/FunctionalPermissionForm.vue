@@ -52,7 +52,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
 
 export default {
     data() {
@@ -137,7 +137,7 @@ export default {
     },
     methods: {
         getFunctions(){
-            HTTPRepo.get(`access-right/findFunctionalPermissionByPeopleUid?peopleUid=`+this.peopleUid)
+            HTTP_AUTH.get(`authorization/findFunctionalPermissionByPeopleUid?peopleUid=`+this.peopleUid)
             .then(response => {
                 this.functionalList = response.data
                 this.objUids = []

@@ -171,7 +171,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import FileSourceCategoryEditWindow from './FileSourceCategory/FileSourceCategoryEditWindow.vue'
 import FileSourceEditWindow from './FileSourceEditWindow.vue'
@@ -247,7 +247,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`file-source-category/findByFilter`, params)
+            HTTP_TRINITY.post(`file-source-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
 
@@ -294,7 +294,7 @@ export default {
                 }
             }
             
-            HTTPRepo.post(urlPath, params)
+            HTTP_TRINITY.post(urlPath, params)
             .then(response => {
                 if (response.data.content !== undefined) {
                     this.allFileSourceObjs = response.data.content
@@ -422,7 +422,7 @@ export default {
                 this.deleteFileSource()
         },
         deleteCategory(){
-            HTTPRepo.get(`file-source-category/delete`, {
+            HTTP_TRINITY.get(`file-source-category/delete`, {
                 params: {
                     uid: this.selectedCategoryRecord.fscategoryuid
                 }
@@ -438,7 +438,7 @@ export default {
             })
         },
         deleteFileSource(){
-            HTTPRepo.get(`file-source/delete`, {
+            HTTP_TRINITY.get(`file-source/delete`, {
                 params: {
                     uid: this.selectedFileSourceRecord.filesourceuid
                 }

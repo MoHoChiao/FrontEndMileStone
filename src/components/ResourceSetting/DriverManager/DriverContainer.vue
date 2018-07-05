@@ -123,7 +123,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPDownload,HTTPUpload, errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_TRINITY_Download,HTTP_TRINITY_Upload, errorHandle } from '../../../util_js/axios_util'
 import DriverEditPanel from './DriverEditPanel.vue'
 import DriverJarPanel from './DriverJarPanel.vue'
 import DriverAddWindow from './DriverAddWindow.vue'
@@ -159,7 +159,7 @@ export default {
     },
     methods: {
         getDrivers(e){
-            HTTPRepo.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
+            HTTP_TRINITY.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 this.allDriverObjs = response.data
@@ -200,7 +200,7 @@ export default {
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get(`driver-manager/deleteDriverFolderAndProp`, {
+            HTTP_TRINITY.get(`driver-manager/deleteDriverFolderAndProp`, {
                 params: {
                     driverName: this.deleteUid
                 }
@@ -254,7 +254,7 @@ export default {
             this.allOverlayLoadingText = 'Export ZIP File - jdbc.zip...'
             this.allOverlayLoading = true
 
-            HTTPDownload.get(`driver-manager/exportDriverZIP`)
+            HTTP_TRINITY_Download.get(`driver-manager/exportDriverZIP`)
             .then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
@@ -284,7 +284,7 @@ export default {
             this.allOverlayLoadingText = 'Import ZIP File - ' + fileName + '...'
             this.allOverlayLoading = true
 
-            HTTPUpload.post(`driver-manager/importDriverZIP`, formData)
+            HTTP_TRINITY_Upload.post(`driver-manager/importDriverZIP`, formData)
             .then(response => {
                 this.allOverlayLoading = false
                 if(response.data === true){

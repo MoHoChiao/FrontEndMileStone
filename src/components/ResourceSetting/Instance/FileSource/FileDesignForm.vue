@@ -189,7 +189,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -244,7 +244,7 @@ export default {
     },
     mounted() {
         //Fetch cfs objs is above
-        HTTPRepo.get(`disconfig/findByModule`, {params: {
+        HTTP_TRINITY.get(`disconfig/findByModule`, {params: {
                 module: 'filesource'
             }})
             .then(response => {
@@ -267,7 +267,7 @@ export default {
                 "ignoreCase":true
             }
         }
-        HTTPRepo.post(`connection/findByFilter`, params)
+        HTTP_TRINITY.post(`connection/findByFilter`, params)
             .then(response => {
                 this.ftpConns = response.data
             })

@@ -8,7 +8,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
 import ModalWindow from '../../Common/window/ModalWindow.vue'
 import PermissionForm from './PermissionForm.vue'
 import PermissionForUseForm from './PermissionForUseForm.vue'
@@ -45,7 +45,7 @@ export default {
             let postContent = this.$refs.permissionForm.save()
             
             if(postContent){
-                HTTPRepo.post(`access-right/modifyByObjectUid?objectUid=`+this.objectUid, postContent)
+                HTTP_AUTH.post(`authorization/modifyByObjectUid?objectUid=`+this.objectUid, postContent)
                 .then(response => {
                     this.$emit('closeApply')
                 })

@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
 import FileEditForm from './FileEditForm.vue';
 import FormButton from '../FormButton.vue';
@@ -50,7 +50,7 @@ export default {
             if(postContent){
                 this.buttonLoading = true
 
-                HTTPRepo.get(`dm-ext-jar/editDescriptionOnly`, {
+                HTTP_TRINITY.get(`dm-ext-jar/editDescriptionOnly`, {
                     params: {
                         extJarUid: postContent.extjaruid,
                         newDesc: postContent.description

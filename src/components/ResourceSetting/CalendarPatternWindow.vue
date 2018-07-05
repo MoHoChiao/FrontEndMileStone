@@ -264,7 +264,7 @@
   </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../util_js/axios_util'
 import myDatepicker from './DatetimePicker.vue'
 import ModalWindow from '../Common/window/ModalWindow.vue'
 import FormButton from './FormButton.vue'
@@ -518,7 +518,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`file-source-category/findByFilter`, params)
+            HTTP_TRINITY.post(`file-source-category/findByFilter`, params)
             .then(response => {
                 this.allCategoryObjs = response.data
             })

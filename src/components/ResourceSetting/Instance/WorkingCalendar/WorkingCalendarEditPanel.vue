@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import WorkingCalendarForm from './WorkingCalendarForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -35,7 +35,7 @@ export default {
         },
         save(postContent){
             if(postContent){
-                HTTPRepo.post(`working-calendar/edit`, postContent)
+                HTTP_TRINITY.post(`working-calendar/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

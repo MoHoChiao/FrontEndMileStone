@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY_Upload,errorHandle } from '../../../util_js/axios_util';
 import ModalWindow from '../../Common/window/ModalWindow.vue';
 import DriverAddForm from './DriverAddForm.vue';
 import FormButton from '../FormButton.vue';
@@ -42,7 +42,7 @@ export default {
 
             if(formData){
                 this.buttonLoading = true
-                HTTPUpload.post(`driver-manager/addDriverFolderAndProp`, formData)
+                HTTP_TRINITY_Upload.post(`driver-manager/addDriverFolderAndProp`, formData)
                 .then(response => {
                     this.buttonLoading = false
                     this.$emit('closeAdd', response.data)

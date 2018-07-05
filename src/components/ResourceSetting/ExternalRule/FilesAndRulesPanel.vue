@@ -123,7 +123,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,HTTPUpload,errorHandle } from '../../../util_js/axios_util';
+import { HTTP_TRINITY,HTTP_TRINITY_Upload,errorHandle } from '../../../util_js/axios_util';
 import FileEditWindow from './FileEditWindow.vue';
 import RuleAddWindow from './RuleAddWindow.vue';
 import RuleEditWindow from './RuleEditWindow.vue';
@@ -202,7 +202,7 @@ export default {
             if(this.selectedFileRecord === undefined) 
                     return
             
-            HTTPRepo.get('dm-ext-rule/findNonSettingRulesByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
+            HTTP_TRINITY.get('dm-ext-rule/findNonSettingRulesByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
             .then(response => {
                 this.modifyRuleRecord = new Object()
                 this.modifyRuleRecord.extjaruid = this.selectedFileRecord.extjaruid
@@ -259,7 +259,7 @@ export default {
         },
         getRules(e){
             if(this.selectedFileRecord){
-                HTTPRepo.get('dm-ext-rule/findByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
+                HTTP_TRINITY.get('dm-ext-rule/findByJarUid?extJarUid=' + this.selectedFileRecord.extjaruid)
                 .then(response => {
                     this.rules = response.data
                 })
@@ -309,7 +309,7 @@ export default {
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get('dm-ext-jar/deleteByJarUid?uid='+this.deleteUid)
+            HTTP_TRINITY.get('dm-ext-jar/deleteByJarUid?uid='+this.deleteUid)
             .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.new_files.splice(this.deleteIndex, 1)
@@ -331,7 +331,7 @@ export default {
                 return
 
             this.delButtonLoading = true
-            HTTPRepo.get('dm-ext-rule/deleteByAllPKs?extJarUid='+this.selectedFileRecord.extjaruid+'&ruleName='+this.deleteUid)
+            HTTP_TRINITY.get('dm-ext-rule/deleteByAllPKs?extJarUid='+this.selectedFileRecord.extjaruid+'&ruleName='+this.deleteUid)
             .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
             .then(response => {
                 this.rules.splice(this.deleteIndex, 1)
@@ -366,7 +366,7 @@ export default {
             this.uploadFile(formData);
         },
         uploadFile(formData){
-            HTTPUpload.post(`dm-ext-jar/add?packageUid=` + this.packageuid, formData)
+            HTTP_TRINITY_Upload.post(`dm-ext-jar/add?packageUid=` + this.packageuid, formData)
             .then(wait(FAST_SPEED))
             .then(response => {
                 if(response.data){

@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ExclFrequencyForm from './ExclFrequencyForm.vue'
 import FormButton from '../../FormButton.vue'
 
@@ -34,7 +34,7 @@ export default {
             let postContent = this.$refs.exclFreqForm.save()
             
             if(postContent){
-                HTTPRepo.post(`excl-frequency/edit`, postContent)
+                HTTP_TRINITY.post(`excl-frequency/edit`, postContent)
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)
                 })

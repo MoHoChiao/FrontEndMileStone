@@ -8,7 +8,7 @@
     </over-lay-loading-div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 import PackageEditForm from './PackageEditForm.vue'
 import FormButton from '../FormButton.vue'
 import OverlayLoadingDIV from '../../Common/Loading/OverlayLoadingDIV.vue'
@@ -45,7 +45,7 @@ export default {
                 this.loadingText = 'Save ' + this.content.packagename + '...'
                 this.isLoading = true
 
-                HTTPRepo.post(`dm-ext-package/edit`, postContent)
+                HTTP_TRINITY.post(`dm-ext-package/edit`, postContent)
                 .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                 .then(response => {
                     this.$emit('closeEdit', this.index, response.data)

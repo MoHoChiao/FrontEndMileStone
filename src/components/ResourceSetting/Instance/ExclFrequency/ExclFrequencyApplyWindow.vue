@@ -8,7 +8,6 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import ExclFrequencyApplyPanel from './ExclFrequencyApplyPanel.vue'
 

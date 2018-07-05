@@ -9,7 +9,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import FrequencyForm from './FrequencyForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -118,7 +118,7 @@ export default {
             }
             
             if(postContent){
-                HTTPRepo.post(`frequency/` + urlPath, postContent)
+                HTTP_TRINITY.post(`frequency/` + urlPath, postContent)
                 .then(response => {
                     if(this.urlOp === 'add'){ //add operation
                         this.$emit('closeAdd', response.data)

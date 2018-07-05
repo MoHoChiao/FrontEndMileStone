@@ -105,7 +105,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import UserEditPanel from './UserEditPanel.vue'
 import UserAddWindow from './UserAddWindow.vue'
@@ -170,7 +170,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`trinity-user/findByFilter`, params)
+            HTTP_TRINITY.post(`trinity-user/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -218,7 +218,7 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`trinity-user/delete`, {
+            HTTP_TRINITY.get(`trinity-user/delete`, {
                 params: {
                     uid: this.deleteUid
                 }
@@ -240,7 +240,7 @@ export default {
             if(this.lockUid === '')
                 return
             
-            HTTPRepo.get(`trinity-user/lock`, {
+            HTTP_TRINITY.get(`trinity-user/lock`, {
                 params: {
                     userid: this.lockId,
                     lock: this.lockStatus

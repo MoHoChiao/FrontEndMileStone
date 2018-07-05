@@ -119,7 +119,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import VRAgentEditPanel from './VRAgentEditPanel.vue'
 import VRAgentAddWindow from './VRAgentAddWindow.vue'
@@ -181,7 +181,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`vragent/findByFilter`, params)
+            HTTP_TRINITY.post(`vragent/findByFilter`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -229,7 +229,7 @@ export default {
             if(this.deleteUid === '')
                 return
             
-            HTTPRepo.get(`vragent/delete`, {
+            HTTP_TRINITY.get(`vragent/delete`, {
                 params: {
                     uid: this.deleteUid
                 }

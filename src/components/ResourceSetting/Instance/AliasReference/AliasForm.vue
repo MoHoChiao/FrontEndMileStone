@@ -80,7 +80,7 @@
     </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -149,7 +149,7 @@ export default {
             this.$set(this.new_content.alias, index, list_info)
         },
         getTargetObjs(url, params, aliastype, uidField, nameField){
-            HTTPRepo.post(url, params)
+            HTTP_TRINITY.post(url, params)
             .then(response => {
                 let targetObjs = []
                 for(let i=0;i<response.data.length;i++){
@@ -190,7 +190,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post('vragent/findByFilter?withoutDetail=true', params)
+            HTTP_TRINITY.post('vragent/findByFilter?withoutDetail=true', params)
             .then(response => {
                 for(let i=0;i<response.data.length;i++){
                     let uid = response.data[i].virtualagentuid

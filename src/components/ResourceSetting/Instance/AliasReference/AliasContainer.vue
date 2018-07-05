@@ -108,7 +108,7 @@
 </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import FilterPanel from '../../FilterPanel.vue'
 import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -165,7 +165,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`busentity/findByFilter?withAlias=true`, params)
+            HTTP_TRINITY.post(`busentity/findByFilter?withAlias=true`, params)
             .then(response => {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
@@ -218,7 +218,7 @@ export default {
                 return
             }
 
-            HTTPRepo.get(`objectalias/deleteByParentUid`, {
+            HTTP_TRINITY.get(`objectalias/deleteByParentUid`, {
                 params: {
                     parentUid: this.deleteUid
                 }

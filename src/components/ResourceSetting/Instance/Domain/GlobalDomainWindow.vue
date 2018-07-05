@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import DomainForm from './DomainForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -45,7 +45,7 @@ export default {
             let postContent = this.$refs.domainForm.save()
             
             if(postContent){
-                HTTPRepo.post(`domain/edit`, postContent)
+                HTTP_TRINITY.post(`domain/edit`, postContent)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Global Domain Success.",
@@ -63,7 +63,7 @@ export default {
             this.$refs.domainForm.reset()
         },
         getGlobalDomain(e){
-            HTTPRepo.get(`domain/findByUid?uid=global`)
+            HTTP_TRINITY.get(`domain/findByUid?uid=global`)
             .then(response => {
                 this.content = response.data
             })

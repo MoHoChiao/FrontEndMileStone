@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import ExclFrequencyForm from './ExclFrequencyForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.exclFreqForm.save()
 
             if(postContent){
-                HTTPRepo.post(`excl-frequency/add`, postContent)
+                HTTP_TRINITY.post(`excl-frequency/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

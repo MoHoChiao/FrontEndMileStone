@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import ExclFrequencyForm from './ExclFrequencyForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -44,7 +44,7 @@ export default {
         save(){
             let postContent = this.$refs.exclFreqForm.save()
             if(postContent){
-                HTTPRepo.post(`excl-frequency/modifyGlobal`, postContent)
+                HTTP_TRINITY.post(`excl-frequency/modifyGlobal`, postContent)
                 .then(response => {
                     let newStatus = {
                         "msg": "Modify Global Exclude Frequency Success.",
@@ -62,7 +62,7 @@ export default {
             this.$refs.exclFreqForm.reset()
         },
         getGlobalExclFreq(e){
-            HTTPRepo.get(`excl-frequency/findByGlobal`)
+            HTTP_TRINITY.get(`excl-frequency/findByGlobal`)
             .then(response => {
                 if(response.data !== ''){
                     this.content = response.data

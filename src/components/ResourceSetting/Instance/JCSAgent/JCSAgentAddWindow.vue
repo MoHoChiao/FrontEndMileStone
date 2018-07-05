@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import JCSAgentForm from './JCSAgentForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -57,7 +57,7 @@ export default {
             let postContent = this.$refs.agentForm.save()
 
             if(postContent){
-                HTTPRepo.post(`jcsagent/add`, postContent)
+                HTTP_TRINITY.post(`jcsagent/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

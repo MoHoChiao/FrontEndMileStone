@@ -7,7 +7,7 @@
     </modal-window>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import RoleForm from './RoleForm.vue'
 import FormButton from '../../FormButton.vue'
@@ -35,7 +35,7 @@ export default {
             let postContent = this.$refs.roleForm.save()
 
             if(postContent){
-                HTTPRepo.post(`role/add`, postContent)
+                HTTP_TRINITY.post(`role/add`, postContent)
                 .then(response => {
                     this.$emit('closeAdd', response.data)
                 })

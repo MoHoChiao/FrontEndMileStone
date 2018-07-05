@@ -291,7 +291,7 @@
   </div>
 </template>
 <script>
-import { HTTPRepo,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import myDatepicker from '../../DatetimePicker.vue'
 import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
@@ -696,7 +696,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`frequency-category/findByFilter`, params)
+            HTTP_TRINITY.post(`frequency-category/findByFilter`, params)
             .then(response => {
                 
                 this.allCategoryLists = response.data
@@ -713,7 +713,7 @@ export default {
             }
         },
         getDistinctFrequencyList(){
-            HTTPRepo.get(`frequency-list/findDistinctDateByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
+            HTTP_TRINITY.get(`frequency-list/findDistinctDateByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
             .then(response => {
                 this.distinctDateLists = response.data
                 if(!this.distinctDateLists[0])  //if empth array
@@ -767,7 +767,7 @@ export default {
                     this.allFrequencyLists = [] //把allFrequencyLists值歸空
                 }
 
-                HTTPRepo.get(`frequency-list/findDistinctTimeByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
+                HTTP_TRINITY.get(`frequency-list/findDistinctTimeByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
                 .then(response => {
                     this.distinctTimeLists = response.data
                     if(!this.distinctTimeLists[0])  //if empth array
@@ -800,7 +800,7 @@ export default {
             })
         },
         getAllFrequencyList(){
-            HTTPRepo.get(`frequency-list/findByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
+            HTTP_TRINITY.get(`frequency-list/findByFrequencyUid`, {params:{uid: this.new_content.frequencyuid}})
             .then(response => {
                 this.allFrequencyLists = response.data
                 this.datetype = "Manually"
@@ -817,7 +817,7 @@ export default {
                 }
             }
 
-            HTTPRepo.post(`working-calendar/findByFilter?withoutDetail=true`, params)
+            HTTP_TRINITY.post(`working-calendar/findByFilter?withoutDetail=true`, params)
             .then(response => {
                 this.allWCLists = response.data
             })
@@ -850,7 +850,7 @@ export default {
             return ymdArr
         },
         generateByPattern(postContent){
-            HTTPRepo.post(`working-calendar/getWCPattern`, postContent)
+            HTTP_TRINITY.post(`working-calendar/getWCPattern`, postContent)
                 .then(response => {
                     this.setDatetimePicker(JSON.stringify(response.data))
                     this.changePatternWindowStatus()
