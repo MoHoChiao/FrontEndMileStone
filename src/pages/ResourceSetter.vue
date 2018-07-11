@@ -13,7 +13,7 @@
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
                 <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" @click="openNav"><i class="fa fa-bars"></i></a>
-                <a href="#" class="w3-bar-item w3-button w3-padding-large w3-signal-black"><i class="fa fa-home w3-margin-right"></i>Go Home</a>
+                <a href="#" class="w3-bar-item w3-button w3-padding-large w3-signal-black"><i class="fa fa-home w3-margin-right"></i>Home</a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="Other Apps"><i class="fa fa-laptop"></i></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="Help"><i class="fa fa-question-circle"></i></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="About"><i class="fa fa-info-circle"></i></a>
@@ -36,24 +36,21 @@
             <div class="w3-row">
                 <!-- Left Column -->
                 <div class="w3-col m3">
-                    <!-- Profile -->
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <h4 class="w3-center">User Setting</h4>
-                            <p class="w3-center"><img src="/src/assets/images/resource_setter/Edit-Male-User_64.png" class="w3-circle" style="height:64px;width:64px" alt="User Set"></p>
-                            <hr class="w3-border-black">
-                            <p><a href="javascript:void(0)" @click="getUser"><i class="fa fa-users fa-fw w3-margin-right w3-text-theme"></i>User Account</a></p>
-                            <p><a href="javascript:void(0)" @click="getRole"><i class="fa fa-user-secret fa-fw w3-margin-right w3-text-theme"></i>User Role</a></p>
-                            <p><a href="javascript:void(0)" @click="getUserGroup"><i class="fa fa-user-circle-o fa-fw w3-margin-right w3-text-theme"></i>User Group</a></p>
-                        </div>
-                    </div>
-                    <br>
-
                     <!-- Accordion -->
                     <div class="w3-card-4 w3-round">
-                        <div class="w3-signal-white">
-                            <button @click="menuFunction('instanceMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Instances</button>
-                            <div id="instanceMenu" class="w3-hide w3-container w3-animate-opacity">
+                        <div class="w3-signal-white w3-round">
+                            <button @click="menuFunction('accountMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-user-plus fa-fw w3-margin-right"></i>Account</button>
+                            <div id="accountMenu" class="w3-container w3-animate-opacity">
+                                <p>
+                                    <div class="w3-bar-block">
+                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>Role</a>
+                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>User</a>
+                                        <a @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>User Group</a>
+                                    </div>
+                                </p>
+                            </div>
+                            <button @click="menuFunction('resourceMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Resource</button>
+                            <div id="resourceMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getAlias" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>Alias Reference</a>
@@ -65,60 +62,45 @@
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('freqMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Frequency Events</button>
-                            <div id="freqMenu" class="w3-hide w3-container w3-animate-opacity">
+                            <button @click="menuFunction('scheduleMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Schedule</button>
+                            <div id="scheduleMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
                                         <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
                                         <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
-                                        <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>Exclude Freq</a>
+                                        <button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>Exclude Freq</button>
+                                        <div id="excludeFreqMenu" class="w3-hide w3-container w3-animate-opacity">
+                                            <div class="w3-bar-block">
+                                                <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>General</a>
+                                                <a @click="getGlobalExclFrequency" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-globe fa-fw w3-margin-right"></i>Global</a>
+                                            </div>
+                                        </div>  
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('fileMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-upload fa-fw w3-margin-right"></i>File Center</button>
-                            <div id="fileMenu" class="w3-hide w3-container w3-animate-opacity">
+                            <button @click="menuFunction('systemMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-wrench fa-fw w3-margin-right"></i>System</button>
+                            <div id="systemMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
+                                        <a @click="changeConfigWindowStatus" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-file-text-o fa-fw w3-margin-right"></i>Configuration</a>
+                                        <a @click="changeMonitorWindowStatus" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>Server Monitor</a>
                                         <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
                                         <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
+                                        <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>License Status</a>
+                                        <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-code-fork fa-fw w3-margin-right"></i>Version Info</a>
                                     </div>
                                 </p>
                             </div>
                         </div>
                     </div>
                     <br>
-
-                    <!-- Global -->
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <p><i class="fa fa-globe fa-fw w3-margin-right"></i>Global</p>
-                            <p>
-                                <button @click="getGlobalDomain" class="w3-button w3-tag w3-small w3-theme-d3">Domain</button>
-                                <button @click="getGlobalAlias" class="w3-button w3-tag w3-small w3-theme-l1">Alias</button>
-                                <button @click="getGlobalExclFrequency" class="w3-button w3-tag w3-small w3-theme-l4">Exclude Freq</button>
-                            </p>
-                        </div>
-                    </div>
-                    <br>
-
-                    <!-- Setting -->
-                    <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom">
-                        <p><i class="fa fa-wrench fa-fw w3-margin-right"></i>Setting</p>
-                        <p>
-                            <button @click="changeConfigWindowStatus" class="w3-button w3-tag w3-small w3-theme-d3">Configuration</button>
-                            <button @click="changeMonitorWindowStatus" class="w3-button w3-tag w3-small w3-theme-l1">Resource Monitor</button>
-                        </p>
-                    </div>
-                    <!-- End Left Column -->
                 </div>
-
                 <!-- Middle Column & Right Column -->
                 <router-view name="content">
                 <!--所有被routing的組件內容都會在這裡渲染-->
                 </router-view>
                 <!-- End Middle Column & Right Column -->
             </div>
-
             <!-- End Page Container -->
         </div>
         <br>
@@ -147,12 +129,10 @@ export default {
     methods: {
         menuFunction(id){
             var x = document.getElementById(id);
-            if (x.className.indexOf("w3-show") == -1) {
-                x.className += " w3-show"
-                x.previousElementSibling.className += " w3-theme-d1"
+            if (x.className.indexOf("w3-hide") == -1) {
+                x.className += " w3-hide"
             } else {
-                x.className = x.className.replace("w3-show", "")
-                x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-theme-d1", "")
+                x.className = x.className.replace("w3-hide", "")
             }
         },
         openNav(e){
@@ -229,7 +209,5 @@ export default {
 }
 </script>
 <style scoped>
-    div {
-        font-family: "Fugaz One"
-    }
+    div { font-family: Verdana, Arial, "Microsoft YaHei", "Noto Sans CJK TC", "Microsoft JhengHei" }
 </style>

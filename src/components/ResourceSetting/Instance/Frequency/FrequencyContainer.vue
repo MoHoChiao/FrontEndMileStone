@@ -28,7 +28,7 @@
                     @confirmDelete="deleteObj" 
   ></confirm-delete-window>
   <!-- Frequency Path Header -->
-  <div class="w3-col m7 w3-animate-opacity">
+  <div class="w3-col m9 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
             <div class="w3-card-4 w3-round w3-signal-white">

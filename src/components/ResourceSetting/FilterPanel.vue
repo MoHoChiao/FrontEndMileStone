@@ -1,5 +1,5 @@
 <template>
-<div class="w3-col m2 w3-small">
+<div class="w3-hide w3-col m2 w3-small">
     <div class="w3-card-4 w3-round w3-signal-white">
         <div class="w3-container">
             <p class="w3-center">Page Size</p>
@@ -27,7 +27,7 @@
             <p>
                 <select class="w3-select w3-border w3-round" v-model="orderField">
                     <option value="" disabled selected>Field</option>
-                    <option :value="field.value" v-for="field in orderFileds">{{ field.name }}</option>
+                    <option :key="field.name + field.value" :value="field.value" v-for="field in orderFileds">{{ field.name }}</option>
                 </select>
             </p>
             <p>
@@ -52,7 +52,7 @@
             <p>
                 <select class="w3-select w3-border w3-round" v-model="queryField">
                     <option value="" disabled selected>Field</option>
-                    <option :value="field.value" v-for="field in queryFileds">{{ field.name }}</option>
+                    <option :key="field.name + field.value" :value="field.value" v-for="field in queryFileds">{{ field.name }}</option>
                 </select>
             </p>
             <p>
@@ -89,7 +89,7 @@ export default {
         return {
             //for pagging
             selectedNum: 0,
-            selectedSize: 10,
+            selectedSize: 20,
             totalPages: 1,
             //for ordering
             isOrder: false,

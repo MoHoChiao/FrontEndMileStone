@@ -19,7 +19,7 @@
                     :objectName="selectedRecord.agentname" 
                     @closeApply="changePermissionWindowStatus" 
   ></permission-window>
-  <div class="w3-col m7 w3-animate-opacity">
+  <div class="w3-col m9 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
             <div class="w3-card-4 w3-round w3-signal-white">
@@ -36,19 +36,85 @@
             </div>
         </div>
     </div>
-
-    <div v-if="showMode">
+    <div v-if="showMode" class="w3-small">
+        <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
+            <p>
+                <div>
+                    <span><img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+                    <span>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                JCS Agents
+                            </div>
+                        </div>
+                    </span>
+                    <span class="w3-dropdown-hover w3-right w3-hide-large">
+                        <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
+                        <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
+                            <div>
+                                <i class="w3-bar-item fa fa-clone w3-button" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
+                                <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
+                                <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
+                                <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"> Delete Connection</i>
+                            </div>
+                        </div>
+                    </span>
+                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
+                    <i class="fa fa-universal-access w3-button w3-right" title="Apply Permission To Connection" aria-hidden="true" @click="changePermissionWindowStatus()"></i>
+                    <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
+                    <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
+                    <i class="fa fa-clone w3-button w3-right w3-hide-medium w3-hide-small" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="getConnections"></i>
+                </div>
+            </p>
+            <p>
+              <div>
+                <div class="w3-responsive w3-card w3-round">
+                    <table class="w3-table-all">
+                        <tr class="w3-teal">
+                            <th class="w3-center" width="25%">Name</th>
+                            <th class="w3-center" width="15%">IP Address</th>
+                            <th class="w3-center" width="38%">Description</th>
+                            <th class="w3-center" width="22%">Update Time</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="agentContainer" class="w3-responsive w3-card w3-round" style="min-height:450px">
+                    <table id="agentTable" class="w3-table-all w3-left">
+                        <tr :id="content.agentuid" :key="content.agentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnAgent(content.agentuid, index)" v-for="(content, index) in allJCSAgentObjs">
+                            <td width="25%">
+                                <span>{{ content.agentname }}</span>
+                            </td>
+                            <td width="15%">
+                                <span>{{ content.host }}</span>
+                            </td>
+                            <td width="38%">
+                                <span>{{ content.description }}</span>
+                            </td>
+                            <td width="22%">
+                                <span>{{ content.lastupdatetime }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+              </div>
+            </p>
+        </div>
+    </div>
+    <div v-else class="w3-small">
         <div :key="content.agentuid+'content'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allJCSAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.agentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4 w3-hide-medium w3-hide-small" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
+                <span class="w3-tag w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
+                <span class="w3-tag w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
+                <span class="w3-tag w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
+                <span class="w3-tag w3-theme-l4 w3-hide-medium w3-hide-small" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <hr class="w3-border-black w3-clear">
-                <p class="w3-small">{{ content.description }}</p>
+                <p >{{ content.description }}</p>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeAddWindowStatus(content)">
                     <i class="fa fa-clone"></i> Copy</button>
                 <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
@@ -61,7 +127,7 @@
             <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
         </div>
     </div>
-    <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
+    <!--ul class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
         <li :key="content.agentuid+'table'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allJCSAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
@@ -89,8 +155,7 @@
             </div>
             <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
         </li>
-    </ul>
-
+    </ul-->
   </div>
   <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getAgents"></filter-panel>
 </div>
@@ -107,6 +172,7 @@ export default {
     data() {
         return {
             showMode: true, //switch content list or table list
+            selectedAgentRecord: new Object(),   //store which record has been selected.(JCSAgents)
             addWindowAlive: false,  //for add agent modal windows
             deleteWindowAlive: false,  //for delete agent modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
@@ -137,6 +203,18 @@ export default {
         this.getAgents()
     },
     methods: {
+        clickOnAgent(id, index){
+            let tr = document.getElementById(id)
+            this.clearSelectedAgentRecord(tr)
+
+            if (tr.className.indexOf('w3-blue-grey') == -1) {
+                tr.className = 'w3-blue-grey'
+                this.selectedAgentRecord = this.allJCSAgentObjs[index]
+                this.selectedAgentRecord.index = index //New prop is stores which agent obj will be deleted in UI
+            } else {
+                tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+            }
+        },
         getAgents(e){
             let params = {
                 "paging":{
@@ -273,6 +351,14 @@ export default {
             }
 
             this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+        },
+        clearSelectedAgentRecord(tr){
+            let table = document.getElementById('agentTable')
+            for(var i=0;i<table.childNodes.length;i++){  //先重設所有agent row的class
+                if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                    table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+            }
+            this.selectedAgentRecord = new Object()
         }
     },
     components: {
