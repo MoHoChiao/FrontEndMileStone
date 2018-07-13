@@ -1,14 +1,12 @@
 <template>
     <div>
         <!-- msg window -->
-        <trinity-config-window :windowAlive="trinityconfigAlive" 
-                    window-title="Trinity Configuration Setting" 
-                    @closeAdd="changeConfigWindowStatus" 
-        ></trinity-config-window>
-        <resource-monitor-window :windowAlive="resourceMonitorAlive" 
-                    window-title="Resource Monitor Setting" 
-                    @closeAdd="changeMonitorWindowStatus" 
-        ></resource-monitor-window>
+        <trinity-config-window :windowAlive="trinityconfigAlive"
+                               window-title="Trinity Configuration Setting"
+                               @closeAdd="changeConfigWindowStatus"></trinity-config-window>
+        <resource-monitor-window :windowAlive="resourceMonitorAlive"
+                                 window-title="Resource Monitor Setting"
+                                 @closeAdd="changeMonitorWindowStatus"></resource-monitor-window>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -43,8 +41,8 @@
                             <div id="accountMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>Role</a>
-                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>User</a>
+                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>Role</a>
+                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>User</a>
                                         <a @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>User Group</a>
                                     </div>
                                 </p>
@@ -74,7 +72,7 @@
                                                 <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>General</a>
                                                 <a @click="getGlobalExclFrequency" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-globe fa-fw w3-margin-right"></i>Global</a>
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </p>
                             </div>
@@ -96,8 +94,8 @@
                     <br>
                 </div>
                 <!-- Middle Column & Right Column -->
-                <router-view name="content">
-                <!--所有被routing的組件內容都會在這裡渲染-->
+                <router-view class="w3-col m9 w3-animate-opacity" name="content">
+                    <!--所有被routing的組件內容都會在這裡渲染-->
                 </router-view>
                 <!-- End Middle Column & Right Column -->
             </div>
@@ -116,98 +114,100 @@
     </div>
 </template>
 <script>
-import TrinityconfigWindow from '../components/ResourceSetting/TrinityConfiguration/TrinityconfigWindow.vue'
-import ResourceMonitorWindow from '../components/ResourceSetting/ResourceMonitor/ResourceMonitorWindow.vue'
+    import TrinityconfigWindow from '../components/ResourceSetting/TrinityConfiguration/TrinityconfigWindow.vue'
+    import ResourceMonitorWindow from '../components/ResourceSetting/ResourceMonitor/ResourceMonitorWindow.vue'
 
-export default {
-    data() {
-        return {
-            trinityconfigAlive: false,
-            resourceMonitorAlive: false,
-        }
-    },
-    methods: {
-        menuFunction(id){
-            var x = document.getElementById(id);
-            if (x.className.indexOf("w3-hide") == -1) {
-                x.className += " w3-hide"
-            } else {
-                x.className = x.className.replace("w3-hide", "")
+    export default {
+        data() {
+            return {
+                trinityconfigAlive: false,
+                resourceMonitorAlive: false,
             }
         },
-        openNav(e){
-            var x = document.getElementById("navDemo")
-            if (x.className.indexOf("w3-show") == -1) {
-                x.className += " w3-show"
-            } else {
-                x.className = x.className.replace(" w3-show", "")
+        methods: {
+            menuFunction(id) {
+                var x = document.getElementById(id);
+                if (x.className.indexOf("w3-hide") == -1) {
+                    x.className += " w3-hide"
+                } else {
+                    x.className = x.className.replace("w3-hide", "")
+                }
+            },
+            openNav(e) {
+                var x = document.getElementById("navDemo")
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show"
+                } else {
+                    x.className = x.className.replace(" w3-show", "")
+                }
+            },
+            changeConfigWindowStatus() {
+                this.trinityconfigAlive = !this.trinityconfigAlive
+            },
+            changeMonitorWindowStatus() {
+                this.resourceMonitorAlive = !this.resourceMonitorAlive
+            },
+            //以下為頁面中間的部份, 各種Resources都會在這裡
+            getAlias(e) {
+                this.$router.push({ name: 'AliasReference' })
+            },
+            getGlobalAlias(e) {
+                this.$router.push({ name: 'GlobalAliasReference' })
+            },
+            getDomains(e) {
+                this.$router.push({ name: 'Domain' })
+            },
+            getGlobalDomain(e) {
+                this.$router.push({ name: 'GlobalDomain' })
+            },
+            getUser(e) {
+                this.$router.push({ name: 'User' })
+            },
+            getRole(e) {
+                this.$router.push({ name: 'Role' })
+            },
+            getUserGroup(e) {
+                this.$router.push({ name: 'UserGroup' })
+            },
+            getAgents(e) {
+                this.$router.push({ name: 'JCSAgent' })
+            },
+            getVRAgents(e) {
+                this.$router.push({ name: 'VRAgent' })
+            },
+            getFileSources(e) {
+                this.$router.push({ name: 'FileSource' })
+            },
+            getConnections(e) {
+                this.$router.push({ name: 'Connection' })
+            },
+            getWorkingCalendar(e) {
+                this.$router.push({ name: 'WorkingCalendar' })
+            },
+            getFrequencies(e) {
+                this.$router.push({ name: 'Frequency' })
+            },
+            getExclFrequencies(e) {
+                this.$router.push({ name: 'ExclFrequency' })
+            },
+            getGlobalExclFrequency(e) {
+                this.$router.push({ name: 'GlobalExclFrequency' })
+            },
+            getDrivers(e) {
+                this.$router.push({ name: 'DriverManager' })
+            },
+            getExternalRules(e) {
+                this.$router.push({ name: 'ExternalRuleContainer' })
             }
         },
-        changeConfigWindowStatus(){
-            this.trinityconfigAlive = !this.trinityconfigAlive
-        },
-        changeMonitorWindowStatus(){
-            this.resourceMonitorAlive = !this.resourceMonitorAlive
-        },
-        //以下為頁面中間的部份, 各種Resources都會在這裡
-        getAlias(e){
-            this.$router.push({ name: 'AliasReference'})
-        },
-        getGlobalAlias(e){
-            this.$router.push({ name: 'GlobalAliasReference'})
-        },
-        getDomains(e){
-            this.$router.push({ name: 'Domain'})
-        },
-        getGlobalDomain(e){
-            this.$router.push({ name: 'GlobalDomain'})
-        },
-        getUser(e){
-            this.$router.push({ name: 'User'})
-        },
-        getRole(e){
-            this.$router.push({ name: 'Role'})
-        },
-        getUserGroup(e){
-            this.$router.push({ name: 'UserGroup'})
-        },
-        getAgents(e){
-            this.$router.push({ name: 'JCSAgent'})
-        },
-        getVRAgents(e){
-            this.$router.push({ name: 'VRAgent'})
-        },
-        getFileSources(e){
-            this.$router.push({ name: 'FileSource'})
-        },
-        getConnections(e){
-            this.$router.push({ name: 'Connection'})
-        },
-        getWorkingCalendar(e){
-            this.$router.push({ name: 'WorkingCalendar'})
-        },
-        getFrequencies(e){
-            this.$router.push({ name: 'Frequency'})
-        },
-        getExclFrequencies(e){
-            this.$router.push({ name: 'ExclFrequency'})
-        },
-        getGlobalExclFrequency(e){
-            this.$router.push({ name: 'GlobalExclFrequency'})
-        },
-        getDrivers(e){
-            this.$router.push({ name: 'DriverManager'})
-        },
-        getExternalRules(e){
-            this.$router.push({ name: 'ExternalRuleContainer'})
+        components: {
+            'trinity-config-window': TrinityconfigWindow,
+            'resource-monitor-window': ResourceMonitorWindow
         }
-    },
-    components: {
-        'trinity-config-window': TrinityconfigWindow,
-        'resource-monitor-window': ResourceMonitorWindow
     }
-}
 </script>
 <style scoped>
-    div { font-family: Verdana, Arial, "Microsoft YaHei", "Noto Sans CJK TC", "Microsoft JhengHei" }
+    div {
+        font-family: Verdana, Arial, "Microsoft YaHei", "Noto Sans CJK TC", "Microsoft JhengHei"
+    }
 </style>
