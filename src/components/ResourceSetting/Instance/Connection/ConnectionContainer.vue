@@ -130,11 +130,11 @@
                                 <i class="w3-bar-item fa fa-clone w3-button" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
                                 <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
                                 <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
-                                <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"> Delete Connection</i>
+                                <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showDeleteConnectionWindow"> Delete Connection</i>
                             </div>
                         </div>
                     </span>
-                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
+                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showDeleteConnectionWindow"></i>
                     <i class="fa fa-universal-access w3-button w3-right" title="Apply Permission To Connection" aria-hidden="true" @click="changePermissionWindowStatus()"></i>
                     <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
                     <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
@@ -480,7 +480,7 @@ export default {
                 this.deleteWhich = 'Category'
             }
         },
-        showdeleteConnectionWindow(){
+        showDeleteConnectionWindow(){
             if( (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0) 
                     && this.selectedConnectionRecord.connectionname) {
                 this.deleteWindowAlive = true

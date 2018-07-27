@@ -1,5 +1,5 @@
 <template>
-<div class="w3-hide w3-col m2 w3-small">
+<div class="w3-col m2 w3-small">
     <div class="w3-card-4 w3-round w3-signal-white">
         <div class="w3-container">
             <p class="w3-center">Page Size</p>
@@ -89,7 +89,7 @@ export default {
         return {
             //for pagging
             selectedNum: 0,
-            selectedSize: 20,
+            selectedSize: 1,
             totalPages: 1,
             //for ordering
             isOrder: false,

@@ -57,7 +57,7 @@
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
                                         <div class="w3-row w3-panel">
                                             <div class="w3-col m8">
-                                                <input class=" w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
+                                                <input class="w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
                                             </div>
                                             <div class="w3-col m4">
                                                 <a @click="getDrivers" class="w3-button w3-theme-d2">Go</a>

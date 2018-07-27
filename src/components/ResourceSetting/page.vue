@@ -1,25 +1,29 @@
 <template>
-  <div>
-    <div class="w3-row">
+  <div v-if="pageCount > 1">
+    <div class="w3-row-padding">
+      <div class="w3-col m1">
         <a @click="prevPage" @keyup.enter="prevPage" 
-            :class="[prevLinkClass, 'w3-col m6 w3-left', firstPageSelected()]" 
+            :class="[prevLinkClass, 'w3-left', firstPageSelected()]" 
             tabindex="0">
                 <i class="fa fa-arrow-left" title="pre page" aria-hidden="true"></i>
         </a>
-        <a @click="nextPage" @keyup.enter="nextPage" 
-            :class="[nextLinkClass, 'w3-col m6 w3-right', lastPageSelected()]" 
-            tabindex="0">
-                <i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i>
-        </a>
-    </div>
-    <div :class="[(pageCount < 5) ? 'w3-center' : '']">
+      </div>
+      <div class="w3-col m10 w3-center">
         <template v-for="page in pages">
-            <a @click="handlePageSelected($event, page.index)" @keyup.enter="handlePageSelected($event, page.index)" 
+          <a @click="handlePageSelected($event, page.index)" @keyup.enter="handlePageSelected($event, page.index)" 
                 :class="[pageLinkClass, page.selected ? activeClass : '']" 
                 tabindex="0">
                 {{ page.content }}
-            </a>
+          </a>
         </template>
+      </div>
+      <div class="w3-col m1">
+        <a @click="nextPage" @keyup.enter="nextPage" 
+            :class="[nextLinkClass, 'w3-right', lastPageSelected()]" 
+            tabindex="0">
+                <i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +48,7 @@ export default {
     },
     pageRange: {
       type: Number,
-      default: 3
+      default: 6
     },
     marginPages: {
       type: Number,
