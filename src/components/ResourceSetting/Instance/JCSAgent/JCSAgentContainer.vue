@@ -10,7 +10,7 @@
                     window-title="Confirm window" 
                     window-bg-color="highway-schoolbus" 
                     btn-color="signal-white" 
-                    @closeDelete="changeDeleteWindowStatus" 
+                    @closeDelete="closeDeleteWindow" 
                     @confirmDelete="deleteAgent" 
   ></confirm-delete-window>
   <permission-window :windowAlive="applyPermissionWindowAlive" 
@@ -34,8 +34,8 @@
                             <span class="w3-col m6 w3-right w3-hide-medium w3-hide-medium">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                                <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection" aria-hidden="true" @click="changeDeleteWindowStatus"></i>
-                                <i class="fa fa-pencil w3-button w3-right" title="Edit Connection" aria-hidden="true" @click="changeEditWindowStatus('edit')"></i>
+                                <i class="fa fa-trash-o w3-button w3-right" title="Delete Agent" aria-hidden="true" @click="showDeleteWindow"></i>
+                                <i class="fa fa-pencil w3-button w3-right" title="Edit Agent" aria-hidden="true" @click="changeEditWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i>
                                 <span class="w3-dropdown-hover w3-right">
@@ -58,7 +58,7 @@
                                         <div>
                                             <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAddWindowStatus()"> Add Agent</i>
                                             <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeEditWindowStatus()"> Edit Agent</i>
-                                            <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="changeDeleteWindowStatus('edit')"> Delete Agent</i>
+                                            <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteWindow"> Delete Agent</i>
                                             <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeAddWindowStatus('copy')"> Copy Agent</i>
                                             <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus('copy')"> Permission</i>
                                         </div>
@@ -188,12 +188,10 @@
         </div>
     </div>
   </div>
-  <filter-panel ref="filter" :order-fileds="[]" :query-fileds="queryFields" @fromFilter="getAgents"></filter-panel>
 </div>
 </template>
 <script>
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
-import FilterPanel from '../../FilterPanel.vue'
 import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
 import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -268,15 +266,6 @@ export default {
                 },
                 "param":this.queryParam
             }
-            
-            // if(this.$refs.filter.isQuery){
-            //     params.querying = {
-            //         "queryType":this.$refs.filter.queryType,
-            //         "queryField":this.$refs.filter.queryField,
-            //         "queryString":this.$refs.filter.queryString,
-            //         "ignoreCase":this.$refs.filter.ignoreCase
-            //     }
-            // }
 
             HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
             .then(response => {
@@ -290,17 +279,6 @@ export default {
                 }
             })
             .catch(error => {
-                if(e){
-                    if(e.target.title === 'Apply Order')
-                        this.$refs.filter.isOrder = true
-                    else if(e.target.title === 'Apply Query')
-                        this.$refs.filter.isQuery = true
-                    else if(e.target.title === 'Cancel Order')
-                        this.$refs.filter.isOrder = false
-                    else if(e.target.title === 'Cancel Query')
-                        this.$refs.filter.isQuery = false
-                }
-
                 errorHandle(this.$store, error)
             })
         },
@@ -320,6 +298,13 @@ export default {
                 this.allJCSAgentObjs[index] = content
             }
         },
+        showDeleteWindow(){
+            if( (this.selectedRecord.index || this.selectedRecord.index === 0) 
+                    && this.selectedRecord.agentname) {
+                this.deleteWindowAlive = true
+                this.deleteName = this.selectedRecord.agentname
+            }
+        },
         deleteAgent(){
             HTTP_TRINITY.get(`jcsagent/delete`, {
                 params: {
@@ -329,11 +314,14 @@ export default {
             .then(response => {
                 this.allJCSAgentObjs.splice(this.selectedRecord.index, 1)
                 this.clearSelectedRecord()
-                this.changeDeleteWindowStatus()
+                this.closeDeleteWindow()
             })
             .catch(error => {
                 errorHandle(this.$store, error)
             })
+        },
+        closeDeleteWindow(){
+            this.deleteWindowAlive = false
         },
         changeShowMode(){
             this.showMode = !this.showMode
@@ -365,15 +353,6 @@ export default {
             if(new_content){    //new_content !== undefined, it means from Add Window Save Click
                 this.allJCSAgentObjs.unshift(new_content) //add object to the top of array
                 this.editable.fill(false) //close all edit form
-            }
-        },
-        changeDeleteWindowStatus(){
-            if( (this.selectedRecord.index || this.selectedRecord.index === 0) 
-                    && this.selectedRecord.agentname) {
-                console.log(this.deleteWindowAlive)
-                this.deleteWindowAlive = !this.deleteWindowAlive
-                console.log(this.deleteWindowAlive)
-                this.deleteName = this.selectedRecord.agentname
             }
         },
         changePermissionWindowStatus(record){
@@ -426,7 +405,6 @@ export default {
         },
     },
     components: {
-        'filter-panel': FilterPanel,
         'agent-edit-panel': JCSAgentEditPanel,
         'agent-add-window': JCSAgentAddWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
