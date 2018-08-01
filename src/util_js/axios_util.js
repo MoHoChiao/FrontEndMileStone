@@ -70,16 +70,28 @@ export function errorHandle(store, error) {
                 msg = error.response.data.exception + ' [' + msg + ']'
         }
 
+        let status = 'Error'
+        if (error.response.status && error.response.status === 401 && msg.indexOf('Permission') > -1)
+            status = 'Warn'
+
         let newStatus = {
             "msg": msg,
-            "status": "Error"
+            "status": status
         }
-        store.dispatch('setSystemStatus', newStatus)
+
+        if (store)
+            store.dispatch('setSystemStatus', newStatus)
+        else
+            console.log(newStatus)
     } else {
         let newStatus = {
             "msg": error.message,
             "status": "Error"
         }
-        store.dispatch('setSystemStatus', newStatus)
+
+        if (store)
+            store.dispatch('setSystemStatus', newStatus)
+        else
+            console.log(newStatus)
     }
 }

@@ -1,15 +1,15 @@
 <template>
 <div>
   <!-- For Add/Edit Category Window -->
-  <connection-category-edit-window :windowAlive="editCategoryWindowAlive" 
+  <connection-category-edit-window v-if="editCategoryWindowAlive" :windowAlive="editCategoryWindowAlive" 
                     window-title="Edit Connection Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
                     :content="selectedCategoryRecord" 
                     :urlOp="operation" 
   ></connection-category-edit-window>
-  <!-- For Add/Edit Connection Window -->
-  <connection-edit-window :windowAlive="editConnectionWindowAlive" 
+  <!-- For Add/Edit/Copy/Move Connection Window -->
+  <connection-edit-window v-if="editConnectionWindowAlive" :windowAlive="editConnectionWindowAlive" 
                     @closeAdd="saveConnectionWindowContentForAdd" 
                     @closeEdit="saveConnectionWindowContentForEdit" 
                     @closeCopy="saveConnectionWindowContentForCopy" 
@@ -28,7 +28,7 @@
                     @confirmDelete="deleteObj" 
   ></confirm-delete-window>
   <!-- For Apply Permission Window -->
-  <permission-window :windowAlive="applyPermissionWindowAlive" 
+  <permission-window v-if="applyPermissionWindowAlive" :windowAlive="applyPermissionWindowAlive" 
                     window-title="Apply Permission To "
                     :objectUid="selectedConnectionRecord.connectionuid" 
                     :objectName="selectedConnectionRecord.connectionname" 
@@ -194,7 +194,7 @@ export default {
             selectedCategoryRecord: new Object(),   //store which record has been selected.(Connection Categories)
             selectedConnectionRecord: new Object(),   //store which record has been selected.(Connections)
             editCategoryWindowAlive: false,  //for add/edit Connection category modal windows
-            editConnectionWindowAlive: false,  //for add/edit Connection modal windows
+            editConnectionWindowAlive: false,  //for add/edit/copy/move Connection modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
             operation: 'add',   //keep which operation(add,edit,copy,move) will be execute
             deleteWindowAlive: false,  //show or not show delete modal windows

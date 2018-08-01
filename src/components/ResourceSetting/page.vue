@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pageCount > 1">
+  <div v-if="pageCount > 0">
     <div class="w3-row-padding">
       <div class="w3-col m1">
         <a @click="prevPage" @keyup.enter="prevPage" 

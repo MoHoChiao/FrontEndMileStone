@@ -1,7 +1,7 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <permission-for-use-form v-if="whichForm === 'USE'" slot="content" ref="permissionForm" :objectUid="objectUid"></permission-for-use-form>
-        <permission-form v-else slot="content" ref="permissionForm" :objectUid="objectUid"></permission-form>
+        <permission-form v-else slot="content" ref="permissionForm" :objectUid="objectUid" @cancel="cancel"></permission-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>

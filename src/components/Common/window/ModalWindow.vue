@@ -68,7 +68,5 @@ export default {
         font-size: 4.5vw;
     }
 }
-.winTitle {
-  font-family: 'Limelight', cursive;
-}
+div { font-family: Verdana, Arial, "Microsoft YaHei", "Noto Sans CJK TC", "Microsoft JhengHei" }
 </style>

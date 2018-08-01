@@ -155,6 +155,14 @@ export default {
             }
         }
     },
+    created(){
+        if (this.urlOp === 'copy') {
+            //copy動作, 把name和description設空值
+            this.new_content.agentuid = ''
+            this.new_content.agentname = ''
+            this.new_content.description = ''
+        }
+    },
     props: {
         content: {
             type: Object,
@@ -178,7 +186,10 @@ export default {
                 }
             }
         },
-        index: Number
+        urlOp: {
+            type: String,
+            default: 'add'
+        }
     },
     methods: {
         save(){

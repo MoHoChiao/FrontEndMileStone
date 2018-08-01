@@ -1,7 +1,7 @@
 <template>
 <div>
   <!-- For Add/Edit Category Window -->
-  <frequency-category-edit-window :windowAlive="editCategoryWindowAlive" 
+  <frequency-category-edit-window v-if="editCategoryWindowAlive" :windowAlive="editCategoryWindowAlive" 
                     window-title="Edit Frequency Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
@@ -9,7 +9,7 @@
                     :urlOp="operation" 
   ></frequency-category-edit-window>
   <!-- For Add/Edit Frequency Window -->
-  <frequency-edit-window :windowAlive="editFrequencyWindowAlive" 
+  <frequency-edit-window v-if="editFrequencyWindowAlive" :windowAlive="editFrequencyWindowAlive" 
                     @closeAdd="saveFrequencyWindowContentForAdd" 
                     @closeEdit="saveFrequencyWindowContentForEdit" 
                     @closeCopy="saveFrequencyWindowContentForCopy" 

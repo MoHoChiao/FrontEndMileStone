@@ -1,7 +1,7 @@
 <template>
 <div>
   <!-- For Add/Edit Category Window -->
-  <file-source-category-edit-window :windowAlive="editCategoryWindowAlive" 
+  <file-source-category-edit-window v-if="editCategoryWindowAlive" :windowAlive="editCategoryWindowAlive" 
                     window-title="Edit File Source Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
@@ -9,7 +9,7 @@
                     :urlOp="operation" 
   ></file-source-category-edit-window>
   <!-- For Add/Edit File Source Window -->
-  <file-source-edit-window :windowAlive="editFileSourceWindowAlive" 
+  <file-source-edit-window v-if="editFileSourceWindowAlive" :windowAlive="editFileSourceWindowAlive" 
                     @closeAdd="saveFileSourceWindowContentForAdd" 
                     @closeEdit="saveFileSourceWindowContentForEdit" 
                     @closeCopy="saveFileSourceWindowContentForCopy" 

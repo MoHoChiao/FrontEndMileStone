@@ -245,6 +245,7 @@ export default {
             })
             .catch(error => {
                 errorHandle(this.$store, error)
+                this.$emit('cancel')
             })
         },
         getPermissionOnlyForRole(){
@@ -271,6 +272,7 @@ export default {
             })
             .catch(error => {
                 errorHandle(this.$store, error)
+                this.$emit('cancel')
             })
         },
         changeApplyAccountWindowStatus(){
