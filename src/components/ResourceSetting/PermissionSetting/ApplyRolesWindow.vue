@@ -4,10 +4,10 @@
         <div class="w3-responsive w3-card-0 w3-round">
             <table class="w3-table-all w3-small">
                 <tr class="w3-teal">
-                    <th class="w3-center" width="10%" style="padding-top:4px">
+                    <th class="w3-left" width="10%" style="padding-top:4px">
                         <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click="onClickCheckAll">
                     </th>
-                    <th class="w3-center" width="90%">Role List</th>
+                    <th class="w3-left" width="90%">Role List</th>
                 </tr>
             </table>
         </div>
@@ -15,10 +15,10 @@
             <table id="freqCategoryTable" class="w3-table-all w3-small">
                 <template v-for="(role, index) in roles">
                     <tr :id="role.roleuid" :key="role.roleuid">
-                        <td class="w3-center" width="10%" style="padding-top:4px">
+                        <td class="w3-left" width="10%" style="padding-top:4px">
                             <input class="w3-check" type="checkbox" v-model="role.checked" @change="onClickCheck(role, index)">
                         </td>
-                        <td class="w3-center" width="90%">
+                        <td class="w3-left" width="90%">
                             <span>{{ role.rolename }}</span>
                         </td>
                     </tr>

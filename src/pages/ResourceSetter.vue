@@ -84,8 +84,8 @@
                                         <a @click="changeMonitorWindowStatus" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>Server Monitor</a>
                                         <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
                                         <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
-                                        <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>License Status</a>
-                                        <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-code-fork fa-fw w3-margin-right"></i>Version Info</a>
+                                        <a @click="getPluginLicense" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>License Status</a>
+                                        <a @click="getVersionInfo" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-code-fork fa-fw w3-margin-right"></i>Version Info</a>
                                     </div>
                                 </p>
                             </div>
@@ -198,6 +198,12 @@
             },
             getExternalRules(e) {
                 this.$router.push({ name: 'ExternalRuleContainer' })
+            },
+            getPluginLicense(e) {
+                this.$router.push({ name: 'PluginLicense' })
+            },
+            getVersionInfo(e) {
+                this.$router.push({ name: 'VersionInfo' })
             }
         },
         components: {

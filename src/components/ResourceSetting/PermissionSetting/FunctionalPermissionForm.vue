@@ -5,12 +5,12 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">Function Name</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">View</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Add</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Delete</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Edit</th>
-                            <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
+                            <th class="w3-left" width="32%" style="padding-top:12px;padding-bottom:12px">Function Name</th>
+                            <th class="w3-left" width="15%" style="padding-top:12px;padding-bottom:12px">View</th>
+                            <th class="w3-left" width="15%" style="padding-top:12px;padding-bottom:12px">Add</th>
+                            <th class="w3-left" width="15%" style="padding-top:12px;padding-bottom:12px">Delete</th>
+                            <th class="w3-left" width="15%" style="padding-top:12px;padding-bottom:12px">Edit</th>
+                            <th class="w3-left" width="8%" style="padding-top:7px;padding-bottom:7px">
                                 <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Function" aria-hidden="true" @click="addFunction"></i>
                             </th>
                         </tr>
@@ -19,7 +19,7 @@
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table-all">
                         <tr :key="list_info.peopleuid+':'+list_info.objectuid" v-for="(list_info, index) in functionalList">
-                            <td class="w3-center" width="32%" style="padding:6px 0px 0px 6px">
+                            <td class="w3-left" width="32%" style="padding:6px 0px 0px 6px">
                                 <span>
                                     <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px" @change="changeFunction(list_info.objectuid, index)">
                                         <template v-for="(obj, index) in allFunctionalObjs">
@@ -29,19 +29,19 @@
                                     </select>
                                 </span>
                             </td>
-                            <td class="w3-center" width="15%">
+                            <td class="w3-left" width="15%">
                                 <input class="w3-check" type="checkbox" v-model="list_info.view">
                             </td>
-                            <td class="w3-center" width="15%">
+                            <td class="w3-left" width="15%">
                                 <input class="w3-check" type="checkbox" v-model="list_info.add">
                             </td>
-                            <td class="w3-center" width="15%">
+                            <td class="w3-left" width="15%">
                                 <input class="w3-check" type="checkbox" v-model="list_info.delete">
                             </td>
-                            <td class="w3-center" width="15%">
+                            <td class="w3-left" width="15%">
                                 <input class="w3-check" type="checkbox" v-model="list_info.edit">
                             </td>
-                            <td class="w3-center" width="8%">
+                            <td class="w3-left" width="8%">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delFunction(index)"></i>
                             </td>
                         </tr>

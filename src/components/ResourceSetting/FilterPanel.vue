@@ -6,12 +6,10 @@
             <p>
                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
                     <option value="-1" disabled selected>Size</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="5">5</option>
                     <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                    <option value="500">500</option>
                 </select>
             </p>
             <p class="w3-center">Page Num</p>

@@ -1,26 +1,27 @@
 <template>
   <div>
-    <div class="w3-row">
-        <a @click="prevPage" @keyup.enter="prevPage" 
-            :class="[prevLinkClass, 'w3-col m6 w3-left', firstPageSelected()]" 
-            tabindex="0">
-                <i class="fa fa-arrow-left" title="pre page" aria-hidden="true"></i>
-        </a>
-        <a @click="nextPage" @keyup.enter="nextPage" 
-            :class="[nextLinkClass, 'w3-col m6 w3-right', lastPageSelected()]" 
-            tabindex="0">
-                <i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i>
-        </a>
-    </div>
-    <div :class="[(pageCount < 5) ? 'w3-center' : '']">
-        <template v-for="page in pages">
-            <a @click="handlePageSelected($event, page.index)" @keyup.enter="handlePageSelected($event, page.index)" 
-                :class="[pageLinkClass, page.selected ? activeClass : '']" 
-                tabindex="0">
-                {{ page.content }}
-            </a>
-        </template>
-    </div>
+      <div class="w3-row w3-center">
+          <a @click="prevPage" @keyup.enter="prevPage"
+             :class="[prevLinkClass, 'w3-col m3 w3-left', firstPageSelected()]"
+             tabindex="0">
+              <i class="fa fa-arrow-left" title="pre page" aria-hidden="true"></i>
+          </a>
+          <div :class="[(pageCount < 5) ? 'w3-center' : '']">
+              <template v-for="page in pages">
+                  <a @click="handlePageSelected($event, page.index)" @keyup.enter="handlePageSelected($event, page.index)"
+                     :class="[pageLinkClass, page.selected ? activeClass : '']"
+                     tabindex="0">
+                      {{ page.content }}
+                  </a>
+              </template>
+          </div>
+          <a @click="nextPage" @keyup.enter="nextPage"
+             :class="[nextLinkClass, 'w3-col m3 w3-right', lastPageSelected()]"
+             tabindex="0">
+              <i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i>
+          </a>
+      </div>
+    
   </div>
 </template>
 

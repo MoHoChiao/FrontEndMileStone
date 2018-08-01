@@ -1,15 +1,18 @@
 <template>
     <div>
         <agent-add-window :windowAlive="addWindowAlive"
-                          window-title="Add JCS Agent"
-                          @closeAdd="saveAddWindowContent"
-                          :content="copyContent"></agent-add-window>
+                          @eAdd="saveAddWindow"
+                          @eEdit="saveEditWindow"
+                          @eCopy="saveCopyWindow"
+                          @eClose="closeAddWindow"
+                          :content="selectedAgentRecord"
+                          :urlOp="operation"></agent-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
-                               @closeDelete="changeDeleteWindowStatus"
+                               @closeDelete="closeDelWindow"
                                @confirmDelete="deleteAgent"></confirm-delete-window>
         <permission-window :windowAlive="applyPermissionWindowAlive"
                            window-title="Apply Permission To "
@@ -24,10 +27,12 @@
                         <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
                             <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
                             <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> JCSAgent</i>
-                            <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode()"></i></button>
-                            <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i></button>
-                            <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                            <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i></button>
+                            <span class="w3-right">
+                                <!--<i class="fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="getAgents" />-->
+                                <i v-if="!showMode" class="fa fa-plus w3-button" title="Add" aria-hidden="true" @click="openAddWindow('add')" />
+                                <!--<i v-if="showMode" class="fa fa-toggle-on w3-button" title="Switch to Table List" aria-hidden="true" @click="changeShowMode()" />
+                                <i v-else class="fa fa-toggle-off w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()" />-->
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -39,30 +44,20 @@
                     <div>
                         <span><img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
                         <span>
-                            <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                            <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white" style="padding:3px;transform:rotate(-5deg)">
+                                <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                                     JCS Agents
-                                </div>
-                            </div>
+                                </i>
+                            </i>
                         </span>
-                        <span class="w3-dropdown-hover w3-right w3-hide-large">
-                            <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
-                            <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
-                                <div>
-                                    <i class="w3-bar-item fa fa-clone w3-button" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
-                                    <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
-                                    <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
-                                    <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"> Delete Connection</i>
-                                </div>
-                            </div>
+                        <span class="w3-right">
+                            <i class="w3-button fa fa-refresh" title="Reload" aria-hidden="true" @click="getAgents"></i>
+                            <i class="w3-button fa fa-plus" title="Add" aria-hidden="true" @click="openAddWindow('add')" />
+                            <i class="w3-button fa fa-clipboard" title="Copy" aria-hidden="true" @click="openAddWindow('copy')" />
+                            <i class="w3-button fa fa-pencil" title="Edit" aria-hidden="true" @click="openAddWindow('edit')" />
+                            <i class="w3-button fa fa-universal-access" title="Apply Permission" aria-hidden="true" @click="changePermissionWindowStatus(content)" />
+                            <i class="w3-button fa fa-trash-o" title="Delete" aria-hidden="true" @click="confirmDelWindow()" />
                         </span>
-                        <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showdeleteConnectionWindow"></i>
-                        <i class="fa fa-universal-access w3-button w3-right" title="Apply Permission To Connection" aria-hidden="true" @click="changePermissionWindowStatus()"></i>
-                        <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
-                        <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
-                        <i class="fa fa-clone w3-button w3-right w3-hide-medium w3-hide-small" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="getConnections"></i>
                     </div>
                 </p>
                 <p>
@@ -70,10 +65,10 @@
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
                                 <tr class="w3-teal">
-                                    <th class="w3-center" width="25%">Name</th>
-                                    <th class="w3-center" width="15%">IP Address</th>
-                                    <th class="w3-center" width="38%">Description</th>
-                                    <th class="w3-center" width="22%">Update Time</th>
+                                    <th class="w3-left" width="25%">Name</th>
+                                    <th class="w3-left" width="15%">IP Address</th>
+                                    <th class="w3-left" width="38%">Description</th>
+                                    <th class="w3-left" width="22%">Update Time</th>
                                 </tr>
                             </table>
                         </div>
@@ -96,6 +91,7 @@
                                 </tr>
                             </table>
                         </div>
+                        <!--<page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>-->
                     </div>
                 </p>
             </div>
@@ -112,51 +108,16 @@
                     <span class="w3-tag w3-theme-l4 w3-hide-medium w3-hide-small" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                     <hr class="w3-border-black w3-clear">
                     <p>{{ content.description }}</p>
-                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeAddWindowStatus(content)">
-                        <i class="fa fa-clone"></i> Copy
-                    </button>
-                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                        <i class="fa fa-pencil"></i> Edit
-                    </button>
-                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePermissionWindowStatus(content)">
-                        <i class="fa fa-universal-access"></i> Permission
-                    </button>
-                    <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
-                        <i class="fa fa-trash-o"></i> Delete
-                    </button>
+                    <span class="w3-right">
+                        <button class="w3-button w3-theme-d1 w3-round w3-margin-bottom fa fa-clipboard" title="Copy" @click="openAddWindow('copyPanel', content)" />
+                        <button class="w3-button w3-theme-d1 w3-round w3-margin-bottom fa fa-pencil" title="Edit" @click="changeEditable(index)" />
+                        <button class="w3-button w3-theme-d1 w3-round w3-margin-bottom fa fa-lock" title="Permission" @click="changePermissionWindowStatus(content)" />
+                        <button class="w3-button w3-theme-d1 w3-round w3-margin-bottom fa fa-trash-o" title="Delete" @click="confirmDelWindow(content)" />
+                    </span>
                 </div>
                 <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
             </div>
         </div>
-        <!--ul class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-            <li :key="content.agentuid+'table'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allJCSAgentObjs">
-                <div v-if="editable[index] === undefined || !editable[index]">
-                    <img src="/src/assets/images/resource_setter/Agent_128.png" alt="JCSAgent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                    <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                    <p>{{ content.agentname }}</p>
-                    <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ 'Host:' + content.host }}</span>
-                    <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ 'Port:' + content.port }}</span>
-                    <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                    <button type="button" title="Delete This Agent" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.agentuid, content.agentname)">
-                        <i class="fa fa-trash-o"></i>
-                        <span class="w3-hide-medium w3-hide-small"> Delete</span>
-                    </button>
-                    <button title="Apply Permission To JCSAgent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
-                        <i class="fa fa-universal-access"></i>
-                        <span class="w3-hide-medium w3-hide-small"> Permission</span>
-                    </button>
-                    <button type="button" title="Edit This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
-                        <i class="fa fa-pencil"></i>
-                        <span class="w3-hide-medium w3-hide-small"> Edit</span>
-                    </button>
-                    <button type="button" title="Copy This Agent" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeAddWindowStatus(content)">
-                        <i class="fa fa-clone"></i>
-                        <span class="w3-hide-medium w3-hide-small"> Copy</span>
-                    </button>
-                </div>
-                <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
-            </li>
-        </ul-->
 
         <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getAgents"></filter-panel>
     </div>
@@ -168,6 +129,7 @@
     import JCSAgentAddWindow from './JCSAgentAddWindow.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
     import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
+    import page from '../../page.vue'
 
     export default {
         data() {
@@ -177,8 +139,7 @@
                 addWindowAlive: false,  //for add agent modal windows
                 deleteWindowAlive: false,  //for delete agent modal windows
                 applyPermissionWindowAlive: false, //for modify Permission modal windows
-                deleteIndex: -1,    //store which index will be delete
-                deleteUid: '',      //store which obj will be delete
+                operation: 'add',   //keep which operation(add,edit,copy,move) will be execute
                 deleteName: '',     //store which obj name will be delete
                 allJCSAgentObjs: new Object(), //store all agents
                 editable: [],   //for all agents content edit panel
@@ -204,18 +165,6 @@
             this.getAgents()
         },
         methods: {
-            clickOnAgent(id, index) {
-                let tr = document.getElementById(id)
-                this.clearSelectedAgentRecord(tr)
-
-                if (tr.className.indexOf('w3-blue-grey') == -1) {
-                    tr.className = 'w3-blue-grey'
-                    this.selectedAgentRecord = this.allJCSAgentObjs[index]
-                    this.selectedAgentRecord.index = index //New prop is stores which agent obj will be deleted in UI
-                } else {
-                    tr.className = 'w3-hover-blue-grey w3-hover-opacity'
-                }
-            },
             getAgents(e) {
                 let params = {
                     "paging": {
@@ -266,6 +215,124 @@
                         errorHandle(this.$store, error)
                     })
             },
+            deleteAgent() {
+                if (this.selectedAgentRecord.agentuid === '')
+                    return
+
+                HTTP_TRINITY.get(`jcsagent/delete`, {
+                    params: {
+                        uid: this.selectedAgentRecord.agentuid
+                    }
+                })
+                    .then(response => {
+                        this.allJCSAgentObjs.splice(this.selectedAgentRecord.index, 1)
+                        //this.editable.splice(this.deleteIndex, 1)
+                        //this.editable.fill(false) //close all edit form
+                        this.clearSelectedAgentRecord()
+                        this.deleteWindowAlive = false
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+
+            },
+            changeShowMode() {
+                this.showMode = !this.showMode
+            },
+            openAddWindow(which, content) {
+                this.operation = which
+
+                if (which == 'add') {
+                    this.addWindowAlive = !this.addWindowAlive
+                } else if (which == 'copyPanel') {
+                    this.selectedAgentRecord = content
+                    this.addWindowAlive = !this.addWindowAlive
+                } else {
+                    if (this.selectedAgentRecord && this.selectedAgentRecord.agentuid && this.selectedAgentRecord.agentuid !== '') {
+                        this.addWindowAlive = !this.addWindowAlive
+                    }
+                }
+            },
+            confirmDelWindow(content) {
+                if (content) {
+                    this.selectedAgentRecord = content
+                }
+
+                if (this.selectedAgentRecord.agentname != null) {
+                    this.deleteName = this.selectedAgentRecord.agentname
+                    this.deleteWindowAlive = true
+                }
+            },
+            closeAddWindow() {
+                this.addWindowAlive = false
+            },
+            closeDelWindow() {
+                this.deleteWindowAlive = false
+            },
+            /*
+             * grid mode
+             */
+            clickOnAgent(id, index) {
+                let tr = document.getElementById(id)
+                this.clearSelectedAgentRecord(tr)
+
+                if (tr.className.indexOf('w3-blue-grey') == -1) {
+                    tr.className = 'w3-blue-grey'
+                    this.selectedAgentRecord = this.allJCSAgentObjs[index]
+                    this.selectedAgentRecord.index = index //New prop is stores which agent obj will be deleted in UI
+                } else {
+                    tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+                }
+            },
+            saveAddWindow(new_content) {
+                if (new_content) {    //new_content !== undefined, it means from Frequency Window Save Click
+                    this.allJCSAgentObjs.unshift(new_content) //add object to the top of array
+                    this.clearSelectedAgentRecord()
+                }
+                this.closeAddWindow()
+            },
+            saveEditWindow(new_content) {
+                //new_content !== undefined, it means from Frequency Window Save Click
+                if (new_content && this.selectedAgentRecord && (this.selectedAgentRecord.index || this.selectedAgentRecord.index === 0)) {
+                    new_content.index = this.selectedAgentRecord.index   //asign old index prop to new content
+                    this.allJCSAgentObjs[this.selectedAgentRecord.index] = new_content   //replace object to the array
+                    this.selectedAgentRecord = new_content
+                }
+                this.closeAddWindow()
+            },
+            saveCopyWindow(agentuid, new_content) {
+                if (new_content) {    //new_content !== undefined, it means from Frequency Window Save Click
+                    //如果相等, 表示copy過去的目標category, 即目前所在的category(即目前所選擇的category), 則立刻在最上列加一筆Frequency
+                    if (this.selectedAgentRecord.agentuid === agentuid) {
+                        this.allJCSAgentObjs.unshift(new_content) //add object to the top of array
+                    }
+                    this.clearSelectedAgentRecord()
+                }
+                this.closeAddWindow()
+            },
+            changePermissionWindowStatus(record) {
+                if (record) {
+                    this.selectedRecord = record
+                    this.selectedRecord.agentuid = this.selectedRecord.agentuid.trim()
+                }
+
+                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+            },
+            clearSelectedAgentRecord(tr) {
+                let table = document.getElementById('agentTable')
+
+                if (table != null) {
+                    for (var i = 0; i < table.childNodes.length; i++) {  //先重設所有agent row的class
+                        if (table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                            table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+                    }
+                }
+                
+                this.selectedAgentRecord = new Object()
+            },
+            /*
+             * panel mode
+             */
             changeEditable(index, content) {
                 /*
                     this.$set is for above :
@@ -281,85 +348,6 @@
                 if (content !== undefined) {
                     this.allJCSAgentObjs[index] = content
                 }
-            },
-            deleteAgent() {
-                if (this.deleteIndex === -1)
-                    return
-                if (this.deleteUid === '')
-                    return
-
-                HTTP_TRINITY.get(`jcsagent/delete`, {
-                    params: {
-                        uid: this.deleteUid
-                    }
-                })
-                    .then(response => {
-                        this.allJCSAgentObjs.splice(this.deleteIndex, 1)
-                        this.editable.splice(this.deleteIndex, 1)
-                        this.editable.fill(false) //close all edit form
-                        this.changeDeleteWindowStatus(-1, '', '')
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
-
-            },
-            changeShowMode() {
-                this.showMode = !this.showMode
-            },
-            changeAddWindowStatus(old_content) {
-                this.addWindowAlive = !this.addWindowAlive  //change add window open/close
-                if (old_content) {    //old_content !== undefined, it means from Copy Click
-                    this.copyContent = new Object()
-                    this.copyContent.agentname = ''
-                    this.copyContent.description = ''
-                    this.copyContent.host = old_content.host
-                    this.copyContent.port = old_content.port
-                    this.copyContent.activate = old_content.activate
-                    this.copyContent.maximumjob = old_content.maximumjob
-                    this.copyContent.ostype = old_content.ostype
-                    this.copyContent.osname = old_content.osname
-                    this.copyContent.deadperiod = old_content.deadperiod
-                    this.copyContent.memweight = old_content.memweight
-                    this.copyContent.compresstransfer = old_content.compresstransfer
-                    this.copyContent.encoding = old_content.encoding
-                    this.copyContent.monitortime = old_content.monitortime
-                    this.copyContent.cpuweight = old_content.cpuweight
-                }
-            },
-            saveAddWindowContent(new_content) {
-                this.copyContent = undefined //Reset Add Window Content is empty
-                this.changeAddWindowStatus()    //Add Window open/close
-
-                if (new_content) {    //new_content !== undefined, it means from Add Window Save Click
-                    this.allJCSAgentObjs.unshift(new_content) //add object to the top of array
-                    this.editable.fill(false) //close all edit form
-                }
-            },
-            changeDeleteWindowStatus(index, agentuid, agentname) {
-                this.deleteWindowAlive = !this.deleteWindowAlive
-                /*
-                    store which obj be delete
-                */
-                this.deleteIndex = index
-                this.deleteUid = agentuid
-                this.deleteName = agentname
-            },
-            changePermissionWindowStatus(record) {
-                if (record) {
-                    this.selectedRecord = record
-                    this.selectedRecord.agentuid = this.selectedRecord.agentuid.trim()
-                }
-
-                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
-            },
-            clearSelectedAgentRecord(tr) {
-                let table = document.getElementById('agentTable')
-                for (var i = 0; i < table.childNodes.length; i++) {  //先重設所有agent row的class
-                    if (table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
-                        table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
-                }
-                this.selectedAgentRecord = new Object()
             }
         },
         components: {
@@ -367,7 +355,8 @@
             'agent-edit-panel': JCSAgentEditPanel,
             'agent-add-window': JCSAgentAddWindow,
             'confirm-delete-window': ConfirmDeleteWindow,
-            'permission-window': PermissionWindow
+            'permission-window': PermissionWindow,
+            'page': page
         }
     }
 </script>

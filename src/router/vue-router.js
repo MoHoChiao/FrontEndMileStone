@@ -19,6 +19,8 @@ import ExclFrequencyContainer from '../components/ResourceSetting/Instance/ExclF
 import GlobalExclFrequencyWindow from '../components/ResourceSetting/Instance/ExclFrequency/GlobalExclFrequencyWindow.vue'
 import DriverContainer from '../components/ResourceSetting/DriverManager/DriverContainer.vue'
 import ExternalRuleContainer from '../components/ResourceSetting/ExternalRule/ExternalRuleContainer.vue'
+import PluginLicenseContainer from '../components/ResourceSetting/LicenseStatus/PluginLicenseContainer.vue'
+import VersionInfoContainer from '../components/ResourceSetting/VersionInfo/VersionInfoContainer.vue'
 import { Authentication } from '../util_js/auth';
 
 Vue.use(VueRouter);
@@ -200,6 +202,26 @@ export default new VueRouter({
                     path: 'ExternalRuleContainer',
                     components: {
                         content: ExternalRuleContainer
+                    },
+                    beforeEnter(to, from, next) {
+                        Authentication(next)
+                    }
+                },
+                {
+                    name: 'PluginLicense',
+                    path: 'PluginLicense',
+                    components: {
+                        content: PluginLicenseContainer
+                    },
+                    beforeEnter(to, from, next) {
+                        Authentication(next)
+                    }
+                },
+                {
+                    name: 'VersionInfo',
+                    path: 'VersionInfo',
+                    components: {
+                        content: VersionInfoContainer
                     },
                     beforeEnter(to, from, next) {
                         Authentication(next)

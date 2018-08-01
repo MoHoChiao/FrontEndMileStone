@@ -29,7 +29,7 @@
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                 <table :id="'UserListTable' + groupuid" class="w3-table-all">
                     <tr :key="list_index+'UserListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyMembers">
-                        <td class="w3-center" width="84%">
+                        <td class="w3-left" width="84%">
                             {{ compositionName(list_info) }}
                         </td>
                         <td class="w3-center" width="16%" style="padding:3px 0px 0px 0px">
