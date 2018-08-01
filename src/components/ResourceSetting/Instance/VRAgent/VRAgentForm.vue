@@ -121,13 +121,7 @@ export default {
         this.cloneAgentList()
 
         //Initial to get all jcsagent for select boxes
-        let params = {
-                "ordering":{
-                    "orderType":'ASC',
-                    "orderField":'agentname'
-                }
-            }
-        HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
+        HTTP_TRINITY.get(`jcsagent/findAll`)
             .then(response => {
                 this.allJCSAgents = response.data
                 for(let i=0;i<this.allJCSAgents.length;i++){
@@ -157,7 +151,6 @@ export default {
     },
     methods: {
         changeAgent(uid,index){
-            
             this.jcsAgentUids.splice(index, 1, uid)
         },
         delAgent(index){
