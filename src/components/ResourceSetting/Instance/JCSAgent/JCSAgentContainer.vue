@@ -34,7 +34,7 @@
                             <span class="w3-col m6 w3-left">
                                 <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
                                     placeholder="Search For Name and Host" style="text-transform:uppercase">
-                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="getAgents"></i>
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
@@ -42,7 +42,7 @@
                                 <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete Agent" aria-hidden="true" @click="showDeleteWindow"></i>
                                 <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Agent" aria-hidden="true" @click="changeAgentWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span v-if="showMode" class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-bars w3-button" title="Other Menu" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
@@ -56,7 +56,7 @@
                             <span class="w3-col m6 w3-right w3-hide-large">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getAgents"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-bars w3-button" title="Function Menu" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
@@ -207,39 +207,27 @@ export default {
         return {
             showMode: true, //switch content list or table list
             selectedRecord: new Object(),   //store which record has been selected.(JCSAgents)
-            addWindowAlive: false,  //for add agent modal windows
             agentWindowAlive: false,  //for add/edit/copy/move Connection modal windows
             operation: 'add',   //keep which operation(add,edit,copy) will be execute
             deleteWindowAlive: false,  //for delete agent modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
-            deleteIndex: -1,    //store which index will be delete
-            deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
             allJCSAgentObjs: new Object(), //store all agents
             agentRecord: new Object(), //store detail agent record
             editable: [],   //for all agents content edit panel
-            
-            queryFields: [  //for querying filter fields
-                {name: "Name",value: "Agentname"},
-                {name: "Activate",value: "activate"},
-                {name: "Host",value: "host"},
-                {name: "Port",value: "port"},
-                {name: "Desc",value: "Description"}
-            ],
-            copyContent: undefined,   //for copy click, pass copyContent to Add Window
             //about paging info
             totalPages: 1,
             selectedNum: 0,
             selectedSize: 10,
             //about ordering info
             orderFields: { //Ordering fields, only for UI
-                agentname: "",
+                agentname: "ASC",
                 host: "",
                 description: "",
-                lastupdatetime: "DESC"
+                lastupdatetime: ""
             },
-            orderField: 'lastupdatetime',   //send to backend
-            orderType: 'DESC',  //send to backend
+            orderField: 'agentname',   //send to backend
+            orderType: 'ASC',  //send to backend
             //about query param
             queryParam: ''
         }
@@ -307,16 +295,6 @@ export default {
                 errorHandle(this.$store, error)
             })
         },
-        //Get Agent detail record
-        getAgent(){
-            HTTP_TRINITY.get(`jcsagent/findByUid?uid=` + this.content.agentuid)
-                .then(response => {
-                    this.agentRecord = response.data
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
-        },
         //for Content List, edit panel
         changeEditable(index){
             HTTP_TRINITY.get(`jcsagent/findByUid?uid=` + this.selectedRecord.agentuid)
@@ -370,6 +348,7 @@ export default {
         changeAgentWindowStatus(which){
             if(which != 'add'){
                 if(this.selectedRecord && this.selectedRecord.agentuid && this.selectedRecord.agentuid !== ''){
+                    //Get Agent detail record
                     HTTP_TRINITY.get(`jcsagent/findByUid?uid=` + this.selectedRecord.agentuid)
                     .then(response => {
                         this.agentRecord = response.data
@@ -413,6 +392,7 @@ export default {
             this.showMode = !this.showMode
             this.selectedRecord = new Object()
         },
+        //clear selected for UI
         clearSelectedRecord(tr){
             let table = document.getElementById('agentTable')
             if(table && table.childNodes){  //判斷是否是從Content List來的操作, 不成立表示由Grid List來的操作
@@ -424,15 +404,14 @@ export default {
             
             this.selectedRecord = new Object()
         },
-        //above for pagging, ordering
+        //above for pagging, ordering, query
         changeNum(e, index){
             //紀錄現在點擊的是那一頁
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
             this.getAgents()
         },
         changeSize(e){
-            //每一次的查詢, 都要讓page number先回到第一頁
-            this.pageNumSelected('1')
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
             this.getAgents()
         },
         pageNumSelected(index){
@@ -457,6 +436,10 @@ export default {
 
             this.getAgents()
         },
+        applyQuery(){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getAgents()
+        }
     },
     components: {
         'agent-edit-panel': JCSAgentEditPanel,

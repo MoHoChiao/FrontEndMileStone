@@ -1,17 +1,22 @@
 <template>
 <div>
-  <vr-agent-add-window :windowAlive="addWindowAlive" 
-                    window-title="Add Virtual Agent" 
-                    @closeAdd="changeAddWindowStatus" 
-  ></vr-agent-add-window>
+  <!-- For Add/Edit/Copy Virtual Agent Window -->
+  <vr-agent-edit-window v-if="agentWindowAlive" :windowAlive="agentWindowAlive" 
+                    @closeAdd="saveAgentWindowContentForAdd" 
+                    @closeEdit="saveAgentWindowContentForEdit" 
+                    :content="agentRecord" 
+                    :urlOp="operation" 
+  ></vr-agent-edit-window>
+  <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
                     :deleteName="deleteName" 
                     window-title="Confirm window" 
                     window-bg-color="highway-schoolbus"
                     btn-color="signal-white" 
-                    @closeDelete="changeDeleteWindowStatus" 
+                    @closeDelete="closeDeleteWindow" 
                     @confirmDelete="deleteAgent" 
   ></confirm-delete-window>
+  <!-- For Apply Permission Window -->
   <permission-window :windowAlive="applyPermissionWindowAlive" 
                     window-title="Apply Permission To "
                     :objectUid="selectedRecord.virtualagentuid" 
@@ -23,28 +28,134 @@
         <div class="w3-col m12">
             <div class="w3-card-4 w3-round w3-signal-white">
                 <div class="w3-container">
-                    <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Virtual Agent</i>
-                        <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
-                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getVRAgents"></i>
-                    </p>
+                    <div class="w3-panel w3-col m12 w3-border w3-round w3-padding">
+                        <div class="w3-row">
+                            <span class="w3-col m6 w3-left">
+                                <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
+                                    placeholder="Search For Name" style="text-transform:uppercase">
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            </span>
+                            <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
+                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i v-if="showMode" class="fa fa-universal-access w3-button w3-right" title="Permission" aria-hidden="true" @click="changePermissionWindowStatus"></i>
+                                <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete Virtual Agent" aria-hidden="true" @click="showDeleteWindow"></i>
+                                <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Virtual Agent" aria-hidden="true" @click="changeAgentWindowStatus('edit')"></i>
+                                <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            </span>
+                            <span class="w3-col m6 w3-right w3-hide-large">
+                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                                <span class="w3-dropdown-hover w3-right">
+                                    <i class="fa fa-bars w3-button" title="Function Menu" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
+                                        <div>
+                                            <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAgentWindowStatus('add')"> Add Virtual Agent</i>
+                                            <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeAgentWindowStatus('edit')"> Edit Virtual Agent</i>
+                                            <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteWindow"> Delete Virtual Agent</i>
+                                            <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                                        </div>
+                                    </div>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div v-if="showMode">
+    <div v-if="showMode" class="w3-small">
+        <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
+            <p>
+                <div>
+                    <span><img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+                    <span>
+                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                Virtual Agents
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </p>
+            <p>
+              <div>
+                <div class="w3-responsive w3-card w3-round">
+                    <table class="w3-table-all">
+                        <tr class="w3-teal">
+                            <th class="w3-center w3-btn w3-hover-none" width="30%" title="Order by Virtual Name" @click="applyOrder('virtualagentname')">
+                                Name
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['virtualagentname'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['virtualagentname'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
+                            <th class="w3-center w3-btn w3-hover-none" width="48%" title="Order by Description" @click="applyOrder('description')">
+                                Description
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
+                            <th class="w3-center w3-btn w3-hover-none" width="22%" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
+                                Update Time
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="virtualAgentContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                    <table id="virtualAgentTable" class="w3-table-all w3-left">
+                        <tr :id="content.virtualagentuid" :key="content.virtualagentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                @click="clickOnAgentRecord(content.virtualagentuid, index)" v-for="(content, index) in allVRAgentObjs">
+                            <td width="30%">
+                                <span>{{ content.virtualagentname }}</span>
+                            </td>
+                            <td width="48%">
+                                <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
+                            </td>
+                            <td width="22%">
+                                <span>{{ content.lastupdatetime }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="w3-row-padding">
+                    <div class="w3-col m9 w3-center" style="padding-top:10px">
+                        <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                    </div>
+                    <div class="w3-col m3">
+                        <div class="w3-row w3-right">
+                            <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
+                                Page Size
+                            </span>
+                            <span class="w3-col m6" style="padding-top:8px">
+                                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
+                                    <option value="-1" disabled selected>Size</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </p>
+        </div>
+    </div>
+    <div v-else>
         <div :key="content.virtualagentuid+'table'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allVRAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.virtualagentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
                 <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
                 <p>
                   <div v-if="content.agentlist.length > 0">
                     <div class="w3-responsive w3-card w3-round">
@@ -78,107 +189,101 @@
                 </p>
                 <hr class="w3-border-black w3-clear">
                 <p class="w3-small">{{ content.description }}</p>
-                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                    <i class="fa fa-pencil"></i> Edit</button>
-                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changePermissionWindowStatus(content)">
-                            <i class="fa fa-universal-access"></i> Permission</button>
-                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
-                    <i class="fa fa-trash-o"></i> Delete</button>
+                <span class="w3-right">
+                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit Agent" @click="clickOnAgentPanel('edit', index, content)">
+                        <i class="fa fa-pencil"></i></button>
+                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Apply Permission" @click="clickOnAgentPanel('permission', index, content)">
+                        <i class="fa fa-universal-access"></i></button>
+                    <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete Agent" @click="clickOnAgentPanel('delete', index, content)">
+                        <i class="fa fa-trash-o"></i></button>
+                </span>
             </div>
             <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
         </div>
     </div>
-    <ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-        <li :key="content.virtualagentuid+'list'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allVRAgentObjs">
-            <div v-if="editable[index] === undefined || !editable[index]">
-                <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                <p>{{ content.virtualagentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
-                <span class="w3-tag w3-small w3-theme-l4" style="transform:rotate(-5deg)">{{ 'Max Jobs:' + content.maximumjob }}</span>
-                <button title="Delete This Virtual Agent" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.virtualagentuid, content.virtualagentname)">
-                    <i class="fa fa-trash-o"></i>
-                    <span class="w3-hide-medium w3-hide-small"> Delete</span>
-                </button>
-                <button title="Apply Permission To Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changePermissionWindowStatus(content)">
-                    <i class="fa fa-universal-access"></i>
-                    <span class="w3-hide-medium w3-hide-small"> Permission</span>
-                </button>
-                <button title="Edit This Virtual Agent" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
-                    <i class="fa fa-pencil"></i>
-                    <span class="w3-hide-medium w3-hide-small"> Edit</span>
-                </button>
-            </div>
-            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
-        </li>
-    </ul>
-
   </div>
-  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getVRAgents"></filter-panel>
 </div>
 </template>
 <script>
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
-import FilterPanel from '../../FilterPanel.vue'
 import VRAgentEditPanel from './VRAgentEditPanel.vue'
-import VRAgentAddWindow from './VRAgentAddWindow.vue'
+import VRAgentEditWindow from './VRAgentEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
+import page from '../../page.vue'
 
 export default {
     data() {
         return {
             showMode: true, //switch content list or table list
-            addWindowAlive: false,  //for add virtual agent modal windows
+            selectedRecord: new Object(),   //store which record has been selected.(Virtual Agent)
+            agentWindowAlive: false,  //for add/edit/copy/move Connection modal windows
+            operation: 'add',   //keep which operation(add,edit,copy) will be execute
+            deleteWindowAlive: false,  //for delete vragent modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
-            deleteWindowAlive: false,  //for delete virtual agent modal windows
-            deleteIndex: -1,    //store which index will be delete
-            deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
             allVRAgentObjs: new Object(), //store all virtual agents
+            agentRecord: new Object(), //store detail vragent record
             editable: [],   //for all virtual agents content edit panel
-            orderFields: [  //for ordering filter fields
-                {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "virtualagentname"},
-                {name: "Activate",value: "activate"},
-                {name: "Mode",value: "mode"}
-            ],
-            queryFields: [  //for querying filter fields
-                {name: "Name",value: "virtualagentname"},
-                {name: "Activate",value: "activate"},
-                {name: "Mode",value: "mode"},
-                {name: "Desc",value: "Description"}
-            ],
-            selectedRecord: new Object()   //store which Virtual Agent has been clicked.
+            //about paging info
+            totalPages: 1,
+            selectedNum: 0,
+            selectedSize: 10,
+            //about ordering info
+            orderFields: { //Ordering fields, only for UI
+                virtualagentname: "ASC",
+                description: "",
+                lastupdatetime: ""
+            },
+            orderField: 'virtualagentname',   //send to backend
+            orderType: 'ASC',  //send to backend
+            //about query param
+            queryParam: ''
         }
     },
     mounted() {
         this.getVRAgents()
     },
     methods: {
+        //When Grid List click on vragent record
+        clickOnAgentRecord(id, index){
+            let tr = document.getElementById(id)
+            this.clearSelectedRecord(tr)
+            
+            if (tr.className.indexOf('w3-blue-grey') == -1) {
+                tr.className = 'w3-blue-grey'
+                this.selectedRecord = this.allVRAgentObjs[index]
+                this.selectedRecord.index = index //New prop is stores which vragent obj will be deleted in UI
+            } else {
+                tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+            }
+        },
+        //When Content List click on vragent operation button
+        clickOnAgentPanel(which, index, content){
+            if(content){
+                this.selectedRecord = content
+                this.selectedRecord.index = index //New prop is stores which vragent obj will be deleted in UI
+
+                if(which == 'edit')
+                    this.changeEditable(index)
+                else if(which == 'permission')
+                    this.changePermissionWindowStatus()
+                else if(which == 'delete')
+                    this.showDeleteWindow()
+            }
+        },
+        //Get All virtual Agents info
         getVRAgents(e){
             let params = {
                 "paging":{
-                    "number":this.$refs.filter.selectedNum,
-                    "size":this.$refs.filter.selectedSize
-                }
-            }
-            
-            if(this.$refs.filter.isOrder){
-                params.ordering = {
-                    "orderType":this.$refs.filter.orderType,
-                    "orderField":this.$refs.filter.orderField
-                }
-            }
-
-            if(this.$refs.filter.isQuery){
-                params.querying = {
-                    "queryType":this.$refs.filter.queryType,
-                    "queryField":this.$refs.filter.queryField,
-                    "queryString":this.$refs.filter.queryString,
-                    "ignoreCase":this.$refs.filter.ignoreCase
-                }
+                    "number":this.selectedNum,
+                    "size":this.selectedSize
+                },
+                "ordering":{
+                    "orderType":this.orderType,
+                    "orderField":this.orderField
+                },
+                "param":this.queryParam
             }
 
             HTTP_TRINITY.post(`vragent/findByFilter`, params)
@@ -186,101 +291,179 @@ export default {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
                     this.allVRAgentObjs = response.data.content
-                    this.$refs.filter.totalPages = response.data.totalPages
+                    this.totalPages = response.data.totalPages
                 } else {
                     this.allVRAgentObjs = response.data
-                    this.$refs.filter.totalPages = 1
+                    this.totalPages = 1
                 }
+                this.clearSelectedRecord()
             })
             .catch(error => {
-                if(e){
-                    if(e.target.title === 'Apply Order')
-                        this.$refs.filter.isOrder = true
-                    else if(e.target.title === 'Apply Query')
-                        this.$refs.filter.isQuery = true
-                    else if(e.target.title === 'Cancel Order')
-                        this.$refs.filter.isOrder = false
-                    else if(e.target.title === 'Cancel Query')
-                        this.$refs.filter.isQuery = false
-                }
-
                 errorHandle(this.$store, error)
             })
         },
         changeEditable(index, content){
-            /*
-                this.$set is for above :
-                http://www.jianshu.com/p/358c1974d9a5
-                https://jsfiddle.net/qnq2munr/2/
-            */
-            if(this.editable[index] === undefined){
-                this.$set(this.editable, index, true) 
-            }else{
-                this.$set(this.editable, index, !this.editable[index])
-            }
-            
-            if(content !== undefined){
-                this.allVRAgentObjs[index] = content
-            }
-        },
-        deleteAgent(){
-            if(this.deleteIndex === -1)
-                return
-            if(this.deleteUid === '')
-                return
-            
-            HTTP_TRINITY.get(`vragent/delete`, {
-                params: {
-                    uid: this.deleteUid
-                }
-            })
+            //Get Virtual Agent detail record
+            HTTP_TRINITY.get(`vragent/findByUid?uid=` + this.selectedRecord.virtualagentuid)
             .then(response => {
-                this.allVRAgentObjs.splice(this.deleteIndex, 1)
-                this.editable.splice(this.deleteIndex, 1)
-                this.editable.fill(false) //close all edit form
-                this.changeDeleteWindowStatus(-1, '', '')
+                /*
+                    this.$set is for above :
+                    http://www.jianshu.com/p/358c1974d9a5
+                    https://jsfiddle.net/qnq2munr/2/
+                */
+                if(this.editable[index] === undefined){
+                    this.$set(this.editable, index, true) 
+                }else{
+                    this.$set(this.editable, index, !this.editable[index])
+                }
+                
+                if(response.data !== undefined){
+                    this.allVRAgentObjs[index] = response.data
+                }
             })
             .catch(error => {
                 errorHandle(this.$store, error)
             })
-            
         },
+        //above for delete window
+        showDeleteWindow(){
+            if( (this.selectedRecord.index || this.selectedRecord.index === 0) 
+                    && this.selectedRecord.virtualagentname) {
+                this.deleteWindowAlive = true
+                this.deleteName = this.selectedRecord.virtualagentname
+            }
+        },
+        deleteAgent(){
+            HTTP_TRINITY.get(`vragent/delete`, {
+                params: {
+                    uid: this.selectedRecord.virtualagentuid
+                }
+            })
+            .then(response => {
+                this.allVRAgentObjs.splice(this.selectedRecord.index, 1)
+                this.clearSelectedRecord()
+                this.closeDeleteWindow()
+            })
+            .catch(error => {
+                errorHandle(this.$store, error)
+            })  
+        },
+        closeDeleteWindow(){
+            this.deleteWindowAlive = false
+        },
+        //about for add/edit/copy window
+        changeAgentWindowStatus(which){
+            if(which != 'add'){
+                if(this.selectedRecord && this.selectedRecord.virtualagentuid && this.selectedRecord.virtualagentuid !== ''){
+                    //Get Virtual Agent detail record
+                    HTTP_TRINITY.get(`vragent/findByUid?uid=` + this.selectedRecord.virtualagentuid)
+                    .then(response => {
+                        this.agentRecord = response.data
+                        this.operation = which
+                        this.agentWindowAlive = !this.agentWindowAlive
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+                }
+            }else{
+                this.operation = which
+                this.agentWindowAlive = !this.agentWindowAlive
+            } 
+        },
+        saveAgentWindowContentForAdd(new_content){
+            if(new_content){    //new_content !== undefined, it means from Agent Window Save Click
+                this.allVRAgentObjs.unshift(new_content) //add object to the top of array
+                this.clearSelectedRecord()
+            }
+            this.agentWindowAlive = !this.agentWindowAlive
+        },
+        saveAgentWindowContentForEdit(new_content){
+            //new_content !== undefined, it means from Agent Window Save Click
+            if(new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)){
+                new_content.index = this.selectedRecord.index   //asign old index prop to new content
+                this.allVRAgentObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                this.selectedRecord = new_content
+            }
+            this.agentWindowAlive = !this.agentWindowAlive
+        },
+        //above for permission window
+        changePermissionWindowStatus(){
+            if(this.selectedRecord && this.selectedRecord.virtualagentuid && this.selectedRecord.virtualagentuid !== ''){
+                this.selectedRecord.virtualagentuid = this.selectedRecord.virtualagentuid.trim()
+                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+            }
+        },
+        //about for change show mode(Grid List & Content List)
         changeShowMode(){
             this.showMode = !this.showMode
+            this.selectedRecord = new Object()
         },
-        changeAddWindowStatus(content){
-            this.addWindowAlive = !this.addWindowAlive
-            if(content !== undefined){
-                this.allVRAgentObjs.unshift(content) //add object to the top of array
-                this.editable.fill(false) //close all edit form
-                // this.editable.unshift(false)
+        clearSelectedRecord(tr){
+            let table = document.getElementById('virtualAgentTable')
+            if(table && table.childNodes){  //判斷是否是從Content List來的操作, 不成立表示由Grid List來的操作
+                for(var i=0;i<table.childNodes.length;i++){  //先重設所有agent row的class
+                    if(table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                        table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+                }
             }
+            
+            this.selectedRecord = new Object()
         },
-        changeDeleteWindowStatus(index, vr_agentuid, vr_agentname){
-            this.deleteWindowAlive = !this.deleteWindowAlive
+        //above for pagging, ordering, query
+        changeNum(e, index){
+            //紀錄現在點擊的是那一頁
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.getVRAgents()
+        },
+        changeSize(e){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getVRAgents()
+        },
+        pageNumSelected(index){
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+        },
+        applyOrder(field){
+            //先清除所有排序方式, only for UI display
+            for(var x in this.orderFields){
+                if(x !== field)
+                    this.orderFields[x] = ''
+            }
 
-            /*
-                store which obj be delete
-            */
-            this.deleteIndex = index
-            this.deleteUid = vr_agentuid
-            this.deleteName = vr_agentname
-        },
-        changePermissionWindowStatus(record){
-            if(record){
-                this.selectedRecord = record
-                this.selectedRecord.virtualagentuid = this.selectedRecord.virtualagentuid.trim()
+            this.orderField = field
+            if(this.orderFields[field] === 'DESC'){
+                this.orderFields[field] = 'ASC' //only for UI display
+                this.orderType = 'ASC'  
+            }else{
+                this.orderFields[field] = 'DESC'    //only for UI display
+                this.orderType = 'DESC'
             }
-            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+
+            this.getVRAgents()
+        },
+        applyQuery(){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getVRAgents()
         }
     },
     components: {
-        'filter-panel': FilterPanel,
         'vr-agent-edit-panel': VRAgentEditPanel,
-        'vr-agent-add-window': VRAgentAddWindow,
+        'vr-agent-edit-window': VRAgentEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'permission-window': PermissionWindow
+        'permission-window': PermissionWindow,
+        'page': page
     }
 }
 </script>
+<style scoped>
+    select {
+        height: 35px;
+        width: 86px;
+    }
+    input {
+        height: 31px;
+        width: 210px;
+    }
+</style>
 
