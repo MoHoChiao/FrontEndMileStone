@@ -45,10 +45,33 @@
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span v-if="showMode" class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-bars w3-button" title="Other Menu" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
                                         <div>
                                             <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeAgentWindowStatus('copy')"> Copy Agent</i>
                                             <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                                        </div>
+                                        <hr class="w3-border-black" style="padding:0px;margin:0px">
+                                        <div class="w3-row-padding w3-small">
+                                            <span class="w3-col m5" style="padding-top:15px">Page Num</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px" title="Page Number" 
+                                                v-model="selectedPage" @change="pageNumSelected111">
+                                                <template v-for="n in totalPages">
+                                                    <option :key="n" :value="n" selected>{{ n }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                            <span class="w3-col m5" style="padding-top:15px">Page Size</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px" title="Page Size" 
+                                                v-model="selectedSize" @change="changeSize">
+                                                <option value="-1" disabled selected>Page Size</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="200">200</option>
+                                                <option value="500">500</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </span>
@@ -147,10 +170,10 @@
                     </div>
                     <div class="w3-col m3">
                         <div class="w3-row w3-right">
-                            <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
+                            <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
                                 Page Size
                             </span>
-                            <span class="w3-col m6" style="padding-top:8px">
+                            <span class="w3-col m6" style="padding-top:10px">
                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
                                     <option value="-1" disabled selected>Size</option>
                                     <option value="10">10</option>
@@ -217,7 +240,8 @@ export default {
             editable: [],   //for all agents content edit panel
             //about paging info
             totalPages: 1,
-            selectedNum: 0,
+            selectedPage: 1, //this is for UI use
+            selectedNum: 0, //this is for backend use
             selectedSize: 10,
             //about ordering info
             orderFields: { //Ordering fields, only for UI
@@ -408,6 +432,7 @@ export default {
         changeNum(e, index){
             //紀錄現在點擊的是那一頁
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = index   //for UI page num
             this.getAgents()
         },
         changeSize(e){
@@ -416,7 +441,13 @@ export default {
         },
         pageNumSelected(index){
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = Number(index)   //for UI page num
             this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+        },
+        pageNumSelected111(){  //for Page select box
+            this.selectedNum = Number(this.selectedPage) - 1
+            this.$refs.paginate.selected = Number(this.selectedPage) - 1
+            this.getAgents()
         },
         applyOrder(field){
             //先清除所有排序方式, only for UI display
@@ -452,8 +483,9 @@ export default {
 </script>
 <style scoped>
     select {
-        height: 35px;
+        height: 30px;
         width: 86px;
+        padding:0px 0px 0px 0px;
     }
     input {
         height: 31px;
