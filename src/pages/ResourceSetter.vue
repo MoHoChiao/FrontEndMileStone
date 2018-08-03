@@ -202,7 +202,7 @@ export default {
             this.$router.push({ name: 'ExternalRuleContainer'})
         },
         getPluginLicense(e) {
-                this.$router.push({ name: 'PluginLicense' })
+            this.$router.push({ name: 'PluginLicense' })
         },
         getVersionInfo(e) {
             this.$router.push({ name: 'VersionInfo' })
