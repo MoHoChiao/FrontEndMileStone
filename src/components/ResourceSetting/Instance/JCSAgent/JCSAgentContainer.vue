@@ -43,26 +43,26 @@
                                 <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Agent" aria-hidden="true" @click="changeAgentWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Agent" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
-                                <span v-if="showMode" class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-bars w3-button" title="Other Menu" aria-hidden="true"></i>
+                                <span class="w3-dropdown-hover w3-right">
+                                    <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
-                                        <div>
+                                        <div v-if="showMode">
                                             <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeAgentWindowStatus('copy')"> Copy Agent</i>
                                             <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
                                         </div>
-                                        <hr class="w3-border-black" style="padding:0px;margin:0px">
+                                        <hr v-if="showMode" class="w3-border-black" style="padding:0px;margin:0px">
                                         <div class="w3-row-padding w3-small">
-                                            <span class="w3-col m5" style="padding-top:15px">Page Num</span>
-                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px" title="Page Number" 
-                                                v-model="selectedPage" @change="pageNumSelected111">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                                v-model="selectedPage" @change="pageNumSelectedComboBox">
                                                 <template v-for="n in totalPages">
                                                     <option :key="n" :value="n" selected>{{ n }}</option>
                                                 </template>
                                             </select>
                                         </div>
                                         <div class="w3-row-padding w3-small" style="padding-bottom:10px">
-                                            <span class="w3-col m5" style="padding-top:15px">Page Size</span>
-                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px" title="Page Size" 
+                                            <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
                                                 v-model="selectedSize" @change="changeSize">
                                                 <option value="-1" disabled selected>Page Size</option>
                                                 <option value="10">10</option>
@@ -81,14 +81,40 @@
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-bars w3-button" title="Function Menu" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
-                                        <div>
+                                    <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
+                                        <div v-if="showMode">
                                             <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAgentWindowStatus('add')"> Add Agent</i>
                                             <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeAgentWindowStatus('edit')"> Edit Agent</i>
                                             <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteWindow"> Delete Agent</i>
                                             <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeAgentWindowStatus('copy')"> Copy Agent</i>
                                             <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                                        </div>
+                                        <div v-else>
+                                            <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAgentWindowStatus('add')"> Add Agent</i>
+                                        </div>
+                                        <hr class="w3-border-black" style="padding:0px;margin:0px">
+                                        <div class="w3-row-padding w3-small">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                                v-model="selectedPage" @change="pageNumSelectedComboBox">
+                                                <template v-for="n in totalPages">
+                                                    <option :key="n" :value="n" selected>{{ n }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
+                                                v-model="selectedSize" @change="changeSize">
+                                                <option value="-1" disabled selected>Page Size</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="200">200</option>
+                                                <option value="500">500</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </span>
@@ -442,11 +468,13 @@ export default {
         pageNumSelected(index){
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
             this.selectedPage = Number(index)   //for UI page num
-            this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
         },
-        pageNumSelected111(){  //for Page select box
+        pageNumSelectedComboBox (){  //for Page select box
             this.selectedNum = Number(this.selectedPage) - 1
-            this.$refs.paginate.selected = Number(this.selectedPage) - 1
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(this.selectedPage) - 1
             this.getAgents()
         },
         applyOrder(field){

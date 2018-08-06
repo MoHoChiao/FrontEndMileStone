@@ -38,24 +38,80 @@
                             <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                                <i v-if="showMode" class="fa fa-universal-access w3-button w3-right" title="Permission" aria-hidden="true" @click="changePermissionWindowStatus"></i>
                                 <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete Virtual Agent" aria-hidden="true" @click="showDeleteWindow"></i>
                                 <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Virtual Agent" aria-hidden="true" @click="changeAgentWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Virtual Agent" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                                <span class="w3-dropdown-hover w3-right">
+                                    <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
+                                        <div v-if="showMode">
+                                            <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                                        </div>
+                                        <hr v-if="showMode" class="w3-border-black" style="padding:0px;margin:0px">
+                                        <div class="w3-row-padding w3-small">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                                v-model="selectedPage" @change="pageNumSelectedComboBox">
+                                                <template v-for="n in totalPages">
+                                                    <option :key="n" :value="n" selected>{{ n }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
+                                                v-model="selectedSize" @change="changeSize">
+                                                <option value="-1" disabled selected>Page Size</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="200">200</option>
+                                                <option value="500">500</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </span>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-large">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-bars w3-button" title="Function Menu" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
-                                        <div>
+                                    <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
+                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
+                                        <div v-if="showMode">
                                             <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAgentWindowStatus('add')"> Add Virtual Agent</i>
                                             <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeAgentWindowStatus('edit')"> Edit Virtual Agent</i>
                                             <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteWindow"> Delete Virtual Agent</i>
                                             <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                                        </div>
+                                        <div v-else>
+                                            <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeAgentWindowStatus('add')"> Add Virtual Agent</i>
+                                        </div>
+                                        <hr class="w3-border-black" style="padding:0px;margin:0px">
+                                        <div class="w3-row-padding w3-small">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                                v-model="selectedPage" @change="pageNumSelectedComboBox">
+                                                <template v-for="n in totalPages">
+                                                    <option :key="n" :value="n" selected>{{ n }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                            <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                            <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
+                                                v-model="selectedSize" @change="changeSize">
+                                                <option value="-1" disabled selected>Page Size</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                                <option value="200">200</option>
+                                                <option value="500">500</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </span>
@@ -227,6 +283,7 @@ export default {
             editable: [],   //for all virtual agents content edit panel
             //about paging info
             totalPages: 1,
+            selectedPage: 1, //this is for UI use
             selectedNum: 0,
             selectedSize: 10,
             //about ordering info
@@ -414,6 +471,7 @@ export default {
         changeNum(e, index){
             //紀錄現在點擊的是那一頁
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = index   //for UI page num
             this.getVRAgents()
         },
         changeSize(e){
@@ -422,7 +480,15 @@ export default {
         },
         pageNumSelected(index){
             this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
-            this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+            this.selectedPage = Number(index)   //for UI page num
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+        },
+        pageNumSelectedComboBox (){  //for Page select box
+            this.selectedNum = Number(this.selectedPage) - 1
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(this.selectedPage) - 1
+            this.getVRAgents()
         },
         applyOrder(field){
             //先清除所有排序方式, only for UI display
