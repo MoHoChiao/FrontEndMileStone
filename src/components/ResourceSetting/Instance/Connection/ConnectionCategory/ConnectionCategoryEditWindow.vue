@@ -14,16 +14,15 @@ import ConnectionCategoryForm from './ConnectionCategoryForm.vue'
 import FormButton from '../../../FormButton.vue'
 
 export default {
-    // data() {
-    //     return {
-    //         urlOp: ''
-    //     }
-    // },
+    computed: {
+        windowTitle(){
+            if(this.urlOp === 'add')
+                return 'Add Category'
+            else if(this.urlOp === 'edit')
+                return 'Edit Category - ' + this.content.conncategoryname
+        }
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'

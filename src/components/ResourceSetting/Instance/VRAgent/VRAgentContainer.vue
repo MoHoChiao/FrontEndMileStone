@@ -278,7 +278,7 @@ export default {
             deleteWindowAlive: false,  //for delete vragent modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
             deleteName: '',     //store which obj name will be delete
-            allVRAgentObjs: new Object(), //store all virtual agents
+            allVRAgentObjs: [], //store all virtual agents
             agentRecord: new Object(), //store detail vragent record
             editable: [],   //for all virtual agents content edit panel
             //about paging info
@@ -498,12 +498,12 @@ export default {
             }
 
             this.orderField = field
-            if(this.orderFields[field] === 'DESC'){
-                this.orderFields[field] = 'ASC' //only for UI display
-                this.orderType = 'ASC'  
-            }else{
-                this.orderFields[field] = 'DESC'    //only for UI display
+            if (this.orderFields[field] === 'ASC') {
+                this.orderFields[field] = 'DESC' //only for UI display
                 this.orderType = 'DESC'
+            } else {
+                this.orderFields[field] = 'ASC'    //only for UI display
+                this.orderType = 'ASC'
             }
 
             this.getVRAgents()

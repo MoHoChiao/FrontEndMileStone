@@ -2,10 +2,9 @@
 <div>
   <!-- For Add/Edit Category Window -->
   <connection-category-edit-window v-if="editCategoryWindowAlive" :windowAlive="editCategoryWindowAlive" 
-                    window-title="Edit Connection Category" 
                     @closeAdd="saveCategoryWindowContentForAdd" 
                     @closeEdit="saveCategoryWindowContentForEdit" 
-                    :content="selectedCategoryRecord" 
+                    :content="categoryRecord" 
                     :urlOp="operation" 
   ></connection-category-edit-window>
   <!-- For Add/Edit/Copy/Move Connection Window -->
@@ -14,7 +13,7 @@
                     @closeEdit="saveConnectionWindowContentForEdit" 
                     @closeCopy="saveConnectionWindowContentForCopy" 
                     @closeMove="saveConnectionWindowContentForMove" 
-                    :content="selectedConnectionRecord" 
+                    :content="connectionRecord" 
                     :selectedCategoryRecord="selectedCategoryRecord" 
                     :urlOp="operation" 
   ></connection-edit-window>
@@ -40,37 +39,39 @@
         <div class="w3-col m12">
             <div class="w3-card-4 w3-round w3-signal-white">
                 <div class="w3-container">
-                    <p contenteditable="false" class="w3-col m12 w3-border w3-padding">
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                        <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> Connection</i>
-                    </p>
+                    <div class="w3-panel w3-col m12 w3-border w3-round w3-padding">
+                        <div class="w3-row">
+                            <span class="w3-col m12 w3-left">
+                                <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
+                                    placeholder="Search For Connection Name" style="text-transform:uppercase">
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Connection Category Panel -->
-    <div>
+    <div class="w3-small">
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
-                <div class="w3-small">
-                    <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
-                    <span>
-                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                All Categories
-                            </div>
+                <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                <span>
+                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                            Connection Categories
                         </div>
-                    </span>
-                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
-                    <i class="fa fa-pencil w3-button w3-right" title="Edit Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
-                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection Category" aria-hidden="true" @click="getCategories"></i>
-                </div>
+                    </div>
+                </span>
+                <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
+                <i class="fa fa-pencil w3-button w3-right" title="Edit Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
+                <i class="fa fa-plus w3-button w3-right" title="Add Connection Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
+                <i class="fa fa-refresh w3-button w3-right" title="Reload Connection Category" aria-hidden="true" @click="getCategories"></i>
             </p>
             <p>
-              <div>
                 <div class="w3-responsive w3-card w3-round">
-                    <table class="w3-table-all w3-small">
+                    <table class="w3-table-all">
                         <tr class="w3-teal">
                             <th class="w3-center" width="32%">Name</th>
                             <th class="w3-center" width="46%">Description</th>
@@ -79,105 +80,191 @@
                     </table>
                 </div>
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
-                    <table id="categoryTable" class="w3-table-all w3-small">
+                    <table id="categoryTable" class="w3-table-all">
                         <template v-for="(content, index) in allCategoryObjs">
                         <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnCategory(content.conncategoryuid, index)">
-                            <td class="w3-center" width="32%">
+                            <td width="32%">
                                 <span>{{ content.conncategoryname }}</span>
                             </td>
                             <td width="46%">
-                                <span>{{ content.description }}</span>
+                                <span :title="content.description">{{ content.description.length > 25 ? content.description.substr(0, 25) + '...' : content.description }}</span>
                             </td>
-                            <td class="w3-center" width="22%">
+                            <td width="22%">
                                 <span>{{ content.lastupdatetime }}</span>
                             </td>
                         </tr>
                         </template>
                     </table>
                 </div>
-              </div>
             </p>
         </div>
     </div>
     <!-- Connection Panel -->
-    <div>
+    <div class="w3-small">
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
-                <div class="w3-small">
-                    <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
-                    <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
-                        <span>
-                            <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                    Connections
-                                </div>
-                            </div>
-                        </span> 
-                        {{ selectedCategoryRecord.conncategoryname }}
-                    </span>
-                    <span v-else>
-                        <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                Connections
-                            </div>
-                        </div>
-                    </span>
-                    <span class="w3-dropdown-hover w3-right w3-hide-large">
-                        <i class="fa fa-bars w3-button" title="Copy/Move/Edit/Delete" aria-hidden="true"></i>
-                        <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block">
-                            <div>
-                                <i class="w3-bar-item fa fa-clone w3-button" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
-                                <i class="w3-bar-item fa fa-clipboard w3-button" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
-                                <i class="w3-bar-item fa fa-pencil w3-button" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
-                                <i class="w3-bar-item fa fa-trash-o w3-button" title="Delete Connection" aria-hidden="true" @click="showDeleteConnectionWindow"> Delete Connection</i>
-                            </div>
-                        </div>
-                    </span>
-                    <i class="fa fa-trash-o w3-button w3-right w3-hide-medium w3-hide-small" title="Delete Connection" aria-hidden="true" @click="showDeleteConnectionWindow"></i>
-                    <i class="fa fa-universal-access w3-button w3-right" title="Apply Permission To Connection" aria-hidden="true" @click="changePermissionWindowStatus()"></i>
-                    <i class="fa fa-pencil w3-button w3-right w3-hide-medium w3-hide-small" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
-                    <i class="fa fa-clipboard w3-button w3-right w3-hide-medium w3-hide-small" title="Move Connection" aria-hidden="true" @click="changeConnectionWindowStatus('move')"></i>
-                    <i class="fa fa-clone w3-button w3-right w3-hide-medium w3-hide-small" title="Copy Connection" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"></i>
-                    <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
-                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="getConnections"></i>
+                <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                    <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                        Connections
+                    </div>
                 </div>
+                <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
+                    <i class="fa fa-trash-o w3-button w3-right" title="Delete Connection" aria-hidden="true" @click="showDeleteConnectionWindow"></i>
+                    <i class="fa fa-pencil w3-button w3-right" title="Edit Connection" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"></i>
+                    <i class="fa fa-plus w3-button w3-right" title="Add Connection" aria-hidden="true" @click="changeConnectionWindowStatus('add')"></i>
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload Connection" aria-hidden="true" @click="applyQuery"></i>
+                    <span class="w3-dropdown-hover w3-right">
+                        <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
+                        <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
+                            <div>
+                                <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
+                                <i class="w3-bar-item fa fa-clipboard w3-button" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
+                                <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                            </div>
+                            <hr class="w3-border-black" style="padding:0px;margin:0px">
+                            <div class="w3-row-padding w3-small">
+                                <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                        v-model="selectedPage" @change="pageNumSelectedComboBox">
+                                    <template v-for="n in totalPages">
+                                        <option :key="n" :value="n" selected>{{ n }}</option>
+                                    </template>
+                                </select>
+                            </div>
+                            <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
+                                        v-model="selectedSize" @change="changeSize">
+                                    <option value="-1" disabled selected>Page Size</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </div>
+                        </div>
+                    </span>
+                </span>
+                <span class="w3-col m6 w3-right w3-hide-large">
+                    <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                    <span class="w3-dropdown-hover w3-right">
+                        <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
+                        <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
+                            <div>
+                                <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeConnectionWindowStatus('edit')"> Edit Connection</i>
+                                <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteConnectionWindow"> Delete Connection</i>
+                                <i class="w3-bar-item fa fa-clone w3-button" aria-hidden="true" @click="changeConnectionWindowStatus('copy')"> Copy Connection</i>
+                                <i class="w3-bar-item fa fa-clipboard w3-button" aria-hidden="true" @click="changeConnectionWindowStatus('move')"> Move Connection</i>
+                                <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Permission</i>
+                            </div>
+                            <hr class="w3-border-black" style="padding:0px;margin:0px">
+                            <div class="w3-row-padding w3-small">
+                                <span class="w3-col m5" style="padding-top:13px">Page Num</span>
+                                <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
+                                        v-model="selectedPage" @change="pageNumSelectedComboBox">
+                                    <template v-for="n in totalPages">
+                                        <option :key="n" :value="n" selected>{{ n }}</option>
+                                    </template>
+                                </select>
+                            </div>
+                            <div class="w3-row-padding w3-small" style="padding-bottom:10px">
+                                <span class="w3-col m5" style="padding-top:13px">Page Size</span>
+                                <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size" 
+                                        v-model="selectedSize" @change="changeSize">
+                                    <option value="-1" disabled selected>Page Size</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </div>
+                        </div>
+                    </span>
+                </span>
             </p>
             <p>
               <div>
                 <div class="w3-responsive w3-card w3-round">
-                    <table class="w3-table-all w3-small">
+                    <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="36%">Name</th>
-                            <th class="w3-center" width="42%">Description</th>
-                            <th class="w3-center" width="22%">Update Time</th>
+                            <th class="w3-center w3-btn w3-hover-none" width="38%" title="Order by Connection Name" @click="applyOrder('connectionname')">
+                                Name
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['connectionname'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['connectionname'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
+                            <th class="w3-center w3-btn w3-hover-none" width="40%" title="Order by Description" @click="applyOrder('description')">
+                                Description
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
+                            <th class="w3-center w3-btn w3-hover-none" width="22%" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
+                                Update Time
+                                &nbsp;&nbsp;
+                                <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                            </th>
                         </tr>
                     </table>
                 </div>
                 <div id="connectionContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
-                    <table id="connectionTable" class="w3-table-all w3-small">
+                    <table id="connectionTable" class="w3-table-all">
                         <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
-                            <td width="36%">
+                            <td width="38%">
                                 <span class="w3-badge w3-indigo">{{ content.connectiontype }}</span>
                                 &nbsp;
-                                <span>{{ content.connectionname }}</span>
+                                <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
+                                    {{selectedCategoryRecord.conncategoryname === '/' ? selectedCategoryRecord.conncategoryname : selectedCategoryRecord.conncategoryname+'/'}}{{ content.connectionname }}
+                                </span>
+                                <span v-else>
+                                    {{content.categoryname === '/' ? content.categoryname : content.categoryname+'/'}}{{ content.connectionname }}
+                                </span>
                             </td>
-                            <td width="42%">
-                                <span>{{ content.description }}</span>
+                            <td width="40%">
+                                <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
                             </td>
-                            <td class="w3-center" width="22%">
+                            <td width="22%">
                                 <span>{{ content.lastupdatetime }}</span>
                             </td>
                         </tr>
                     </table>
+                </div>
+                <div class="w3-row-padding">
+                    <div class="w3-col m9 w3-center" style="padding-top:10px">
+                        <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                    </div>
+                    <div class="w3-col m3">
+                        <div class="w3-row w3-right">
+                            <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
+                                Page Size
+                            </span>
+                            <span class="w3-col m6" style="padding-top:10px">
+                                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
+                                    <option value="-1" disabled selected>Size</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
                 </div>
               </div>
             </p>
         </div>
     </div>
   </div>
-  <filter-panel ref="filter" :order-fileds="orderFields" :query-fileds="queryFields" @fromFilter="getConnections"></filter-panel>
 </div>
 </template>
 <script>
@@ -187,6 +274,7 @@ import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategor
 import ConnectionEditWindow from './ConnectionEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
+import page from '../../page.vue'
 
 export default {
     data() {
@@ -200,18 +288,26 @@ export default {
             deleteWindowAlive: false,  //show or not show delete modal windows
             deleteName: '', //store delete object name
             deleteWhich: '', //store delete Category or Connection
-            allCategoryObjs: new Object(), //store all remote data.(Connection Categories)
-            allConnectionObjs: new Object(), //store all remote data.(Connections)
-            orderFields: [  //for ordering filter fields
-                {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "connectionname"},
-                {name: "Type",value: "connectiontype"}
-            ],
-            queryFields: [  //for querying filter fields
-                {name: "Name",value: "connectionname"},
-                {name: "Type",value: "connectiontype"},
-                {name: "Desc",value: "Description"}
-            ]
+            allCategoryObjs: [], //store all remote data.(Connection Categories)
+            categoryRecord: new Object(),   //store detail connection category record
+            allConnectionObjs: [], //store all remote data.(Connections)
+            connectionRecord: new Object(), //store detail connection record
+            //about paging info
+            totalPages: 1,
+            selectedPage: 1, //this is for UI use
+            selectedNum: 0, //this is for backend use
+            selectedSize: 10,
+            //about connection ordering info
+            orderFields: { //Ordering fields, only for UI
+                connectionname: "ASC",
+                host: "",
+                description: "",
+                lastupdatetime: ""
+            },
+            orderField: 'connectionname',   //send to backend
+            orderType: 'ASC',  //send to backend
+            //about query param
+            queryParam: ''
         }
     },
     mounted() {
@@ -234,8 +330,10 @@ export default {
             } else {
                 tr.className = 'w3-hover-blue-grey w3-hover-opacity'
             }
-            this.$refs.filter.pageNumSelected('1')  //每次'點擊'category刷新時, 重載connections都讓filter的page number回到第一頁
-            this.getConnections()   //refresh Connections content
+
+            this.changeSize()
+            // this.pageNumSelected('1')  //每次'點擊'category刷新時, 重載connections都讓filter的page number回到第一頁
+            // this.getConnections()   //refresh Connections content
         },
         clickOnConnection(id, index){
             let tr = document.getElementById(id)
@@ -265,10 +363,20 @@ export default {
             .then(response => {
                 this.allCategoryObjs = response.data
 
-                this.clearSelectedCategoryRecord()
+                let rootCategory = {
+                    "conncategoryuid": "root",
+                    "conncategoryname":"/",
+                    "description":"Root Directory",
+                    "lastupdatetime": ""
+                }
+                this.allCategoryObjs.unshift(rootCategory)
+
+                // this.clearSelectedCategoryRecord()
                 this.clearSelectedConnectionRecord()
-                this.$refs.filter.pageNumSelected('1')  //每次category刷新時, 重載connections都讓filter的page number回到第一頁
-                this.getConnections()   //refresh Connections content
+
+                this.changeSize()
+                // this.pageNumSelected('1')  //每次category刷新時, 重載connections都讓filter的page number回到第一頁
+                // this.getConnections()   //refresh Connections content
                 
                 /*
                  * if fetch category records success, scroll to top
@@ -281,31 +389,20 @@ export default {
             })
         },
         getConnections(e){
-            let urlPath = 'connection/findByFilter?categoryUid='
+            let urlPath = 'connection/findByFilter'
             if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && this.selectedCategoryRecord.conncategoryuid !== '')
-                urlPath += this.selectedCategoryRecord.conncategoryuid
+                urlPath += '?categoryUid=' + this.selectedCategoryRecord.conncategoryuid
             
             let params = {
                 "paging":{
-                    "number":this.$refs.filter.selectedNum,
-                    "size":this.$refs.filter.selectedSize
-                }
-            }
-            
-            if(this.$refs.filter.isOrder){
-                params.ordering = {
-                    "orderType":this.$refs.filter.orderType,
-                    "orderField":this.$refs.filter.orderField
-                }
-            }
-
-            if(this.$refs.filter.isQuery){
-                params.querying = {
-                    "queryType":this.$refs.filter.queryType,
-                    "queryField":this.$refs.filter.queryField,
-                    "queryString":this.$refs.filter.queryString,
-                    "ignoreCase":this.$refs.filter.ignoreCase
-                }
+                    "number":this.selectedNum,
+                    "size":this.selectedSize
+                },
+                "ordering":{
+                    "orderType":this.orderType,
+                    "orderField":this.orderField
+                },
+                "param":this.queryParam
             }
 
             HTTP_TRINITY.post(urlPath, params)
@@ -314,25 +411,14 @@ export default {
                     this.allConnectionObjs = response.data.content
                     if(response.data.totalPages <= 0)
                         response.data.totalPages = 1
-                    this.$refs.filter.totalPages = response.data.totalPages
+                    this.totalPages = response.data.totalPages
                 } else {
                     this.allConnectionObjs = response.data
-                    this.$refs.filter.totalPages = 1
+                    this.totalPages = 1
                 }
                 this.clearSelectedConnectionRecord()
             })
             .catch(error => {
-                if(e){
-                    if(e.target.title === 'Apply Order')
-                        this.$refs.filter.isOrder = true
-                    else if(e.target.title === 'Apply Query')
-                        this.$refs.filter.isQuery = true
-                    else if(e.target.title === 'Cancel Order')
-                        this.$refs.filter.isOrder = false
-                    else if(e.target.title === 'Cancel Query')
-                        this.$refs.filter.isQuery = false
-                }
-                
                 errorHandle(this.$store, error)
             })
         },
@@ -345,17 +431,40 @@ export default {
                 this.operation = which
                 this.editCategoryWindowAlive = !this.editCategoryWindowAlive
             }else{
-                if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && this.selectedCategoryRecord.conncategoryuid !== ''){
-                    this.operation = which
-                    this.editCategoryWindowAlive = !this.editCategoryWindowAlive
+                if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid 
+                        && this.selectedCategoryRecord.conncategoryuid !== '' && this.selectedCategoryRecord.conncategoryuid !== 'root'){
+                    HTTP_TRINITY.get(`connection-category/findByUid?uid=` + this.selectedCategoryRecord.conncategoryuid)
+                    .then(response => {
+                        this.categoryRecord = response.data
+                        this.operation = which
+                        this.editCategoryWindowAlive = !this.editCategoryWindowAlive
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
                 }
             }
         },
         changeConnectionWindowStatus(which){
             if(which != 'add'){
                 if(this.selectedConnectionRecord && this.selectedConnectionRecord.connectionuid && this.selectedConnectionRecord.connectionuid !== ''){
-                    this.operation = which
-                    this.editConnectionWindowAlive = !this.editConnectionWindowAlive
+                    //Get Connection detail record
+                    HTTP_TRINITY.get(`connection/findByUid?uid=` + this.selectedConnectionRecord.connectionuid)
+                    .then(response => {
+                        this.connectionRecord = response.data
+
+                        //above for pass category info to connection form, if no category data, pass default value
+                        if(this.connectionRecord.categoryname == undefined || this.connectionRecord.categoryname.trim() == '')
+                            this.connectionRecord.categoryname = '/'
+                        if(this.connectionRecord.categoryuid == undefined || this.connectionRecord.categoryuid.trim() == '')
+                            this.connectionRecord.categoryuid = 'root'
+
+                        this.operation = which
+                        this.editConnectionWindowAlive = !this.editConnectionWindowAlive
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
                 }
             }else{
                 this.operation = which
@@ -370,7 +479,7 @@ export default {
         },
         saveCategoryWindowContentForAdd(new_content){
             if(new_content){    //new_content !== undefined, it means from Connection Category Window Save Click
-                this.allCategoryObjs.unshift(new_content) //add object to the top of array
+                this.allCategoryObjs.splice(1, 0, new_content) //add object to the second position of array
                 this.clearSelectedCategoryRecord()
                 this.getConnections()   //refresh Connections content
 
@@ -407,20 +516,27 @@ export default {
             }
             this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
-        saveConnectionWindowContentForCopy(conncategoryuid, new_content){
+        saveConnectionWindowContentForCopy(new_content){
             if(new_content){    //new_content !== undefined, it means from Connection Window Save Click
                 //如果相等, 表示copy過去的目標category, 即目前所在的category(即目前所選擇的category), 則立刻在最上列加一筆connection
-                if(this.selectedCategoryRecord.conncategoryuid === conncategoryuid){
+                if(this.selectedCategoryRecord.conncategoryuid === undefined || 
+                        this.selectedCategoryRecord.conncategoryuid === new_content.categoryuid){
                     this.allConnectionObjs.unshift(new_content) //add object to the top of array
                 }
                 this.clearSelectedConnectionRecord()
             }
             this.editConnectionWindowAlive = !this.editConnectionWindowAlive
         },
-        saveConnectionWindowContentForMove(conncategoryuid, new_content){
+        saveConnectionWindowContentForMove(new_content){
             //new_content !== undefined, it means from Connection Window Save Click
             if(new_content && this.selectedConnectionRecord && (this.selectedConnectionRecord.index || this.selectedConnectionRecord.index === 0)){
-                if(this.selectedCategoryRecord.conncategoryuid === conncategoryuid){
+                /*
+                 *  this.selectedCategoryRecord.conncategoryuid === undefined, 表示沒有點選任何目錄, 即所有的connection都要出現, 
+                 *  this.selectedCategoryRecord.conncategoryuid === new_content.categoryuid, 表示move過去的目標category, 即目前所在的category(即目前所選擇的category)
+                 *  以上兩種情形, 一律替換掉舊object即可
+                */
+                if(this.selectedCategoryRecord.conncategoryuid === undefined || 
+                        this.selectedCategoryRecord.conncategoryuid === new_content.categoryuid){
                     new_content.index = this.selectedConnectionRecord.index   //asign old index prop to new content
                     this.allConnectionObjs[this.selectedConnectionRecord.index] = new_content   //replace object to the array
                     this.selectedConnectionRecord = new_content
@@ -474,7 +590,7 @@ export default {
         },
         showDeleteCategoryWindow(){
             if( (this.selectedCategoryRecord.index || this.selectedCategoryRecord.index === 0) 
-                    && this.selectedCategoryRecord.conncategoryname) {
+                    && this.selectedCategoryRecord.conncategoryname && this.selectedCategoryRecord.conncategoryname !== '/') {
                 this.deleteWindowAlive = true
                 this.deleteName = this.selectedCategoryRecord.conncategoryname
                 this.deleteWhich = 'Category'
@@ -510,6 +626,51 @@ export default {
                     table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
             }
             this.selectedConnectionRecord = new Object()
+        },
+        //above for pagging, ordering, query
+        changeNum(e, index){
+            //紀錄現在點擊的是那一頁
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = index   //for UI page num
+            this.getConnections()
+        },
+        changeSize(e){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getConnections()
+        },
+        pageNumSelected(index){
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = Number(index)   //for UI page num
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+        },
+        pageNumSelectedComboBox (){  //for Page select box
+            this.selectedNum = Number(this.selectedPage) - 1
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(this.selectedPage) - 1
+            this.getConnections()
+        },
+        applyOrder(field){
+            //先清除所有排序方式, only for UI display
+            for(var x in this.orderFields){
+                if(x !== field)
+                    this.orderFields[x] = ''
+            }
+
+            this.orderField = field
+            if (this.orderFields[field] === 'ASC') {
+                this.orderFields[field] = 'DESC' //only for UI display
+                this.orderType = 'DESC'
+            } else {
+                this.orderFields[field] = 'ASC'    //only for UI display
+                this.orderType = 'ASC'
+            }
+
+            this.getConnections()
+        },
+        applyQuery(){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getConnections()
         }
     },
     components: {
@@ -517,7 +678,19 @@ export default {
         'connection-category-edit-window': ConnectionCategoryEditWindow,
         'connection-edit-window': ConnectionEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'permission-window': PermissionWindow
+        'permission-window': PermissionWindow,
+        'page': page
     }
 }
 </script>
+<style scoped>
+    select {
+        height: 30px;
+        width: 86px;
+        padding:0px 0px 0px 0px;
+    }
+    input {
+        height: 31px;
+        width: 260px;
+    }
+</style>

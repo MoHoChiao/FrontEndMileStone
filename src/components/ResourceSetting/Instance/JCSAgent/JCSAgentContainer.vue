@@ -261,7 +261,7 @@ export default {
             deleteWindowAlive: false,  //for delete agent modal windows
             applyPermissionWindowAlive: false, //for modify Permission modal windows
             deleteName: '',     //store which obj name will be delete
-            allJCSAgentObjs: new Object(), //store all agents
+            allJCSAgentObjs: [], //store all agents
             agentRecord: new Object(), //store detail agent record
             editable: [],   //for all agents content edit panel
             //about paging info
@@ -485,12 +485,12 @@ export default {
             }
 
             this.orderField = field
-            if(this.orderFields[field] === 'DESC'){
-                this.orderFields[field] = 'ASC' //only for UI display
-                this.orderType = 'ASC'  
-            }else{
-                this.orderFields[field] = 'DESC'    //only for UI display
+            if (this.orderFields[field] === 'ASC') {
+                this.orderFields[field] = 'DESC' //only for UI display
                 this.orderType = 'DESC'
+            } else {
+                this.orderFields[field] = 'ASC'    //only for UI display
+                this.orderType = 'ASC'
             }
 
             this.getAgents()

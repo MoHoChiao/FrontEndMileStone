@@ -4,16 +4,17 @@
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
-            <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
+            <div :class="[(urlOp === 'add') ? 'w3-col m9' : 'w3-col m4']">
                 <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
-            <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
+            <div v-if="urlOp !== 'add'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                     <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
                 </div>
                 <div class="w3-col m3">
-                    <select :class="inputClassList.conncategoryuid" v-model="conncategoryuid" style="padding:0px">
-                        <option value="" selected>/</option>
+                    <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
+                    <select v-else :class="inputClassList.conncategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
+                        <option value="root" selected>/</option>
                         <template v-for="category in allCategoryObjs">
                             <option :key="category.conncategoryuid" :value="category.conncategoryuid">{{ category.conncategoryname }}</option>
                         </template>
@@ -67,10 +68,10 @@
                 <div class="w3-col m8">
                     <span class="w3-text-red">*</span><label>Database Type</label>
                     <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
-<template v-for="(info, key) in jdbcDriverInfo">
-    <option :value="key">
-        {{ key }}</option>
-</template>
+                        <template v-for="(info, key) in jdbcDriverInfo">
+                            <option :value="key">
+                                {{ key }}</option>
+                        </template>
                         <option value="Generic" >Generic</option>
                     </select>
                 </div>
@@ -261,7 +262,6 @@
                     pimaccountname: ['w3-input', 'w3-border'],
                     conncategoryuid: ['w3-select', 'w3-border', 'w3-round']
                 },
-                conncategoryuid: '', //store categoryuid for copy/move operation
                 allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
                 jdbcDriverInfo: new Object(),
                 new_content: {
@@ -299,7 +299,9 @@
                     sapSystemName: this.content.sapSystemName,
                     sapHostIP: this.content.sapHostIP,
                     sapCodePage: this.content.sapCodePage,
-                    sapClient: this.content.sapClient
+                    sapClient: this.content.sapClient,
+                    categoryname: this.content.categoryname,
+                    categoryuid: this.content.categoryuid
                 }
             }
         },
@@ -307,7 +309,7 @@
             //Get all jdbc connection info
             this.getJDBCInfo()
     
-            if (this.urlOp === 'copy' || this.urlOp === 'move') {
+            if (this.urlOp !== 'add') {
                 this.getCategories() //取得所有可供選擇的connection categories
     
                 if (this.urlOp === 'copy') {
@@ -364,6 +366,8 @@
                         sapHostIP: '',
                         sapCodePage: '',
                         sapClient: '',
+                        categoryname: '/',
+                        categoryuid: 'root'
                     }
                 }
             },
@@ -480,12 +484,10 @@
                     "pimendpointname": this.new_content.pimendpointname,
                     "pimaccountcontainer": this.new_content.pimaccountcontainer,
                     "pimaccountname": this.new_content.pimaccountname,
+                    "categoryuid": this.new_content.categoryuid,
+                    "categoryname": this.new_content.categoryname
                 }
-    
-                //conncategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
-                if (this.conncategoryuid && this.conncategoryuid.trim().length > 0)
-                    returnValue.conncategoryuid = this.conncategoryuid
-    
+
                 //collect form value(to be continue)
                 if (this.new_content.connectiontype === 'D') {
                     returnValue.server = this.new_content.server
@@ -645,6 +647,12 @@
                 this.inputClassList.pimendpointname.splice(2, 1)
                 this.inputClassList.pimaccountcontainer.splice(2, 1)
                 this.inputClassList.pimaccountname.splice(2, 1)
+            },
+            changeCategory(e){
+                let selectElement = e.target
+                var optionIndex = selectElement.selectedIndex
+                var option = selectElement.options[optionIndex]
+                this.new_content.categoryname = option.text
             },
             getCategories() { //Get all connection category
                 let params = {

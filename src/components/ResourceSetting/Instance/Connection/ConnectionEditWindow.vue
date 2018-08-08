@@ -20,13 +20,12 @@ export default {
             if(this.urlOp === 'add')
                 return 'Add Connection'
             else if(this.urlOp === 'edit')
-                return 'Edit Connection'
+                return 'Edit Connection - ' + this.content.connectionname
             else if(this.urlOp === 'copy')
-                return 'Copy Connection'
+                return 'Copy Connection from ' + this.content.connectionname
             else if(this.urlOp === 'move')
-                return 'Move Connection'
+                return 'Move Connection from ' + this.content.connectionname
         }
-        
     },
     props: {
         windowBgColor: {
@@ -72,6 +71,8 @@ export default {
                     sapHostIP: '',
                     sapCodePage: '',
                     sapClient: '',
+                    categoryname: '/',
+                    categoryuid: 'root'
                 }
             }
         },
@@ -117,22 +118,22 @@ export default {
             } else if(this.urlOp === 'copy'){   //複制一筆已存在的connection, 到某個connection category底下
                 /*
                  * 寫死add方法,因為其實copy就等於是add方法的行為
-                 * 沒有回傳conncategoryuid則表示是在root底下新增connection, 此時urlPath只需'add'路徑
+                 * 沒有回傳categoryuid則表示是在root底下新增connection, 此時urlPath只需'add'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.conncategoryuid && postContent.conncategoryuid.trim().length > 0)    //當conncategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'add?categoryUid=' + postContent.conncategoryuid
+                    if(postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        urlPath = 'add?categoryUid=' + postContent.categoryuid
                     else    //如果選擇'/'表示根目錄, 只需要add即可
                         urlPath = 'add'
                 }
             } else if(this.urlOp === 'move'){   //移動一筆已存在的connection, 到某個connection category底下
                 /*
                  * 寫死edit方法,因為其實move就等於是edit方法的行為
-                 * 沒有回傳conncategoryuid則表示是把connection移動到root底下, 此時urlPath只需'edit'路徑
+                 * 沒有回傳categoryuid則表示是把connection移動到root底下, 此時urlPath只需'edit'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.conncategoryuid && postContent.conncategoryuid.trim().length > 0)    //當conncategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'edit?categoryUid=' + postContent.conncategoryuid
+                    if(postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        urlPath = 'edit?categoryUid=' + postContent.categoryuid
                     else    //表示選擇'/'表示根目錄, categoryUid代為空字串
                         urlPath = 'edit?categoryUid='
                 }
@@ -143,14 +144,17 @@ export default {
             if(postContent){
                 HTTP_TRINITY.post(`connection/` + urlPath, postContent)
                 .then(response => {
+                    //把category info append回給container來顯示
+                    response.data.categoryuid = postContent.categoryuid
+                    response.data.categoryname = postContent.categoryname
                     if(this.urlOp === 'add'){ //add operation
                         this.$emit('closeAdd', response.data)
                     }else if(this.urlOp === 'edit'){    //edit operation
                         this.$emit('closeEdit', response.data)
                     }else if(this.urlOp === 'copy'){  //copy operation
-                        this.$emit('closeCopy', postContent.conncategoryuid, response.data)
+                        this.$emit('closeCopy', response.data)
                     }else if(this.urlOp === 'move'){  //move operation
-                        this.$emit('closeMove', postContent.conncategoryuid, response.data)
+                        this.$emit('closeMove', response.data)
                     }
                 })
                 .catch(error => {
