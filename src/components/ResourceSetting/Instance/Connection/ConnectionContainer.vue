@@ -55,8 +55,8 @@
     <!-- Connection Category Panel -->
     <div class="w3-small">
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
-            <p>
-                <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+            <p> 
+                <span><img src="/src/assets/images/resource_setter/connection_category.png" alt="Connection Category" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
                 <span>
                     <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
@@ -104,7 +104,7 @@
     <div class="w3-small">
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
-                <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:26px"></span>
+                <span><img src="/src/assets/images/resource_setter/connection.png" alt="Connection" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                         Connections
