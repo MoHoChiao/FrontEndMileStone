@@ -82,8 +82,8 @@
                             <div id="systemMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="changeConfigWindowStatus" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-file-text-o fa-fw w3-margin-right"></i>Configuration</a>
-                                        <a @click="changeMonitorWindowStatus" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>Server Monitor</a>
+                                        <a @click="getTrinityconfig" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-file-text-o fa-fw w3-margin-right"></i>Configuration</a>
+                                        <a @click="getResourceMonitor" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>Server Monitor</a>
                                         <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>Driver Manager</a>
                                         <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>External Rule</a>
                                         <a @click="getPluginLicense" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>License Status</a>
@@ -194,6 +194,12 @@ export default {
         },
         getGlobalExclFrequency(e){
             this.$router.push({ name: 'GlobalExclFrequency'})
+        },
+        getTrinityconfig(e) {
+            this.$router.push({ name: 'Trinityconfig' })
+        },
+        getResourceMonitor(e) {
+            this.$router.push({ name: 'ResourceMonitor' })
         },
         getDrivers(e){
             this.$router.push({ name: 'DriverManager'})

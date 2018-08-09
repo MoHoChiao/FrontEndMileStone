@@ -17,11 +17,13 @@ import WorkingCalendarContainer from '../components/ResourceSetting/Instance/Wor
 import FrequencyContainer from '../components/ResourceSetting/Instance/Frequency/FrequencyContainer.vue'
 import ExclFrequencyContainer from '../components/ResourceSetting/Instance/ExclFrequency/ExclFrequencyContainer.vue'
 import GlobalExclFrequencyWindow from '../components/ResourceSetting/Instance/ExclFrequency/GlobalExclFrequencyWindow.vue'
+import TrinityconfigContainer from '../components/ResourceSetting/TrinityConfiguration/TrinityconfigContainer.vue'
+import ResourceMonitorContainer from '../components/ResourceSetting/ResourceMonitor/ResourceMonitorContainer.vue'
 import DriverContainer from '../components/ResourceSetting/DriverManager/DriverContainer.vue'
 import ExternalRuleContainer from '../components/ResourceSetting/ExternalRule/ExternalRuleContainer.vue'
 import PluginLicenseContainer from '../components/ResourceSetting/LicenseStatus/PluginLicenseContainer.vue'
 import VersionInfoContainer from '../components/ResourceSetting/VersionInfo/VersionInfoContainer.vue'
-import { Authentication } from '../util_js/auth';
+import { Authentication } from '../util_js/auth'
 
 Vue.use(VueRouter);
 
@@ -186,6 +188,26 @@ export default new VueRouter({
                             Authentication(next)
                         }
                     }]
+                },
+                {
+                    name: 'Trinityconfig',
+                    path: 'Trinityconfig',
+                    components: {
+                        content: TrinityconfigContainer
+                    },
+                    beforeEnter(to, from, next) {
+                        Authentication(next)
+                    }
+                },
+                {
+                    name: 'ResourceMonitor',
+                    path: 'ResourceMonitor',
+                    components: {
+                        content: ResourceMonitorContainer
+                    },
+                    beforeEnter(to, from, next) {
+                        Authentication(next)
+                    }
                 },
                 {
                     name: 'DriverManager',

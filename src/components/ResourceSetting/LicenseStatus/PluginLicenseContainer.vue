@@ -23,7 +23,7 @@
 
         <div class="w3-small w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
-                <span><img src="/src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+                <span><img src="/src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small" style="height:26px;width:32px"></span>
                 <span>
                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white" style="padding:3px;transform:rotate(-5deg)">
                         <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
@@ -38,18 +38,18 @@
                         <tr class="w3-teal" style="cursor: pointer">
                             <th class="w3-left" :width=gridWidth[0] @click="sortBy('pluginname')">
                                 {{ gridHeader[0] }}
-                                <span v-if="this.sortKey == 'pluginname' && sortOrder == 'desc'" class="w3-text-black">&#9660;</span>
-                                <span v-else-if="this.sortKey == 'pluginname' && sortOrder == 'asc'" class="w3-text-black">&#9650;</span>
+                                <span v-if="this.sortKey == 'pluginname' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.sortKey == 'pluginname' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                             </th>
                             <th class="w3-left" :width=gridWidth[1] @click="sortBy('expireddate')">
                                 {{ gridHeader[1] }}
-                                <span v-if="this.sortKey == 'expireddate' && sortOrder == 'desc'" class="w3-text-black">&#9660;</span>
-                                <span v-else-if="this.sortKey == 'expireddate' && sortOrder == 'asc'" class="w3-text-black">&#9650;</span>
+                                <span v-if="this.sortKey == 'expireddate' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.sortKey == 'expireddate' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                             </th>
                             <th class="w3-left" :width=gridWidth[2] @click="sortBy('status')">
                                 {{ gridHeader[2] }}
-                                <span v-if="this.sortKey == 'status' && sortOrder == 'desc'" class="w3-text-black">&#9660;</span>
-                                <span v-else-if="this.sortKey == 'status' && sortOrder == 'asc'" class="w3-text-black">&#9650;</span>
+                                <span v-if="this.sortKey == 'status' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                <span v-else-if="this.sortKey == 'status' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                             </th>
                         </tr>
                     </table>
@@ -79,13 +79,13 @@
         },
         data() {
             return {
+                dataObjs: [],
+                gridHeader: ['Plugin Name', 'Expired Date', 'Status'],
+                gridWidth: ['60%', '25%', '15%'],
                 inputStr: '',
                 queryStr: '',
-                dataObjs: [],
                 sortKey: 'pluginname',
-                sortOrder: 'asc',
-                gridHeader: ['Plugin Name', 'Expired Date', 'Status'],
-                gridWidth: ['60%', '25%', '15%']
+                sortOrder: 'ASC'
             }
         },
         props: {
@@ -96,7 +96,7 @@
         },
         computed: {
             sortedData: function () {
-                return _.orderBy(this.filterData, this.sortKey, this.sortOrder);
+                return _.orderBy(this.filterData, this.sortKey, this.sortOrder.toLowerCase());
             },
             filterData: function () {
                 if (this.queryStr.length == 0)
@@ -106,13 +106,13 @@
 
                 if (_.startsWith(this.queryStr, '%') && _.endsWith(this.queryStr, '%')) {
                     qs = qs.slice(1);
-                    qs = qs.slice(0, -1);
+                    qs = qs.slice(0, -1); // %xxx% => xxx
                 } else if (_.startsWith(this.queryStr, '%')) {
-                    qs = qs.slice(1) + '$';
+                    qs = qs.slice(1) + '$'; // %xxx => xxx$
                 } else if (_.endsWith(this.queryStr, '%')) {
-                    qs = '^' + qs.slice(0, -1);
+                    qs = '^' + qs.slice(0, -1); // xxx% => ^xxx
                 } else {
-                    qs = '^' + qs + '$';
+                    qs = '^' + qs + '$'; // xxx => ^xxx$
                 }
 
                 var reg = new RegExp(qs, 'i');
@@ -126,10 +126,10 @@
             },
             sortBy: function (key) {
                 if (key == this.sortKey) {
-                    this.sortOrder = (this.sortOrder == 'asc') ? 'desc' : 'asc';
+                    this.sortOrder = (this.sortOrder == 'ASC') ? 'DESC' : 'ASC';
                 } else {
                     this.sortKey = key;
-                    this.sortOrder = 'asc';
+                    this.sortOrder = 'ASC';
                 }
             },
             getPlugin(e) {
@@ -142,8 +142,7 @@
                     })
             },
             exportCSV() {
-                //const items = this.jcsServerV;
-                let items = this.dataObjs;
+                let items = this.sortedData;
 
                 const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
                 const header = Object.keys(items[0]);
