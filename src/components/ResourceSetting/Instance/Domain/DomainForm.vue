@@ -46,6 +46,14 @@ export default {
             }
         }
     },
+    created(){
+        if (this.urlOp === 'copy') {
+            //copy動作, 把name和description設空值
+            this.new_content.domainuid = ''
+            this.new_content.name = ''
+            this.new_content.description = ''
+        }
+    },
     props: {
         content: {
             type: Object,
@@ -59,7 +67,10 @@ export default {
                 }
             }
         },
-        index: Number
+        urlOp: {
+            type: String,
+            default: 'add'
+        }
     },
     methods: {
         save(){
@@ -104,9 +115,15 @@ export default {
         reset(){
             this.clearInValid()
             
-            this.new_content.domainuid = this.content.domainuid
-            this.new_content.name = this.content.name
-            this.new_content.description = this.content.description
+            if (this.urlOp === 'copy') {
+                this.new_content.domainuid = ''
+                this.new_content.name = ''
+                this.new_content.description = ''
+            }else{
+                this.new_content.domainuid = this.content.domainuid
+                this.new_content.name = this.content.name
+                this.new_content.description = this.content.description
+            }
             
             this.$refs.varAndResourceTable.reset()
         },

@@ -218,9 +218,16 @@ export default {
         reset(){
             this.clearInValid()
             
-            this.new_content.agentuid = this.content.agentuid
-            this.new_content.agentname = this.content.agentname
-            this.new_content.description = this.content.description
+            if (this.urlOp === 'copy') {
+                this.new_content.agentuid = ''
+                this.new_content.agentname = ''
+                this.new_content.description = ''
+            }else{
+                this.new_content.agentuid = this.content.agentuid
+                this.new_content.agentname = this.content.agentname
+                this.new_content.description = this.content.description
+            }
+            
             this.new_content.host = this.content.host
             this.new_content.port = this.content.port
             this.new_content.maximumjob = this.content.maximumjob

@@ -44,7 +44,7 @@
                             <span class="w3-col m12 w3-left">
                                 <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
                                     placeholder="Search For Connection Name" style="text-transform:uppercase">
-                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Search For Connection Name" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                         </div>
                     </div>
@@ -214,19 +214,19 @@
                         </tr>
                     </table>
                 </div>
-                <div id="connectionContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
+                <div id="connectionContainer" class="w3-responsive w3-card w3-round">
                     <table id="connectionTable" class="w3-table-all">
                         <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
                             <td width="38%">
-                                <span class="w3-badge w3-indigo">{{ content.connectiontype }}</span>
-                                &nbsp;
                                 <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
-                                    {{selectedCategoryRecord.conncategoryname === '/' ? selectedCategoryRecord.conncategoryname : selectedCategoryRecord.conncategoryname+'/'}}{{ content.connectionname }}
+                                    {{selectedCategoryRecord.conncategoryname === '/' ? selectedCategoryRecord.conncategoryname : '/'+selectedCategoryRecord.conncategoryname+'/'}}{{ content.connectionname }}
                                 </span>
                                 <span v-else>
-                                    {{content.categoryname === '/' ? content.categoryname : content.categoryname+'/'}}{{ content.connectionname }}
+                                    {{content.categoryname === '/' ? content.categoryname : '/'+content.categoryname+'/'}}{{ content.connectionname }}
                                 </span>
+                                &nbsp;
+                                <span class="w3-tiny w3-badge w3-indigo">{{ content.connectiontype }}</span>
                             </td>
                             <td width="40%">
                                 <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>

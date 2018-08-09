@@ -1,6 +1,6 @@
 <template>
 <div>
-  <!-- For Add/Edit/Copy Virtual Agent Window -->
+  <!-- For Add/Edit Virtual Agent Window -->
   <vr-agent-edit-window v-if="agentWindowAlive" :windowAlive="agentWindowAlive" 
                     @closeAdd="saveAgentWindowContentForAdd" 
                     @closeEdit="saveAgentWindowContentForEdit" 
@@ -33,7 +33,7 @@
                             <span class="w3-col m6 w3-left">
                                 <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
                                     placeholder="Search For Name" style="text-transform:uppercase">
-                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
@@ -162,7 +162,7 @@
                         </tr>
                     </table>
                 </div>
-                <div id="virtualAgentContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                <div id="virtualAgentContainer" class="w3-responsive w3-card w3-round">
                     <table id="virtualAgentTable" class="w3-table-all w3-left">
                         <tr :id="content.virtualagentuid" :key="content.virtualagentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnAgentRecord(content.virtualagentuid, index)" v-for="(content, index) in allVRAgentObjs">
@@ -359,7 +359,7 @@ export default {
                 errorHandle(this.$store, error)
             })
         },
-        changeEditable(index, content){
+        changeEditable(index){
             //Get Virtual Agent detail record
             HTTP_TRINITY.get(`vragent/findByUid?uid=` + this.selectedRecord.virtualagentuid)
             .then(response => {

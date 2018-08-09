@@ -34,7 +34,7 @@
                             <span class="w3-col m6 w3-left">
                                 <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
                                     placeholder="Search For Name and Host" style="text-transform:uppercase">
-                                <i class="fa fa-search w3-button w3-theme-d2" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                                <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name And Host" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
                                 <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
@@ -171,7 +171,7 @@
                         </tr>
                     </table>
                 </div>
-                <div id="agentContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                <div id="agentContainer" class="w3-responsive w3-card w3-round">
                     <table id="agentTable" class="w3-table-all w3-left">
                         <tr :id="content.agentuid" :key="content.agentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnAgentRecord(content.agentuid, index)" v-for="(content, index) in allJCSAgentObjs">
@@ -227,10 +227,10 @@
                 <hr class="w3-border-black w3-clear">
                 <p >{{ content.description }}</p>
                 <span class="w3-right">
-                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Copy Agent" @click="clickOnAgentPanel('copy', index, content)">
-                        <i class="fa fa-clone"></i></button>
                     <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit Agent" @click="clickOnAgentPanel('edit', index, content)">
                         <i class="fa fa-pencil"></i></button>
+                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Copy Agent" @click="clickOnAgentPanel('copy', index, content)">
+                        <i class="fa fa-clone"></i></button>
                     <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Apply Permission" @click="clickOnAgentPanel('permission', index, content)">
                         <i class="fa fa-universal-access"></i></button>
                     <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete Agent" @click="clickOnAgentPanel('delete', index, content)">
