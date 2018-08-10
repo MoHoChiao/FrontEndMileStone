@@ -158,6 +158,7 @@
                 </div>
                 <div id="domainContainer" class="w3-responsive w3-card w3-round">
                     <table id="domainTable" class="w3-table-all w3-left">
+                        <empty-grid v-if="allDomainObjs.length <= 0"></empty-grid>
                         <tr :id="content.domainuid" :key="content.domainuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnDomainRecord(content.domainuid, index)" v-for="(content, index) in allDomainObjs">
                             <td width="30%">
@@ -234,6 +235,7 @@ import DomainEditWindow from './DomainEditWindow.vue'
 import VarAndResourcePanel from './VarAndResourcePanel.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import page from '../../page.vue'
+import EmptyGrid from '../../../Common/EmptyGrid.vue'
 
 export default {
     data() {
@@ -496,7 +498,8 @@ export default {
         'domain-edit-window': DomainEditWindow,
         'var-resource-panel': VarAndResourcePanel,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'page': page
+        'page': page,
+        'empty-grid': EmptyGrid
     }
 }
 </script>

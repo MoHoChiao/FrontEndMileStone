@@ -164,6 +164,7 @@
                 </div>
                 <div id="virtualAgentContainer" class="w3-responsive w3-card w3-round">
                     <table id="virtualAgentTable" class="w3-table-all w3-left">
+                        <empty-grid v-if="allVRAgentObjs.length <= 0"></empty-grid>
                         <tr :id="content.virtualagentuid" :key="content.virtualagentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnAgentRecord(content.virtualagentuid, index)" v-for="(content, index) in allVRAgentObjs">
                             <td width="30%">
@@ -267,6 +268,7 @@ import VRAgentEditWindow from './VRAgentEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 import page from '../../page.vue'
+import EmptyGrid from '../../../Common/EmptyGrid.vue'
 
 export default {
     data() {
@@ -518,7 +520,8 @@ export default {
         'vr-agent-edit-window': VRAgentEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
         'permission-window': PermissionWindow,
-        'page': page
+        'page': page,
+        'empty-grid': EmptyGrid
     }
 }
 </script>

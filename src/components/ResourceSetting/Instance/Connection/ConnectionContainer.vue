@@ -189,7 +189,6 @@
                 </span>
             </p>
             <p>
-              <div>
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
@@ -216,7 +215,8 @@
                 </div>
                 <div id="connectionContainer" class="w3-responsive w3-card w3-round">
                     <table id="connectionTable" class="w3-table-all">
-                        <tr :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                        <empty-grid v-if="allConnectionObjs.length <= 0"></empty-grid>
+                        <tr v-else :id="content.connectionuid" :key="content.connectionuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnConnection(content.connectionuid, index)" v-for="(content, index) in allConnectionObjs">
                             <td width="38%">
                                 <span v-if="selectedCategoryRecord && selectedCategoryRecord.conncategoryname">
@@ -260,7 +260,6 @@
                         </div>
                     </div>
                 </div>
-              </div>
             </p>
         </div>
     </div>
@@ -275,6 +274,7 @@ import ConnectionEditWindow from './ConnectionEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
 import page from '../../page.vue'
+import EmptyGrid from '../../../Common/EmptyGrid.vue'
 
 export default {
     data() {
@@ -679,7 +679,8 @@ export default {
         'connection-edit-window': ConnectionEditWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
         'permission-window': PermissionWindow,
-        'page': page
+        'page': page,
+        'empty-grid': EmptyGrid
     }
 }
 </script>

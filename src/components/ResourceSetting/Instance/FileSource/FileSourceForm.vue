@@ -14,13 +14,14 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name">
+                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
             </div>
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
             </div>
             <div class="w3-col m3">
-                <select :class="inputClassList.fscategoryuid" v-model="fscategoryuid" style="padding:0px">
+                <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
+                <select :class="inputClassList.fscategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
                     <option value="" selected>/</option>
                     <template v-for="category in allCategoryObjs">
                         <option :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
@@ -79,7 +80,6 @@ export default {
                 desc: ['w3-input','w3-border'],
                 fscategoryuid: ['w3-select','w3-border','w3-round']
             },
-            fscategoryuid: '',  //store categoryuid for copy/move operation
             allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
             new_content: {
                 /*
@@ -89,6 +89,8 @@ export default {
                 filesourceuid: this.content.filesourceuid,
                 filesourcename: this.content.filesourcename,
                 description: this.content.description,
+                categoryname: this.content.categoryname,
+                categoryuid: this.content.categoryuid,
                 directoryAsign: {
                     rootdir: this.content.rootdir,
                     receivedir: this.content.receivedir,
@@ -194,7 +196,9 @@ export default {
                     triggerjobuid: '',
                     txdateformat: '',
                     txdatestartpos: 0,
-                    txdateendpos: 0
+                    txdateendpos: 0,
+                    categoryname: '/',
+                    categoryuid: 'root'
                 }
             }
         },
@@ -228,12 +232,14 @@ export default {
             let returnValue = {
                 "filesourceuid":this.new_content.filesourceuid,
                 "filesourcename":this.new_content.filesourcename.trim().toUpperCase(),
-                "description":this.new_content.description
+                "description":this.new_content.description,
+                "categoryuid": this.new_content.categoryuid,
+                "categoryname": this.new_content.categoryname
             }
             
-            //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
-            if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
-                returnValue.fscategoryuid = this.fscategoryuid
+            // //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
+            // if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
+            //     returnValue.fscategoryuid = this.fscategoryuid
 
             //call Directory Asign form to check value
             let directoryAsignContent = this.$refs.directoryAsignForm.save()
@@ -295,6 +301,12 @@ export default {
         clearInValid(){
             this.inputClassList.name.splice(2, 1)
             this.inputClassList.desc.splice(2, 1)
+        },
+        changeCategory(e){
+            let selectElement = e.target
+            var optionIndex = selectElement.selectedIndex
+            var option = selectElement.options[optionIndex]
+            this.new_content.categoryname = option.text
         },
         getCategories(){
             let params = {

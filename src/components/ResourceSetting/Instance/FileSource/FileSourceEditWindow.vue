@@ -18,13 +18,13 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add File Source'
+                return 'Add Filesource'
             else if(this.urlOp === 'edit')
-                return 'Edit File Source'
+                return 'Edit Filesource - ' + this.content.filesourcename
             else if(this.urlOp === 'copy')
-                return 'Copy File Source'
+                return 'Copy Filesource from ' + this.content.filesourcename
             else if(this.urlOp === 'move')
-                return 'Move File Source'
+                return 'Move Filesource from ' + this.content.filesourcename
         }
         
     },
@@ -81,7 +81,9 @@ export default {
                     triggerjobuid: '',
                     txdateformat: '',
                     txdatestartpos: 0,
-                    txdateendpos: 0
+                    txdateendpos: 0,
+                    categoryname: '/',
+                    categoryuid: 'root'
                 }
             }
         },
@@ -127,22 +129,22 @@ export default {
             } else if(this.urlOp === 'copy'){   //複制一筆已存在的file source, 到某個file source category底下
                 /*
                  * 寫死add方法,因為其實copy就等於是add方法的行為
-                 * 沒有回傳fscategoryuid則表示是在root底下新增file source, 此時urlPath只需'add'路徑
+                 * 沒有回傳categoryuid則表示是在root底下新增file source, 此時urlPath只需'add'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.fscategoryuid && postContent.fscategoryuid.trim().length > 0)    //當fscategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'add?categoryUid=' + postContent.fscategoryuid
+                    if(postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        urlPath = 'add?categoryUid=' + postContent.categoryuid
                     else    //如果選擇'/'表示根目錄, 只需要add即可
                         urlPath = 'add'
                 }
             } else if(this.urlOp === 'move'){   //移動一筆已存在的file source, 到某個file source category底下
                 /*
                  * 寫死edit方法,因為其實move就等於是edit方法的行為
-                 * 沒有回傳fscategoryuid則表示是把file source移動到root底下, 此時urlPath只需'edit'路徑
+                 * 沒有回傳categoryuid則表示是把file source移動到root底下, 此時urlPath只需'edit'路徑
                 */
                 if(postContent){    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                    if(postContent.fscategoryuid && postContent.fscategoryuid.trim().length > 0)    //當fscategoryuid有值, 表示有選擇某一個category
-                        urlPath = 'edit?categoryUid=' + postContent.fscategoryuid
+                    if(postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        urlPath = 'edit?categoryUid=' + postContent.categoryuid
                     else    //表示選擇'/'表示根目錄, categoryUid代為空字串
                         urlPath = 'edit?categoryUid='
                 }
@@ -153,14 +155,17 @@ export default {
             if(postContent){
                 HTTP_TRINITY.post(`file-source/` + urlPath, postContent)
                 .then(response => {
+                    //把category info append回給container來顯示
+                    response.data.categoryuid = postContent.categoryuid
+                    response.data.categoryname = postContent.categoryname
                     if(this.urlOp === 'add'){ //add operation
                         this.$emit('closeAdd', response.data)
                     }else if(this.urlOp === 'edit'){    //edit operation
                         this.$emit('closeEdit', response.data)
                     }else if(this.urlOp === 'copy'){  //copy operation
-                        this.$emit('closeCopy', postContent.fscategoryuid, response.data)
+                        this.$emit('closeCopy', response.data)
                     }else if(this.urlOp === 'move'){  //move operation
-                        this.$emit('closeMove', postContent.fscategoryuid, response.data)
+                        this.$emit('closeMove', response.data)
                     }
                 })
                 .catch(error => {
