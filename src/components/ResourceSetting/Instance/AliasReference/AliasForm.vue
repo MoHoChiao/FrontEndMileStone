@@ -80,7 +80,7 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
 
 export default {
     data() {
@@ -100,37 +100,29 @@ export default {
                 */
                 busentityuid: this.content.busentityuid,
                 busentityname: this.content.busentityname,
-                alias: null
+                alias: []
             }
         }
     },
     created() {
-        let params = {
-                "ordering":{
-                "orderType":'ASC'
-            }
-        }
-        let url = ''
+        this.cloneAlias()
 
-        params.orderField = 'connectionname'
-        url = 'connection/findByFilter'
-        this.getTargetObjs(url, params, 'Connection', 'connectionuid', 'connectionname')
+        // let url = ''
 
-        params.orderField = 'name'
-        url = 'domain/findByFilter?withoutDetail=true'
-        this.getTargetObjs(url, params, 'Domain', 'domainuid', 'name')
+        // url = 'connection/findAll'
+        // this.getTargetObjs(url, 'Connection', 'connectionuid', 'connectionname')
 
-        params.orderField = 'agentname'
-        url = 'jcsagent/findByFilter'
-        this.getTargetObjs(url, params, 'Agent', 'agentuid', 'agentname')
+        // url = 'domain/findAll?withoutDetail=true'
+        // this.getTargetObjs(url, 'Domain', 'domainuid', 'name')
 
-        params.orderField = 'frequencyname'
-        url = 'frequency/findByFilter'
-        this.getTargetObjs(url, params, 'Frequency', 'frequencyuid', 'frequencyname')
+        // url = 'jcsagent/findAll'
+        // this.getTargetObjs(url, 'Agent', 'agentuid', 'agentname')
 
-        params.orderField = 'filesourcename'
-        url = 'file-source/findByFilter'
-        this.getTargetObjs(url, params, 'Filesource', 'filesourceuid', 'filesourcename')
+        // url = 'frequency/findAll'
+        // this.getTargetObjs(url, 'Frequency', 'frequencyuid', 'frequencyname')
+
+        // url = 'file-source/findAll'
+        // this.getTargetObjs(url, 'Filesource', 'filesourceuid', 'filesourcename')
     },
     props: {
         content: {
@@ -146,11 +138,23 @@ export default {
     },
     methods: {
         changeType(index, list_info){
+            if(list_info.aliastype === 'Connection'){
+                this.getTargetObjs('connection/findAll', 'Connection', 'connectionuid', 'connectionname')
+            }else if(list_info.aliastype === 'Domain'){
+                this.getTargetObjs('domain/findAll?withoutDetail=true', 'Domain', 'domainuid', 'name')
+            }else if(list_info.aliastype === 'Agent'){
+                this.getTargetObjs('jcsagent/findAll', 'Agent', 'agentuid', 'agentname')
+            }else if(list_info.aliastype === 'Frequency'){
+                this.getTargetObjs('frequency/findAll', 'Frequency', 'frequencyuid', 'frequencyname')
+            }else if(list_info.aliastype === 'Filesource'){
+                this.getTargetObjs('file-source/findAll', 'Filesource', 'filesourceuid', 'filesourcename')
+            }
             this.$set(this.new_content.alias, index, list_info)
         },
-        getTargetObjs(url, params, aliastype, uidField, nameField){
-            HTTP_TRINITY.post(url, params)
+        getTargetObjs(url, aliastype, uidField, nameField){
+            HTTP_TRINITY.get(url)
             .then(response => {
+                console.log(response.data)
                 let targetObjs = []
                 for(let i=0;i<response.data.length;i++){
                     let uid = response.data[i][uidField]
@@ -158,7 +162,7 @@ export default {
 
                     let targetObj = {
                         "uid": uid,
-                        "name": name,
+                        "name": name
                     }
                     targetObjs.push(targetObj)
                     //儲存所有target obj的uid和name之對應關係, 以供取target name用
@@ -179,7 +183,8 @@ export default {
                 }
             })
             .catch(error => {
-                errorHandle(this.$store, error)
+                if (!error.response.status || error.response.status !== 401)
+                    errorHandle(this.$store, error)
             })
         },
         getVirtualAgentObjs(){
@@ -189,8 +194,8 @@ export default {
                     "orderField": 'virtualagentname'
                 }
             }
-
-            HTTP_TRINITY.post('vragent/findByFilter?withoutDetail=true', params)
+            
+            HTTP_TRINITY.get('vragent/findAll?withoutDetail=true', params)
             .then(response => {
                 for(let i=0;i<response.data.length;i++){
                     let uid = response.data[i].virtualagentuid
@@ -208,22 +213,61 @@ export default {
                 this.cloneAlias()
             })
             .catch(error => {
-                errorHandle(this.$store, error)
+                if (!error.response.status || error.response.status !== 401)
+                    errorHandle(this.$store, error)
             })
         },
         delAlias(index){
-            this.new_content.alias.splice(index, 1)
+            HTTP_AUTH.get(`authorization/checkFuncPermission`, {
+                params: {
+                    functionName: 'alias',
+                    permissionFlag:'delete'
+                }
+            })
+            .then(response => {
+                if(response.data){
+                    this.new_content.alias.splice(index, 1)
+                }else{
+                    let newStatus = {
+                        "msg": "You do not have 'Delete' Permission!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+            .catch(error => {
+                errorHandle(this.$store, error)
+            })
         },
         addAlias(){
-            let new_alias= {
-                parentuid: this.new_content.busentityuid,
-                aliasname: '$',
-                aliastype: 'Connection',
-                objectuid: '',
-                description: '',
-                addFlag: true   //新增特有的屬性
-            };
-            this.new_content.alias.push(new_alias)
+            HTTP_AUTH.get(`authorization/checkFuncPermission`, {
+                params: {
+                    functionName: 'alias',
+                    permissionFlag:'add'
+                }
+            })
+            .then(response => {
+                if(response.data){
+                        let new_alias= {
+                        parentuid: this.new_content.busentityuid,
+                        aliasname: '$',
+                        aliastype: 'Connection',
+                        objectuid: '',
+                        description: '',
+                        addFlag: true   //新增特有的屬性
+                    };
+                    this.new_content.alias.push(new_alias)
+                }else{
+                    let newStatus = {
+                        "msg": "You do not have 'Add' Permission!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+            .catch(error => {
+                errorHandle(this.$store, error)
+            })
         },
         save(){
             let return_alias = []
@@ -248,8 +292,6 @@ export default {
                     this.$store.dispatch('setSystemStatus', newStatus)
                     return
                 }
-
-                
 
                 if(aliasNames.includes(this.new_content.alias[i].aliasname)){
                     let newStatus = {
@@ -306,7 +348,29 @@ export default {
                     description: this.content.alias[i].description,
                     objectname: this.content.alias[i].objectname
                 };
+                
+                let targetObj = {
+                    "uid": this.content.alias[i].objectuid,
+                    "name": this.content.alias[i].objectname
+                }
+                if(this.content.alias[i].aliastype === 'Connection'){
+                    this.allConnections = []
+                    this.allConnections.push(targetObj)
+                }else if(this.content.alias[i].aliastype === 'Domain'){
+                    this.allDomains = []
+                    this.allDomains.push(targetObj)
+                }else if(this.content.alias[i].aliastype === 'Agent'){
+                    this.allAgents = []
+                    this.allAgents.push(targetObj)
+                }else if(this.content.alias[i].aliastype === 'Frequency'){
+                    this.allFrequencies = []
+                    this.allFrequencies.push(targetObj)
+                }else if(this.content.alias[i].aliastype === 'Filesource'){
+                    this.allFilesources = []
+                    this.allFilesources.push(targetObj)
+                }
             }
+            // console.log('sssssssssssssssssssssssssss')
         }
     }
 }

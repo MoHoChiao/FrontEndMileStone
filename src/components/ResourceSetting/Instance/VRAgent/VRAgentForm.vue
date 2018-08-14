@@ -258,7 +258,7 @@ export default {
 </script>
 <style scoped>
     input,select {
-        height: 30px
+        height: 24px
     }
     input.w3-check,input.w3-radio {
         height: 16px

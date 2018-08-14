@@ -238,7 +238,7 @@
                         <i class="fa fa-trash-o"></i></button>
                 </span>
             </div>
-            <agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></agent-edit-panel>
+            <agent-edit-panel v-else :index="index" :content="content" @closeEdit="closeEditable"></agent-edit-panel>
         </div>
     </div>
   </div>
@@ -308,7 +308,7 @@ export default {
                 this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
 
                 if(which == 'edit')
-                    this.changeEditable(index)
+                    this.openEditable(index)
                 else if(which == 'copy')
                     this.changeAgentWindowStatus('copy')
                 else if(which == 'permission')
@@ -348,7 +348,7 @@ export default {
             })
         },
         //for Content List, edit panel
-        changeEditable(index){
+        openEditable(index){
             HTTP_TRINITY.get(`jcsagent/findByUid?uid=` + this.selectedRecord.agentuid)
             .then(response => {
                 /*
@@ -361,7 +361,7 @@ export default {
                 }else{
                     this.$set(this.editable, index, !this.editable[index])
                 }
-
+                console.log(response.data)
                 if(response.data !== undefined){
                     this.allJCSAgentObjs[index] = response.data
                 }
@@ -369,6 +369,12 @@ export default {
             .catch(error => {
                 errorHandle(this.$store, error)
             }) 
+        },
+        closeEditable(index, content){
+            this.$set(this.editable, index, false) 
+
+            if(content)
+                this.allJCSAgentObjs[index] = content
         },
         //above for delete window
         showDeleteWindow(){

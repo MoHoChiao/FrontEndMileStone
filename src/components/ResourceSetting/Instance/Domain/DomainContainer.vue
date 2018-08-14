@@ -120,7 +120,7 @@
         <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
             <p>
                 <div>
-                    <span><img src="/src/assets/images/resource_setter/domain.png" alt="Virtual Agent" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
+                    <span><img src="/src/assets/images/resource_setter/domain.png" alt="Domain" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
                     <span>
                         <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                             <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
@@ -222,7 +222,7 @@
                         <i class="fa fa-trash-o"></i></button>
                 </span>
             </div>
-            <domain-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></domain-edit-panel>
+            <domain-edit-panel v-else :index="index" :content="content" @closeEdit="closeEditable"></domain-edit-panel>
         </div>
     </div>
   </div>
@@ -290,7 +290,7 @@ export default {
                 this.selectedRecord.index = index //New prop is stores which domain obj will be deleted in UI
 
                 if(which == 'edit')
-                    this.changeEditable(index)
+                    this.openEditable(index)
                 else if(which == 'copy')
                     this.changeDomainWindowStatus('copy')
                 else if(which == 'delete')
@@ -328,7 +328,7 @@ export default {
             })
         },
         //for Content List, edit panel
-        changeEditable(index){
+        openEditable(index){
             HTTP_TRINITY.get(`domain/findByUid?uid=` + this.selectedRecord.domainuid)
             .then(response => {
                 /*
@@ -339,9 +339,9 @@ export default {
                 if(this.editable[index] === undefined){
                     this.$set(this.editable, index, true) 
                 }else{
-                    this.$set(this.editable, index, !this.editable[index])
+                    this.$set(this.editable, index, !this.editable[index]) 
                 }
-
+                
                 if(response.data !== undefined){
                     this.allDomainObjs[index] = response.data
                 }
@@ -349,6 +349,13 @@ export default {
             .catch(error => {
                 errorHandle(this.$store, error)
             })
+        },
+        closeEditable(index, content){
+            this.$set(this.editable, index, false) 
+
+            if(content){
+                this.allDomainObjs[index] = content
+            }
         },
         //above for delete window
         showDeleteWindow(){

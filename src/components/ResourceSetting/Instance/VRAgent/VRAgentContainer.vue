@@ -206,17 +206,17 @@
             </p>
         </div>
     </div>
-    <div v-else>
+    <div v-else class="w3-small">
         <div :key="content.virtualagentuid+'table'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allVRAgentObjs">
             <div v-if="editable[index] === undefined || !editable[index]">
                 <img src="/src/assets/images/resource_setter/VrAgent_128.png" alt="Virtual Agent" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.virtualagentname }}</p>
-                <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
+                <span class="w3-tag w3-theme-l3" style="transform:rotate(-5deg)">{{ (content.mode == 0) ? 'Load Balance' : 'By Seq' }}</span>
                 <p>
                   <div v-if="content.agentlist.length > 0">
                     <div class="w3-responsive w3-card w3-round">
-                        <table class="w3-table-all w3-small">
+                        <table class="w3-table-all">
                             <tr class="w3-teal">
                                 <th class="w3-center" width="7%">Seq</th>
                                 <th class="w3-center" width="33%">Name</th>
@@ -226,7 +226,7 @@
                         </table>
                     </div>
                     <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
-                        <table class="w3-table-all w3-small">
+                        <table class="w3-table-all">
                             <tr :key="list_info.virtualagentuid+':'+list_info.agentuid" class="w3-hover-blue-grey w3-hover-opacity" draggable="true" v-for="(list_info, list_index) in content.agentlist">
                                 <td width="7%">{{ list_index + 1 }}</td>
                                 <td class="w3-center" width="33%">
@@ -245,7 +245,7 @@
                   </div>
                 </p>
                 <hr class="w3-border-black w3-clear">
-                <p class="w3-small">{{ content.description }}</p>
+                <p>{{ content.description }}</p>
                 <span class="w3-right">
                     <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit Agent" @click="clickOnAgentPanel('edit', index, content)">
                         <i class="fa fa-pencil"></i></button>
@@ -255,7 +255,7 @@
                         <i class="fa fa-trash-o"></i></button>
                 </span>
             </div>
-            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></vr-agent-edit-panel>
+            <vr-agent-edit-panel v-else :index="index" :content="content" @closeEdit="closeEditable"></vr-agent-edit-panel>
         </div>
     </div>
   </div>
@@ -324,7 +324,7 @@ export default {
                 this.selectedRecord.index = index //New prop is stores which vragent obj will be deleted in UI
 
                 if(which == 'edit')
-                    this.changeEditable(index)
+                    this.openEditable(index)
                 else if(which == 'permission')
                     this.changePermissionWindowStatus()
                 else if(which == 'delete')
@@ -361,7 +361,8 @@ export default {
                 errorHandle(this.$store, error)
             })
         },
-        changeEditable(index){
+        //for Content List, edit panel
+        openEditable(index){
             //Get Virtual Agent detail record
             HTTP_TRINITY.get(`vragent/findByUid?uid=` + this.selectedRecord.virtualagentuid)
             .then(response => {
@@ -373,7 +374,7 @@ export default {
                 if(this.editable[index] === undefined){
                     this.$set(this.editable, index, true) 
                 }else{
-                    this.$set(this.editable, index, !this.editable[index])
+                    this.$set(this.editable, index, !this.editable[index]) 
                 }
                 
                 if(response.data !== undefined){
@@ -383,6 +384,14 @@ export default {
             .catch(error => {
                 errorHandle(this.$store, error)
             })
+        },
+        closeEditable(index, content){
+            this.$set(this.editable, index, false) 
+
+            if(content){
+                this.allVRAgentObjs[index] = content
+            }
+                
         },
         //above for delete window
         showDeleteWindow(){
@@ -535,4 +544,3 @@ export default {
         width: 210px;
     }
 </style>
-
