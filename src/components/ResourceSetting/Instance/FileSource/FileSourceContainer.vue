@@ -394,8 +394,9 @@ export default {
                 if (response.data.content !== undefined) {
                     this.allFileSourceObjs = response.data.content
                     if(response.data.totalPages <= 0)
-                        response.data.totalPages = 1
-                    this.totalPages = response.data.totalPages
+                        this.totalPages = 1
+                    else
+                        this.totalPages = response.data.totalPages
                 } else {
                     this.allFileSourceObjs = response.data
                     this.totalPages = 1

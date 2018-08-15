@@ -159,7 +159,7 @@
                 <div id="domainContainer" class="w3-responsive w3-card w3-round">
                     <table id="domainTable" class="w3-table-all w3-left">
                         <empty-grid v-if="allDomainObjs.length <= 0"></empty-grid>
-                        <tr :id="content.domainuid" :key="content.domainuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                        <tr v-else :id="content.domainuid" :key="content.domainuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnDomainRecord(content.domainuid, index)" v-for="(content, index) in allDomainObjs">
                             <td width="30%">
                                 <span>{{ content.name }}</span>
@@ -316,7 +316,10 @@ export default {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
                     this.allDomainObjs = response.data.content
-                    this.totalPages = response.data.totalPages
+                    if(response.data.totalPages <= 0)
+                        this.totalPages = 1
+                    else
+                        this.totalPages = response.data.totalPages
                 } else {
                     this.allDomainObjs = response.data
                     this.totalPages = 1

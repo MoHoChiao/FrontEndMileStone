@@ -174,7 +174,7 @@
                 <div id="agentContainer" class="w3-responsive w3-card w3-round">
                     <table id="agentTable" class="w3-table-all w3-left">
                         <empty-grid v-if="allJCSAgentObjs.length <= 0"></empty-grid>
-                        <tr :id="content.agentuid" :key="content.agentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                        <tr v-else :id="content.agentuid" :key="content.agentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnAgentRecord(content.agentuid, index)" v-for="(content, index) in allJCSAgentObjs">
                             <td width="25%">
                                 <span>{{ content.agentname }}</span>
@@ -336,7 +336,10 @@ export default {
                 this.editable.fill(false) //close all edit form
                 if (response.data.content !== undefined) {
                     this.allJCSAgentObjs = response.data.content
-                    this.totalPages = response.data.totalPages
+                    if(response.data.totalPages <= 0)
+                        this.totalPages = 1
+                    else
+                        this.totalPages = response.data.totalPages
                 } else {
                     this.allJCSAgentObjs = response.data
                     this.totalPages = 1

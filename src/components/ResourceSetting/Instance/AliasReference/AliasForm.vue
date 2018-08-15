@@ -107,22 +107,22 @@ export default {
     created() {
         this.cloneAlias()
 
-        // let url = ''
+        let url = ''
 
-        // url = 'connection/findAll'
-        // this.getTargetObjs(url, 'Connection', 'connectionuid', 'connectionname')
+        url = 'connection/findAll'
+        this.getTargetObjs(url, 'Connection', 'connectionuid', 'connectionname')
 
-        // url = 'domain/findAll?withoutDetail=true'
-        // this.getTargetObjs(url, 'Domain', 'domainuid', 'name')
+        url = 'domain/findAll?withoutDetail=true'
+        this.getTargetObjs(url, 'Domain', 'domainuid', 'name')
 
-        // url = 'jcsagent/findAll'
-        // this.getTargetObjs(url, 'Agent', 'agentuid', 'agentname')
+        url = 'jcsagent/findAll'
+        this.getTargetObjs(url, 'Agent', 'agentuid', 'agentname')
 
-        // url = 'frequency/findAll'
-        // this.getTargetObjs(url, 'Frequency', 'frequencyuid', 'frequencyname')
+        url = 'frequency/findAll'
+        this.getTargetObjs(url, 'Frequency', 'frequencyuid', 'frequencyname')
 
-        // url = 'file-source/findAll'
-        // this.getTargetObjs(url, 'Filesource', 'filesourceuid', 'filesourcename')
+        url = 'file-source/findAll'
+        this.getTargetObjs(url, 'Filesource', 'filesourceuid', 'filesourcename')
     },
     props: {
         content: {
@@ -349,26 +349,26 @@ export default {
                     objectname: this.content.alias[i].objectname
                 };
                 
-                let targetObj = {
-                    "uid": this.content.alias[i].objectuid,
-                    "name": this.content.alias[i].objectname
-                }
-                if(this.content.alias[i].aliastype === 'Connection'){
-                    this.allConnections = []
-                    this.allConnections.push(targetObj)
-                }else if(this.content.alias[i].aliastype === 'Domain'){
-                    this.allDomains = []
-                    this.allDomains.push(targetObj)
-                }else if(this.content.alias[i].aliastype === 'Agent'){
-                    this.allAgents = []
-                    this.allAgents.push(targetObj)
-                }else if(this.content.alias[i].aliastype === 'Frequency'){
-                    this.allFrequencies = []
-                    this.allFrequencies.push(targetObj)
-                }else if(this.content.alias[i].aliastype === 'Filesource'){
-                    this.allFilesources = []
-                    this.allFilesources.push(targetObj)
-                }
+                // let targetObj = {
+                //     "uid": this.content.alias[i].objectuid,
+                //     "name": this.content.alias[i].objectname
+                // }
+                // if(this.content.alias[i].aliastype === 'Connection'){
+                //     this.allConnections = []
+                //     this.allConnections.push(targetObj)
+                // }else if(this.content.alias[i].aliastype === 'Domain'){
+                //     this.allDomains = []
+                //     this.allDomains.push(targetObj)
+                // }else if(this.content.alias[i].aliastype === 'Agent'){
+                //     this.allAgents = []
+                //     this.allAgents.push(targetObj)
+                // }else if(this.content.alias[i].aliastype === 'Frequency'){
+                //     this.allFrequencies = []
+                //     this.allFrequencies.push(targetObj)
+                // }else if(this.content.alias[i].aliastype === 'Filesource'){
+                //     this.allFilesources = []
+                //     this.allFilesources.push(targetObj)
+                // }
             }
             // console.log('sssssssssssssssssssssssssss')
         }
