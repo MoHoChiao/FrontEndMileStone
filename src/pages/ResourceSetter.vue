@@ -66,8 +66,8 @@
                             <div id="scheduleMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
-                                        <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>
+                                        <!--<a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Working Cal</a>
+                                        <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>Frequency</a>-->
                                         <button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>Exclude Freq</button>
                                         <div id="excludeFreqMenu" class="w3-hide w3-container w3-animate-opacity">
                                             <div class="w3-bar-block">

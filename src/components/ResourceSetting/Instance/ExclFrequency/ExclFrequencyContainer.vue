@@ -2,19 +2,27 @@
     <div>
         <excl-frequency-add-window :windowAlive="addWindowAlive"
                                    window-title="Add Exclude Frequency"
-                                   @closeAdd="changeAddWindowStatus"></excl-frequency-add-window>
+                                   :content="selectedRecord"
+                                   :urlOp="operation"
+                                   @closeAdd="saveAddWindow"
+                                   @closeEdit="saveEditWindow">
+        </excl-frequency-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
-                               @closeDelete="changeDeleteWindowStatus"
-                               @confirmDelete="deleteExclFreq"></confirm-delete-window>
+                               @closeDelete="closeDeleteWindow"
+                               @confirmDelete="deleteExclFreq">
+
+        </confirm-delete-window>
         <excl-frequency-apply-window :windowAlive="applyWindowAlive"
                                      window-title="Apply Exclude Frequency To Other Object"
                                      :applyTimes="selectedRecord.excludefrequencylist"
                                      :excludefrequencyuid="selectedRecord.excludefrequencyuid"
-                                     @closeApply="changeApplyWindowStatus"></excl-frequency-apply-window>
+                                     @closeApply="changeApplyWindowStatus">
+
+        </excl-frequency-apply-window>
         <router-view name="content">
             <!--Global Excl Freq Window組件內容會在這裡渲染-->
         </router-view>
@@ -32,7 +40,9 @@
                                     </span>
                                     <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                     <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                                    <i class="w3-right fa fa-plus w3-button" title="Add Exclude frequency" aria-hidden="true" @click="changeAddWindowStatus"></i>
+                                    <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete" aria-hidden="true" @click="showDeleteWindow"></i>
+                                    <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit" aria-hidden="true" @click="changeAddWindowStatus('edit')"></i>
+                                    <i class="w3-right fa fa-plus w3-button" title="Add Exclude frequency" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
                                     <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 </div>
                             </div>
@@ -86,10 +96,11 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div id="packageContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                            <div id="freqContainer" class="w3-responsive w3-card w3-round">
                                 <table id="freqTable" class="w3-table-all w3-left">
+                                    <empty-grid v-if="allExclFreqObjs.length == 0"></empty-grid>
                                     <tr :id="content.excludefrequencyuid" :key="content.excludefrequencyuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
-                                        @click="clickOnPackageRecord(content.excludefrequencyuid, index)" v-for="(content, index) in allExclFreqObjs">
+                                        @click="clickOnFreqRecord(content.excludefrequencyuid, index)" v-for="(content, index) in allExclFreqObjs">
                                         <td :width="gridWidth[0]">
                                             <span>{{ content.excludefrequencyname }}</span>
                                         </td>
@@ -148,12 +159,14 @@
                         </excl-frequency-apply-panel>
                         <hr class="w3-border-black w3-clear">
                         <p class="w3-small">{{ content.description }}</p>
-                        <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                            <i class="fa fa-pencil"></i> Edit
-                        </button>
-                        <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.excludefrequencyuid, content.excludefrequencyname)">
-                            <i class="fa fa-trash-o"></i> Delete
-                        </button>
+                        <span class="w3-right">
+                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit" @click="clickOnFreqPanel('edit', index, content)">
+                                <i class="fa fa-pencil" />
+                            </button>
+                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete" @click="clickOnFreqPanel('delete', index, content)">
+                                <i class="fa fa-trash-o" />
+                            </button>
+                        </span>
                     </div>
                     <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel1'"
                                                :index="index" :content="content" @closeEdit="changeEditable"></excl-frequency-edit-panel>
@@ -198,6 +211,7 @@
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
     import ExclFrequencyApplyWindow from './ExclFrequencyApplyWindow.vue'
     import page from '../../page.vue'
+    import EmptyGrid from '../../../Common/EmptyGrid.vue'
 
     export default {
         components: {
@@ -207,16 +221,16 @@
             'excl-frequency-add-window': ExclFrequencyAddWindow,
             'confirm-delete-window': ConfirmDeleteWindow,
             'excl-frequency-apply-window': ExclFrequencyApplyWindow,
-            'page': page
+            'page': page,
+            'empty-grid': EmptyGrid
         },
         data() {
             return {
                 showMode: true, //switch content list or table list
                 addWindowAlive: false,  //for add Exclude Frequency modal windows
+                operation: 'add',   //keep which operation(add,edit) will be execute
                 applyWindowAlive: false, //for modify Exclude Frequency Apply modal windows(Frequency, Job, Flow)
                 deleteWindowAlive: false,  //for delete Exclude Frequency modal windows
-                deleteIndex: -1,    //store which index will be delete
-                deleteUid: '',      //store which obj will be delete
                 deleteName: '',     //store which obj name will be delete
                 allExclFreqObjs: [], //store all Exclude Frequency
                 editable: [],   //for all Exclude Frequency content edit panel
@@ -244,7 +258,7 @@
         },
         methods: {
             //When Grid List click on agent record
-            clickOnPackageRecord(id, index) {
+            clickOnFreqRecord(id, index) {
                 let tr = document.getElementById(id)
                 this.clearSelectedRecord(tr)
 
@@ -254,6 +268,17 @@
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+                }
+            },
+            clickOnFreqPanel(which, index, content) {
+                if (content) {
+                    this.selectedRecord = content
+                    this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+
+                    if (which == 'edit')
+                        this.changeEditable(index)
+                    else if (which == 'delete')
+                        this.showDeleteWindow()
                 }
             },
             getExclFreq(e) {
@@ -268,6 +293,8 @@
                     },
                     "param": this.queryParam
                 }
+
+                console.log(params)
 
                 HTTP_TRINITY.post(`excl-frequency/findByFilter`, params)
                     .then(response => {
@@ -306,48 +333,74 @@
                     this.selectedRecord = record
                 this.applyWindowAlive = !this.applyWindowAlive
             },
+            //above for delete window
+            showDeleteWindow() {
+                if ((this.selectedRecord.index || this.selectedRecord.index === 0)
+                    && this.selectedRecord.excludefrequencyname) {
+                    this.deleteWindowAlive = true
+                    this.deleteName = this.selectedRecord.excludefrequencyname
+                }
+            },
             deleteExclFreq() {
-                if (this.deleteIndex === -1)
-                    return
-                if (this.deleteUid === '')
-                    return
-
                 HTTP_TRINITY.get(`excl-frequency/delete`, {
                     params: {
-                        uid: this.deleteUid
+                        uid: this.selectedRecord.excludefrequencyuid
                     }
                 })
-                    .then(response => {
-                        this.allExclFreqObjs.splice(this.deleteIndex, 1)
-                        this.editable.splice(this.deleteIndex, 1)
-                        this.editable.fill(false) //close all edit form
-                        this.changeDeleteWindowStatus(-1, '', '')
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
+                .then(response => {
+                    this.allExclFreqObjs.splice(this.selectedRecord.index, 1)
+                    this.clearSelectedRecord()
+                    this.closeDeleteWindow()
+                })
+                .catch(error => {
+                    errorHandle(this.$store, error)
+                })
+            },
+            closeDeleteWindow() {
+                this.deleteWindowAlive = false
             },
             changeShowMode() {
                 this.showMode = !this.showMode
+                this.clearSelectedRecord()
             },
-            changeAddWindowStatus(content) {
+            changeAddWindowStatus(which) {
+                if (which == 'edit') {
+                    if (this.selectedRecord && this.selectedRecord.excludefrequencyuid && this.selectedRecord.excludefrequencyuid !== '') {
+                        //Get Agent detail record
+                        this.operation = which
+                        this.addWindowAlive = !this.addWindowAlive
+                    }
+                } else {
+                    this.operation = which
+                    this.addWindowAlive = !this.addWindowAlive
+                }
+            },
+            saveAddWindow(new_content) {
+                if (new_content) {    //new_content !== undefined, it means from Window Save Click
+                    this.allExclFreqObjs.unshift(new_content) //add object to the top of array
+                    this.clearSelectedRecord()
+                }
                 this.addWindowAlive = !this.addWindowAlive
-                //if (content !== undefined) {
-                //    this.allExclFreqObjs.unshift(content) //add object to the top of array
-                //    this.editable.fill(false) //close all edit form
-                //    // this.editable.unshift(false)
-                //}
             },
-            changeDeleteWindowStatus(index, excludefrequencyuid, excludefrequencyname) {
-                this.deleteWindowAlive = !this.deleteWindowAlive
+            saveEditWindow(new_content) {
+                //new_content !== undefined, it means from Agent Window Save Click
+                if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
+                    new_content.index = this.selectedRecord.index   //asign old index prop to new content
+                    this.allExclFreqObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.selectedRecord = new_content
+                }
+                this.addWindowAlive = !this.addWindowAlive
+            },
+            //changeDeleteWindowStatus(index, excludefrequencyuid, excludefrequencyname) {
+            //    this.deleteWindowAlive = !this.deleteWindowAlive
 
-                /*
-                    store which obj be delete
-                */
-                this.deleteIndex = index
-                this.deleteUid = excludefrequencyuid
-                this.deleteName = excludefrequencyname
-            },
+            //    /*
+            //        store which obj be delete
+            //    */
+            //    this.deleteIndex = index
+            //    this.deleteUid = excludefrequencyuid
+            //    this.deleteName = excludefrequencyname
+            //},
             //clear selected for UI
             clearSelectedRecord(tr) {
                 let table = document.getElementById('freqTable')

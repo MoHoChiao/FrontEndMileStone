@@ -1,16 +1,22 @@
 <template>
     <div>
-        <package-add-window v-if="addWindowAlive"
+        <package-add-window :windowAlive="addWindowAlive"
                             window-title="Add New External Package"
-                            @closeAdd="changeAddWindowStatus"></package-add-window>
+                            :content="packageRecord"
+                            :urlOp="operation"
+                            @close="close"
+                            @closeAdd="saveAddWindow"
+                            @closeEdit="saveEditWindow">
+        </package-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                :is-loading="delButtonLoading"
                                window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
-                               @closeDelete="changeDeleteWindowStatus"
-                               @confirmDelete="deletePackage"></confirm-delete-window>
+                               @closeDelete="closeDeleteWindow"
+                               @confirmDelete="deletePackage">
+        </confirm-delete-window>
         <files-rules-window v-if="attachWindowAlive"
                             :window-title="'Attach Rule Files To ' + selectedPackageRecord.packagename"
                             :packageuid="selectedPackageRecord.packageuid"
@@ -36,53 +42,19 @@
                                     <span class="w3-right">
                                         <form enctype="multipart/form-data" novalidate>
                                             <label>
-                                                <i class="w3-bar-item fa fa-upload w3-button w3-right" title="import Package" aria-hidden="true"></i>
+                                                <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Package" aria-hidden="true"></i>
                                                 <input id="ExternalRuleInputFile" type="file" name="file"
                                                        @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
                                                        accept=".jar" class="input-file" hidden>
                                             </label>
                                         </form>
                                     </span>
+                                    <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete Package" aria-hidden="true" @click="showDeleteWindow"></i>
+                                    <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Package" aria-hidden="true" @click="changeEditWindowStatus('edit')"></i>
+                                    <i class="w3-right fa fa-plus w3-button" title="Add Package" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
                                     <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 </div>
                             </div>
-                            <!--<p contenteditable="false" class="w3-col m12 w3-border w3-padding">
-                                <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> ResourceSetter</i>
-                                <i class="fa fa-arrow-right w3-left w3-opacity" aria-hidden="true" style="margin: 6px 6px 0 0"> External Rule</i>
-                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
-                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
-                                <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-file-archive-o w3-button" title="Import/Publish" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
-                                        <div v-if="!allOverlayLoading">
-                                            <form enctype="multipart/form-data" novalidate>
-                                                <label>
-                                                    <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import External Rule" aria-hidden="true"> Import Package</i>
-                                                    <input id="ExternalRuleInputFile" type="file" name="file"
-                                                           @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
-                                                           accept=".jar" class="input-file">
-                                                </label>
-                                            </form>
-                                            <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Rules to JCS Agent" aria-hidden="true" @click="changePublishWindowStatus"> Publish Rules</i>
-                                        </div>
-                                    </div>
-                                </span>
-                                <i class="fa fa-plus w3-button w3-right" title="Add New Package" aria-hidden="true" @click="changeAddWindowStatus()"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getPackages"></i>
-                                <span class="w3-dropdown-hover w3-right">
-                                    <i class="fa fa-search w3-button" title="Search Package By Name" aria-hidden="true"></i>
-                                    <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
-                                        <div class="w3-row w3-panel">
-                                            <div class="w3-col m8">
-                                                <input class=" w3-input w3-border" v-model="searchText" type="text" maxlength="36" placeholder="Search..">
-                                            </div>
-                                            <div class="w3-col m4">
-                                                <a @click="getPackages" class="w3-button w3-theme-d2">Go</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </span>
-                            </p>-->
                         </div>
                     </div>
                 </div>
@@ -127,8 +99,9 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div id="packageContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                            <div id="packageContainer" class="w3-responsive w3-card w3-round">
                                 <table id="packageTable" class="w3-table-all w3-left">
+                                    <empty-grid v-if="allPackageObjs.length == 0"></empty-grid>
                                     <tr :id="content.packageuid" :key="content.packageuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                         @click="clickOnPackageRecord(content.packageuid, index)" v-for="(content, index) in allPackageObjs">
                                         <td :width="gridWidth[0]">
@@ -182,44 +155,20 @@
                             <files-rules-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></files-rules-panel>
                             <hr class="w3-border-black w3-clear">
                             <p class="w3-small">{{ content.description }}</p>
-                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                                <i class="fa fa-pencil"></i> Edit
-                            </button>
-                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content)">
-                                <i class="fa fa-trash-o"></i> Delete
-                            </button>
+                            <span class="w3-right">
+                                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit" @click="clickOnPackagePanel('edit', index, content)">
+                                    <i class="fa fa-pencil" />
+                                </button>
+                                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete" @click="clickOnPackagePanel('delete', index, content)">
+                                    <i class="fa fa-trash-o" />
+                                </button>
+                            </span>
                         </div>
                     </over-lay-loading-div>
                     <package-edit-panel v-else :key="content.packageuid+'EditPanel1'"
                                         :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
                 </div>
             </div>
-            <!--<ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li :key="content.packageuid+'li'" class="w3-bar w3-border-camo-black loading-area" v-for="(content, index) in allPackageObjs">
-                    <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                        <p>
-                            {{ content.packagename }}
-                        </p>
-                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.description }}</span>
-                        <button title="Delete This Package" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeDeleteWindowStatus(index, content)">
-                            <i class="fa fa-trash-o"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Delete</span>
-                        </button>
-                        <button title="Attach Jar To Package" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeJarWindowStatus(content)">
-                            <i class="fa fa-paperclip"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Attach</span>
-                        </button>
-                        <button title="Edit This Package" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
-                            <i class="fa fa-pencil"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Edit</span>
-                        </button>
-                    </div>
-                    <package-edit-panel v-else :key="content.name+'EditPanel2'"
-                        :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
-                </li>
-            </ul>-->
         </div>
         <over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>
     </div>
@@ -236,6 +185,7 @@
     import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
     import page from '../page.vue'
     import { wait, NON_SPEED, SLOW_SPEED, FAST_SPEED } from '../../../util_js/utils'
+    import EmptyGrid from '../../Common/EmptyGrid.vue'
 
     export default {
         components: {
@@ -247,7 +197,8 @@
             'files-rules-window': FilesAndRulesWindow,
             'over-lay-loading-div': OverlayLoadingDIV,
             'over-lay-loading': OverlayLoading,
-            'page': page
+            'page': page,
+            'empty-grid': EmptyGrid
         },
         data() {
             return {
@@ -256,15 +207,15 @@
                 allOverlayLoadingText: 'Loading',    //control the status of all page overlay loading
                 showMode: true, //switch content list or table list
                 addWindowAlive: false,  //for add Package modal windows
+                operation: 'add',
                 attachWindowAlive: false, //for upload jar file modal windows
                 publishWindowAlive: false, //for publish Package file modal windows
                 deleteWindowAlive: false,  //for delete Package modal windows
-                deleteIndex: -1,    //store which index will be delete
-                deleteUid: '',      //store which obj will be delete
                 deleteName: '',     //store which obj name will be delete
                 allPackageObjs: [], //store all Package info
                 editable: [],   //for all Package content edit panel
                 selectedPackageRecord: new Object(),   //store which Package has been clicked.
+                packageRecord: new Object(), //store detail record
                 searchText: '',
                 gridWidth: ['30%', '45%', '25%'],
                 //about paging info
@@ -287,7 +238,7 @@
             this.getPackages()
         },
         methods: {
-            //When Grid List click on agent record
+            //When Grid List click on record
             clickOnPackageRecord(id, index) {
                 let tr = document.getElementById(id)
                 this.clearSelectedRecord(tr)
@@ -295,9 +246,20 @@
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
                     this.selectedRecord = this.allPackageObjs[index]
-                    this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+                    this.selectedRecord.index = index //New prop is stores which obj will be deleted in UI
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+                }
+            },
+            clickOnPackagePanel(which, index, content) {
+                if (content) {
+                    this.selectedRecord = content
+                    this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+
+                    if (which == 'edit')
+                        this.changeEditable(index)
+                    else if (which == 'delete')
+                        this.showDeleteWindow()
                 }
             },
             getPackages(e) {
@@ -354,53 +316,76 @@
             changePublishWindowStatus() {
                 this.publishWindowAlive = !this.publishWindowAlive
             },
+            //above for delete window
+            showDeleteWindow() {
+                if ((this.selectedRecord.index || this.selectedRecord.index === 0)
+                    && this.selectedRecord.packagename) {
+                    this.deleteWindowAlive = true
+                    this.deleteName = this.selectedRecord.packagename
+                }
+            },
             deletePackage() {
-                if (this.deleteIndex === -1)
-                    return
-                if (this.deleteUid === '')
-                    return
-
                 this.delButtonLoading = true
                 HTTP_TRINITY.get(`dm-ext-package/delete`, {
                     params: {
-                        uid: this.deleteUid
+                        uid: this.selectedRecord.packageuid
                     }
                 })
                     .then(response => {
-                        this.allPackageObjs.splice(this.deleteIndex, 1)
-                        this.editable.splice(this.deleteIndex, 1)
-                        this.editable.fill(false) //close all edit form
+                        this.allPackageObjs.splice(this.selectedRecord.index, 1)
+                        this.clearSelectedRecord()
+                        this.closeDeleteWindow()
                         this.delButtonLoading = false
-                        this.changeDeleteWindowStatus(-1, '')
                     })
                     .catch(error => {
                         this.delButtonLoading = false
                         errorHandle(this.$store, error)
                     })
             },
+            closeDeleteWindow() {
+                this.deleteWindowAlive = false
+            },
             changeShowMode() {
                 this.showMode = !this.showMode
+                this.clearSelectedRecord()
             },
-            changeAddWindowStatus(content) {
+            changeEditWindowStatus(which) {
+                if (which != 'add') {
+                    if (this.selectedRecord && this.selectedRecord.packageuid && this.selectedRecord.packageuid !== '') {
+                        //Get detail record
+                        HTTP_TRINITY.get(`dm-ext-package/findByUid?uid=` + this.selectedRecord.packageuid)
+                            .then(response => {
+                                this.packageRecord = response.data
+                                this.operation = which
+                                this.addWindowAlive = !this.addWindowAlive
+                            })
+                            .catch(error => {
+                                errorHandle(this.$store, error)
+                            })
+                    }
+                } else {
+                    this.operation = which
+                    this.addWindowAlive = !this.addWindowAlive
+                }
+            },
+            close() {
+                this.addWindowAlive = false
+            },
+            saveAddWindow(new_content) {
+                if (new_content) {    //new_content !== undefined, it means from Window Save Click
+                    this.allPackageObjs.unshift(new_content) //add object to the top of array
+                    this.clearSelectedRecord()
+                }
                 this.addWindowAlive = !this.addWindowAlive
-                let index = -1
-                if (content !== undefined) {
-                    this.allPackageObjs.unshift(content) //add object to the top of array
-                    this.editable.fill(false) //close all edit form
-                    // this.editable.unshift(false)
-                }
             },
-            changeDeleteWindowStatus(index, p) {
-                this.deleteWindowAlive = !this.deleteWindowAlive
-
-                /*
-                    store which obj be delete
-                */
-                if (p) {
-                    this.deleteIndex = index
-                    this.deleteUid = p.packageuid
-                    this.deleteName = p.packagename
+            saveEditWindow(new_content) {
+                //new_content !== undefined, it means from Agent Window Save Click
+                if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
+                    new_content.index = this.selectedRecord.index   //asign old index prop to new content
+                    this.allPackageObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.selectedRecord = new_content
                 }
+                this.addWindowAlive = !this.addWindowAlive
             },
             importPackage(fileName, formData) {
                 this.allOverlayLoadingText = 'Import Jar File - ' + fileName + '...'

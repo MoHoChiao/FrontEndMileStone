@@ -71,7 +71,7 @@
                         </tr>
                     </table>
                 </div>
-                <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
+                <div id="categoryContainer" class="w3-responsive w3-card w3-round"  >
                     <table id="categoryTable" class="w3-table-all w3-small">
                         <template v-for="(content, index) in allCategoryObjs">
                         <tr :id="content.freqcategoryuid" :key="content.freqcategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
@@ -146,7 +146,7 @@
                         </tr>
                     </table>
                 </div>
-                <div id="frequencyContainer" class="w3-responsive w3-card w3-round" style="min-height:350px">
+                <div id="frequencyContainer" class="w3-responsive w3-card w3-round" >
                     <table id="frequencyTable" class="w3-table-all w3-small">
                         <tr :id="content.frequencyuid" :key="content.frequencyuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
                                 @click="clickOnFrequency(content.frequencyuid, index)" v-for="(content, index) in allFrequencyObjs">
@@ -188,7 +188,7 @@ export default {
             deleteWindowAlive: false,  //show or not show delete modal windows
             deleteName: '', //store delete object name
             deleteWhich: '', //store delete Category or Frequency
-            allCategoryObjs: new Object(), //store all remote data.(Frequency Categories)
+            allCategoryObjs: [], //store all remote data.(Frequency Categories)
             allFrequencyObjs: new Object(), //store all remote data.(Frequencies)
             orderFields: [  //for ordering filter fields
                 {name: "Update Time",value: "lastupdatetime"},

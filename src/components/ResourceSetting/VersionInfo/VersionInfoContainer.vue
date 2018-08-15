@@ -71,7 +71,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="container" class="w3-responsive w3-card w3-round" style="min-height:450px">
+                    <div id="container" class="w3-responsive w3-card w3-round">
                         <table id="dataTable" class="w3-table-all">
                             <tr v-for="obj in dataObjs" class="w3-hover-blue-grey w3-hover-opacity">
                                 <td class="w3-left" :width="gridWidth[0]">{{ obj.path }}</td>

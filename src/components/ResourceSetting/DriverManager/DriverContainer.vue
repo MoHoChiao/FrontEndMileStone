@@ -2,23 +2,33 @@
     <div>
         <driver-add-window v-if="addWindowAlive"
                            window-title="Add New Driver"
-                           @closeAdd="changeAddWindowStatus"></driver-add-window>
+                           @closeAdd="saveAddWindow">
+        </driver-add-window>
+        <driver-edit-window :windowAlive="editWindowAlive"
+                            window-title="Edit Driver"
+                            :content="selectedRecord"
+                            :driverClassList="driverClassList"
+                            @closeEdit="closeEditWindow">
+        </driver-edit-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                :is-loading="delButtonLoading"
                                window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
-                               @closeDelete="changeDeleteWindowStatus"
-                               @confirmDelete="deleteDriver"></confirm-delete-window>
+                               @closeDelete="closeDeleteWindow"
+                               @confirmDelete="deleteDriver">
+        </confirm-delete-window>
         <driver-jar-window v-if="attachWindowAlive"
-                           :window-title="'Attach Jar To ' + selectedDriverRecord.name"
-                           :driverName="selectedDriverRecord.name"
-                           :jarFiles="selectedDriverRecord.jarFiles"
-                           @closeApply="changeJarWindowStatus"></driver-jar-window>
+                           :window-title="'Attach Jar To ' + selectedRecord.name"
+                           :driverName="selectedRecord.name"
+                           :jarFiles="selectedRecord.jarFiles"
+                           @closeApply="changeJarWindowStatus">
+        </driver-jar-window>
         <publish-driver-window v-if="publishWindowAlive"
                                window-title="Publish Drivers To JCS"
-                               @closeApply="changePublishWindowStatus"></publish-driver-window>
+                               @closeApply="changePublishWindowStatus">
+        </publish-driver-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div class="w3-row-padding">
                 <div class="w3-col m12">
@@ -50,7 +60,9 @@
                                             </div>
                                         </div>
                                     </span>
-                                    <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeAddWindowStatus()"></i>
+                                    <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete" aria-hidden="true" @click="showDeleteWindow()"></i>
+                                    <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit" aria-hidden="true" @click="changeEditWindowStatus('edit')"></i>
+                                    <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
                                     <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getDrivers"></i>
                                 </div>
                             </div>
@@ -98,8 +110,9 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div id="driverContainer" class="w3-responsive w3-card w3-round" style="min-height:420px">
+                            <div id="driverContainer" class="w3-responsive w3-card w3-round">
                                 <table id="driverTable" class="w3-table-all w3-left">
+                                    <empty-grid v-if="sortedData.length == 0"></empty-grid>
                                     <tr :id="content.name" :key="content.name" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                         @click="clickOnDriverRecord(content.name, index)" v-for="(content, index) in sortedData">
                                         <td :width="gridWidth[0]">
@@ -153,12 +166,14 @@
                             <p><span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span></p>
                             <driver-jar-panel :key="content.name+'JarPanel'" :driverName="content.name" :jarFiles="content.jarFiles"></driver-jar-panel>
                             <br>
-                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" @click="changeEditable(index)">
-                                <i class="fa fa-pencil"></i> Edit
-                            </button>
-                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" @click="changeDeleteWindowStatus(index, content.name)">
-                                <i class="fa fa-trash-o"></i> Delete
-                            </button>
+                            <span class="w3-right">
+                                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit" @click="clickOnDriverPanel('edit', index, content)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete" @click="clickOnDriverPanel('delete', index, content)">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </span>
                         </div>
                     </over-lay-loading-div>
                     <driver-edit-panel v-else :key="content.name+'EditPanel1'"
@@ -201,6 +216,7 @@
     import DriverEditPanel from './DriverEditPanel.vue'
     import DriverJarPanel from './DriverJarPanel.vue'
     import DriverAddWindow from './DriverAddWindow.vue'
+    import DriverEditWindow from './DriverEditWindow.vue'
     import PublishDriverWindow from './PublishDriverWindow.vue'
     import ConfirmDeleteWindow from '../ConfirmDeleteWindow.vue'
     import DriverJarWindow from './DriverJarWindow.vue'
@@ -208,8 +224,22 @@
     import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
     import page from '../page.vue'
     import { wait, NON_SPEED, SLOW_SPEED, FAST_SPEED } from '../../../util_js/utils'
+    import EmptyGrid from '../../Common/EmptyGrid.vue'
 
     export default {
+        components: {
+            'driver-edit-panel': DriverEditPanel,
+            'driver-jar-panel': DriverJarPanel,
+            'driver-add-window': DriverAddWindow,
+            'driver-edit-window': DriverEditWindow,
+            'publish-driver-window': PublishDriverWindow,
+            'confirm-delete-window': ConfirmDeleteWindow,
+            'driver-jar-window': DriverJarWindow,
+            'over-lay-loading-div': OverlayLoadingDIV,
+            'over-lay-loading': OverlayLoading,
+            'page': page,
+            'empty-grid': EmptyGrid
+        },
         data() {
             return {
                 delButtonLoading: false,    //control the status of delete window buttons
@@ -217,6 +247,7 @@
                 allOverlayLoadingText: 'Loading',    //control the status of all page overlay loading
                 showMode: true, //switch content list or table list
                 addWindowAlive: false,  //for add driver modal windows
+                editWindowAlive: false,
                 attachWindowAlive: false, //for upload jar file modal windows
                 publishWindowAlive: false, //for publish driver file modal windows
                 deleteWindowAlive: false,  //for delete driver modal windows
@@ -224,8 +255,9 @@
                 deleteUid: '',      //store which obj will be delete
                 deleteName: '',     //store which obj name will be delete
                 allDriverObjs: [], //store all drivers info
+                driverClassList: [],
                 editable: [],   //for all driver content edit panel
-                selectedDriverRecord: new Object(),   //store which driver attach button has been clicked.
+                selectedRecord: new Object(),   //store which driver attach button has been clicked.
                 searchText: '',
                 gridWidth: ['25%', '35%', '40%'],
                 //about paging info
@@ -294,6 +326,18 @@
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
                 }
             },
+            //When Content List click on agent operation button
+            clickOnDriverPanel(which, index, content) {
+                if (content) {
+                    this.selectedRecord = content
+                    this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+
+                    if (which == 'edit')
+                        this.changeEditable(index)
+                    else if (which == 'delete')
+                        this.showDeleteWindow()
+                }
+            },
             getDrivers(e) {
                 HTTP_TRINITY.get(`driver-manager/findDriversProp?driverName=` + this.searchText.trim())
                     .then(response => {
@@ -304,7 +348,7 @@
                         errorHandle(this.$store, error)
                     })
             },
-            changeEditable(index, content) {
+            changeEditable(index) {
                 /*
                     this.$set is for above :
                     http://www.jianshu.com/p/358c1974d9a5
@@ -321,9 +365,16 @@
                     this.allDriverObjs[index] = content
                 }
             },
+            showDeleteWindow() {
+                if ((this.selectedRecord.index || this.selectedRecord.index === 0)
+                    && this.selectedRecord.name) {
+                    this.deleteWindowAlive = true
+                    this.deleteName = this.selectedRecord.name
+                }
+            },
             changeJarWindowStatus(record) {
                 if (record)
-                    this.selectedDriverRecord = record
+                    this.selectedRecord = record
                 this.attachWindowAlive = !this.attachWindowAlive
             },
             changePublishWindowStatus() {
@@ -347,20 +398,43 @@
                         this.editable.splice(this.deleteIndex, 1)
                         this.editable.fill(false) //close all edit form
                         this.delButtonLoading = false
-                        this.changeDeleteWindowStatus(-1, '')
+                        this.closeDeleteWindow()
                     })
                     .catch(error => {
                         this.delButtonLoading = false
                         errorHandle(this.$store, error)
                     })
             },
+            closeDeleteWindow() {
+                this.deleteWindowAlive = false
+            },
             changeShowMode() {
                 this.showMode = !this.showMode
+                this.clearSelectedRecord()
             },
-            changeAddWindowStatus(content) {
-                this.addWindowAlive = !this.addWindowAlive
+            changeEditWindowStatus(which) {
+                if (which == 'edit') {
+                    if (this.selectedRecord && this.selectedRecord.name && this.selectedRecord.name !== '') {
+                        //Get detail record
+                        HTTP_TRINITY.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.selectedRecord.name)
+                            .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s
+                            .then(response => {
+                                this.driverClassList = response.data
+                                this.isLoading = false
+                                this.editWindowAlive = true
+                            })
+                            .catch(error => {
+                                this.isLoading = false
+                                errorHandle(this.$store, error)
+                            })
+                    }
+                } else {
+                    this.addWindowAlive = !this.addWindowAlive
+                }
+            },
+            saveAddWindow(new_content) {
                 let index = -1
-                if (content !== undefined) {
+                if (new_content) {    //new_content !== undefined, it means from Window Save Click
                     for (let i = 0; i < this.allDriverObjs.length; i++) {
                         if (this.allDriverObjs[i].name === content.name) {
                             index = i
@@ -375,16 +449,19 @@
                     this.editable.fill(false) //close all edit form
                     // this.editable.unshift(false)
                 }
+                this.addWindowAlive = !this.addWindowAlive
             },
-            changeDeleteWindowStatus(index, name) {
-                this.deleteWindowAlive = !this.deleteWindowAlive
-
-                /*
-                    store which obj be delete
-                */
-                this.deleteIndex = index
-                this.deleteUid = name
-                this.deleteName = name
+            saveEditWindow(new_content) {
+                //new_content !== undefined, it means from Agent Window Save Click
+                if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
+                    new_content.index = this.selectedRecord.index   //asign old index prop to new content
+                    this.allDriverObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.selectedRecord = new_content
+                }
+                this.editWindowAlive = !this.editWindowAlive
+            },
+            closeEditWindow() {
+                this.editWindowAlive = false
             },
             exportJDBC() {
                 this.allOverlayLoadingText = 'Export ZIP File - jdbc.zip...'
@@ -499,17 +576,6 @@
                 this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
                 this.getDrivers()
             }
-        },
-        components: {
-            'driver-edit-panel': DriverEditPanel,
-            'driver-jar-panel': DriverJarPanel,
-            'driver-add-window': DriverAddWindow,
-            'publish-driver-window': PublishDriverWindow,
-            'confirm-delete-window': ConfirmDeleteWindow,
-            'driver-jar-window': DriverJarWindow,
-            'over-lay-loading-div': OverlayLoadingDIV,
-            'over-lay-loading': OverlayLoading,
-            'page': page
         }
     }
 </script>
