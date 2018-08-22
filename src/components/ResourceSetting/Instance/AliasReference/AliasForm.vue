@@ -37,6 +37,7 @@
                             </td>
                             <td class="w3-center" width="24%">
                                 <span>
+                                    <div>{{ list_info.objectuid }}....................</div>
                                     <select v-if="list_info.aliastype === 'Connection'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
                                         <template v-for="(targetObj, index) in allConnections">
                                             <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
@@ -106,6 +107,7 @@ export default {
     },
     created() {
         this.cloneAlias()
+        this.initialResourceArray()
 
         let url = ''
 
@@ -138,23 +140,11 @@ export default {
     },
     methods: {
         changeType(index, list_info){
-            if(list_info.aliastype === 'Connection'){
-                this.getTargetObjs('connection/findAll', 'Connection', 'connectionuid', 'connectionname')
-            }else if(list_info.aliastype === 'Domain'){
-                this.getTargetObjs('domain/findAll?withoutDetail=true', 'Domain', 'domainuid', 'name')
-            }else if(list_info.aliastype === 'Agent'){
-                this.getTargetObjs('jcsagent/findAll', 'Agent', 'agentuid', 'agentname')
-            }else if(list_info.aliastype === 'Frequency'){
-                this.getTargetObjs('frequency/findAll', 'Frequency', 'frequencyuid', 'frequencyname')
-            }else if(list_info.aliastype === 'Filesource'){
-                this.getTargetObjs('file-source/findAll', 'Filesource', 'filesourceuid', 'filesourcename')
-            }
             this.$set(this.new_content.alias, index, list_info)
         },
         getTargetObjs(url, aliastype, uidField, nameField){
             HTTP_TRINITY.get(url)
             .then(response => {
-                console.log(response.data)
                 let targetObjs = []
                 for(let i=0;i<response.data.length;i++){
                     let uid = response.data[i][uidField]
@@ -209,8 +199,6 @@ export default {
                     //儲存所有target obj的uid和name之對應關係, 以供取target name用
                     this.allTargetObjectMap.set(uid, name)
                 }
-                //initial alias[]要放在這裡才行, 否則objectuid有時會是undefined
-                this.cloneAlias()
             })
             .catch(error => {
                 if (!error.response.status || error.response.status !== 401)
@@ -334,43 +322,73 @@ export default {
         },
         cloneAlias(){
             //Create a new array from this.content.alias, Avoid array to call by reference.
-            this.new_content.alias = new Array(this.content.alias.length)
+            // this.new_content.alias = new Array(this.content.alias.length)
             /*
                 Copy all new objs from this.content.agentlist's objs into this.new_content.agentlist
                 Avoid objs to call by reference.
             */
+            this.new_content.alias = []
             for (var i = 0, len = this.content.alias.length; i < len; i++) {
-                this.new_content.alias[i] = {
-                    parentuid: this.content.alias[i].parentuid,
-                    aliasname: this.content.alias[i].aliasname,
-                    aliastype: this.content.alias[i].aliastype,
-                    objectuid: this.content.alias[i].objectuid,
-                    description: this.content.alias[i].description,
-                    objectname: this.content.alias[i].objectname
-                };
+                // let alias = {
+                //     "parentuid": this.content.alias[i].parentuid,
+                //     "aliasname": this.content.alias[i].aliasname,
+                //     "aliastype": this.content.alias[i].aliastype,
+                //     "objectuid": this.content.alias[i].objectuid,
+                //     "description": this.content.alias[i].description,
+                //     "objectname": this.content.alias[i].objectname,
+                // }
                 
-                // let targetObj = {
-                //     "uid": this.content.alias[i].objectuid,
-                //     "name": this.content.alias[i].objectname
-                // }
-                // if(this.content.alias[i].aliastype === 'Connection'){
-                //     this.allConnections = []
-                //     this.allConnections.push(targetObj)
-                // }else if(this.content.alias[i].aliastype === 'Domain'){
-                //     this.allDomains = []
-                //     this.allDomains.push(targetObj)
-                // }else if(this.content.alias[i].aliastype === 'Agent'){
-                //     this.allAgents = []
-                //     this.allAgents.push(targetObj)
-                // }else if(this.content.alias[i].aliastype === 'Frequency'){
-                //     this.allFrequencies = []
-                //     this.allFrequencies.push(targetObj)
-                // }else if(this.content.alias[i].aliastype === 'Filesource'){
-                //     this.allFilesources = []
-                //     this.allFilesources.push(targetObj)
-                // }
+
+                var new_alias = {
+                    "objectuid": this.content.alias[i].objectuid,
+                    "parentuid": this.content.alias[i].parentuid,
+                    "aliasname": this.content.alias[i].aliasname,
+                    "aliastype": this.content.alias[i].aliastype,
+                    "description": this.content.alias[i].description,
+                    "objectname": this.content.alias[i].objectname
+                }
+                
+                var test1 = JSON.stringify(new_alias)
+                console.log(test1)
+                var test2 = JSON.parse(test1)
+                console.log(test2)
+
+                this.new_content.alias.push(test2)
+                // console.log(new_alias)
+                // this.new_content.alias[i] = {
+                //     parentuid: this.content.alias[i].parentuid,
+                //     aliasname: this.content.alias[i].aliasname,
+                //     aliastype: this.content.alias[i].aliastype,
+                //     objectuid: this.content.alias[i].objectuid,
+                //     description: this.content.alias[i].description,
+                //     objectname: this.content.alias[i].objectname
+                // };
             }
-            // console.log('sssssssssssssssssssssssssss')
+            console.log(this.new_content.alias)
+        },
+        initialResourceArray(){
+            for (var i = 0, len = this.new_content.alias.length; i < len; i++) {
+                let targetObj = {
+                    "uid": this.new_content.alias[i].objectuid,
+                    "name": this.new_content.alias[i].objectname
+                }
+                if(this.new_content.alias[i].aliastype === 'Connection'){
+                    this.allConnections = []
+                    this.allConnections.push(targetObj)
+                }else if(this.new_content.alias[i].aliastype === 'Domain'){
+                    this.allDomains = []
+                    this.allDomains.push(targetObj)
+                }else if(this.new_content.alias[i].aliastype === 'Agent'){
+                    this.allAgents = []
+                    this.allAgents.push(targetObj)
+                }else if(this.new_content.alias[i].aliastype === 'Frequency'){
+                    this.allFrequencies = []
+                    this.allFrequencies.push(targetObj)
+                }else if(this.new_content.alias[i].aliastype === 'Filesource'){
+                    this.allFilesources = []
+                    this.allFilesources.push(targetObj)
+                }
+            }
         }
     }
 }

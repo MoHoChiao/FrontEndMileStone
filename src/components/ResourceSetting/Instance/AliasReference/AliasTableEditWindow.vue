@@ -32,19 +32,18 @@ export default {
                     alias: []
                 }
             }
-        },
-        index: Number
+        }
     },
     methods: {
         cancel(){
-            this.$emit('closeEdit', this.index)
+            this.$emit('closeEdit')
         },
         save(){
             let postContent = this.$refs.aliasForm.save()
             if(postContent){
                 HTTP_TRINITY.post(`objectalias/modify?parentUid=`+this.content.busentityuid, postContent)
                 .then(response => {
-                    this.$emit('closeEdit', this.index, response.data)
+                    this.$emit('closeEdit', response.data)
                 })
                 .catch(error => {
                     errorHandle(this.$store, error)

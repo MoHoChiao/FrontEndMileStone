@@ -1,9 +1,9 @@
 <template>
 <div>
   <!-- For Add/Edit Virtual Agent Window -->
-  <alias-table-edit-window v-if="aliasWindowAlive" :windowAlive="aliasWindowAlive" 
+  <alias-table-edit-window v-if="aliasWindowAlive" 
+                    :content="selectedRecord" 
                     @closeEdit="saveAliasWindowContentForEdit" 
-                    :content="aliasRecord" 
   ></alias-table-edit-window>
   <!-- For Delete Confirm Window -->
   <confirm-delete-window :windowAlive="deleteWindowAlive" 
@@ -14,14 +14,11 @@
                     @closeDelete="closeDeleteWindow" 
                     @confirmDelete="deleteAlias" 
   ></confirm-delete-window>
-  <!-- For Apply Permission Window -->
-  <permission-window :windowAlive="applyPermissionWindowAlive" 
-                    window-title="Apply Permission To "
-                    :objectUid="selectedRecord.parentuid + selectedRecord.aliasname" 
-                    :objectName="selectedRecord.aliasname" 
-                    whichForm="USE"
-                    @closeApply="changePermissionWindowStatus" 
-  ></permission-window>
+  <alias-table-permission-window v-if="applyPermissionWindowAlive" 
+                    :busentityname="selectedRecord.busentityname" 
+                    :alias="selectedRecord.alias" 
+                    @closeApplyPermission="applyPermission" 
+  ></alias-table-permission-window>
   <div class="w3-col m9 w3-animate-opacity">
     <div class="w3-row-padding">
         <div class="w3-col m12">
@@ -43,11 +40,12 @@
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
                                     <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
-                                        <div v-if="showMode" class="w3-hide-large">
-                                            <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeAliasWindowStatus()"> Edit Alias</i>
-                                            <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="changePermissionWindowStatus()"> Delete All Alias</i>
+                                        <div v-if="showMode">
+                                            <i class="w3-bar-item fa fa-pencil w3-button w3-hide-large" aria-hidden="true" @click="changeAliasWindowStatus()"> Edit Alias</i>
+                                            <i class="w3-bar-item fa fa-trash-o w3-button w3-hide-large" aria-hidden="true" @click="changePermissionWindowStatus()"> Delete All Alias</i>
+                                            <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="applyPermission()"> Apply Permission</i>
                                         </div>
-                                        <hr v-if="showMode" class="w3-border-black w3-hide-large" style="padding:0px;margin:0px">
+                                        <hr v-if="showMode" class="w3-border-black" style="padding:0px;margin:0px">
                                         <div class="w3-row-padding w3-small">
                                             <span class="w3-col m5" style="padding-top:13px">Page Num</span>
                                             <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number" 
@@ -170,46 +168,12 @@
                 <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                 <p>{{ content.busentityname }}</p>
                 <br>
-                <div v-if="content.alias.length > 0">
-                    <div class="w3-responsive w3-card w3-round">
-                        <table class="w3-table-all">
-                            <tr class="w3-teal">
-                                <th class="w3-center" width="25%">Alias Name</th>
-                                <th class="w3-center" width="10%">Type</th>
-                                <th class="w3-center" width="27%">Target</th>
-                                <th class="w3-center" width="30%">Description</th>
-                                <th class="w3-center" width="8%">Permission</th>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:176px;word-break:break-all">
-                        <table class="w3-table-all">
-                            <tr :key="list_info.parentuid+':'+list_info.aliasname" v-for="(list_info, list_index) in content.alias">
-                                <td class="w3-center" width="25%"><span>{{ list_info.aliasname }}</span></td>
-                                <td class="w3-center" width="10%">
-                                    <span v-if="list_info.aliastype == 'Agent'" class="w3-badge w3-red" title="Agent">A</span>
-                                    <span v-if="list_info.aliastype == 'Connection'" class="w3-badge w3-indigo" title="Connection">C</span>
-                                    <span v-if="list_info.aliastype == 'Domain'" class="w3-badge w3-flat-turquoise" title="Domain">D</span>
-                                    <span v-if="list_info.aliastype == 'Filesource'" class="w3-badge w3-dark-grey" title="Filesource">F</span>
-                                    <span v-if="list_info.aliastype == 'Frequency'" class="w3-badge w3-grey" title="Frequency">F</span>
-                                </td>
-                                <td class="w3-center" width="27%"><span>{{ list_info.objectname }}</span></td>
-                                <td width="30%"><span>{{ list_info.description }}</span></td>
-                                <td class="w3-center" width="8%" style="padding-top:3px;padding-bottom:0px">
-                                    <i class="fa fa-universal-access w3-button w3-hover-none" title="Apply Use Permission to Alias" 
-                                        aria-hidden="true" @click="changePermissionWindowStatus(list_info)"></i>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+                <alias-table-panel :alias="content.alias"></alias-table-panel>
                 <hr class="w3-border-black w3-clear">
                 <p>{{ content.description }}</p>
                 <span class="w3-right">
                     <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit Alias" @click="clickOnEntityPanel('edit', index, content)">
                         <i class="fa fa-pencil"></i></button>
-                    <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Apply Permission" @click="clickOnEntityPanel('permission', index, content)">
-                        <i class="fa fa-universal-access"></i></button>
                     <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete All Alias" @click="clickOnEntityPanel('delete', index, content)">
                         <i class="fa fa-trash-o"></i></button>
                 </span>
@@ -224,8 +188,9 @@
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import AliasTableEditWindow from './AliasTableEditWindow.vue'
+import AliasTablePermissionWindow from './AliasTablePermissionWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
-import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
+import AliasTablePanel from './AliasTablePanel.vue'
 import page from '../../page.vue'
 import EmptyGrid from '../../../Common/EmptyGrid.vue'
 
@@ -282,8 +247,6 @@ export default {
 
                 if(which == 'edit')
                     this.openEditable(index)
-                else if(which == 'permission')
-                    this.changePermissionWindowStatus()
                 else if(which == 'delete')
                     this.showDeleteWindow()
             }
@@ -378,9 +341,9 @@ export default {
         changeAliasWindowStatus(){
             if(this.selectedRecord && this.selectedRecord.busentityuid && this.selectedRecord.busentityuid !== ''){
                 //Get Virtual Agent detail record
-                HTTP_TRINITY.get(`busentity/findByUid?withAlias=true&uid=` + this.selectedRecord.busentityuid)
+                HTTP_TRINITY.get(`objectalias/findExtraByParentUid?parentUid=` + this.selectedRecord.busentityuid)
                 .then(response => {
-                    this.aliasRecord = response.data
+                    this.selectedRecord.alias = response.data
                     this.aliasWindowAlive = !this.aliasWindowAlive
                 })
                 .catch(error => {
@@ -392,19 +355,16 @@ export default {
             //new_content !== undefined, it means from Agent Window Save Click
             if(new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)){
                 new_content.index = this.selectedRecord.index   //asign old index prop to new content
-                this.allEntityObjs[this.selectedRecord.index] = new_content   //replace object to the array
-                this.selectedRecord = new_content
+                this.allEntityObjs[this.selectedRecord.index].alias = new_content   //replace object to the array
+                this.selectedRecord.alias = new_content
             }
             this.aliasWindowAlive = !this.aliasWindowAlive
         },
-        //above for permission window
-        changePermissionWindowStatus(record){
-            if(record){
-                this.selectedRecord = record
-                this.selectedRecord.parentuid = this.selectedRecord.parentuid.trim()
+        //about Apply Permission Window for grid list
+        applyPermission(){
+            if(this.selectedRecord && this.selectedRecord.busentityuid && this.selectedRecord.busentityuid !== ''){
+                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
             }
-
-            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
         },
         //about for change show mode(Grid List & Content List)
         changeShowMode(){
@@ -471,8 +431,9 @@ export default {
     components: {
         'alias-table-edit-panel': AliasTableEditPanel,
         'alias-table-edit-window': AliasTableEditWindow,
+        'alias-table-permission-window': AliasTablePermissionWindow,
         'confirm-delete-window': ConfirmDeleteWindow,
-        'permission-window': PermissionWindow,
+        'alias-table-panel': AliasTablePanel,
         'page': page,
         'empty-grid': EmptyGrid
     }
