@@ -1,6 +1,7 @@
 <template>
     <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <alias-table-panel slot="content" :alias="alias"></alias-table-panel>
+        <div slot="footer">&nbsp;</div>
     </modal-window>
 </template>
 <script>

@@ -37,7 +37,6 @@
                             </td>
                             <td class="w3-center" width="24%">
                                 <span>
-                                    <div>{{ list_info.objectuid }}....................</div>
                                     <select v-if="list_info.aliastype === 'Connection'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
                                         <template v-for="(targetObj, index) in allConnections">
                                             <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
@@ -329,16 +328,6 @@ export default {
             */
             this.new_content.alias = []
             for (var i = 0, len = this.content.alias.length; i < len; i++) {
-                // let alias = {
-                //     "parentuid": this.content.alias[i].parentuid,
-                //     "aliasname": this.content.alias[i].aliasname,
-                //     "aliastype": this.content.alias[i].aliastype,
-                //     "objectuid": this.content.alias[i].objectuid,
-                //     "description": this.content.alias[i].description,
-                //     "objectname": this.content.alias[i].objectname,
-                // }
-                
-
                 var new_alias = {
                     "objectuid": this.content.alias[i].objectuid,
                     "parentuid": this.content.alias[i].parentuid,
@@ -348,23 +337,8 @@ export default {
                     "objectname": this.content.alias[i].objectname
                 }
                 
-                var test1 = JSON.stringify(new_alias)
-                console.log(test1)
-                var test2 = JSON.parse(test1)
-                console.log(test2)
-
-                this.new_content.alias.push(test2)
-                // console.log(new_alias)
-                // this.new_content.alias[i] = {
-                //     parentuid: this.content.alias[i].parentuid,
-                //     aliasname: this.content.alias[i].aliasname,
-                //     aliastype: this.content.alias[i].aliastype,
-                //     objectuid: this.content.alias[i].objectuid,
-                //     description: this.content.alias[i].description,
-                //     objectname: this.content.alias[i].objectname
-                // };
+                this.new_content.alias.push(new_alias)
             }
-            console.log(this.new_content.alias)
         },
         initialResourceArray(){
             for (var i = 0, len = this.new_content.alias.length; i < len; i++) {

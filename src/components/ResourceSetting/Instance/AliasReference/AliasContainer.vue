@@ -185,7 +185,7 @@
 </div>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
 import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import AliasTableEditWindow from './AliasTableEditWindow.vue'
 import AliasTablePermissionWindow from './AliasTablePermissionWindow.vue'
@@ -314,15 +314,15 @@ export default {
         //above for delete window
         showDeleteWindow(){
             if( (this.selectedRecord.index || this.selectedRecord.index === 0) 
-                    && this.selectedRecord.busentityname) {
+                    && this.selectedRecord.busentityname && this.selectedRecord.busentityuid) {
                 this.deleteWindowAlive = true
-                this.deleteName = 'all aliases under ' + busentityname
+                this.deleteName = 'all aliases under ' + this.selectedRecord.busentityname
             }
         },
         deleteAlias(){
             HTTP_TRINITY.get(`objectalias/deleteByParentUid`, {
                 params: {
-                    parentUid: this.deleteUid
+                    parentUid: this.selectedRecord.busentityuid.trim()
                 }
             })
             .then(response => {
@@ -363,7 +363,34 @@ export default {
         //about Apply Permission Window for grid list
         applyPermission(){
             if(this.selectedRecord && this.selectedRecord.busentityuid && this.selectedRecord.busentityuid !== ''){
-                this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+                if(this.selectedRecord.alias && this.selectedRecord.alias.length > 0){
+                    HTTP_AUTH.get(`authorization/checkFuncPermission`, {
+                        params: {
+                            functionName: 'alias',
+                            permissionFlag:'modify'
+                        }
+                    })
+                    .then(response => {
+                        if(response.data){
+                            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+                        }else{
+                            let newStatus = {
+                                "msg": "You do not have 'Edit' Permission!",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        }
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+                }else{
+                    let newStatus = {
+                        "msg": "Empty Alias! Please add alias object first.",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
             }
         },
         //about for change show mode(Grid List & Content List)
