@@ -37,31 +37,66 @@
                             </td>
                             <td class="w3-center" width="24%">
                                 <span>
-                                    <select v-if="list_info.aliastype === 'Connection'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
-                                        <template v-for="(targetObj, index) in allConnections">
-                                            <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
-                                        </template>
-                                    </select>
-                                    <select v-else-if="list_info.aliastype === 'Domain'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
-                                        <template v-for="(targetObj, index) in allDomains">
-                                            <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
-                                        </template>
-                                    </select>
-                                    <select v-else-if="list_info.aliastype === 'Agent'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
-                                        <template v-for="(targetObj, index) in allAgents">
-                                            <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
-                                        </template>
-                                    </select>
-                                    <select v-else-if="list_info.aliastype === 'Frequency'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
-                                        <template v-for="(targetObj, index) in allFrequencies">
-                                            <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
-                                        </template>
-                                    </select>
-                                    <select v-else-if="list_info.aliastype === 'Filesource'" class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
-                                        <template v-for="(targetObj, index) in allFilesources">
-                                            <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
-                                        </template>
-                                    </select>
+                                    <div v-if="list_info.aliastype === 'Connection'">
+                                        <div v-if="allConnections.length <= 0 && list_info.objectuid !== ''">
+                                            <input class="w3-input w3-border" v-model="connectionObj.name" type="text" maxlength="255" readonly>
+                                        </div>
+                                        <div v-else>
+                                            <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
+                                                <template v-for="(targetObj, index) in allConnections">
+                                                    <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="list_info.aliastype === 'Domain'">
+                                        <div v-if="allDomains.length <= 0 && list_info.objectuid !== ''">
+                                            <input class="w3-input w3-border" v-model="domainObj.name" type="text" maxlength="255" readonly>
+                                        </div>
+                                        <div v-else>
+                                            <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
+                                                <template v-for="(targetObj, index) in allDomains">
+                                                    <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="list_info.aliastype === 'Agent'">
+                                        <div v-if="allAgents.length <= 0 && list_info.objectuid !== ''">
+                                            <input class="w3-input w3-border" v-model="agentObj.name" type="text" maxlength="255" readonly>
+                                        </div>
+                                        <div v-else>
+                                            <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
+                                                <template v-for="(targetObj, index) in allAgents">
+                                                    <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="list_info.aliastype === 'Frequency'">
+                                        <div v-if="allFrequencies.length <= 0 && list_info.objectuid !== ''">
+                                            <input class="w3-input w3-border" v-model="frequencyObj.name" type="text" maxlength="255" readonly>
+                                        </div>
+                                        <div v-else>
+                                            <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
+                                                <template v-for="(targetObj, index) in allFrequencies">
+                                                    <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="list_info.aliastype === 'Filesource'">
+                                        <div v-if="allFilesources.length <= 0 && list_info.objectuid !== ''">
+                                            <input class="w3-input w3-border" v-model="filesourceObj.name" type="text" maxlength="255" readonly>
+                                        </div>
+                                        <div v-else>
+                                            <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px">
+                                                <template v-for="(targetObj, index) in allFilesources">
+                                                    <option :key="targetObj.uid" :value="targetObj.uid">{{ targetObj.name }}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </span>
                             </td>
                             <td width="25%">
@@ -85,12 +120,18 @@ import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_ut
 export default {
     data() {
         return {
+            //下列存放各Resource的所有Object data(uid, name)
             allConnections: [],
             allDomains: [],
             allAgents: [],
-            allVirtualAgents: [],
             allFrequencies: [],
             allFilesources: [],
+            //下列存放各Resource的舊資料
+            connectionObj: new Object(),
+            domainObj: new Object(),
+            agentObj: new Object(),
+            frequencyObj: new Object(),
+            filesourceObj: new Object(),
             //以下是因為vue.js的v-for, 暫時不支援map collection, 所以額外宣告出來儲存所有key/value值
             allTargetObjectMap: new Map(),
             new_content: {
@@ -321,46 +362,39 @@ export default {
         },
         cloneAlias(){
             //Create a new array from this.content.alias, Avoid array to call by reference.
-            // this.new_content.alias = new Array(this.content.alias.length)
+            this.new_content.alias = new Array(this.content.alias.length)
             /*
                 Copy all new objs from this.content.agentlist's objs into this.new_content.agentlist
                 Avoid objs to call by reference.
             */
-            this.new_content.alias = []
             for (var i = 0, len = this.content.alias.length; i < len; i++) {
-                var new_alias = {
-                    "objectuid": this.content.alias[i].objectuid,
-                    "parentuid": this.content.alias[i].parentuid,
-                    "aliasname": this.content.alias[i].aliasname,
-                    "aliastype": this.content.alias[i].aliastype,
-                    "description": this.content.alias[i].description,
-                    "objectname": this.content.alias[i].objectname
-                }
-                
-                this.new_content.alias.push(new_alias)
+                this.new_content.alias[i] = {
+                    parentuid: this.content.alias[i].parentuid,
+                    aliasname: this.content.alias[i].aliasname,
+                    aliastype: this.content.alias[i].aliastype,
+                    objectuid: this.content.alias[i].objectuid,
+                    description: this.content.alias[i].description,
+                    objectname: this.content.alias[i].objectname
+                };
             }
         },
         initialResourceArray(){
             for (var i = 0, len = this.new_content.alias.length; i < len; i++) {
-                let targetObj = {
-                    "uid": this.new_content.alias[i].objectuid,
-                    "name": this.new_content.alias[i].objectname
-                }
                 if(this.new_content.alias[i].aliastype === 'Connection'){
-                    this.allConnections = []
-                    this.allConnections.push(targetObj)
+                    this.connectionObj.uid = this.new_content.alias[i].objectuid
+                    this.connectionObj.name = this.new_content.alias[i].objectname
                 }else if(this.new_content.alias[i].aliastype === 'Domain'){
-                    this.allDomains = []
-                    this.allDomains.push(targetObj)
+                    this.domainObj.uid = this.new_content.alias[i].objectuid
+                    this.domainObj.name = this.new_content.alias[i].objectname
                 }else if(this.new_content.alias[i].aliastype === 'Agent'){
-                    this.allAgents = []
-                    this.allAgents.push(targetObj)
+                    this.agentObj.uid = this.new_content.alias[i].objectuid
+                    this.agentObj.name = this.new_content.alias[i].objectname
                 }else if(this.new_content.alias[i].aliastype === 'Frequency'){
-                    this.allFrequencies = []
-                    this.allFrequencies.push(targetObj)
+                    this.frequencyObj.uid = this.new_content.alias[i].objectuid
+                    this.frequencyObj.name = this.new_content.alias[i].objectname
                 }else if(this.new_content.alias[i].aliastype === 'Filesource'){
-                    this.allFilesources = []
-                    this.allFilesources.push(targetObj)
+                    this.filesourceObj.uid = this.new_content.alias[i].objectuid
+                    this.filesourceObj.name = this.new_content.alias[i].objectname
                 }
             }
         }

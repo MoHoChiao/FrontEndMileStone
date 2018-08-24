@@ -97,23 +97,29 @@ export default {
     data() {
         return {
             showMode: true, //switch content list or table list
-            addWindowAlive: false,  //for add User Group modal windows
+            selectedRecord: new Object(),   //store which record has been selected.(User Group)
+            groupWindowAlive: false,  //for add/edit User Group modal windows
+            operation: 'add',   //keep which operation(add,edit,copy) will be execute
             applyWindowAlive: false, //for modify User Group Member modal windows
             deleteWindowAlive: false,  //for delete User Group modal windows
-            deleteIndex: -1,    //store which index will be delete
-            deleteUid: '',      //store which obj will be delete
             deleteName: '',     //store which obj name will be delete
             allGroupObjs: [], //store all User Group
             editable: [],   //for all User Group content edit panel
-            selectedUserGroupRecord: new Object(),   //store which user group members button has been clicked.
-            orderFields: [  //for ordering filter fields
-                {name: "Update Time",value: "lastupdatetime"},
-                {name: "Name",value: "groupname"}
-            ],
-            queryFields: [  //for querying filter fields
-                {name: "Name",value: "groupname"},
-                {name: "Desc",value: "Description"}
-            ]
+            //about paging info
+            totalPages: 1,
+            selectedPage: 1, //this is for UI use
+            selectedNum: 0,
+            selectedSize: 10,
+            //about ordering info
+            orderFields: { //Ordering fields, only for UI
+                virtualagentname: "ASC",
+                description: "",
+                lastupdatetime: ""
+            },
+            orderField: 'virtualagentname',   //send to backend
+            orderType: 'ASC',  //send to backend
+            //about query param
+            queryParam: ''
         }
     },
     mounted() {
@@ -233,6 +239,51 @@ export default {
             this.deleteUid = groupuid
             this.deleteName = groupname
         },
+        //above for pagging, ordering, query
+        changeNum(e, index){
+            //紀錄現在點擊的是那一頁
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = index   //for UI page num
+            this.getVRAgents()
+        },
+        changeSize(e){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getVRAgents()
+        },
+        pageNumSelected(index){
+            this.selectedNum = Number(index) - 1    //page number需要index - 1, 因為後端的分頁是從0開始算起
+            this.selectedPage = Number(index)   //for UI page num
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(index) - 1    //除了changeNum因為已經改變過paginate.selected之值了, 其它都需要再去改變paginate.selected的值
+        },
+        pageNumSelectedComboBox (){  //for Page select box
+            this.selectedNum = Number(this.selectedPage) - 1
+            if(this.$refs.paginate) //對content list而言, 其this.$refs.paginate可能為undefined
+                this.$refs.paginate.selected = Number(this.selectedPage) - 1
+            this.getVRAgents()
+        },
+        applyOrder(field){
+            //先清除所有排序方式, only for UI display
+            for(var x in this.orderFields){
+                if(x !== field)
+                    this.orderFields[x] = ''
+            }
+
+            this.orderField = field
+            if (this.orderFields[field] === 'ASC') {
+                this.orderFields[field] = 'DESC' //only for UI display
+                this.orderType = 'DESC'
+            } else {
+                this.orderFields[field] = 'ASC'    //only for UI display
+                this.orderType = 'ASC'
+            }
+
+            this.getVRAgents()
+        },
+        applyQuery(){
+            this.pageNumSelected('1')   //每一次的查詢, 都要讓page number先回到第一頁
+            this.getVRAgents()
+        }
         
     },
     components: {
