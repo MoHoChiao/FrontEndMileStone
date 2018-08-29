@@ -201,14 +201,7 @@ export default {
         },
         getEntities(){
             //Fetch all business entities objs is above
-            let params = {
-                "ordering":{
-                    "orderType":"ASC",
-                    "orderField":"busentityname"
-                }
-            }
-
-            HTTP_TRINITY.post(`busentity/findByFilter`, params)
+            HTTP_TRINITY.get(`busentity/findAll`)
             .then(response => {
                 this.entities = response.data
             })

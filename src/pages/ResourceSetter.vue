@@ -39,17 +39,17 @@
                     <!-- Accordion -->
                     <div class="w3-card-4 w3-round">
                         <div class="w3-signal-white w3-round">
-                            <button @click="menuFunction('accountMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-user-plus fa-fw w3-margin-right"></i>Account</button>
+                            <button @click="menuFunction('accountMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-user-plus fa-fw w3-margin-right"></i>Account</button>
                             <div id="accountMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>Role</a>
-                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>User</a>
+                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>User</a>
+                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>Role</a>
                                         <a @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>User Group</a>
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('resourceMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Resource</button>
+                            <button @click="menuFunction('resourceMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>Resource</button>
                             <div id="resourceMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
@@ -62,7 +62,7 @@
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('scheduleMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Schedule</button>
+                            <button @click="menuFunction('scheduleMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>Schedule</button>
                             <div id="scheduleMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
@@ -78,7 +78,7 @@
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('systemMenu')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-wrench fa-fw w3-margin-right"></i>System</button>
+                            <button @click="menuFunction('systemMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-wrench fa-fw w3-margin-right"></i>System</button>
                             <div id="systemMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
