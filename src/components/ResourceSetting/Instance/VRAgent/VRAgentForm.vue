@@ -146,8 +146,7 @@ export default {
                     agentlist: []
                 }
             }
-        },
-        index: Number
+        }
     },
     methods: {
         changeAgent(uid,index){

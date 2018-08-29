@@ -179,10 +179,10 @@
                     </div>
                     <div class="w3-col m3">
                         <div class="w3-row w3-right">
-                            <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
+                            <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
                                 Page Size
                             </span>
-                            <span class="w3-col m6" style="padding-top:8px">
+                            <span class="w3-col m6" style="padding-top:10px">
                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
                                     <option value="-1" disabled selected>Size</option>
                                     <option value="10">10</option>
