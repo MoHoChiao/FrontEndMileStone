@@ -61,7 +61,7 @@
                 // preview it
                 this.importLicense(fileName, formData);
 
-                ////²M±¼file input¤º®e, Åý¥¦¥i¥H¦A¦¸¿ï¾Ü¬Û¦PªºÀÉ®×¦WºÙ
+                ////ï¿½Mï¿½ï¿½file inputï¿½ï¿½ï¿½e, ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Hï¿½Aï¿½ï¿½ï¿½ï¿½Ü¬Û¦Pï¿½ï¿½ï¿½É®×¦Wï¿½ï¿½
                 //let input = document.getElementById("DriverInputFile")
                 //input.value = ''
             },

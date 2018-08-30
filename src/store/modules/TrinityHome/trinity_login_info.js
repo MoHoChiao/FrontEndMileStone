@@ -1,5 +1,6 @@
 import { HTTP_AUTH } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
+import router from '../../../router/vue-router'
 
 const types = {
     Check_Login_Token: 'check/Login_Token',
@@ -33,6 +34,7 @@ const actions = {
             })
             .then(response => {
                 commit(types.Gen_Login_Token, response.data);
+                router.push('/ResourceSetter')
             })
             .catch(error => {
                 if (error.response && error.response.data) {
@@ -54,6 +56,7 @@ const actions = {
     	HTTP_AUTH.get(`authentication/remove-authn`)
             .then(response => {
                 commit(types.Reomve_Login_Token, response.data);
+                router.push('/')
             })
             .catch(error => {
                 if (error.response && error.response.data) {
