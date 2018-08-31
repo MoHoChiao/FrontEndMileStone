@@ -159,6 +159,7 @@ export default {
             })
             .catch(error => {
                 errorHandle(this.$store, error)
+                this.$emit('cancel')
             })
         },
         changeFunction(uid,index){
@@ -215,7 +216,7 @@ export default {
 </script>
 <style scoped>
     input,select {
-        height: 30px
+        height: 24px
     }
     input.w3-check,input.w3-radio {
         height: 16px

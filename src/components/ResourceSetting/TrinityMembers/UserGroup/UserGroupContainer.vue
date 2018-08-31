@@ -17,10 +17,9 @@
                             @confirmDelete="deleteGroup" 
         ></confirm-delete-window>
         <!-- For Apply group member Window -->
-        <user-group-member-window :windowAlive="applyWindowAlive" 
-                            window-title="Apply Members To User Group"
-                            :groupuid="selectedRecord.groupuid" 
-                            @closeApply="changeMemberWindowStatus" 
+        <user-group-member-window v-if="applyWindowAlive" :windowAlive="applyWindowAlive" 
+                            :content="selectedRecord" 
+                            @closeApply="closeMemberWindow" 
         ></user-group-member-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div class="w3-row-padding">
@@ -35,8 +34,8 @@
                                         <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name" aria-hidden="true" @click="applyQuery"></i>
                                     </span>
                                     <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
-                                        <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i-->
                                         <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete User Group" aria-hidden="true" @click="showDeleteWindow"></i>
                                         <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit User Group" aria-hidden="true" @click="changeGroupWindowStatus('edit')"></i>
                                         <i class="fa fa-plus w3-button w3-right" title="Add User Group" aria-hidden="true" @click="changeGroupWindowStatus('add')"></i>
@@ -45,7 +44,7 @@
                                             <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
                                             <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
                                                 <div v-if="showMode">
-                                                    <i class="w3-bar-item fa fa-user w3-button" aria-hidden="true" @click="changeMemberWindowStatus()"> Apply Member</i>
+                                                    <i class="w3-bar-item fa fa-user w3-button" aria-hidden="true" @click="openMemberWindow()"> Apply Member</i>
                                                 </div>
                                                 <hr v-if="showMode" class="w3-border-black" style="padding:0px;margin:0px">
                                                 <div class="w3-row-padding w3-small">
@@ -84,7 +83,7 @@
                                                     <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeGroupWindowStatus('add')"> Add User Group</i>
                                                     <i class="w3-bar-item fa fa-pencil w3-button" aria-hidden="true" @click="changeGroupWindowStatus('edit')"> Edit User Group</i>
                                                     <i class="w3-bar-item fa fa-trash-o w3-button" aria-hidden="true" @click="showDeleteWindow"> Delete User Group</i>
-                                                    <i class="w3-bar-item fa fa-user w3-button" aria-hidden="true" @click="changeMemberWindowStatus()"> Apply Member</i>
+                                                    <i class="w3-bar-item fa fa-user w3-button" aria-hidden="true" @click="openMemberWindow()"> Apply Member</i>
                                                 </div>
                                                 <div v-else>
                                                     <i class="w3-bar-item fa fa-plus w3-button" aria-hidden="true" @click="changeGroupWindowStatus('add')"> Add User Group</i>
@@ -125,7 +124,7 @@
                 <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
                     <p>
                         <div>
-                            <span><img src="/src/assets/images/resource_setter/Group.png" alt="Virtual Agent" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
+                            <span><img src="/src/assets/images/resource_setter/Group.png" alt="User Group" class="w3-margin-right w3-left w3-hide-small" style="height32px;width:32px"></span>
                             <span>
                                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
@@ -140,7 +139,7 @@
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
                                 <tr class="w3-teal">
-                                    <th class="w3-center w3-btn w3-hover-none" width="30%" title="Order by Virtual Name" @click="applyOrder('groupname')">
+                                    <th class="w3-center w3-btn w3-hover-none" width="30%" title="Order by Group Name" @click="applyOrder('groupname')">
                                         Name
                                         &nbsp;&nbsp;
                                         <span v-if="this.orderFields['groupname'] == 'DESC'" class="w3-text-black">&#9660;</span>
@@ -205,7 +204,7 @@
                     </p>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="w3-small">
                 <div :key="content.groupuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allGroupObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/Group.png" alt="User Group" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
@@ -213,7 +212,7 @@
                         <p>
                             {{ content.groupname }}
                         </p>
-                        <br>
+                        <br><br>
                         <user-group-member-panel :key="content.groupuid+'MemberPanel'" :groupuid="content.groupuid"></user-group-member-panel>
                         <hr class="w3-border-black w3-clear">
                         <p class="w3-small">{{ content.description }}</p>
@@ -232,7 +231,7 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
 import UserGroupEditPanel from './UserGroupEditPanel.vue'
 import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
 import UserGroupEditWindow from './UserGroupEditWindow.vue'
@@ -247,7 +246,7 @@ export default {
             showMode: true, //switch content list or table list
             selectedRecord: new Object(),   //store which record has been selected.(User Group)
             groupWindowAlive: false,  //for add/edit User Group modal windows
-            operation: 'add',   //keep which operation(add,edit,copy) will be execute
+            operation: 'add',   //keep which operation(add,edit) will be execute
             applyWindowAlive: false, //for modify User Group Member modal windows
             deleteWindowAlive: false,  //for delete User Group modal windows
             deleteName: '',     //store which obj name will be delete
@@ -296,13 +295,11 @@ export default {
 
                 if(which == 'edit')
                     this.openEditable(index)
-                else if(which == 'permission')
-                    this.changePermissionWindowStatus()
                 else if(which == 'delete')
                     this.showDeleteWindow()
             }
         },
-        //Get All virtual Agents info
+        //Get All user groups info
         getGroup(e){
             let params = {
                 "paging":{
@@ -418,7 +415,7 @@ export default {
             this.groupWindowAlive = !this.groupWindowAlive
         },
         saveGroupWindowContentForEdit(new_content){
-            //new_content !== undefined, it means from Agent Window Save Click
+            //new_content !== undefined, it means from Group Window Save Click
             if(new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)){
                 new_content.index = this.selectedRecord.index   //asign old index prop to new content
                 this.allGroupObjs[this.selectedRecord.index] = new_content   //replace object to the array
@@ -426,10 +423,30 @@ export default {
             }
             this.groupWindowAlive = !this.groupWindowAlive
         },
-        //above for apply member window
-        changeMemberWindowStatus(){
-            if(this.selectedRecord && this.selectedRecord.groupuid)
-                this.applyWindowAlive = !this.applyWindowAlive
+        //above for open/close apply member window
+        openMemberWindow(){
+            if(this.selectedRecord && this.selectedRecord.groupuid){
+                HTTP_AUTH.get(`authorization/isRootOrAdmin`)
+                .then(response => {
+                    if(response.data){
+                        this.applyWindowAlive = true
+                    }else{
+                        let newStatus = {
+                            "msg": "You do not have 'Root Or Admin' Permission!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                })
+                .catch(error => {
+                    errorHandle(this.$store, error)
+                })
+            }
+        },
+        closeMemberWindow(){
+            if(this.selectedRecord && this.selectedRecord.groupuid){
+                this.applyWindowAlive = false
+            }
         },
         //about for change show mode(Grid List & Content List)
         changeShowMode(){

@@ -4,6 +4,7 @@
             window-title="Apply Members To Role" 
             :memberUids="memberUids" 
             :roleuid="roleuid"  
+            :rolename="rolename" 
             @closeApply="changeApplyWindowStatus" 
             @applyMembers="getMembers" 
         ></apply-members-window>
@@ -43,7 +44,7 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
 import ApplyMembersWindow from './ApplyMembersWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -60,7 +61,8 @@ export default {
         }
     },
     props:{
-        roleuid: ''
+        roleuid: '',
+        rolename: ''
     },
     created(){
         this.getMembers()
@@ -81,23 +83,44 @@ export default {
             }
         },
         getMembers(){
-            if(this.roleuid && this.roleuid !== ''){
-                HTTP_TRINITY.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
+            if(this.groupuid && this.groupuid !== ''){
+                HTTP_AUTH.get(`authorization/isRootOrAdmin`)
                 .then(response => {
-                    this.applyMembers = response.data
-                    this.memberUids = []
-                    for(let i=0; i<this.applyMembers.length; i++){
-                        this.memberUids.push(this.applyMembers[i].useruid)
+                    if(response.data){
+                        HTTP_TRINITY.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
+                        .then(response => {
+                            this.applyMembers = response.data
+                            this.memberUids = []
+                            for(let i=0; i<this.applyMembers.length; i++){
+                                this.memberUids.push(this.applyMembers[i].useruid)
+                            }
+                        })
+                        .catch(error => {
+                            errorHandle(this.$store, error)
+                        })
                     }
                 })
                 .catch(error => {
                     errorHandle(this.$store, error)
                 })
             }
-            
         },
         changeApplyWindowStatus(){
-            this.applyWindowAlive = !this.applyWindowAlive
+            HTTP_AUTH.get(`authorization/isRootOrAdmin`)
+            .then(response => {
+                if(response.data){
+                    this.applyWindowAlive = !this.applyWindowAlive
+                }else{
+                    let newStatus = {
+                        "msg": "You do not have 'Root Or Admin' Permission!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
+            })
+            .catch(error => {
+                errorHandle(this.$store, error)
+            })
         },
         changeDeleteWindowStatus(index, list_info){
             this.deleteWindowAlive = !this.deleteWindowAlive

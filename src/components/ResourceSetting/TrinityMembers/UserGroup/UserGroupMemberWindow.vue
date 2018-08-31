@@ -1,7 +1,8 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <user-group-member-panel slot="content" 
-                :groupuid="groupuid" 
+                :groupuid="content.groupuid" 
+                :groupname="content.groupname" 
         ></user-group-member-panel>
         <div slot="footer"></div>
     </modal-window>
@@ -11,11 +12,12 @@ import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
 
 export default {
+    computed: {
+        windowTitle(){
+            return 'Apply Members - ' + this.content.groupname
+        }  
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'
@@ -24,7 +26,17 @@ export default {
             type: Boolean,
             default: false
         },
-        groupuid: ''
+        //store selected user group
+        content: {
+            type: Object,
+            default () {
+                return {
+                    groupuid: '',
+                    groupname: '',
+                    description: ''
+                }
+            }
+        }
     },
     methods: {
         cancel(){

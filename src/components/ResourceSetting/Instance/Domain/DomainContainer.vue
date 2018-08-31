@@ -30,8 +30,8 @@
                                 <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-small w3-hide-medium">
-                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i-->
                                 <i v-if="showMode" class="fa fa-trash-o w3-button w3-right" title="Delete Domain" aria-hidden="true" @click="showDeleteWindow"></i>
                                 <i v-if="showMode" class="fa fa-pencil w3-button w3-right" title="Edit Domain" aria-hidden="true" @click="changeDomainWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Domain" aria-hidden="true" @click="changeDomainWindowStatus('add')"></i>

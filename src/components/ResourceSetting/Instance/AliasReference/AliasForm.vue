@@ -152,7 +152,7 @@ export default {
         let url = ''
 
         url = 'connection/findAll'
-        this.getTargetObjs(url, 'Connection', 'connectionuid', 'connectionname')
+        this.getTargetObjs(url, 'Connection', 'connectionuid', 'connectionname', 'functionName=agent&permissionFlag=view')
 
         url = 'domain/findAll?withoutDetail=true'
         this.getTargetObjs(url, 'Domain', 'domainuid', 'name')
@@ -182,39 +182,46 @@ export default {
         changeType(index, list_info){
             this.$set(this.new_content.alias, index, list_info)
         },
-        getTargetObjs(url, aliastype, uidField, nameField){
-            HTTP_TRINITY.get(url)
+        getTargetObjs(url, aliastype, uidField, nameField, checkFunctionalView){
+            HTTP_AUTH.get(`authorization/checkFuncPermission?functionName=` + aliastype.toLowerCase() + '&permissionFlag=view')
             .then(response => {
-                let targetObjs = []
-                for(let i=0;i<response.data.length;i++){
-                    let uid = response.data[i][uidField]
-                    let name = response.data[i][nameField]
+                if(response.data){
+                    HTTP_TRINITY.get(url)
+                    .then(response => {
+                        let targetObjs = []
+                        for(let i=0;i<response.data.length;i++){
+                            let uid = response.data[i][uidField]
+                            let name = response.data[i][nameField]
 
-                    let targetObj = {
-                        "uid": uid,
-                        "name": name
-                    }
-                    targetObjs.push(targetObj)
-                    //儲存所有target obj的uid和name之對應關係, 以供取target name用
-                    this.allTargetObjectMap.set(uid, name)
-                }
+                            let targetObj = {
+                                "uid": uid,
+                                "name": name
+                            }
+                            targetObjs.push(targetObj)
+                            //儲存所有target obj的uid和name之對應關係, 以供取target name用
+                            this.allTargetObjectMap.set(uid, name)
+                        }
 
-                if(aliastype === 'Connection'){
-                    this.allConnections = targetObjs
-                }else if(aliastype === 'Domain'){
-                    this.allDomains = targetObjs
-                }else if(aliastype === 'Agent'){
-                    this.allAgents = targetObjs
-                    this.getVirtualAgentObjs()
-                }else if(aliastype === 'Frequency'){
-                    this.allFrequencies = targetObjs
-                }else if(aliastype === 'Filesource'){
-                    this.allFilesources = targetObjs
+                        if(aliastype === 'Connection'){
+                            this.allConnections = targetObjs
+                        }else if(aliastype === 'Domain'){
+                            this.allDomains = targetObjs
+                        }else if(aliastype === 'Agent'){
+                            this.allAgents = targetObjs
+                            this.getVirtualAgentObjs()
+                        }else if(aliastype === 'Frequency'){
+                            this.allFrequencies = targetObjs
+                        }else if(aliastype === 'Filesource'){
+                            this.allFilesources = targetObjs
+                        }
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
                 }
             })
             .catch(error => {
-                if (!error.response.status || error.response.status !== 401)
-                    errorHandle(this.$store, error)
+                errorHandle(this.$store, error)
             })
         },
         getVirtualAgentObjs(){
@@ -224,7 +231,6 @@ export default {
                     "orderField": 'virtualagentname'
                 }
             }
-            
             HTTP_TRINITY.get('vragent/findAll?withoutDetail=true', params)
             .then(response => {
                 for(let i=0;i<response.data.length;i++){
@@ -241,8 +247,7 @@ export default {
                 }
             })
             .catch(error => {
-                if (!error.response.status || error.response.status !== 401)
-                    errorHandle(this.$store, error)
+                errorHandle(this.$store, error)
             })
         },
         delAlias(index){

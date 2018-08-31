@@ -44,11 +44,12 @@ export default {
             trinityusers: []
         }
     },
+    computed: {
+        windowTitle(){
+            return 'Add User(s) to ' + this.groupname
+        }  
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'
@@ -58,6 +59,7 @@ export default {
             default: false
         },
         groupuid: '',
+        groupname: '',
         memberUids: {
             type: Array,
             default: () => []

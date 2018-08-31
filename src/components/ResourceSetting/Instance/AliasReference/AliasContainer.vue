@@ -32,8 +32,8 @@
                                 <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name" aria-hidden="true" @click="applyQuery"></i>
                             </span>
                             <span class="w3-col m6 w3-right">
-                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
-                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>
+                                <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
+                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button-->
                                 <i v-if="showMode" class="fa fa-trash-o w3-button w3-hide-small w3-hide-medium w3-right" title="Delete All Alias" aria-hidden="true" @click="showDeleteWindow"></i>
                                 <i v-if="showMode" class="fa fa-pencil w3-button w3-hide-small w3-hide-medium w3-right" title="Edit Alias" aria-hidden="true" @click="changeAliasWindowStatus()"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getEntities"></i>

@@ -44,8 +44,8 @@
                             <div id="accountMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('menuContent.Role') }}</a>
-                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('menuContent.User') }}</a>
+                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('menuContent.User') }}</a>
+                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('menuContent.Role') }}</a>
                                         <a @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('menuContent.User_Group') }}</a>
                                     </div>
                                 </p>

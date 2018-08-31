@@ -1,7 +1,8 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <role-member-panel slot="content" 
-                :roleuid="roleuid" 
+                :roleuid="content.roleuid" 
+                :rolename="content.rolename" 
         ></role-member-panel>
         <div slot="footer"></div>
     </modal-window>
@@ -11,11 +12,12 @@ import ModalWindow from '../../../Common/window/ModalWindow.vue'
 import RoleMemberPanel from './RoleMemberPanel.vue'
 
 export default {
+    computed: {
+        windowTitle(){
+            return 'Apply Members - ' + this.content.rolename
+        }  
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'
@@ -24,7 +26,17 @@ export default {
             type: Boolean,
             default: false
         },
-        roleuid: ''
+        //store selected role
+        content: {
+            type: Object,
+            default () {
+                return {
+                    roleuid: '',
+                    rolename: '',
+                    description: ''
+                }
+            }
+        }
     },
     methods: {
         cancel(){
