@@ -115,14 +115,7 @@ export default {
     },
     methods: {
         getAllUsers(){
-            let params = {
-                "ordering":{
-                    "orderType":'ASC',
-                    "orderField":'username'
-                }
-            }
-
-            HTTP_TRINITY.post(`trinity-user/findByFilter`, params)
+            HTTP_TRINITY.get(`trinity-user/findAll`)
             .then(response => {
                 this.allUsers = response.data
 

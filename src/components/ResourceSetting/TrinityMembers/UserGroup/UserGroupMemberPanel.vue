@@ -15,7 +15,7 @@
             @closeDelete="changeDeleteWindowStatus" 
             @confirmDelete="deleteApply" 
         ></confirm-delete-window>
-        <div v-if="applyMembers.length > 0">
+        <div>
             <div class="w3-row">
                 <div class="w3-col m10">
                     <input :id="'SearchUserInput' + groupuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
@@ -43,7 +43,8 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable } from '../../../../util_js/auth'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
 import ApplyMembersWindow from './ApplyMembersWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -83,43 +84,31 @@ export default {
         },
         getMembers(){
             if(this.groupuid && this.groupuid !== ''){
-                HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-                .then(response => {
-                    if(response.data){
-                        HTTP_TRINITY.get(`group-member/findFullNameByGroupUid`, {params:{uid: this.groupuid}})
-                        .then(response => {
-                            this.applyMembers = response.data
-                            this.memberUids = []
-                            for(let i=0; i<this.applyMembers.length; i++){
-                                this.memberUids.push(this.applyMembers[i].useruid)
-                            }
-                        })
-                        .catch(error => {
-                            errorHandle(this.$store, error)
-                        })
-                    }
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+                if(PermissionTable.root || PermissionTable.admin){
+                    HTTP_TRINITY.get(`group-member/findFullNameByGroupUid`, {params:{uid: this.groupuid}})
+                    .then(response => {
+                        this.applyMembers = response.data
+                        this.memberUids = []
+                        for(let i=0; i<this.applyMembers.length; i++){
+                            this.memberUids.push(this.applyMembers[i].useruid)
+                        }
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+                }
             }
         },
         changeApplyWindowStatus(){
-            HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-            .then(response => {
-                if(response.data){
-                    this.applyWindowAlive = !this.applyWindowAlive
-                }else{
-                    let newStatus = {
-                        "msg": "You do not have 'Root Or Admin' Permission!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
+            if(PermissionTable.root || PermissionTable.admin){
+                this.applyWindowAlive = !this.applyWindowAlive
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Root Or Admin' Permission!",
+                    "status": "Warn"
                 }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
         },
         changeDeleteWindowStatus(index, list_info){
             this.deleteWindowAlive = !this.deleteWindowAlive
@@ -144,30 +133,24 @@ export default {
             if(!this.deleteUid || this.deleteUid === '')
                 return
             
-            HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-            .then(response => {
-                if(response.data){
-                    HTTP_TRINITY.get('group-member/deleteByPKUids?groupUid='+this.groupuid+'&userUid='+this.deleteUid)
-                    .then(response => {
-                        this.applyMembers.splice(this.deleteIndex, 1)
-                        this.memberUids.splice(this.deleteIndex, 1)
+            if(PermissionTable.root || PermissionTable.admin){
+                HTTP_TRINITY.get('group-member/deleteByPKUids?groupUid='+this.groupuid+'&userUid='+this.deleteUid)
+                .then(response => {
+                    this.applyMembers.splice(this.deleteIndex, 1)
+                    this.memberUids.splice(this.deleteIndex, 1)
                         
-                        this.changeDeleteWindowStatus()
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
-                }else{
-                    let newStatus = {
-                        "msg": "You do not have 'Root Or Admin' Permission!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
+                    this.changeDeleteWindowStatus()
+                })
+                .catch(error => {
+                    errorHandle(this.$store, error)
+                })
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Root Or Admin' Permission!",
+                    "status": "Warn"
                 }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
         },
         compositionName(list_info){
             return list_info.username + ' (' + list_info.userid + ')'

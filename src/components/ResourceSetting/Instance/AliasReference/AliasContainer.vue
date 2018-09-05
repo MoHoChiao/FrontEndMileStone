@@ -185,7 +185,8 @@
 </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import AliasTableEditPanel from './AliasTableEditPanel.vue'
 import AliasTableEditWindow from './AliasTableEditWindow.vue'
 import AliasTablePermissionWindow from './AliasTablePermissionWindow.vue'
@@ -223,7 +224,9 @@ export default {
         }
     },
     mounted() {
-        this.getEntities()
+        loadPermissionTable.then((successMessage) => {
+            this.getEntities()
+        });
     },
     methods: {
         //When Grid List click on entity record
@@ -253,6 +256,11 @@ export default {
         },
         //Get All business entity info
         getEntities(){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.alias_func || !PermissionTable.alias_func.view)
+                    return
+            }
+
             let params = {
                 "paging":{
                     "number":this.selectedNum,
@@ -364,26 +372,15 @@ export default {
         applyPermission(){
             if(this.selectedRecord && this.selectedRecord.busentityuid && this.selectedRecord.busentityuid !== ''){
                 if(this.selectedRecord.alias && this.selectedRecord.alias.length > 0){
-                    HTTP_AUTH.get(`authorization/checkFuncPermission`, {
-                        params: {
-                            functionName: 'alias',
-                            permissionFlag:'modify'
+                    if(PermissionTable.root || PermissionTable.admin || (PermissionTable.alias_func && PermissionTable.alias_func.modify)){
+                        this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+                    }else{
+                        let newStatus = {
+                            "msg": "You do not have 'Edit' Permission!",
+                            "status": "Warn"
                         }
-                    })
-                    .then(response => {
-                        if(response.data){
-                            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
-                        }else{
-                            let newStatus = {
-                                "msg": "You do not have 'Edit' Permission!",
-                                "status": "Warn"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                        }
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
                 }else{
                     let newStatus = {
                         "msg": "Empty Alias! Please add alias object first.",

@@ -77,8 +77,8 @@
                                         </span>
                                     </span>
                                     <span class="w3-col m6 w3-right w3-hide-large">
-                                        <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i-->
                                         <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                         <span class="w3-dropdown-hover w3-right">
                                             <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
@@ -239,7 +239,8 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import RoleEditPanel from './RoleEditPanel.vue'
 import RoleMemberPanel from './RoleMemberPanel.vue'
 import RoleEditWindow from './RoleEditWindow.vue'
@@ -281,7 +282,9 @@ export default {
         }
     },
     mounted() {
-        this.getRole()
+        loadPermissionTable.then((successMessage) => {
+            this.getRole()
+        });
     },
     methods: {
         //When Grid List click on role record
@@ -313,6 +316,10 @@ export default {
         },
         //Get All roles info
         getRole(e){
+            //用client端暫存的permission table去檢查是否具有權限
+            if(!PermissionTable && !PermissionTable.root && !PermissionTable.admin)
+                return
+                
             let params = {
                 "paging":{
                     "number":this.selectedNum,
@@ -446,28 +453,28 @@ export default {
         //above for open/close apply member window
         openMemberWindow(){
             if(this.selectedRecord && this.selectedRecord.roleuid){
-                var url = "isRootOrAdmin"
-                var msg = "You do not have 'Root Or Admin' Permission!"
+                var msg = ""
                 if(this.selectedRecord.roleuid.trim() === 'Role1'){
-                    url = 'isRoot'
-                    msg = "You do not have 'Root' Permission!"
-                }
-
-                HTTP_AUTH.get(`authorization/` + url)
-                .then(response => {
-                    if(response.data){
+                    if(PermissionTable.root){
                         this.applyWindowAlive = true
                     }else{
                         let newStatus = {
-                            "msg": msg,
+                            "msg": "You do not have 'Root' Permission!",
                             "status": "Warn"
                         }
                         this.$store.dispatch('setSystemStatus', newStatus)
                     }
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+                }else{
+                    if(PermissionTable.root || PermissionTable.admin){
+                        this.applyWindowAlive = true
+                    }else{
+                        let newStatus = {
+                            "msg": "You do not have 'Root Or Admin' Permission!",
+                            "status": "Warn"
+                        }
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
+                }
             }
         },
         closeMemberWindow(){
@@ -495,22 +502,16 @@ export default {
         changePermissionWindowStatus(){
             if(this.selectedRecord && this.selectedRecord.roleuid){
                 if(this.selectedRecord.roleuid.trim() !== 'Role1'){
-                    HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-                    .then(response => {
-                        if(response.data){
-                            this.selectedRecord.roleuid = this.selectedRecord.roleuid.trim()
-                            this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
-                        }else{
-                            let newStatus = {
-                                "msg": "You do not have 'Root Or Admin' Permission!",
-                                "status": "Warn"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
+                    if(PermissionTable.root || PermissionTable.admin){
+                        this.selectedRecord.roleuid = this.selectedRecord.roleuid.trim()
+                        this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive
+                    }else{
+                        let newStatus = {
+                            "msg": "You do not have 'Root Or Admin' Permission!",
+                            "status": "Warn"
                         }
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
+                        this.$store.dispatch('setSystemStatus', newStatus)
+                    }
                 }else{
                     let newStatus = {
                         "msg": 'Administrator has all permissions and cannot be modified!',

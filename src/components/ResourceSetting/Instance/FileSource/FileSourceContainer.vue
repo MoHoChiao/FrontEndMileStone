@@ -74,19 +74,20 @@
                 </div>
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
                     <table id="categoryTable" class="w3-table-all w3-small">
-                        <template v-for="(content, index) in allCategoryObjs">
-                        <tr :id="content.fscategoryuid" :key="content.fscategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
-                                @click="clickOnCategory(content.fscategoryuid, index)">
-                            <td width="32%">
-                                <span>{{ content.fscategoryname }}</span>
-                            </td>
-                            <td width="46%">
-                                <span :title="content.description">{{ content.description.length > 25 ? content.description.substr(0, 25) + '...' : content.description }}</span>
-                            </td>
-                            <td width="22%">
-                                <span>{{ content.lastupdatetime }}</span>
-                            </td>
-                        </tr>
+                        <empty-grid v-if="allCategoryObjs.length <= 0"></empty-grid>
+                        <template v-else v-for="(content, index) in allCategoryObjs">
+                            <tr :id="content.fscategoryuid" :key="content.fscategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                    @click="clickOnCategory(content.fscategoryuid, index)">
+                                <td width="32%">
+                                    <span>{{ content.fscategoryname }}</span>
+                                </td>
+                                <td width="46%">
+                                    <span :title="content.description">{{ content.description.length > 25 ? content.description.substr(0, 25) + '...' : content.description }}</span>
+                                </td>
+                                <td width="22%">
+                                    <span>{{ content.lastupdatetime }}</span>
+                                </td>
+                            </tr>
                         </template>
                     </table>
                 </div>
@@ -257,6 +258,7 @@
 </template>
 <script>
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import FileSourceCategoryEditWindow from './FileSourceCategory/FileSourceCategoryEditWindow.vue'
 import FileSourceEditWindow from './FileSourceEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -296,8 +298,10 @@ export default {
         }
     },
     mounted() {
-        this.getCategories()
-        // this.getFileSources()    //不需要, 因為getCategories()裡就會呼叫到getFileSources()
+        loadPermissionTable.then((successMessage) => {
+            this.getCategories()
+            // this.getFileSources()    //不需要, 因為getCategories()裡就會呼叫到getFileSources()
+        });
     },
     methods: {
         /*
@@ -337,6 +341,11 @@ export default {
          * Above For All About Fetch Data Function
         */
         getCategories(){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.filesource_func || !PermissionTable.filesource_func.view)
+                    return
+            }
+
             let params = {
                 "ordering":{
                     "orderType":"ASC",
@@ -373,6 +382,11 @@ export default {
             })
         },
         getFileSources(e){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.filesource_func || !PermissionTable.filesource_func.view)
+                    return
+            }
+
             let urlPath = 'file-source/findByFilter'
             if(this.selectedCategoryRecord && this.selectedCategoryRecord.fscategoryuid && this.selectedCategoryRecord.fscategoryuid !== '')
                 urlPath += '?categoryUid=' + this.selectedCategoryRecord.fscategoryuid

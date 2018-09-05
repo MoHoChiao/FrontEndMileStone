@@ -106,7 +106,8 @@ export default {
                 mobile: this.content.mobile,
                 defaultlang: this.content.defaultlang,
                 ssoid: this.content.ssoid,
-                homedir: this.content.homedir
+                homedir: this.content.homedir,
+                createduseruid: this.content.createduseruid
             },
             password1: '',
             password2: ''
@@ -129,7 +130,8 @@ export default {
                     mobile: '',
                     defaultlang: 'en_US',
                     ssoid: '',
-                    homedir: ''
+                    homedir: '',
+                    createduseruid: ''
                 }
             }
         },

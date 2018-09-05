@@ -44,7 +44,8 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable } from '../../../../util_js/auth'
 import ApplyMembersWindow from './ApplyMembersWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
 
@@ -83,44 +84,32 @@ export default {
             }
         },
         getMembers(){
-            if(this.groupuid && this.groupuid !== ''){
-                HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-                .then(response => {
-                    if(response.data){
-                        HTTP_TRINITY.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
-                        .then(response => {
-                            this.applyMembers = response.data
-                            this.memberUids = []
-                            for(let i=0; i<this.applyMembers.length; i++){
-                                this.memberUids.push(this.applyMembers[i].useruid)
-                            }
-                        })
-                        .catch(error => {
-                            errorHandle(this.$store, error)
-                        })
-                    }
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+            if(this.roleuid && this.roleuid !== ''){
+                if(PermissionTable.root || PermissionTable.admin){
+                    HTTP_TRINITY.get(`role-member/findFullNameByRoleUid`, {params:{uid: this.roleuid}})
+                    .then(response => {
+                        this.applyMembers = response.data
+                        this.memberUids = []
+                        for(let i=0; i<this.applyMembers.length; i++){
+                            this.memberUids.push(this.applyMembers[i].useruid)
+                        }
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+                }
             }
         },
         changeApplyWindowStatus(){
-            HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-            .then(response => {
-                if(response.data){
-                    this.applyWindowAlive = !this.applyWindowAlive
-                }else{
-                    let newStatus = {
-                        "msg": "You do not have 'Root Or Admin' Permission!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
+            if(PermissionTable.root || PermissionTable.admin){
+                this.applyWindowAlive = !this.applyWindowAlive
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Root Or Admin' Permission!",
+                    "status": "Warn"
                 }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
         },
         changeDeleteWindowStatus(index, list_info){
             this.deleteWindowAlive = !this.deleteWindowAlive
@@ -145,16 +134,25 @@ export default {
             if(!this.deleteUid || this.deleteUid === '')
                 return
             
-            HTTP_TRINITY.get('role-member/deleteByPKUids?roleUid='+this.roleuid+'&userUid='+this.deleteUid)
-            .then(response => {
-                this.applyMembers.splice(this.deleteIndex, 1)
-                this.memberUids.splice(this.deleteIndex, 1)
-                
-                this.changeDeleteWindowStatus()
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+            if(PermissionTable.root || PermissionTable.admin){
+                HTTP_TRINITY.get('role-member/deleteByPKUids?roleUid='+this.roleuid+'&userUid='+this.deleteUid)
+                .then(response => {
+                    this.applyMembers.splice(this.deleteIndex, 1)
+                    this.memberUids.splice(this.deleteIndex, 1)
+                    
+                    this.changeDeleteWindowStatus()
+                })
+                .catch(error => {
+                    errorHandle(this.$store, error)
+                })
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Root Or Admin' Permission!",
+                    "status": "Warn"
+                }
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
+            
         },
         compositionName(list_info){
             return list_info.username + ' (' + list_info.userid + ')'

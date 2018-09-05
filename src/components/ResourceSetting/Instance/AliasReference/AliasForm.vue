@@ -115,7 +115,8 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable } from '../../../../util_js/auth'
 
 export default {
     data() {
@@ -183,46 +184,41 @@ export default {
             this.$set(this.new_content.alias, index, list_info)
         },
         getTargetObjs(url, aliastype, uidField, nameField, checkFunctionalView){
-            HTTP_AUTH.get(`authorization/checkFuncPermission?functionName=` + aliastype.toLowerCase() + '&permissionFlag=view')
-            .then(response => {
-                if(response.data){
-                    HTTP_TRINITY.get(url)
-                    .then(response => {
-                        let targetObjs = []
-                        for(let i=0;i<response.data.length;i++){
-                            let uid = response.data[i][uidField]
-                            let name = response.data[i][nameField]
+            let functionPermission = aliastype.toLowerCase()+'_func'
+            if(PermissionTable.root || PermissionTable.admin || (PermissionTable[functionPermission] && PermissionTable[functionPermission].view)){
+                HTTP_TRINITY.get(url)
+                .then(response => {
+                    let targetObjs = []
+                    for(let i=0;i<response.data.length;i++){
+                        let uid = response.data[i][uidField]
+                        let name = response.data[i][nameField]
 
-                            let targetObj = {
-                                "uid": uid,
-                                "name": name
-                            }
-                            targetObjs.push(targetObj)
-                            //儲存所有target obj的uid和name之對應關係, 以供取target name用
-                            this.allTargetObjectMap.set(uid, name)
+                        let targetObj = {
+                            "uid": uid,
+                            "name": name
                         }
+                        targetObjs.push(targetObj)
+                        //儲存所有target obj的uid和name之對應關係, 以供取target name用
+                        this.allTargetObjectMap.set(uid, name)
+                    }
 
-                        if(aliastype === 'Connection'){
-                            this.allConnections = targetObjs
-                        }else if(aliastype === 'Domain'){
-                            this.allDomains = targetObjs
-                        }else if(aliastype === 'Agent'){
-                            this.allAgents = targetObjs
-                            this.getVirtualAgentObjs()
-                        }else if(aliastype === 'Frequency'){
-                            this.allFrequencies = targetObjs
-                        }else if(aliastype === 'Filesource'){
-                            this.allFilesources = targetObjs
-                        }
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
-                }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                    if(aliastype === 'Connection'){
+                        this.allConnections = targetObjs
+                    }else if(aliastype === 'Domain'){
+                        this.allDomains = targetObjs
+                    }else if(aliastype === 'Agent'){
+                        this.allAgents = targetObjs
+                        this.getVirtualAgentObjs()
+                    }else if(aliastype === 'Frequency'){
+                        this.allFrequencies = targetObjs
+                    }else if(aliastype === 'Filesource'){
+                        this.allFilesources = targetObjs
+                    }
+                })
+                .catch(error => {
+                    errorHandle(this.$store, error)
+                })
+            }
         },
         getVirtualAgentObjs(){
             let params = {
@@ -251,37 +247,19 @@ export default {
             })
         },
         delAlias(index){
-            HTTP_AUTH.get(`authorization/checkFuncPermission`, {
-                params: {
-                    functionName: 'alias',
-                    permissionFlag:'delete'
+            if(PermissionTable.root || PermissionTable.admin || (PermissionTable.alias_func && PermissionTable.alias_func.delete)){
+                this.new_content.alias.splice(index, 1)
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Delete' Permission!",
+                    "status": "Warn"
                 }
-            })
-            .then(response => {
-                if(response.data){
-                    this.new_content.alias.splice(index, 1)
-                }else{
-                    let newStatus = {
-                        "msg": "You do not have 'Delete' Permission!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
         },
         addAlias(){
-            HTTP_AUTH.get(`authorization/checkFuncPermission`, {
-                params: {
-                    functionName: 'alias',
-                    permissionFlag:'add'
-                }
-            })
-            .then(response => {
-                if(response.data){
-                        let new_alias= {
+            if(PermissionTable.root || PermissionTable.admin ||  (PermissionTable.alias_func && PermissionTable.alias_func.add)){
+                let new_alias= {
                         parentuid: this.new_content.busentityuid,
                         aliasname: '$',
                         aliastype: 'Connection',
@@ -289,18 +267,14 @@ export default {
                         description: '',
                         addFlag: true   //新增特有的屬性
                     };
-                    this.new_content.alias.push(new_alias)
-                }else{
-                    let newStatus = {
-                        "msg": "You do not have 'Add' Permission!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
+                this.new_content.alias.push(new_alias)
+            }else{
+                let newStatus = {
+                    "msg": "You do not have 'Add' Permission!",
+                    "status": "Warn"
                 }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+                this.$store.dispatch('setSystemStatus', newStatus)
+            }
         },
         save(){
             let return_alias = []

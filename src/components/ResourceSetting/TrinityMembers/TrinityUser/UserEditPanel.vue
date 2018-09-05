@@ -29,7 +29,8 @@ export default {
                     mobile: '',
                     defaultlang: 'en_US',
                     ssoid: '',
-                    homedir: ''
+                    homedir: '',
+                    createduseruid: ''
                 }
             }
         },

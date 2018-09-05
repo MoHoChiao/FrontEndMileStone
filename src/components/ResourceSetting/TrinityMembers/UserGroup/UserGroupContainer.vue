@@ -73,8 +73,8 @@
                                         </span>
                                     </span>
                                     <span class="w3-col m6 w3-right w3-hide-large">
-                                        <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i-->
                                         <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                         <span class="w3-dropdown-hover w3-right">
                                             <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
@@ -215,7 +215,7 @@
                         <br><br>
                         <user-group-member-panel :key="content.groupuid+'MemberPanel'" :groupuid="content.groupuid"></user-group-member-panel>
                         <hr class="w3-border-black w3-clear">
-                        <p class="w3-small">{{ content.description }}</p>
+                        <p>{{ content.description }}</p>
                         <span class="w3-right">
                             <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit User Group" @click="clickOnGroupPanel('edit', index, content)">
                                 <i class="fa fa-pencil"></i></button>
@@ -231,7 +231,8 @@
     </div>
 </template>
 <script>
-import { HTTP_TRINITY,HTTP_AUTH,errorHandle } from '../../../../util_js/axios_util'
+import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import UserGroupEditPanel from './UserGroupEditPanel.vue'
 import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
 import UserGroupEditWindow from './UserGroupEditWindow.vue'
@@ -271,7 +272,9 @@ export default {
         }
     },
     mounted() {
-        this.getGroup()
+        loadPermissionTable.then((successMessage) => {
+            this.getGroup()
+        });
     },
     methods: {
         //When Grid List click on user group record
@@ -301,6 +304,10 @@ export default {
         },
         //Get All user groups info
         getGroup(e){
+            //用client端暫存的permission table去檢查是否具有權限
+            if(!PermissionTable && !PermissionTable.root && !PermissionTable.admin)
+                return
+
             let params = {
                 "paging":{
                     "number":this.selectedNum,
@@ -426,21 +433,15 @@ export default {
         //above for open/close apply member window
         openMemberWindow(){
             if(this.selectedRecord && this.selectedRecord.groupuid){
-                HTTP_AUTH.get(`authorization/isRootOrAdmin`)
-                .then(response => {
-                    if(response.data){
-                        this.applyWindowAlive = true
-                    }else{
-                        let newStatus = {
-                            "msg": "You do not have 'Root Or Admin' Permission!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
+                if(PermissionTable.root || PermissionTable.admin){
+                    this.applyWindowAlive = true
+                }else{
+                    let newStatus = {
+                        "msg": "You do not have 'Root Or Admin' Permission!",
+                        "status": "Warn"
                     }
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                }
             }
         },
         closeMemberWindow(){

@@ -75,8 +75,8 @@
                                 </span>
                             </span>
                             <span class="w3-col m6 w3-right w3-hide-large">
-                                <i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                                <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i-->
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 <span class="w3-dropdown-hover w3-right">
                                     <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
@@ -263,6 +263,7 @@
 </template>
 <script>
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import VRAgentEditPanel from './VRAgentEditPanel.vue'
 import VRAgentEditWindow from './VRAgentEditWindow.vue'
 import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -301,7 +302,9 @@ export default {
         }
     },
     mounted() {
-        this.getVRAgents()
+        loadPermissionTable.then((successMessage) => {
+            this.getVRAgents()
+        });
     },
     methods: {
         //When Grid List click on vragent record
@@ -333,6 +336,11 @@ export default {
         },
         //Get All virtual Agents info
         getVRAgents(e){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.agent_func || !PermissionTable.agent_func.view)
+                    return
+            }
+            
             let params = {
                 "paging":{
                     "number":this.selectedNum,
@@ -460,6 +468,7 @@ export default {
         },
         //above for permission window
         changePermissionWindowStatus(){
+            alert('ssss')
             if(this.selectedRecord && this.selectedRecord.virtualagentuid && this.selectedRecord.virtualagentuid !== ''){
                 this.selectedRecord.virtualagentuid = this.selectedRecord.virtualagentuid.trim()
                 this.applyPermissionWindowAlive = !this.applyPermissionWindowAlive

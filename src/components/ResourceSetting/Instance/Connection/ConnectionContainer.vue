@@ -81,19 +81,20 @@
                 </div>
                 <div id="categoryContainer" class="w3-responsive w3-card w3-round" style="overflow:auto;height:107px">
                     <table id="categoryTable" class="w3-table-all">
-                        <template v-for="(content, index) in allCategoryObjs">
-                        <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
-                                @click="clickOnCategory(content.conncategoryuid, index)">
-                            <td width="32%">
-                                <span>{{ content.conncategoryname }}</span>
-                            </td>
-                            <td width="46%">
-                                <span :title="content.description">{{ content.description.length > 25 ? content.description.substr(0, 25) + '...' : content.description }}</span>
-                            </td>
-                            <td width="22%">
-                                <span>{{ content.lastupdatetime }}</span>
-                            </td>
-                        </tr>
+                        <empty-grid v-if="allCategoryObjs.length <= 0"></empty-grid>
+                        <template v-else v-for="(content, index) in allCategoryObjs">
+                            <tr :id="content.conncategoryuid" :key="content.conncategoryuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer" 
+                                    @click="clickOnCategory(content.conncategoryuid, index)">
+                                <td width="32%">
+                                    <span>{{ content.conncategoryname }}</span>
+                                </td>
+                                <td width="46%">
+                                    <span :title="content.description">{{ content.description.length > 25 ? content.description.substr(0, 25) + '...' : content.description }}</span>
+                                </td>
+                                <td width="22%">
+                                    <span>{{ content.lastupdatetime }}</span>
+                                </td>
+                            </tr>
                         </template>
                     </table>
                 </div>
@@ -268,6 +269,7 @@
 </template>
 <script>
 import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
+import { PermissionTable,loadPermissionTable } from '../../../../util_js/auth'
 import FilterPanel from '../../FilterPanel.vue'
 import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategoryEditWindow.vue'
 import ConnectionEditWindow from './ConnectionEditWindow.vue'
@@ -311,8 +313,10 @@ export default {
         }
     },
     mounted() {
-        this.getCategories()
-        // this.getConnections()    //不需要, 因為getCategories()裡就會呼叫到getConnections()
+        loadPermissionTable.then((successMessage) => {
+            this.getCategories()
+            // this.getConnections()    //不需要, 因為getCategories()裡就會呼叫到getConnections()
+        });
     },
     methods: {
         /*
@@ -352,6 +356,12 @@ export default {
          * Above For All About Fetch Data Function
         */
         getCategories(){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.connection_func || !PermissionTable.connection_func.view)
+                    return
+            }
+            
+
             let params = {
                 "ordering":{
                     "orderType":"ASC",
@@ -389,6 +399,11 @@ export default {
             })
         },
         getConnections(e){
+            if(!PermissionTable.root && !PermissionTable.admin){
+                if(!PermissionTable.connection_func || !PermissionTable.connection_func.view)
+                    return
+            }
+                
             let urlPath = 'connection/findByFilter'
             if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && this.selectedCategoryRecord.conncategoryuid !== '')
                 urlPath += '?categoryUid=' + this.selectedCategoryRecord.conncategoryuid

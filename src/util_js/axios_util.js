@@ -71,7 +71,7 @@ export function errorHandle(store, error) {
         }
 
         let status = 'Error'
-        if (error.response.status && error.response.status === 401 && msg.indexOf('Permission') > -1)
+        if (error.response.status && (error.response.status === 401 || msg.indexOf('Permission') > -1))
             status = 'Warn'
 
         let newStatus = {
