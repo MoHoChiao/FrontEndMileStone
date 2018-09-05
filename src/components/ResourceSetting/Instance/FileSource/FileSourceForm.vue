@@ -1,15 +1,6 @@
 <template>
     <div class="w3-container w3-small">
-        <div v-if="urlOp === 'add' || urlOp === 'edit'" class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
-            </div>
-            <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" 
-                    maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
-            </div>
-        </div>
-        <div v-else class="w3-row w3-section">
+        <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
@@ -21,10 +12,10 @@
             </div>
             <div class="w3-col m3">
                 <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
-                <select :class="inputClassList.fscategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
-                    <option value="" selected>/</option>
+                <select v-else :class="inputClassList.fscategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
+                    <option value="root" selected>/</option>
                     <template v-for="category in allCategoryObjs">
-                        <option :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
+                        <option :key="category.fscategoryuid" :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
                     </template>
                 </select>
             </div>
@@ -139,15 +130,13 @@ export default {
         }
     },
     created() {
-        if(this.urlOp === 'copy' || this.urlOp === 'move'){
-            this.getCategories()    //取得所有可供選擇的file source categories
-
-            if(this.urlOp === 'copy'){
+         if (this.urlOp !== 'add') {
+            this.getCategories() //取得所有可供選擇的connection categories
+    
+            if (this.urlOp === 'copy') {
                 //copy動作, 把name和description設空值
                 this.new_content.filesourcename = ''
                 this.new_content.description = ''
-            }else if(this.urlOp === 'move'){
-                // this.tabsFlag.fill(false)    //disable all tabs, because of move operation can not be modified
             }
         }
     },

@@ -216,10 +216,7 @@
 </template>
 
 <script>
-    import {
-        HTTP_TRINITY,
-        errorHandle
-    } from '../../../../util_js/axios_util'
+    import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
     
     export default {
         data() {
