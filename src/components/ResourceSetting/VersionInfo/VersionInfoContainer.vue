@@ -16,8 +16,8 @@
                             </i>
                         </span>
                         <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
-                                placeholder="Name" style="height:28px;max-width: 260px;" @keyup.enter="searchBy">
-                        <i class="fa fa-search w3-button w3-theme-d2" title="Search" aria-hidden="true" @click="searchBy"></i>
+                                placeholder="Name" style="height:28px;max-width: 200px;" @keyup.enter="searchBy">
+                        <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
                         <i class="fa fa-download w3-button w3-right" title="Export" aria-hidden="true" @click="exportCSV"></i>
                     </div>
                     <!-- tabs -->
@@ -71,7 +71,7 @@
                         </p>
                     </div>
                 </div>
-                <over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>
+                <!--<over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>-->
             </div>
         </div>
     </div>

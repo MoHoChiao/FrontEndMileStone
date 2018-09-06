@@ -30,7 +30,7 @@
 
         <div class="w3-col m9 w3-animate-opacity">
             <!-- Frequency Category Panel -->
-            <div class="w3-row-padding w3-small">
+            <div class="w3-small w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-container w3-card-4 w3-signal-white w3-round">
                         <p>
@@ -38,13 +38,13 @@
                                 <span>
                                     <img src="/src/assets/images/resource_setter/frequency_category.png" alt="Frequency Category" class="w3-margin-right w3-left w3-hide-small" style="height:26px;width:26px">
                                 </span>
-                                <span>
-                                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;/*transform:rotate(-5deg)*/">
-                                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                            Frequency Category
-                                        </div>
+                                <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;/*transform:rotate(-5deg)*/">
+                                    <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                        Frequency Category
                                     </div>
-                                </span>
+                                </div>
+                                <i class="fa fa-trash-o w3-button w3-right" title="Delete Frequency Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
+                                <i class="fa fa-pencil w3-button w3-right" title="Edit Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
                                 <i class="fa fa-plus w3-button w3-right" title="Add Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
                                 <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency Category" aria-hidden="true" @click="getCategories"></i>
                             </div>
@@ -54,9 +54,10 @@
                                 <div class="w3-responsive w3-card w3-round">
                                     <table class="w3-table-all w3-small">
                                         <tr class="w3-teal">
-                                            <th class="" width="32%">Name</th>
-                                            <th class="" width="46%">Description</th>
-                                            <th class="" width="22%">Update Time</th>
+                                            <th :width="gridWidth[0]"></th>
+                                            <th :width="gridWidth[1]">Name</th>
+                                            <th :width="gridWidth[2]">Description</th>
+                                            <th :width="gridWidth[3]">Update Time</th>
                                         </tr>
                                     </table>
                                 </div>
@@ -65,13 +66,14 @@
                                         <tr v-for="(content, index) in allCategoryObjs" :id="content.freqcategoryuid" :key="content.freqcategoryuid"
                                             class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                             @click="clickOnCategory(content.freqcategoryuid, index)">
-                                            <td width="32%">
+                                            <td :width="gridWidth[0]"></td>
+                                            <td :width="gridWidth[1]">
                                                 <span>{{ content.freqcategoryname }}</span>
                                             </td>
-                                            <td width="46%">
+                                            <td :width="gridWidth[2]">
                                                 <span>{{ content.description }}</span>
                                             </td>
-                                            <td width="22%">
+                                            <td :width="gridWidth[3]">
                                                 <span>{{ content.lastupdatetime }}</span>
                                             </td>
                                         </tr>
@@ -88,40 +90,38 @@
                     <div class="w3-panel w3-row w3-border w3-round w3-padding">
                         <span>
                             <img src="/src/assets/images/resource_setter/frequency.png" class="w3-margin-right w3-left w3-hide-small"
-                                    style="height:26px;width:32px">
+                                 style="height:26px;width:32px">
                         </span>
-                        <span>
-                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px;/*transform:rotate(-5deg)*/">
-                                <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                    {{ $t('menuContent.Frequency') }}
-                                </div>
+                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px;/*transform:rotate(-5deg)*/">
+                            <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                {{ $t('menuContent.Frequency') }}
                             </div>
-                        </span>
+                        </div>
                         <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
-                                placeholder="Name" style="height:28px;max-width: 260px;text-transform:uppercase" @keyup.enter="applyQuery">
-                        <i class="fa fa-search w3-button w3-theme-d1" title="Name" aria-hidden="true" @click="applyQuery"></i>
+                               placeholder="Name" style="height:28px;max-width: 200px;text-transform:uppercase" @keyup.enter="applyQuery">
+                        <i class="fa fa-search w3-button" title="Name" aria-hidden="true" @click="applyQuery"></i>
                         <i class="fa fa-plus w3-button w3-right" title="Add Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('add')"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency" aria-hidden="true" @click="getFrequencies"></i>
+                        <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency" aria-hidden="true" @click="applyQuery"></i>
                     </div>
                     <p>
                         <div>
                             <div class="w3-responsive w3-card w3-round">
                                 <table class="w3-table-all w3-small">
                                     <tr class="w3-teal">
-                                        <th width="2%"></th>
-                                        <th class="w3-btn w3-hover-none" width="30%" title="Order by Connection Name" @click="applyOrder('frequencyname')">
+                                        <th :width="gridWidth[0]"></th>
+                                        <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Connection Name" @click="applyOrder('frequencyname')">
                                             Name
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['frequencyname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                             <span v-else-if="this.orderFields['frequencyname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                         </th>
-                                        <th class="w3-btn w3-hover-none" width="46%" title="Order by Description" @click="applyOrder('description')">
+                                        <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
                                             Description
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                             <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                         </th>
-                                        <th class="w3-btn w3-hover-none" width="22%" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
+                                        <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
                                             Update Time
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
@@ -132,34 +132,33 @@
                             </div>
                             <div id="frequencyContainer" class="w3-responsive w3-card w3-round" style="overflow:inherit">
                                 <table id="frequencyTable" class="w3-table-all">
-                                    <empty-grid v-if="allFrequencyObjs.length <= 0"></empty-grid>
+                                    <empty-grid v-if="allFrequencyObjs.length == 0"></empty-grid>
                                     <tr v-else :id="content.frequencyuid" :key="content.frequencyuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                         @click="clickOnFrequency(content.frequencyuid, index)" v-for="(content, index) in allFrequencyObjs">
-                                        <td width="2%">
+                                        <td :width="gridWidth[0]">
                                             <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                 <i class="fa fa-bars"></i>
                                                 <div class="w3-dropdown-content w3-bar-block w3-border">
-                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeFrequencyWindowStatus('copy')"> Copy</button>
-                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeFrequencyWindowStatus('move')"> Move</button>
-                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeFrequencyWindowStatus('edit')"> Edit</button>
-                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showdeleteFrequencyWindow"> Delete</button>
-                                                </div>
+                                                    <i class="w3-bar-item fa fa-clone w3-button" @click.stop="changeFrequencyWindowStatus('copy')"> Copy</i>
+                                                    <i class="w3-bar-item fa fa-clipboard w3-button" @click.stop="changeFrequencyWindowStatus('move')"> Move</i>
+                                                    <i class="w3-bar-item fa fa-trash-o w3-button" @click.stop="showdeleteFrequencyWindow"> Delete</i>                                                </div>
                                             </div>
                                         </td>
-                                        <td width="30%">
-                                            <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname">
+                                        <td :width="gridWidth[1]">
+                                            <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname" style="text-decoration:underline;" 
+                                                  @click.stop="clickOnFrequencyName(content.frequencyuid, index)">
                                                 {{selectedCategoryRecord.freqcategoryname === '/' ? selectedCategoryRecord.freqcategoryname : '/'+selectedCategoryRecord.freqcategoryname+'/'}}{{ content.frequencyname }}
                                             </span>
-                                            <span v-else>
+                                            <span v-else style="text-decoration:underline;" @click.stop="clickOnFrequencyName(content.frequencyuid, index)">
                                                 {{content.categoryname === '/' ? content.categoryname : '/'+content.categoryname+'/'}}{{ content.frequencyname }}
                                             </span>
                                         </td>
-                                        <td width="46%">
+                                        <td :width="gridWidth[2]">
                                             <span :title="content.description">
                                                 {{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}
                                             </span>
                                         </td>
-                                        <td width="22%">
+                                        <td :width="gridWidth[3]">
                                             <span>{{ content.lastupdatetime }}</span>
                                         </td>
                                     </tr>
@@ -180,6 +179,8 @@
                                                 <option value="-1" disabled selected>Size</option>
                                                 <option value="10">10</option>
                                                 <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
                                             </select>
                                         </span>
                                     </div>
@@ -224,6 +225,7 @@
                 categoryRecord: new Object(),   //store detail category record
                 allFrequencyObjs: [], //store all remote data.(Frequencies)
                 freqRecord: new Object(), //store detail record
+                gridWidth: ['2%', '30%', '48%', '20%'],
                 //about paging info
                 totalPages: 1,
                 selectedPage: 1, //this is for UI use
@@ -278,6 +280,22 @@
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
                     menuBtn.style.display = 'none'
                 }
+            },
+            clickOnFrequencyName(id, index) {
+                let tr = document.getElementById(id)
+
+                if (tr.className.indexOf('w3-blue-grey') == -1) {
+                    this.clearSelectedFrequencyRecord(tr)
+
+                    tr.className = 'w3-blue-grey'
+                    this.selectedFrequencyRecord = this.allFrequencyObjs[index]
+                    this.selectedFrequencyRecord.index = index
+
+                    let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
+                    menuBtn.style.display = 'block'
+                }
+
+                this.changeFrequencyWindowStatus('edit')
             },
             /*
              * Above For All About Fetch Data Function

@@ -26,9 +26,9 @@
                     <table class="w3-table-all">
                         <tr class="w3-teal">
                             <th class="w3-center" width="10%">Publish</th>
-                            <th class="w3-center" width="25%">Package Name</th>
-                            <th class="w3-center" width="25%">Rule Name</th>
-                            <th class="w3-center" width="40%">Full Class</th>
+                            <th class="" width="25%">Package Name</th>
+                            <th class="" width="25%">Rule Name</th>
+                            <th class="" width="40%">Full Class</th>
                         </tr>
                     </table>
                 </div>
@@ -38,9 +38,9 @@
                             <td class="w3-center" width="10%" style="padding-top:4px">
                                 <input class="w3-check" type="checkbox" v-model="publication.published">
                             </td>
-                            <td class="w3-center" width="25%">{{publication.packagename}}</td>
-                            <td class="w3-center" width="25%">{{publication.rulename}}</td>
-                            <td class="w3-center" width="40%">{{publication.fullclasspath}}</td>
+                            <td class="" width="25%">{{publication.packagename}}</td>
+                            <td class="" width="25%">{{publication.rulename}}</td>
+                            <td class="" width="40%">{{publication.fullclasspath}}</td>
                         </tr>
                     </table>
                 </div>
@@ -80,15 +80,20 @@ export default {
         },
         getAllAgents(){
             let params = {
-                "ordering":{
-                    "orderType":'ASC',
-                    "orderField":'agentname'
-                }
+                "paging": {
+                    "number": 0,
+                    "size": 500
+                },
+                "ordering": {
+                    "orderType": 'ASC',
+                    "orderField": 'agentname'
+                },
+                "param": ''
             }
 
             HTTP_TRINITY.post(`jcsagent/findByFilter`, params)
             .then(response => {
-                this.allJCSAgents = response.data
+                this.allJCSAgents = response.data.content
             })
             .catch(error => {
                 errorHandle(this.$store, error)

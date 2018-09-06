@@ -25,7 +25,7 @@
         <publish-rule-window v-if="publishWindowAlive"
                              @closePublish="changePublishWindowStatus"></publish-rule-window>
         <div class="w3-col m9 w3-animate-opacity">
-            <div class="w3-row-padding">
+            <div v-if="!showMode" class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card-4 w3-round w3-signal-white">
                         <div class="w3-container">
@@ -59,88 +59,119 @@
                     </div>
                 </div>
             </div>
-            <div v-if="showMode" class="w3-small">
-                <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
-                    <p>
-                        <div>
-                            <span><img src="/src/assets/images/resource_setter/package.png" alt="External Rule" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+            <div v-if="showMode" class="w3-small w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round">
+                        <div class="w3-panel w3-border w3-round w3-padding">
                             <span>
-                                <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                    <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        External Rule
-                                    </div>
-                                </div>
+                                <img src="/src/assets/images/resource_setter/package.png" class="w3-margin-right w3-left w3-hide-small"
+                                     style="height:26px;width:32px">
                             </span>
+                            <span>
+                                <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
+                                    <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                        External Rule
+                                    </i>
+                                </i>
+                            </span>
+                            <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
+                                   placeholder="Package Name" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
+                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
+
+                            <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
+                            <i class="w3-right w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Rules to JCS Agent" aria-hidden="true" @click="changePublishWindowStatus"></i>
+                            <span class="w3-right">
+                                <form enctype="multipart/form-data" novalidate>
+                                    <label>
+                                        <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Package" aria-hidden="true"></i>
+                                        <input id="ExternalRuleInputFile" type="file" name="file"
+                                               @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                               accept=".jar" class="input-file" hidden>
+                                    </label>
+                                </form>
+                            </span>
+                            <i class="w3-right fa fa-plus w3-button" title="Add Package" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
+                            <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                         </div>
-                    </p>
-                    <p>
-                        <div>
-                            <div class="w3-responsive w3-card w3-round">
-                                <table class="w3-table-all">
-                                    <tr class="w3-teal">
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[0]" title="Order by Package Name" @click="applyOrder('packagename')">
-                                            Package Name
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.orderFields['packagename'] == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.orderFields['packagename'] == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Description" @click="applyOrder('description')">
-                                            Description
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                            Update Time
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div id="packageContainer" class="w3-responsive w3-card w3-round">
-                                <table id="packageTable" class="w3-table-all w3-left">
-                                    <empty-grid v-if="allPackageObjs.length == 0"></empty-grid>
-                                    <tr :id="content.packageuid" :key="content.packageuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
-                                        @click="clickOnPackageRecord(content.packageuid, index)" v-for="(content, index) in allPackageObjs">
-                                        <td :width="gridWidth[0]">
-                                            <span>{{ content.packagename }}</span>
-                                        </td>
-                                        <td :width="gridWidth[1]">
-                                            <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
-                                        </td>
-                                        <td :width="gridWidth[2]">
-                                            <span>{{ content.lastupdatetime }}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="w3-row-padding">
-                                <div class="w3-col m9 w3-center" style="padding-top:10px">
-                                    <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                        <p>
+                            <div>
+                                <div class="w3-responsive w3-card w3-round">
+                                    <table class="w3-table-all">
+                                        <tr class="w3-teal">
+                                            <th :width="gridWidth[0]"></th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Package Name" @click="applyOrder('packagename')">
+                                                Package Name
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.orderFields['packagename'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.orderFields['packagename'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
+                                                Description
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
+                                                Update Time
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="w3-col m3">
-                                    <div class="w3-row w3-right">
-                                        <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                            Page Size
-                                        </span>
-                                        <span class="w3-col m6" style="padding-top:8px">
-                                            <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
-                                                <option value="-1" disabled selected>Size</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="200">200</option>
-                                                <option value="500">500</option>
-                                            </select>
-                                        </span>
+                                <div id="packageContainer" class="w3-responsive w3-card w3-round">
+                                    <table id="packageTable" class="w3-table-all w3-left">
+                                        <empty-grid v-if="allPackageObjs.length == 0"></empty-grid>
+                                        <tr v-else :id="content.packageuid" :key="content.packageuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
+                                            @click="clickOnPackageRecord(content.packageuid, index)" v-for="(content, index) in allPackageObjs">
+                                            <td :width="gridWidth[0]">
+                                                <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
+                                                    <i class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td :width="gridWidth[1]">
+                                                <span style="text-decoration:underline;" @click.stop="clickOnPackageRecordName(content.packageuid, index)">
+                                                    {{ content.packagename }}
+                                                </span>
+                                            </td>
+                                            <td :width="gridWidth[2]">
+                                                <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
+                                            </td>
+                                            <td :width="gridWidth[3]">
+                                                <span>{{ content.lastupdatetime }}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="w3-row-padding">
+                                    <div class="w3-col m9 w3-center" style="padding-top:10px">
+                                        <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                                    </div>
+                                    <div class="w3-col m3">
+                                        <div class="w3-row w3-right">
+                                            <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
+                                                Page Size
+                                            </span>
+                                            <span class="w3-col m6" style="padding-top:8px">
+                                                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
+                                                    <option value="-1" disabled selected>Size</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div v-else class="w3-small">
@@ -217,7 +248,7 @@
                 selectedPackageRecord: new Object(),   //store which Package has been clicked.
                 packageRecord: new Object(), //store detail record
                 searchText: '',
-                gridWidth: ['30%', '45%', '25%'],
+                gridWidth: ['2%', '30%', '45%', '23%'],
                 //about paging info
                 totalPages: 1,
                 selectedNum: 0,
@@ -242,14 +273,33 @@
             clickOnPackageRecord(id, index) {
                 let tr = document.getElementById(id)
                 this.clearSelectedRecord(tr)
+                let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
                     this.selectedRecord = this.allPackageObjs[index]
                     this.selectedRecord.index = index //New prop is stores which obj will be deleted in UI
+                    menuBtn.style.display = 'block'
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+                    menuBtn.style.display = 'none'
                 }
+            },
+            clickOnPackageRecordName(id, index) {
+                let tr = document.getElementById(id)
+
+                if (tr.className.indexOf('w3-blue-grey') == -1) {
+                    this.clearSelectedRecord(tr)
+
+                    tr.className = 'w3-blue-grey'
+                    this.selectedRecord = this.allPackageObjs[index]
+                    this.selectedRecord.index = index //New prop is stores which obj will be deleted in UI
+
+                    let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
+                    menuBtn.style.display = 'block'
+                }
+
+                this.changeEditWindowStatus('edit')
             },
             clickOnPackagePanel(which, index, content) {
                 if (content) {
@@ -448,8 +498,14 @@
                 let table = document.getElementById('packageTable')
                 if (table && table.childNodes) {  //判斷是否是從Content List來的操作, 不成立表示由Grid List來的操作
                     for (var i = 0; i < table.childNodes.length; i++) {  //先重設所有package row的class
-                        if (table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                        if (table.childNodes[i] !== tr) {   //等於自己的(即點到的那一列)不用重設
                             table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+
+                            if (table.childNodes[i].nodeName !== 'DIV') {   // not empty grid
+                                let menuBtn = table.childNodes[i].getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
+                                menuBtn.style.display = 'none'
+                            }
+                        }
                     }
                 }
 

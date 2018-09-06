@@ -83,19 +83,19 @@
             },
             save(postContent) {
                 let urlPath = ''
-                if (this.urlOp === 'add') {   //新增一筆connection
+                if (this.urlOp === 'add') {   //新增一筆
                     if (this.selectedCategoryRecord && this.selectedCategoryRecord.freqcategoryuid &&
-                        this.selectedCategoryRecord.freqcategoryuid !== '') {  //在某個connection category底下新增一筆connection
+                        this.selectedCategoryRecord.freqcategoryuid !== 'root') {  //在某個 category 底下新增一筆
                         urlPath = this.urlOp + '?categoryUid=' + this.selectedCategoryRecord.freqcategoryuid
                     } else {  //在root位置新增一筆connection
                         urlPath = this.urlOp
                     }
-                } else if (this.urlOp === 'edit') {   //編輯一筆已存在的connection
+                } else if (this.urlOp === 'edit') {   //編輯一筆已存在的
                     urlPath = this.urlOp
-                } else if (this.urlOp === 'copy') {   //複制一筆已存在的connection, 到某個connection category底下
+                } else if (this.urlOp === 'copy') {   //複制一筆已存在的, 到某個 category 底下
                     /*
                      * 寫死add方法,因為其實copy就等於是add方法的行為
-                     * 沒有回傳categoryuid則表示是在root底下新增connection, 此時urlPath只需'add'路徑
+                     * 沒有回傳categoryuid則表示是在root底下新增, 此時urlPath只需'add'路徑
                     */
                     if (postContent) {    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
                         if (postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
@@ -117,7 +117,7 @@
                 } else {
                     return
                 }
-
+                
                 if (postContent) {
                     HTTP_TRINITY.post(`frequency/` + urlPath, postContent)
                         .then(response => {

@@ -3,24 +3,24 @@
         <div class="w3-row-padding w3-small">
             <div class="w3-col m12">
                 <div class="w3-container w3-card-4 w3-signal-white w3-round">
-                    <div class="w3-panel w3-border w3-round w3-padding">
-                        <span>
-                            <img src="/src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small" 
-                                    style="height:26px;width:32px">
-                        </span>
-                        <span>
-                            <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
-                                <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                    License Status
-                                </i>
-                            </i>
-                        </span>
-                        <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
-                                placeholder="Plugin Name" style="height:28px;max-width: 260px" @keyup.enter="searchBy">
-                        <i class="fa fa-search w3-button w3-theme-d1" title="Search" aria-hidden="true" @click="searchBy"></i>
-                        <i class="fa fa-download w3-button w3-right" title="Export" aria-hidden="true" @click="exportCSV"></i>
-                    </div>
                     <p>
+                        <div class="w3-panel w3-border w3-round w3-padding">
+                            <span>
+                                <img src="/src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small"
+                                     style="height:26px;width:32px">
+                            </span>
+                            <span>
+                                <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
+                                    <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                        License Status
+                                    </i>
+                                </i>
+                            </span>
+                            <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
+                                   placeholder="Plugin Name" style="height:28px;max-width: 200px" @keyup.enter="searchBy">
+                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
+                            <i class="fa fa-download w3-button w3-right" title="Export" aria-hidden="true" @click="exportCSV"></i>
+                        </div>
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
                                 <tr class="w3-teal" style="cursor: pointer">
@@ -60,7 +60,6 @@
         </div>
     </div>
 </template>
-
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../util_js/axios_util'
 

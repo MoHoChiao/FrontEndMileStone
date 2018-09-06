@@ -1,5 +1,5 @@
 <template>
-    <div style="min-height:50px;padding-top:13px;padding-left:13px">
-        <b>No data to show or you do not have permission to view.</b>
+    <div class="w3-center" style="min-height:40px;padding-top:10px;padding-left:10px">
+        <b>No data or permission denied</b>
     </div>
 </template>

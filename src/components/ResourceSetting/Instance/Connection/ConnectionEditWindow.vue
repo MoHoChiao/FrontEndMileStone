@@ -106,7 +106,7 @@ export default {
             let postContent = this.$refs.connectionForm.save()
 
             let urlPath = ''
-            if(this.urlOp === 'add'){   //新增一筆connection
+            if (this.urlOp === 'add') {   //新增一筆connection
                 if(this.selectedCategoryRecord && this.selectedCategoryRecord.conncategoryuid && 
                         this.selectedCategoryRecord.conncategoryuid !== ''){  //在某個connection category底下新增一筆connection
                     urlPath = this.urlOp + '?categoryUid=' + this.selectedCategoryRecord.conncategoryuid

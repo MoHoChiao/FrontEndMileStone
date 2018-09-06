@@ -1,6 +1,6 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <working-calendar-form slot="content" ref="wcForm" @save="save"></working-calendar-form>
+        <working-calendar-form slot="content" ref="wcForm" :content="content" @save="save"></working-calendar-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="picked"></form-button>
         </div>
@@ -25,7 +25,10 @@ export default {
         windowAlive: {
             type: Boolean,
             default: false
-        }
+        },
+        content: {
+            type: Object
+        },
     },
     methods: {
         cancel(){

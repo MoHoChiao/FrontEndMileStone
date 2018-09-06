@@ -30,7 +30,7 @@
                                @closeApply="changePublishWindowStatus">
         </publish-driver-window>
         <div class="w3-col m9 w3-animate-opacity">
-            <div class="w3-row-padding">
+            <div v-if="!showMode" class="w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-card-4 w3-round w3-signal-white">
                         <div class="w3-container">
@@ -70,88 +70,125 @@
                     </div>
                 </div>
             </div>
-            <div v-if="showMode" class="w3-small">
-                <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
-                    <p>
-                        <div>
-                            <span><img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+            <div v-if="showMode" class="w3-small w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-container w3-card-4 w3-signal-white w3-round">
+                        <div class="w3-panel w3-border w3-round w3-padding">
                             <span>
-                                <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                    <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                <img src="/src/assets/images/resource_setter/driver.png" class="w3-margin-right w3-left w3-hide-small"
+                                     style="height:26px;width:32px">
+                            </span>
+                            <span>
+                                <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
+                                    <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                                         Driver Manager
+                                    </i>
+                                </i>
+                            </span>
+                            <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
+                                   placeholder="Name" style="height:28px;max-width: 200px" @keyup.enter="searchBy">
+                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
+
+                            <!--<i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
+                            <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>-->
+                            <span class="w3-dropdown-hover w3-right">
+                                <i class="fa fa-file-archive-o w3-button" title="Import/Export/Publish" aria-hidden="true"></i>
+                                <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
+                                    <div v-if="!allOverlayLoading">
+                                        <form enctype="multipart/form-data" novalidate>
+                                            <label>
+                                                <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
+                                                <input id="DriverInputFile" type="file" name="file"
+                                                       @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                                       accept=".zip" class="input-file">
+                                            </label>
+                                        </form>
+                                        <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true" @click="exportJDBC"> Export Drivers</i>
+                                        <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Drivers" aria-hidden="true" @click="changePublishWindowStatus"> Publish Drivers</i>
                                     </div>
                                 </div>
                             </span>
+                            <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
+                            <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getDrivers"></i>
                         </div>
-                    </p>
-                    <p>
-                        <div>
-                            <div class="w3-responsive w3-card w3-round">
-                                <table class="w3-table-all">
-                                    <tr class="w3-teal">
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[0]" title="Order by Name" @click="sortBy('name')">
-                                            Name
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.sortKey == 'name' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.sortKey == 'name' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Driver" @click="sortBy('driver')">
-                                            JDBC Driver
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.sortKey == 'driver' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.sortKey == 'driver' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                        <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Update Time" @click="sortBy('url')">
-                                            JDBC URL
-                                            &nbsp;&nbsp;
-                                            <span v-if="this.sortKey == 'url' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
-                                            <span v-else-if="this.sortKey == 'url' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
-                                        </th>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div id="driverContainer" class="w3-responsive w3-card w3-round">
-                                <table id="driverTable" class="w3-table-all w3-left">
-                                    <empty-grid v-if="sortedData.length == 0"></empty-grid>
-                                    <tr :id="content.name" :key="content.name" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
-                                        @click="clickOnDriverRecord(content.name, index)" v-for="(content, index) in sortedData">
-                                        <td :width="gridWidth[0]">
-                                            <span>{{ content.name }}</span>
-                                        </td>
-                                        <td :width="gridWidth[1]">
-                                            <span>{{ content.driver }}</span>
-                                        </td>
-                                        <td :width="gridWidth[2]">
-                                            <span>{{ content.url }}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="w3-row-padding">
-                                <div class="w3-col m9 w3-center" style="padding-top:10px">
-                                    <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                        <p>
+                            <div>
+                                <div class="w3-responsive w3-card w3-round">
+                                    <table class="w3-table-all">
+                                        <tr class="w3-teal">
+                                            <th :width="gridWidth[0]"></th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Name" @click="sortBy('name')">
+                                                Name
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.sortKey == 'name' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.sortKey == 'name' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Driver" @click="sortBy('driver')">
+                                                JDBC Driver
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.sortKey == 'driver' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.sortKey == 'driver' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                            <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="sortBy('url')">
+                                                JDBC URL
+                                                &nbsp;&nbsp;
+                                                <span v-if="this.sortKey == 'url' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                                                <span v-else-if="this.sortKey == 'url' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
+                                            </th>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="w3-col m3">
-                                    <div class="w3-row w3-right">
-                                        <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                            Page Size
-                                        </span>
-                                        <span class="w3-col m6" style="padding-top:8px">
-                                            <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
-                                                <option value="-1" disabled selected>Size</option>
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option>
-                                                <option value="200">200</option>
-                                                <option value="500">500</option>
-                                            </select>
-                                        </span>
+                                <div id="driverContainer" class="w3-responsive w3-card w3-round">
+                                    <table id="driverTable" class="w3-table-all w3-left">
+                                        <empty-grid v-if="sortedData.length == 0"></empty-grid>
+                                        <tr v-else :id="content.name" :key="content.name" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
+                                            @click="clickOnDriverRecord(content.name, index)" v-for="(content, index) in sortedData">
+                                            <td :width="gridWidth[0]">
+                                                <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
+                                                    <i class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td :width="gridWidth[1]">
+                                                <span style="text-decoration:underline;"  @click.stop="clickOnDriverRecordName(content.name, index)">
+                                                    {{ content.name }}
+                                                </span>
+                                            </td>
+                                            <td :width="gridWidth[2]">
+                                                <span>{{ content.driver }}</span>
+                                            </td>
+                                            <td :width="gridWidth[3]">
+                                                <span>{{ content.url }}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="w3-row-padding">
+                                    <div class="w3-col m9 w3-center" style="padding-top:10px">
+                                        <page ref="paginate" :page-count="totalPages" :clickHandler="changeNum"></page>
+                                    </div>
+                                    <div class="w3-col m3">
+                                        <div class="w3-row w3-right">
+                                            <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
+                                                Page Size
+                                            </span>
+                                            <span class="w3-col m6" style="padding-top:8px">
+                                                <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
+                                                    <option value="-1" disabled selected>Size</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div v-else class="w3-small">
@@ -180,33 +217,6 @@
                                        :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
                 </div>
             </div>
-
-            <!--<ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li :key="content.name+'li'" class="w3-bar w3-border-camo-black loading-area" v-for="(content, index) in allDriverObjs">
-                    <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/driver.png" alt="Driver" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{ content.owner }}</span>
-                        <p>
-                            {{ content.name }}
-                        </p>
-                        <span class="w3-tag w3-small w3-theme-l3" style="transform:rotate(-3deg)">{{ content.driver }}</span>
-                        <button title="Delete This Driver" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.name)">
-                            <i class="fa fa-trash-o"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Delete</span>
-                        </button>
-                        <button title="Attach Jar To Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeJarWindowStatus(content)">
-                            <i class="fa fa-paperclip"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Attach</span>
-                        </button>
-                        <button title="Edit This Driver" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
-                            <i class="fa fa-pencil"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Edit</span>
-                        </button>
-                    </div>
-                    <driver-edit-panel v-else :key="content.name+'EditPanel2'"
-                        :index="index" :content="content" @closeEdit="changeEditable"></driver-edit-panel>
-                </li>
-            </ul>-->
         </div>
         <over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>
     </div>
@@ -259,7 +269,7 @@
                 editable: [],   //for all driver content edit panel
                 selectedRecord: new Object(),   //store which driver attach button has been clicked.
                 searchText: '',
-                gridWidth: ['25%', '35%', '40%'],
+                gridWidth: ['2%', '18%', '30%', '50%'],
                 //about paging info
                 totalPages: 1,
                 selectedNum: 0,
@@ -317,14 +327,33 @@
             clickOnDriverRecord(id, index) {
                 let tr = document.getElementById(id)
                 this.clearSelectedRecord(tr)
+                let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
                     this.selectedRecord = this.allDriverObjs[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+                    menuBtn.style.display = 'block'
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
+                    menuBtn.style.display = 'none'
                 }
+            },
+            clickOnDriverRecordName(id, index) {
+                let tr = document.getElementById(id)
+
+                if (tr.className.indexOf('w3-blue-grey') == -1) {
+                    this.clearSelectedRecord(tr)
+
+                    tr.className = 'w3-blue-grey'
+                    this.selectedRecord = this.allDriverObjs[index]
+                    this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
+
+                    let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
+                    menuBtn.style.display = 'block'
+                }
+
+                this.changeEditWindowStatus('edit')
             },
             //When Content List click on agent operation button
             clickOnDriverPanel(which, index, content) {
@@ -551,8 +580,14 @@
                 let table = document.getElementById('driverTable')
                 if (table && table.childNodes) {  //判斷是否是從Content List來的操作, 不成立表示由Grid List來的操作
                     for (var i = 0; i < table.childNodes.length; i++) {  //先重設所有driver row的class
-                        if (table.childNodes[i] !== tr)   //等於自己的(即點到的那一列)不用重設
+                        if (table.childNodes[i] !== tr) {  //等於自己的(即點到的那一列)不用重設
                             table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
+
+                            if (table.childNodes[i].nodeName !== 'DIV') {   // not empty grid
+                                let menuBtn = table.childNodes[i].getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
+                                menuBtn.style.display = 'none'
+                            }
+                        }
                     }
                 }
 
