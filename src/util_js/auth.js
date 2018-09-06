@@ -26,23 +26,27 @@ export function Authentication(next) {
         })
 }
 let loadPermissionTable = new Promise((resolve, reject) => {
-    HTTP_AUTH.get(`authentication/find-authn`)
-        .then(response => {
-            if (response.data.status === 'Success') {
-                HTTP_AUTH.get(`authorization/loadPermissionTable`)
-                    .then(response => {
-                        PermissionTable = response.data
-                        resolve("Success!");
-                    })
-                    .catch(error => {
-                        errorHandle(undefined, error)
-                    })
-            } else {
+    if (!PermissionTable) {
+        HTTP_AUTH.get(`authentication/find-authn`)
+            .then(response => {
+                if (response.data.status === 'Success') {
+                    HTTP_AUTH.get(`authorization/loadPermissionTable`)
+                        .then(response => {
+                            PermissionTable = response.data
+                            resolve("Success!");
+                        })
+                        .catch(error => {
+                            errorHandle(undefined, error)
+                        })
+                } else {
+                    errorHandle(undefined, error)
+                }
+            })
+            .catch(error => {
                 errorHandle(undefined, error)
-            }
-        })
-        .catch(error => {
-            errorHandle(undefined, error)
-        })
+            })
+    } else {
+        resolve("Success!");
+    }
 });
 export { loadPermissionTable }
