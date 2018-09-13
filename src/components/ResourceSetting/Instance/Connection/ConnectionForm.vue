@@ -5,7 +5,7 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div :class="[(urlOp === 'add') ? 'w3-col m9' : 'w3-col m4']">
-                <input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
+                <name-input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
             </div>
             <div v-if="urlOp !== 'add'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
@@ -70,9 +70,10 @@
                     <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
                         <template v-for="(info, key) in jdbcDriverInfo">
                             <option :value="key">
-                                {{ key }}</option>
+                                {{ key }}
+                            </option>
                         </template>
-                        <option value="Generic" >Generic</option>
+                        <option value="Generic">Generic</option>
                     </select>
                 </div>
                 <div class="w3-col m4">
@@ -104,7 +105,7 @@
                 </div>
                 <div class="w3-col m6">
                     <div class="w3-left" style="margin-top:16px;margin-right:16px;">
-                        <input class="w3-check" v-model="new_content.mailssl" type="checkbox" >
+                        <input class="w3-check" v-model="new_content.mailssl" type="checkbox">
                         <label>SSL</label>
                     </div>
                     <div class="w3-left" style="margin-top:16px">
@@ -214,10 +215,9 @@
         </div>
     </div>
 </template>
-
 <script>
-    import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
-    
+    import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
+
     export default {
         data() {
             return {
@@ -305,21 +305,21 @@
         created() {
             //Get all jdbc connection info
             this.getJDBCInfo()
-    
+
             if (this.urlOp !== 'add') {
                 this.getCategories() //取得所有可供選擇的connection categories
-    
+
                 if (this.urlOp === 'copy') {
                     //copy動作, 把name和description設空值
                     this.new_content.connectionname = ''
                     this.new_content.description = ''
                 }
             }
-    
+
             if (this.urlOp !== 'add') { //如果不是add, 表示connectiontype必定有值,要把typeFlag中對應的connectiontype值改為true
                 this.clickType()
             }
-    
+
             /*
              *因為JDBC Connection時, 一樣是userid卻叫jdbc_userid, 而password叫jdbc_password
              *因為Mail Connection時, 一樣是userid卻叫user
@@ -330,7 +330,7 @@
         props: {
             content: {
                 type: Object,
-                default () {
+                default() {
                     return {
                         connectionuid: '',
                         connectionname: '',
@@ -391,23 +391,23 @@
             },
             save() {
                 this.clearInValid()
-    
+
                 //check form value
                 if (this.new_content.connectionname === undefined || this.new_content.connectionname.trim().length <= 0) {
                     this.inputClassList.connectionname.splice(2, 1, 'w3-red')
                     return
                 }
-    
+
                 if (this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0) {
                     this.inputClassList.userid.splice(2, 1, 'w3-red')
                     return
                 }
-    
+
                 if (this.new_content.password === undefined || this.new_content.password.trim().length <= 0) {
                     this.inputClassList.password.splice(2, 1, 'w3-red')
                     return
                 }
-    
+
                 if (this.new_content.withpim) {
                     if (this.new_content.pimendpointtype === undefined || this.new_content.pimendpointtype.trim().length <= 0) {
                         this.inputClassList.pimendpointtype.splice(2, 1, 'w3-red')
@@ -423,7 +423,7 @@
                         return
                     }
                 }
-    
+
                 if (this.new_content.connectiontype === 'D') {
                     if (this.new_content.server === undefined || this.new_content.server.trim().length <= 0) {
                         this.inputClassList.server.splice(2, 1, 'w3-red')
@@ -443,9 +443,9 @@
                         return
                     }
                 } else if (this.new_content.connectiontype === 'M') {
-    
+
                 } else if (this.new_content.connectiontype === 'O') {
-    
+
                 } else if (this.new_content.connectiontype === 'S') {
                     if (this.new_content.sapSystemName === undefined || this.new_content.sapSystemName.trim().length <= 0) {
                         this.inputClassList.sapSystemName.splice(2, 1, 'w3-red')
@@ -469,7 +469,7 @@
                         return
                     }
                 }
-    
+
                 //collect basic necessary value
                 let returnValue = {
                     "connectionuid": this.new_content.connectionuid,
@@ -529,7 +529,7 @@
                     returnValue.notesDBName = this.new_content.notesDBName
                     returnValue.userid = this.new_content.userid
                 }
-    
+
                 return returnValue
             },
             testConnection() {
@@ -537,15 +537,15 @@
                     this.inputClassList.userid.splice(2, 1, 'w3-red')
                     return
                 }
-    
+
                 if (this.new_content.password === undefined || this.new_content.password.trim().length <= 0) {
                     this.inputClassList.password.splice(2, 1, 'w3-red')
                     return
                 }
-    
+
                 let postData = new Object()
                 let urlPath = ``
-    
+
                 if (this.new_content.connectiontype === 'J') {
                     if (this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0) {
                         this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
@@ -563,7 +563,7 @@
                 } else {
                     return
                 }
-    
+
                 HTTP_TRINITY.post(urlPath, postData)
                     .then(response => {
                         let newStatus = {
@@ -579,7 +579,7 @@
             reset() {
                 //clear red font
                 this.clearInValid()
-    
+
                 //reset value to initial
                 if (this.urlOp === 'copy') { //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
                     this.new_content.connectionname = ''
@@ -588,42 +588,42 @@
                     this.new_content.connectionname = this.content.connectionname
                     this.new_content.description = this.content.description
                 }
-    
+
                 this.new_content.connectionuid = this.content.connectionuid
                 this.new_content.connectiontype = this.content.connectiontype,
-                this.new_content.pimendpointtype = this.content.pimendpointtype,
-                this.new_content.pimendpointname = this.content.pimendpointname,
-                this.new_content.pimaccountcontainer = this.content.pimaccountcontainer,
-                this.new_content.pimaccountname = this.content.pimaccountname,
-                this.new_content.withpim = Number(this.content.withpim),
-                this.new_content.server = this.content.server,
-                this.new_content.targetdir = this.content.targetdir,
-                this.new_content.jdbc_dbType = this.content.jdbc_dbType,
-                this.new_content.jdbc_url = this.content.jdbc_url,
-                this.new_content.jdbc_driver = this.content.jdbc_driver,
-                this.new_content.host = this.content.host,
-                this.new_content.port = this.content.port,
-                this.new_content.mailssl = Number(this.content.mailssl),
-                this.new_content.mailtls = Number(this.content.mailtls),
-                this.new_content.user = this.content.user,
-                this.new_content.notesHostIP = this.content.notesHostIP,
-                this.new_content.notesIor = this.content.notesIor,
-                this.new_content.notesServerName = this.content.notesServerName,
-                this.new_content.notesDBName = this.content.notesDBName,
-                this.new_content.saplanguage = this.content.saplanguage,
-                this.new_content.sapSystemNumber = this.content.sapSystemNumber,
-                this.new_content.sapSystemName = this.content.sapSystemName,
-                this.new_content.sapHostIP = this.content.sapHostIP,
-                this.new_content.sapCodePage = this.content.sapCodePage,
-                this.new_content.sapClient = this.content.sapClient
-    
+                    this.new_content.pimendpointtype = this.content.pimendpointtype,
+                    this.new_content.pimendpointname = this.content.pimendpointname,
+                    this.new_content.pimaccountcontainer = this.content.pimaccountcontainer,
+                    this.new_content.pimaccountname = this.content.pimaccountname,
+                    this.new_content.withpim = Number(this.content.withpim),
+                    this.new_content.server = this.content.server,
+                    this.new_content.targetdir = this.content.targetdir,
+                    this.new_content.jdbc_dbType = this.content.jdbc_dbType,
+                    this.new_content.jdbc_url = this.content.jdbc_url,
+                    this.new_content.jdbc_driver = this.content.jdbc_driver,
+                    this.new_content.host = this.content.host,
+                    this.new_content.port = this.content.port,
+                    this.new_content.mailssl = Number(this.content.mailssl),
+                    this.new_content.mailtls = Number(this.content.mailtls),
+                    this.new_content.user = this.content.user,
+                    this.new_content.notesHostIP = this.content.notesHostIP,
+                    this.new_content.notesIor = this.content.notesIor,
+                    this.new_content.notesServerName = this.content.notesServerName,
+                    this.new_content.notesDBName = this.content.notesDBName,
+                    this.new_content.saplanguage = this.content.saplanguage,
+                    this.new_content.sapSystemNumber = this.content.sapSystemNumber,
+                    this.new_content.sapSystemName = this.content.sapSystemName,
+                    this.new_content.sapHostIP = this.content.sapHostIP,
+                    this.new_content.sapCodePage = this.content.sapCodePage,
+                    this.new_content.sapClient = this.content.sapClient
+
                 /*
                  *因為JDBC Connection時, 一樣是userid卻叫jdbc_userid, 而password叫jdbc_password
                  *因為Mail Connection時, 一樣是userid卻叫user
                  *由於以上兩點, 所以才需下面這個function來作一些很不自然的轉換動作, 這樣的設計是標準的UI相依於後端邏輯, very suck!!!
                  */
                 this.convertUserIdAndPassword()
-    
+
                 //當connectiontype值變了之後, 尚需要改變UI的功能選項
                 this.clickType()
             },
@@ -645,7 +645,7 @@
                 this.inputClassList.pimaccountcontainer.splice(2, 1)
                 this.inputClassList.pimaccountname.splice(2, 1)
             },
-            changeCategory(e){
+            changeCategory(e) {
                 let selectElement = e.target
                 var optionIndex = selectElement.selectedIndex
                 var option = selectElement.options[optionIndex]
@@ -658,7 +658,7 @@
                         "orderField": "conncategoryname"
                     }
                 }
-    
+
                 HTTP_TRINITY.post(`connection-category/findByFilter`, params)
                     .then(response => {
                         this.allCategoryObjs = response.data
@@ -691,14 +691,14 @@
         }
     }
 </script>
-
 <style scoped>
+
     input,
     select {
         height: 30px
     }
-    
-    input.w3-check {
-        height: 20px
-    }
+
+        input.w3-check {
+            height: 20px
+        }
 </style>

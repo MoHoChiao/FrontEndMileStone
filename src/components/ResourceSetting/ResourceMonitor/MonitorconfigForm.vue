@@ -4,94 +4,98 @@
             <div class="w3-half">
                 <input id="SearchJCSInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text"
                        placeholder="Search For JCS List..." @keyup="searchForList()">
-                <div class="w3-responsive w3-card-0 w3-round w3-border" style="overflow:auto;height:260px">
+                <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;height:346px">
                     <table id="JCSListTable" class="w3-table-all w3-small">
                         <tr id="JCSServer" key="JCSServer" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnJCS('JCSServer', 'JCSServer', 0)">
                             <td class="w3-center">
                                 JCSServer
                             </td>
                         </tr>
-                        <tr v-for="(agent, index) in allJCSAgents" :id="agent.agentuid" :key="agent.agentuid"
-                            class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnJCS(agent.agentuid, agent.agentname, index)">
-                            <td class="w3-center">
-                                {{ agent.agentname }}
-                            </td>
-                        </tr>
+                        <template v-for="(agent, index) in allJCSAgents">
+                            <tr :id="agent.agentuid" :key="agent.agentuid" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnJCS(agent.agentuid, agent.agentname, index)">
+                                <td class="w3-center">
+                                    {{ agent.agentname }}
+                                </td>
+                            </tr>
+                        </template>
                     </table>
                 </div>
             </div>
             <div class="w3-half">
                 <div v-if="selectedMonitorConfig.uid === 'JCSServer'" class="w3-row">
                     <div class="w3-col m12 w3-left">
-                        <input class="w3-check" v-model="selectedMonitorConfig.suspendJob" type="checkbox">
+                        <input class="w3-check" v-model="selectedMonitorConfig.suspendJob" style="width:40px;" type="checkbox">
                         <label>Suspend Dispatch Job With Alert</label>
                     </div>
                 </div>
                 <div v-else class="w3-row">
                     <div class="w3-col m12 w3-left">
-                        <input class="w3-check" v-model="selectedMonitorConfig.processmonitor" type="checkbox">
+                        <input class="w3-check" v-model="selectedMonitorConfig.processmonitor" style="width:40px;" type="checkbox">
                         <label>Process Monitor</label>
                     </div>
                 </div>
                 <div class="w3-row">
                     <div class="w3-col m12 w3-left">
-                        <input class="w3-check" v-model="selectedMonitorConfig.resourcemonitor" type="checkbox">
+                        <input class="w3-check" v-model="selectedMonitorConfig.resourcemonitor" style="width:40px;" type="checkbox">
                         <label>Resource Monitor</label>
                     </div>
                 </div>
                 <div v-if="selectedMonitorConfig.resourcemonitor">
                     <div class="w3-row w3-section">
-                        <div class="w3-col m4">
+                        <div class="w3-col m6">
                             <div class="w3-row">
-                                <input type="checkbox" class="w3-check">
-                                <label>CPU >=</label>
-                                <input id="CPU" class="w3-border" v-model="selectedMonitorConfig.cpu"
-                                        type="number" min="0" max="100" style="width:40px;height:20px">
-                                <span>%</span>
+                                <div class="w3-col m3 w3-left">
+                                    <span>CPU:</span>
+                                </div>
+                                <div class="w3-col m6 w3-left">
+                                    <input id="CPU" :class="inputClassList" v-model="selectedMonitorConfig.cpu" type="number" min="0" max="100">
+                                </div>
+                                <div class="w3-col m3 w3-left">
+                                    <span>%</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="w3-col m5">
+                        <div class="w3-col m6">
                             <div class="w3-row">
-                                <input type="checkbox" class="w3-check">
-                                <label>Memory >=</label>
-                                <input id="Memory" class="w3-border" v-model="selectedMonitorConfig.memory"
-                                       type="number" min="0" max="100" style="width:40px;height:20px">
-                                <span>%</span>
+                                <div class="w3-col m5 w3-left">
+                                    <span>Memory:</span>
+                                </div>
+                                <div class="w3-col m6 w3-left">
+                                    <input id="Memory" :class="inputClassList" v-model="selectedMonitorConfig.memory" type="number" min="0" max="100">
+                                </div>
+                                <div class="w3-col m1 w3-left">
+                                    <span>%</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="w3-col m3">
-                            <input type="checkbox" class="w3-check" v-model="selectedMonitorConfig.diskset">
-                            <label>Disk</label>
                         </div>
                     </div>
-                    <div v-if="selectedMonitorConfig.diskset" class="w3-row">
+                    <div class="w3-row">
                         <div class="w3-col m12">
                             <div class="w3-responsive w3-card w3-round">
                                 <table class="w3-table-all">
                                     <tr class="w3-teal">
-                                        <th width="62%">File System</th>
-                                        <th width="30%">MB</th>
-                                        <th width="8%" class="w3-center" style="cursor:pointer">
-                                            <i class="fa fa-plus-square w3-bar " title="Add" aria-hidden="true" @click="addDisk"></i>
+                                        <th class="" width="62%">File System</th>
+                                        <th class="" width="30%">MB</th>
+                                        <th class="" width="8%">
+                                            <i class="fa fa-plus-square w3-bar w3-hover-none" style="cursor:pointer" title="Add Disk" aria-hidden="true" @click="addDisk"></i>
                                         </th>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:150px">
+                            <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:190px">
                                 <table class="w3-table-all">
                                     <tr :key="list_info.agentuid" v-for="(list_info, index) in selectedMonitorConfig.disk">
-                                        <td width="62%">
+                                        <td class="" width="62%">
                                             <input class="w3-input w3-border" v-model="list_info.path" type="text"
                                                    placeholder="Please Input File System Path">
                                         </td>
                                         <td width="30%">
                                             <span>
-                                                <input class="w3-input w3-border" v-model="list_info.value" type="number" min="0" max="2147483647">
+                                                <input class="w3-input w3-border" style="width:100%" v-model="list_info.value" type="number" min="0" max="2147483647">
                                             </span>
                                         </td>
-                                        <td width="8%" class="w3-center">
-                                            <i class="fa fa-minus-circle w3-bar" style="padding-top:8px;cursor:pointer" 
-                                               title="Delete" aria-hidden="true" @click="delDisk(index)"></i>
+                                        <td class="w3-center" width="8%">
+                                            <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delDisk(index)"></i>
                                         </td>
                                     </tr>
                                 </table>
@@ -99,12 +103,12 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="w3-row">
-                    <div class="w3-col m12 w3-center" style="padding-top:16px">
+                <div class="w3-row">
+                    <div class="w3-col m12 w3-center" style="padding-top:18px">
                         <button class="w3-button w3-round w3-teal" @click="reset">Reset</button>
                         <button class="w3-button w3-round w3-teal" @click="save">Save</button>
                     </div>
-                </div>-->
+                </div>
             </div>
         </div>
     </div>
@@ -122,16 +126,9 @@
                 pattern: '^([a-zA-Z]:/)|^([a-zA-Z]:\\\\)|^(\\\\)|^(/)'
             }
         },
-        props: {
-            eventBus: {
-                type: Object
-            }
-        },
         mounted() {
             this.getAllAgents()
             this.clickOnJCS('JCSServer', 'JCSServer', 0)
-
-            this.eventBus.$on('save', this.save)
         },
         methods: {
             clickOnJCS(id, name, index) {
@@ -269,22 +266,18 @@
 </script>
 <style scoped>
     input {
-        height: 28px
+        height: 30px
     }
-    input.w3-check {
-        height: 20px
-    }
-    /*#CPU {
+
+        input.w3-check {
+            height: 16px
+        }
+
+    #CPU {
         height: 16px
     }
+
     #Memory {
         height: 16px
-    }*/
-    /*input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }*/
-    /*input[type="number"] {
-        -moz-appearance: textfield;
-    }*/
+    }
 </style>

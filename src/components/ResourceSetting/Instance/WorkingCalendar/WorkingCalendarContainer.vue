@@ -1,9 +1,10 @@
 <template>
     <div>
         <working-calendar-add-window :windowAlive="addWindowAlive"
-                                     window-title="Add Working Calendar"
-                                     @closeAdd="changeAddWindowStatus"
+                                     @closeAdd="saveWindowContentForAdd"
+                                     @closeEdit="saveWindowContentForEdit"
                                      :content="wcRecord"
+                                     :urlOp="operation"
         ></working-calendar-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
@@ -26,7 +27,7 @@
                                     </span>
                                     <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                                     <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                                    <i class="w3-right fa fa-plus w3-button" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus"></i>
+                                    <i class="w3-right fa fa-plus w3-button" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
                                     <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                                 </div>
                             </div>
@@ -54,7 +55,7 @@
                             <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
                             <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                             <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                            <i class="w3-right fa fa-plus w3-button" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus"></i>
+                            <i class="w3-right fa fa-plus w3-button" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
                             <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
                         </div>
                         <p>
@@ -89,10 +90,10 @@
                                         <empty-grid v-if="allWCObjs.length == 0"></empty-grid>
                                         <tr v-else :id="content.wcalendaruid" :key="content.wcalendaruid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                             @click="clickOnPackageRecord(content.wcalendaruid, index)" v-for="(content, index) in allWCObjs">
-                                            <td :width="gridWidth[0]">
+                                            <td id="barsTD" :width="gridWidth[0]">
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                    <i class="fa fa-bars"></i>
-                                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                                    <i id="barsLabel" class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -200,8 +201,10 @@
         },
         data() {
             return {
+                selectedRecord: new Object(),
                 showMode: true, //switch content list or table list
                 addWindowAlive: false,  //for add Working Calendar modal windows
+                operation: 'add',
                 deleteWindowAlive: false,  //for delete Working Calendar modal windows
                 deleteIndex: -1,    //store which index will be delete
                 deleteUid: '',      //store which obj will be delete
@@ -411,6 +414,21 @@
 
                 this.selectedRecord = new Object()
             },
+            saveWindowContentForAdd(new_content) {
+                if (new_content) {
+                    this.allWCObjs.unshift(new_content) //add object to the top of array
+                    this.clearSelectedRecord()
+                }
+                this.addWindowAlive = !this.addWindowAlive
+            },
+            saveWindowContentForEdit(new_content) {
+                if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
+                    new_content.index = this.selectedRecord.index   //asign old index prop to new content
+                    this.allWCObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.selectedRecord = new_content
+                }
+                this.addWindowAlive = !this.addWindowAlive
+            },
             //above for pagging, ordering, query
             changeNum(e, index) {
                 //�����{�b�I�����O���@��
@@ -456,10 +474,17 @@
         height: 35px;
         width: 86px;
     }
-
     input {
         height: 28px;
         width: 200px;
+    }
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>
 

@@ -189,13 +189,13 @@
                                         <template v-else v-for="(content, index) in allUserObjs">
                                             <tr v-show="content.userid.trim() !== 'root'" :id="content.useruid" :key="content.useruid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                                 @click="clickOnUserRecord(content.useruid, index)">
-                                                <td :width="gridWidth[0]">
+                                                <td id="barsTD" :width="gridWidth[0]">
                                                     <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                        <i class="fa fa-bars"></i>
-                                                        <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                            <i v-if="!selectedRecord.lock || selectedRecord.lock !== '1'" class="w3-bar-item fa fa-lock w3-button" @click.stop="showLockWindow(true)">  Lock</i>
-                                                            <i v-else class="w3-bar-item fa fa-unlock w3-button" @click.stop="showLockWindow(false)">  Unlock</i>
-                                                            <i class="w3-bar-item fa fa-trash-o w3-button" @click.stop="showDeleteWindow"> Delete</i>
+                                                        <i id="barsLabel" class="fa fa-bars"></i>
+                                                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                            <button v-if="!selectedRecord.lock || selectedRecord.lock !== '1'" class="w3-bar-item w3-button w3-padding-small" @click.stop="showLockWindow(true)"> Lock</button>
+                                                            <button v-else class="w3-bar-item w3-button w3-padding-small" @click.stop="showLockWindow(false)"> Unlock</button>
+                                                            <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> Delete</button>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -633,10 +633,17 @@
         width: 86px;
         padding: 0px 0px 0px 0px;
     }
-
     input {
         height: 31px;
         width: 210px;
+    }
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>
 

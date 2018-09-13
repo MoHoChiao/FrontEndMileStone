@@ -181,13 +181,13 @@
                                         <empty-grid v-if="allJCSAgentObjs.length <= 0"></empty-grid>
                                         <tr v-else :id="content.agentuid" :key="content.agentuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                             @click="clickOnAgentRecord(content.agentuid, index)" v-for="(content, index) in allJCSAgentObjs">
-                                            <td :width="gridWidth[0]">
+                                            <td id="barsTD" :width="gridWidth[0]">
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                    <i class="fa fa-bars"></i>
+                                                    <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                        <i class="w3-bar-item fa fa-clone w3-button" @click.stop="changeAgentWindowStatus('copy')"> Copy</i>
-                                                        <i class="w3-bar-item fa fa-universal-access w3-button" @click.stop="changePermissionWindowStatus()"> Permission</i>
-                                                        <i class="w3-bar-item fa fa-trash-o w3-button" @click.stop="showDeleteWindow"> Delete</i>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeAgentWindowStatus('copy')"> Copy</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changePermissionWindowStatus"> Permission</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -581,9 +581,16 @@
         width: 86px;
         padding: 0px 0px 0px 0px;
     }
-
     input {
         height: 31px;
         width: 210px;
+    }
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>

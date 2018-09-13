@@ -10,8 +10,8 @@
                     <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
-                    <input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text"
-                           maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase">
+                    <name-input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text"
+                                maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
                 </div>
                 <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w3-row-padding w3-section">
+            <div v-if="urlOp !== 'move'" class="w3-row-padding w3-section">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                     <label class="w3-right">Date Type</label>
                 </div>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="datetype != 'Manually'">
+            <div v-if="urlOp !== 'move' && datetype != 'Manually'">
                 <div class="w3-row-padding">
                     <hr class="w3-border-black">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">
@@ -297,6 +297,10 @@
     var moment = require('moment')
 
     export default {
+        components: {
+            'datetime-picker': myDatepicker,
+            'calendar-pattern-window': CalendarPatternWindow
+        },
         data() {
             return {
                 inputClassList: {
@@ -899,14 +903,11 @@
             delSelectedTime(index) {
                 this.selectedTime.splice(index, 1)
             },
-        },
-        components: {
-            'datetime-picker': myDatepicker,
-            'calendar-pattern-window': CalendarPatternWindow
         }
     }
 </script>
 <style scoped>
+
 
     input, select {
         height: 30px

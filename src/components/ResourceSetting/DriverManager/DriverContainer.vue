@@ -143,10 +143,10 @@
                                         <empty-grid v-if="sortedData.length == 0"></empty-grid>
                                         <tr v-else :id="content.name" :key="content.name" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                             @click="clickOnDriverRecord(content.name, index)" v-for="(content, index) in sortedData">
-                                            <td :width="gridWidth[0]">
+                                            <td id="barsTD" :width="gridWidth[0]">
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                    <i class="fa fa-bars"></i>
-                                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                                    <i id="barsLabel" class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -619,22 +619,26 @@
         height: 35px;
         width: 86px;
     }
-
     input {
         height: 31px;
         width: 210px;
     }
-
     .loading-area {
         position: relative
     }
-
     .input-file {
         opacity: 0; /* invisible but it's there! */
         width: 0px;
         height: 0px;
         position: absolute;
         visibility: hidden
+    }
+    #barsTD {
+        padding: 0px 0px;
+    }
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>
 

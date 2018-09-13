@@ -27,7 +27,6 @@
                                @closeDelete="closeDeleteWindow"
                                @confirmDelete="deleteObj">
         </confirm-delete-window>
-
         <div class="w3-col m9 w3-animate-opacity">
             <!-- Frequency Category Panel -->
             <div class="w3-small w3-row-padding">
@@ -135,17 +134,18 @@
                                     <empty-grid v-if="allFrequencyObjs.length == 0"></empty-grid>
                                     <tr v-else :id="content.frequencyuid" :key="content.frequencyuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                         @click="clickOnFrequency(content.frequencyuid, index)" v-for="(content, index) in allFrequencyObjs">
-                                        <td :width="gridWidth[0]">
+                                        <td id="barsTD" :width="gridWidth[0]">
                                             <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                <i class="fa fa-bars"></i>
-                                                <div class="w3-dropdown-content w3-bar-block w3-border">
-                                                    <i class="w3-bar-item fa fa-clone w3-button" @click.stop="changeFrequencyWindowStatus('copy')"> Copy</i>
-                                                    <i class="w3-bar-item fa fa-clipboard w3-button" @click.stop="changeFrequencyWindowStatus('move')"> Move</i>
-                                                    <i class="w3-bar-item fa fa-trash-o w3-button" @click.stop="showdeleteFrequencyWindow"> Delete</i>                                                </div>
+                                                <i id="barsLabel" class="fa fa-bars"></i>
+                                                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeFrequencyWindowStatus('copy')"> Copy</button>
+                                                    <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeFrequencyWindowStatus('move')"> Move</button>
+                                                    <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showdeleteFrequencyWindow"> Delete</button>
+                                                </div>
                                             </div>
                                         </td>
                                         <td :width="gridWidth[1]">
-                                            <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname" style="text-decoration:underline;" 
+                                            <span v-if="selectedCategoryRecord && selectedCategoryRecord.freqcategoryname" style="text-decoration:underline;"
                                                   @click.stop="clickOnFrequencyName(content.frequencyuid, index)">
                                                 {{selectedCategoryRecord.freqcategoryname === '/' ? selectedCategoryRecord.freqcategoryname : '/'+selectedCategoryRecord.freqcategoryname+'/'}}{{ content.frequencyname }}
                                             </span>
@@ -627,3 +627,13 @@
         }
     }
 </script>
+<style scoped>
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
+    }
+</style>

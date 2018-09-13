@@ -8,7 +8,7 @@
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>User Name</label>
-                <input :class="inputClassList.username" v-model="new_content.username" type="text" maxlength="32" placeholder="Please Input Name">
+                <name-input :class="inputClassList.username" v-model="new_content.username" type="text" maxlength="32" placeholder="Please Input Name" />
             </div>
         </div>
         <div class="w3-row-padding w3-section">
@@ -75,129 +75,131 @@
 </template>
 <script>
 
-export default {
-    data() {
-        return {
-            inputClassList: {
-                userid: ['w3-input','w3-border'],
-                username: ['w3-input','w3-border'],
-                password1: ['w3-input','w3-border'],
-                password2: ['w3-input','w3-border'],
-                email: ['w3-input','w3-border'],
-                mobile: ['w3-input','w3-border'],
-                description: ['w3-input','w3-border'],
-                ssoid: ['w3-input','w3-border'],
-                homedir: ['w3-input','w3-border']
-            },
-            new_content: {
-                /*
-                    javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
-                    To avoid parent content to be changed.
-                */
-                useruid: this.content.useruid,
-                userid: this.content.userid,
-                username: this.content.username,
-                description: this.content.description,
-                usertype: this.content.usertype,
-                activate: Number(this.content.activate),
-                localaccount: Number(this.content.localaccount),
-                onlyforexecution: Number(this.content.onlyforexecution),
-                email: this.content.email,
-                mobile: this.content.mobile,
-                defaultlang: this.content.defaultlang,
-                ssoid: this.content.ssoid,
-                homedir: this.content.homedir,
-                createduseruid: this.content.createduseruid
-            },
-            password1: '',
-            password2: ''
-        }
-    },
-    props: {
-        content: {
-            type: Object,
-            default () {
-                return {
-                    useruid: '',
-                    userid: '',
-                    username: '',
-                    description: '',
-                    usertype: 'G',
-                    activate: '1',
-                    localaccount: '0',
-                    onlyforexecution: '0',
-                    email: '',
-                    mobile: '',
-                    defaultlang: 'en_US',
-                    ssoid: '',
-                    homedir: '',
-                    createduseruid: ''
-                }
+    export default {
+        data() {
+            return {
+                inputClassList: {
+                    userid: ['w3-input', 'w3-border'],
+                    username: ['w3-input', 'w3-border'],
+                    password1: ['w3-input', 'w3-border'],
+                    password2: ['w3-input', 'w3-border'],
+                    email: ['w3-input', 'w3-border'],
+                    mobile: ['w3-input', 'w3-border'],
+                    description: ['w3-input', 'w3-border'],
+                    ssoid: ['w3-input', 'w3-border'],
+                    homedir: ['w3-input', 'w3-border']
+                },
+                new_content: {
+                    /*
+                        javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
+                        To avoid parent content to be changed.
+                    */
+                    useruid: this.content.useruid,
+                    userid: this.content.userid,
+                    username: this.content.username,
+                    description: this.content.description,
+                    usertype: this.content.usertype,
+                    activate: Number(this.content.activate),
+                    localaccount: Number(this.content.localaccount),
+                    onlyforexecution: Number(this.content.onlyforexecution),
+                    email: this.content.email,
+                    mobile: this.content.mobile,
+                    defaultlang: this.content.defaultlang,
+                    ssoid: this.content.ssoid,
+                    homedir: this.content.homedir,
+                    createduseruid: this.content.createduseruid
+                },
+                password1: '',
+                password2: ''
             }
         },
-        index: Number
-    },
-    methods: {
-        save(){
-            this.clearInValid()
-
-            if(this.new_content.userid.trim().length <= 0){
-                this.inputClassList.userid.splice(2, 1, 'w3-red')
-            }else if(this.new_content.username.trim().length <= 0){
-                this.inputClassList.username.splice(2, 1, 'w3-red')
-            // }else if(this.password1.trim() === '') {
-            //     this.inputClassList.password1.splice(2, 1, 'w3-red')
-            // }else if(this.password2.trim() === '') {
-            //     this.inputClassList.password2.splice(2, 1, 'w3-red')
-            }else if(this.password1 !== this.password2) {
-                let newStatus = {
-                    "msg": "Passwords are not identical!",
-                    "status": "Warn"
+        props: {
+            content: {
+                type: Object,
+                default() {
+                    return {
+                        useruid: '',
+                        userid: '',
+                        username: '',
+                        description: '',
+                        usertype: 'G',
+                        activate: '1',
+                        localaccount: '0',
+                        onlyforexecution: '0',
+                        email: '',
+                        mobile: '',
+                        defaultlang: 'en_US',
+                        ssoid: '',
+                        homedir: '',
+                        createduseruid: ''
+                    }
                 }
-                this.$store.dispatch('setSystemStatus', newStatus)
-                this.inputClassList.password1.splice(2, 1, 'w3-red')
-                this.inputClassList.password2.splice(2, 1, 'w3-red')
-            }else{
-                this.new_content.activate = Number(this.new_content.activate)
-                this.new_content.localaccount = Number(this.new_content.localaccount)
-                this.new_content.onlyforexecution = Number(this.new_content.onlyforexecution)
-                this.new_content.password = this.password1
-                return this.new_content
-            }                
+            },
+            index: Number
         },
-        reset(){
-            this.clearInValid()
-            
-            this.new_content.useruid = this.content.useruid
-            this.new_content.userid = this.content.userid
-            this.new_content.username = this.content.username
-            this.new_content.description = this.content.description
-            this.new_content.usertype = this.content.usertype
-            this.new_content.activate = Number(this.content.activate)
-            this.new_content.localaccount = Number(this.content.localaccount)
-            this.new_content.onlyforexecution = Number(this.content.onlyforexecution)
-            this.new_content.email = this.content.email
-            this.new_content.mobile = this.content.mobile
-            this.new_content.defaultlang = this.content.defaultlang
-            this.new_content.ssoid = this.content.ssoid
-            this.new_content.homedir = this.content.homedir
+        methods: {
+            save() {
+                this.clearInValid()
 
-            this.password1 = ''
-            this.password2 = ''
-        },
-        clearInValid(){
-            this.inputClassList.userid.splice(2, 1)
-            this.inputClassList.username.splice(2, 1)
-            this.inputClassList.password1.splice(2, 1)
-            this.inputClassList.password2.splice(2, 1)
+                if (this.new_content.userid.trim().length <= 0) {
+                    this.inputClassList.userid.splice(2, 1, 'w3-red')
+                } else if (this.new_content.username.trim().length <= 0) {
+                    this.inputClassList.username.splice(2, 1, 'w3-red')
+                    // }else if(this.password1.trim() === '') {
+                    //     this.inputClassList.password1.splice(2, 1, 'w3-red')
+                    // }else if(this.password2.trim() === '') {
+                    //     this.inputClassList.password2.splice(2, 1, 'w3-red')
+                } else if (this.password1 !== this.password2) {
+                    let newStatus = {
+                        "msg": "Passwords are not identical!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                    this.inputClassList.password1.splice(2, 1, 'w3-red')
+                    this.inputClassList.password2.splice(2, 1, 'w3-red')
+                } else {
+                    this.new_content.activate = Number(this.new_content.activate)
+                    this.new_content.localaccount = Number(this.new_content.localaccount)
+                    this.new_content.onlyforexecution = Number(this.new_content.onlyforexecution)
+                    this.new_content.password = this.password1
+                    return this.new_content
+                }
+            },
+            reset() {
+                this.clearInValid()
+
+                this.new_content.useruid = this.content.useruid
+                this.new_content.userid = this.content.userid
+                this.new_content.username = this.content.username
+                this.new_content.description = this.content.description
+                this.new_content.usertype = this.content.usertype
+                this.new_content.activate = Number(this.content.activate)
+                this.new_content.localaccount = Number(this.content.localaccount)
+                this.new_content.onlyforexecution = Number(this.content.onlyforexecution)
+                this.new_content.email = this.content.email
+                this.new_content.mobile = this.content.mobile
+                this.new_content.defaultlang = this.content.defaultlang
+                this.new_content.ssoid = this.content.ssoid
+                this.new_content.homedir = this.content.homedir
+
+                this.password1 = ''
+                this.password2 = ''
+            },
+            clearInValid() {
+                this.inputClassList.userid.splice(2, 1)
+                this.inputClassList.username.splice(2, 1)
+                this.inputClassList.password1.splice(2, 1)
+                this.inputClassList.password2.splice(2, 1)
+            }
         }
     }
-}
 </script>
 <style scoped>
-    input,select {
+
+    input, select {
         height: 30px
     }
+
     input.w3-check {
         height: 20px
     }

@@ -1,61 +1,85 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <working-calendar-form slot="content" ref="wcForm" :content="content" @save="save"></working-calendar-form>
+        <working-calendar-form v-if="urlOp === 'add'" slot="content" ref="wcForm" @save="save"></working-calendar-form>
+        <working-calendar-form v-else slot="content" ref="wcForm" :content="content" @save="save"></working-calendar-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="picked"></form-button>
         </div>
     </modal-window>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import WorkingCalendarForm from './WorkingCalendarForm.vue'
-import FormButton from '../../FormButton.vue'
+    import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
+    import ModalWindow from '../../../Common/window/ModalWindow.vue'
+    import WorkingCalendarForm from './WorkingCalendarForm.vue'
+    import FormButton from '../../FormButton.vue'
 
-export default {
-    props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
-        windowBgColor: {
-            type: String,
-            default: 'camo-black'
-        },
-        windowAlive: {
-            type: Boolean,
-            default: false
-        },
-        content: {
-            type: Object
-        },
-    },
-    methods: {
-        cancel(){
-            this.$emit('closeAdd')
-        },
-        picked(){
-            this.$refs.wcForm.picked()
-        },
-        save(postContent){
-            if(postContent){
-                HTTP_TRINITY.post(`working-calendar/add`, postContent)
-                .then(response => {
-                    this.$emit('closeAdd', response.data)
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+    export default {
+        computed: {
+            windowTitle() {
+                if (this.urlOp === 'add')
+                    return 'Add Working Calendar'
+                else if (this.urlOp === 'edit')
+                    return 'Edit Working Calendar - ' + this.content.wcalendarname
+                else if (this.urlOp === 'copy')
+                    return 'Copy Working Calendar ' + this.content.wcalendarname
             }
         },
-        reset(){
-            this.$refs.wcForm.reset()
+        props: {
+            windowBgColor: {
+                type: String,
+                default: 'camo-black'
+            },
+            windowAlive: {
+                type: Boolean,
+                default: false
+            },
+            content: {
+                type: Object
+            },
+            urlOp: {
+                type: String,
+                default: 'add'
+            }
+        },
+        methods: {
+            cancel() {
+                if (this.urlOp === 'add')
+                    this.$emit('closeAdd')
+                else if (this.urlOp === 'edit')
+                    this.$emit('closeEdit')
+                //else if (this.urlOp === 'copy')
+                //    this.$emit('closeCopy')
+                //else if (this.urlOp === 'move')
+                //    this.$emit('closeMove')
+            },
+            picked() {
+                this.$refs.wcForm.picked()
+            },
+            save(postContent) {
+                if (postContent) {
+                    HTTP_TRINITY.post(`working-calendar/` + this.urlOp, postContent)
+                        .then(response => {
+                            if (this.urlOp === 'add') { //add operation
+                                this.$emit('closeAdd', response.data)
+                            } else if (this.urlOp === 'edit') {    //edit operation
+                                this.$emit('closeEdit', response.data)
+                            //} else if (this.urlOp === 'copy') {  //copy operation
+                            //    this.$emit('closeCopy', response.data)
+                            }
+                        })
+                        .catch(error => {
+                            errorHandle(this.$store, error)
+                        })
+                }
+            },
+            reset() {
+                this.$refs.wcForm.reset()
+            }
+        },
+        components: {
+            'modal-window': ModalWindow,
+            'working-calendar-form': WorkingCalendarForm,
+            'form-button': FormButton
         }
-    },
-    components: {
-        'modal-window': ModalWindow,
-        'working-calendar-form': WorkingCalendarForm,
-        'form-button': FormButton
     }
-}
 </script>

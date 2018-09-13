@@ -126,12 +126,12 @@
                                         <empty-grid v-if="allEntityObjs.length <= 0"></empty-grid>
                                         <tr v-else :id="content.busentityuid" :key="content.busentityuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                             @click="clickOnEntityRecord(content.busentityuid, index)" v-for="(content, index) in allEntityObjs">
-                                            <td :width="gridWidth[0]">
+                                            <td id="barsTD" :width="gridWidth[0]">
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                    <i class="fa fa-bars"></i>
-                                                    <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                        <i class="w3-bar-item fa fa-trash-o w3-button" @click.stop="showDeleteWindow"> Delete All Alias</i>
-                                                        <i class="w3-bar-item fa fa-universal-access w3-button" @click.stop="applyPermission"> Apply Permission</i>
+                                                    <i id="barsLabel" class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Clear All Alias</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="applyPermission"> Permission</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -511,9 +511,16 @@
         width: 86px;
         padding: 0px 0px 0px 0px;
     }
-
     input {
         height: 31px;
         width: 210px;
+    }
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>

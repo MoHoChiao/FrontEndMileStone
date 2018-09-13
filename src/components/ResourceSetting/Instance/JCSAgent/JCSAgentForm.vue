@@ -5,8 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.name" v-model="new_content.agentname" type="text" 
-                    maxlength="32" placeholder="Please Input Agent Name" style="text-transform:uppercase">
+                <name-input :class="inputClassList.name" v-model="new_content.agentname" type="text"
+                            maxlength="32" placeholder="Please Input Agent Name" style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" type="checkbox">
@@ -119,143 +119,145 @@
 </template>
 <script>
 
-export default {
-    data() {
-        return {
-            inputClassList: {
-                name: ['w3-input','w3-border'],
-                desc: ['w3-input','w3-border'],
-                host: ['w3-input','w3-border'],
-                port: ['w3-input','w3-border'],
-                osname: ['w3-input','w3-border'],
-                encoding: ['w3-input','w3-border'],
-                cpu: ['w3-input','w3-border'],
-                mem: ['w3-input','w3-border'],
-            },
-            new_content: {
-                /*
-                    javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
-                    To avoid parent content to be changed.
-                */
-                agentuid: this.content.agentuid,
-                agentname: this.content.agentname,
-                description: this.content.description,
-                host: this.content.host,
-                port: this.content.port,
-                maximumjob: this.content.maximumjob,
-                activate: Number(this.content.activate),
-                ostype: this.content.ostype,
-                osname: this.content.osname,
-                deadperiod: this.content.deadperiod,
-                memweight: this.content.memweight,
-                compresstransfer: Number(this.content.compresstransfer),
-                encoding: this.content.encoding,
-                monitortime: this.content.monitortime,
-                cpuweight: this.content.cpuweight
-            }
-        }
-    },
-    created(){
-        if (this.urlOp === 'copy') {
-            //copy動作, 把name和description設空值
-            this.new_content.agentuid = ''
-            this.new_content.agentname = ''
-            this.new_content.description = ''
-        }
-    },
-    props: {
-        content: {
-            type: Object,
-            default () {
-                return {
-                    agentuid: '',
-                    agentname: '',
-                    description: '',
-                    host: '',
-                    port: '',
-                    maximumjob: 5,
-                    activate: '0',
-                    ostype: 'Linux',
-                    osname: '',
-                    deadperiod: 10,
-                    memweight: 1,
-                    compresstransfer: '0',
-                    encoding: '',
-                    monitortime: 6,
-                    cpuweight: 2
+    export default {
+        data() {
+            return {
+                inputClassList: {
+                    name: ['w3-input', 'w3-border'],
+                    desc: ['w3-input', 'w3-border'],
+                    host: ['w3-input', 'w3-border'],
+                    port: ['w3-input', 'w3-border'],
+                    osname: ['w3-input', 'w3-border'],
+                    encoding: ['w3-input', 'w3-border'],
+                    cpu: ['w3-input', 'w3-border'],
+                    mem: ['w3-input', 'w3-border'],
+                },
+                new_content: {
+                    /*
+                        javascript object/array is copy by reference, so here can not be written 'new_content=this.content'.
+                        To avoid parent content to be changed.
+                    */
+                    agentuid: this.content.agentuid,
+                    agentname: this.content.agentname,
+                    description: this.content.description,
+                    host: this.content.host,
+                    port: this.content.port,
+                    maximumjob: this.content.maximumjob,
+                    activate: Number(this.content.activate),
+                    ostype: this.content.ostype,
+                    osname: this.content.osname,
+                    deadperiod: this.content.deadperiod,
+                    memweight: this.content.memweight,
+                    compresstransfer: Number(this.content.compresstransfer),
+                    encoding: this.content.encoding,
+                    monitortime: this.content.monitortime,
+                    cpuweight: this.content.cpuweight
                 }
             }
         },
-        urlOp: {
-            type: String,
-            default: 'add'
-        }
-    },
-    methods: {
-        save(){
-            this.clearInValid()
-
-            if(this.new_content.agentname.trim().length <= 0){
-                this.inputClassList.name.splice(2, 1, 'w3-red')
-            }else if(this.new_content.host.trim().length <= 0){
-                this.inputClassList.host.splice(2, 1, 'w3-red')
-            }else if(this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port) || 
-                        this.new_content.port < 0 || this.new_content.port > 65535){
-                this.inputClassList.port.splice(2, 1, 'w3-red')
-            }else if(this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight) || 
-                        this.new_content.cpuweight < 0){
-                this.inputClassList.cpu.splice(2, 1, 'w3-red')
-            }else if(this.new_content.memweight.toString().trim() === '' || isNaN(this.new_content.memweight) || 
-                        this.new_content.memweight < 0){
-                this.inputClassList.mem.splice(2, 1, 'w3-red')
-            }else{
-                this.new_content.agentname = this.new_content.agentname.trim().toUpperCase()
-                this.new_content.activate = Number(this.new_content.activate)
-                this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
-                return this.new_content
-            }                
-        },
-        reset(){
-            this.clearInValid()
-            
+        created() {
             if (this.urlOp === 'copy') {
+                //copy動作, 把name和description設空值
                 this.new_content.agentuid = ''
                 this.new_content.agentname = ''
                 this.new_content.description = ''
-            }else{
-                this.new_content.agentuid = this.content.agentuid
-                this.new_content.agentname = this.content.agentname
-                this.new_content.description = this.content.description
             }
-            
-            this.new_content.host = this.content.host
-            this.new_content.port = this.content.port
-            this.new_content.maximumjob = this.content.maximumjob
-            this.new_content.activate = Number(this.content.activate)
-            this.new_content.ostype = this.content.ostype
-            this.new_content.osname = this.content.osname
-            this.new_content.deadperiod = this.content.deadperiod
-            this.new_content.memweight = this.content.memweight
-            this.new_content.compresstransfer = Number(this.content.compresstransfer)
-            this.new_content.encoding = this.content.encoding
-            this.new_content.monitortime = this.content.monitortime
-            this.new_content.cpuweight = this.content.cpuweight
         },
-        clearInValid(){
-            this.inputClassList.name.splice(2, 1)
-            this.inputClassList.host.splice(2, 1)
-            this.inputClassList.port.splice(2, 1)
-            this.inputClassList.cpu.splice(2, 1)
-            this.inputClassList.mem.splice(2, 1)
+        props: {
+            content: {
+                type: Object,
+                default() {
+                    return {
+                        agentuid: '',
+                        agentname: '',
+                        description: '',
+                        host: '',
+                        port: '',
+                        maximumjob: 5,
+                        activate: '0',
+                        ostype: 'Linux',
+                        osname: '',
+                        deadperiod: 10,
+                        memweight: 1,
+                        compresstransfer: '0',
+                        encoding: '',
+                        monitortime: 6,
+                        cpuweight: 2
+                    }
+                }
+            },
+            urlOp: {
+                type: String,
+                default: 'add'
+            }
+        },
+        methods: {
+            save() {
+                this.clearInValid()
+
+                if (this.new_content.agentname.trim().length <= 0) {
+                    this.inputClassList.name.splice(2, 1, 'w3-red')
+                } else if (this.new_content.host.trim().length <= 0) {
+                    this.inputClassList.host.splice(2, 1, 'w3-red')
+                } else if (this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port) ||
+                    this.new_content.port < 0 || this.new_content.port > 65535) {
+                    this.inputClassList.port.splice(2, 1, 'w3-red')
+                } else if (this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight) ||
+                    this.new_content.cpuweight < 0) {
+                    this.inputClassList.cpu.splice(2, 1, 'w3-red')
+                } else if (this.new_content.memweight.toString().trim() === '' || isNaN(this.new_content.memweight) ||
+                    this.new_content.memweight < 0) {
+                    this.inputClassList.mem.splice(2, 1, 'w3-red')
+                } else {
+                    this.new_content.agentname = this.new_content.agentname.trim().toUpperCase()
+                    this.new_content.activate = Number(this.new_content.activate)
+                    this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
+                    return this.new_content
+                }
+            },
+            reset() {
+                this.clearInValid()
+
+                if (this.urlOp === 'copy') {
+                    this.new_content.agentuid = ''
+                    this.new_content.agentname = ''
+                    this.new_content.description = ''
+                } else {
+                    this.new_content.agentuid = this.content.agentuid
+                    this.new_content.agentname = this.content.agentname
+                    this.new_content.description = this.content.description
+                }
+
+                this.new_content.host = this.content.host
+                this.new_content.port = this.content.port
+                this.new_content.maximumjob = this.content.maximumjob
+                this.new_content.activate = Number(this.content.activate)
+                this.new_content.ostype = this.content.ostype
+                this.new_content.osname = this.content.osname
+                this.new_content.deadperiod = this.content.deadperiod
+                this.new_content.memweight = this.content.memweight
+                this.new_content.compresstransfer = Number(this.content.compresstransfer)
+                this.new_content.encoding = this.content.encoding
+                this.new_content.monitortime = this.content.monitortime
+                this.new_content.cpuweight = this.content.cpuweight
+            },
+            clearInValid() {
+                this.inputClassList.name.splice(2, 1)
+                this.inputClassList.host.splice(2, 1)
+                this.inputClassList.port.splice(2, 1)
+                this.inputClassList.cpu.splice(2, 1)
+                this.inputClassList.mem.splice(2, 1)
+            }
         }
     }
-}
 </script>
 <style scoped>
-    input,select {
+
+    input, select {
         height: 30px
     }
-    input.w3-check {
-        height: 20px
-    }
+
+        input.w3-check {
+            height: 20px
+        }
 </style>
