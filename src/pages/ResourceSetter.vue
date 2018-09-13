@@ -44,9 +44,9 @@
                             <div id="accountMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('menuContent.User') }}</a>
-                                        <a @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('menuContent.Role') }}</a>
-                                        <a @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('menuContent.User_Group') }}</a>
+                                        <a id="userBtn" @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('menuContent.User') }}</a>
+                                        <a id="roleBtn"@click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('menuContent.Role') }}</a>
+                                        <a id="usergroupBtn"@click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('menuContent.User_Group') }}</a>
                                     </div>
                                 </p>
                             </div>
@@ -69,13 +69,14 @@
                                     <div class="w3-bar-block">
                                         <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ $t('menuContent.Working_Cal') }}</a>
                                         <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Frequency') }}</a>
-                                        <button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Exclude_Freq') }}</button>
+                                        <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Exclude_Freq') }}</a>
+                                        <!--<button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Exclude_Freq') }}</button>
                                         <div id="excludeFreqMenu" class="w3-hide w3-container w3-animate-opacity">
                                             <div class="w3-bar-block">
                                                 <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>{{ $t('menuContent.General') }}</a>
                                                 <a @click="getGlobalExclFrequency" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-globe fa-fw w3-margin-right"></i>{{ $t('menuContent.Global') }}</a>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </p>
                             </div>
@@ -149,68 +150,100 @@
             changeMonitorWindowStatus() {
                 this.resourceMonitorAlive = !this.resourceMonitorAlive
             },
+            clickMenuItem(btn) {
+                let c = 'w3-bar-item w3-button w3-padding w3-text-black w3-grey'
+                let list = document.getElementsByClassName(c)
+
+                // clear others 
+                for (let i = 0; i < list.length; i++) {
+                    list[i].className = 'w3-bar-item w3-button w3-padding w3-text-teal'
+                }
+
+                btn.className = c
+            },
             //以下為頁面中間的部份, 各種Resources都會在這裡
             getAlias(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'AliasReference' })
             },
             getGlobalAlias(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'GlobalAliasReference' })
             },
             getDomains(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'Domain' })
             },
             getGlobalDomain(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'GlobalDomain' })
             },
             getUser(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'User' })
             },
             getRole(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'Role' })
             },
             getUserGroup(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'UserGroup' })
             },
             getAgents(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'JCSAgent' })
             },
             getVRAgents(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'VRAgent' })
             },
             getFileSources(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'FileSource' })
             },
             getConnections(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'Connection' })
             },
             getWorkingCalendar(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'WorkingCalendar' })
             },
             getFrequencies(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'Frequency' })
             },
             getExclFrequencies(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'ExclFrequency' })
             },
             getGlobalExclFrequency(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'GlobalExclFrequency' })
             },
             getTrinityconfig(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'Trinityconfig' })
             },
             getResourceMonitor(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'ResourceMonitor' })
             },
             getDrivers(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'DriverManager' })
             },
             getExternalRules(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'ExternalRuleContainer' })
             },
             getPluginLicense(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'PluginLicense' })
             },
             getVersionInfo(e) {
+                this.clickMenuItem(e.target)
                 this.$router.push({ name: 'VersionInfo' })
             },
             logout(e) {
