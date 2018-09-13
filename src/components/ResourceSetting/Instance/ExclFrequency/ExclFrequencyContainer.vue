@@ -110,11 +110,11 @@
                                     <table id="freqTable" class="w3-table-all w3-left">
                                         <empty-grid v-if="allExclFreqObjs.length == 0"></empty-grid>
                                         <tr v-else :id="content.excludefrequencyuid" :key="content.excludefrequencyuid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
-                                            @click="clickOnFreqRecord(content.excludefrequencyuid, index)" v-for="(content, index) in allExclFreqObjs">
-                                            <td :width="gridWidth[0]">
-                                                <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                    <i class="fa fa-bars"></i>
-                                                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                                            @click="clickOnFreqRecord(content.excludefrequencyuid, index)" v-for="(content, index) in sortedData">
+                                            <td id="barsTD" :width="gridWidth[0]">
+                                                <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute;">
+                                                    <i id="barsLabel" class="fa fa-bars"></i>
+                                                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -191,33 +191,6 @@
                                                :index="index" :content="content" @closeEdit="changeEditable"></excl-frequency-edit-panel>
                 </div>
             </div>
-            <!--<ul v-else class="w3-ul w3-card-4 w3-round w3-signal-white w3-margin">
-                <li :key="content.excludefrequencyuid+'li'" class="w3-bar w3-border-camo-black" v-for="(content, index) in allExclFreqObjs">
-                    <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/exclude_frequency.png" alt="Exclude Frequency" class="w3-left w3-circle w3-margin-right w3-hide-medium w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                        <p>
-                            <i v-if="content.excludefrequencyuid.trim() === 'global'" class="fa fa-globe fa-fw w3-text-blue"></i>
-                            {{ content.excludefrequencyname }}
-                        </p>
-                        <span class="w3-tag w3-small w3-theme-l2" style="transform:rotate(-5deg)">{{ (content.activate == 1) ? 'activate' : 'Deactivate' }}</span>
-                        <button title="Delete This Exclude Frequency" type="button" class="w3-button w3-theme-d2 w3-round w3-small w3-right" @click="changeDeleteWindowStatus(index, content.excludefrequencyuid, content.excludefrequencyname)">
-                            <i class="fa fa-trash-o"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Delete</span>
-                        </button>
-                        <button title="Apply To Frequency/Job/Flow" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeApplyWindowStatus(content)">
-                            <i class="fa fa-hand-lizard-o"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Apply</span>
-                        </button>
-                        <button title="Edit This Exclude Frequency" type="button" class="w3-button w3-theme-d1 w3-round w3-small w3-right" style="margin-right:3px;" @click="changeEditable(index)">
-                            <i class="fa fa-pencil"></i>
-                            <span class="w3-hide-medium w3-hide-small"> Edit</span>
-                        </button>
-                    </div>
-                    <excl-frequency-edit-panel v-else :key="content.excludefrequencyuid+'EditPanel2'"
-                        :index="index" :content="content" @closeEdit="changeEditable"></excl-frequency-edit-panel>
-                </li>
-            </ul>-->
         </div>
     </div>
 </template>
@@ -275,6 +248,14 @@
         mounted() {
             this.getExclFreq()
         },
+        computed: {
+            // if 'GLOBAL', show top in grid
+            sortedData: function () {
+                return _.sortBy(this.allExclFreqObjs, function (item) {
+                    return item.excludefrequencyname === 'GLOBAL'? 0: 1
+                });
+            }
+        },
         methods: {
             //When Grid List click on agent record
             clickOnFreqRecord(id, index) {
@@ -284,9 +265,11 @@
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allExclFreqObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
-                    menuBtn.style.display = 'block'
+
+                    if (id.trim() !== 'global') // 'GLOBAL' can not delete
+                        menuBtn.style.display = 'block'
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
                     menuBtn.style.display = 'none'
@@ -299,7 +282,7 @@
                     this.clearSelectedRecord(tr)
 
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allExclFreqObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
 
                     let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
@@ -331,8 +314,6 @@
                     },
                     "param": this.queryParam
                 }
-
-                console.log(params)
 
                 HTTP_TRINITY.post(`excl-frequency/findByFilter`, params)
                     .then(response => {
@@ -424,7 +405,7 @@
                 //new_content !== undefined, it means from Agent Window Save Click
                 if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
                     new_content.index = this.selectedRecord.index   //asign old index prop to new content
-                    this.allExclFreqObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.sortedData[this.selectedRecord.index] = new_content   //replace object to the array
                     this.selectedRecord = new_content
                 }
                 this.addWindowAlive = !this.addWindowAlive
@@ -506,6 +487,15 @@
     input {
         height: 28px;
         width: 200px;
+    }
+
+    #barsTD {
+        padding: 0px 0px;
+    }
+
+    #barsLabel {
+        padding-top: 7px;
+        padding-left: 8px;
     }
 </style>
 
