@@ -5,7 +5,6 @@
                            @closeAdd="saveAddWindow">
         </driver-add-window>
         <driver-edit-window :windowAlive="editWindowAlive"
-                            window-title="Edit Driver"
                             :content="selectedRecord"
                             :driverClassList="driverClassList"
                             @closeEdit="closeEditWindow">
@@ -450,12 +449,13 @@
                             .then(response => {
                                 this.driverClassList = response.data
                                 this.isLoading = false
-                                this.editWindowAlive = true
                             })
                             .catch(error => {
                                 this.isLoading = false
                                 errorHandle(this.$store, error)
                             })
+
+                        this.editWindowAlive = true
                     }
                 } else {
                     this.addWindowAlive = !this.addWindowAlive

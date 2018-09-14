@@ -22,8 +22,10 @@
             'form-button': FormButton,
             'over-lay-loading-div': OverlayLoadingDIV
         },
-        mounted() {
-            
+        computed: {
+            windowTitle() {
+                return 'Edit Driver - ' + this.content.name
+            }
         },
         data() {
             return {
@@ -35,10 +37,6 @@
             driverClassList: {
                 type: Array,
                 default: () => []
-            },
-            windowTitle: {
-                type: String,
-                default: ''
             },
             windowBgColor: {
                 type: String,
