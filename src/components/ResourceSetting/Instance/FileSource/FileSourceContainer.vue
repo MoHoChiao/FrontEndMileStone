@@ -189,7 +189,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import FileSourceCategoryEditWindow from './FileSourceCategory/FileSourceCategoryEditWindow.vue'
     import FileSourceEditWindow from './FileSourceEditWindow.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -230,10 +230,8 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getCategories()
-                // this.getFileSources()    //不需要, 因為getCategories()裡就會呼叫到getFileSources()
-            });
+            this.getCategories()
+            // this.getFileSources()    //不需要, 因為getCategories()裡就會呼叫到getFileSources()
         },
         methods: {
             /*

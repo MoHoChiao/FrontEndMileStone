@@ -194,7 +194,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import FilterPanel from '../../FilterPanel.vue'
     import ConnectionCategoryEditWindow from './ConnectionCategory/ConnectionCategoryEditWindow.vue'
     import ConnectionEditWindow from './ConnectionEditWindow.vue'
@@ -239,10 +239,8 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getCategories()
-                // this.getConnections()    //不需要, 因為getCategories()裡就會呼叫到getConnections()
-            });
+            this.getCategories()
+            // this.getConnections()    //不需要, 因為getCategories()裡就會呼叫到getConnections()
         },
         methods: {
             /*

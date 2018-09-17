@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="urlOp !== 'move'" class="w3-row-padding w3-section">
+            <div v-show="urlOp !== 'move'" class="w3-row-padding w3-section">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                     <label class="w3-right">Date Type</label>
                 </div>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="urlOp !== 'move' && datetype != 'Manually'">
+            <div v-show="urlOp !== 'move' && datetype != 'Manually'">
                 <div class="w3-row-padding">
                     <hr class="w3-border-black">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">

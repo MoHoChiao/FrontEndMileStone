@@ -22,9 +22,9 @@ export default {
             else if(this.urlOp === 'edit')
                 return 'Edit Connection - ' + this.content.connectionname
             else if(this.urlOp === 'copy')
-                return 'Copy Connection from ' + this.content.connectionname
+                return 'Copy Connection - ' + this.content.connectionname
             else if(this.urlOp === 'move')
-                return 'Move Connection from ' + this.content.connectionname
+                return 'Move Connection - ' + this.content.connectionname
         }
     },
     props: {
