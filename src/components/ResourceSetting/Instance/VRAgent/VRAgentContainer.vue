@@ -281,7 +281,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import VRAgentEditPanel from './VRAgentEditPanel.vue'
     import VRAgentEditWindow from './VRAgentEditWindow.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -321,9 +321,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getVRAgents()
-            });
+            this.getVRAgents()
         },
         methods: {
             //When Grid List click on vragent record

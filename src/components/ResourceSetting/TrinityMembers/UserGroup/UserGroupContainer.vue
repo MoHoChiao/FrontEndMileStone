@@ -249,7 +249,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import UserGroupEditPanel from './UserGroupEditPanel.vue'
     import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
     import UserGroupEditWindow from './UserGroupEditWindow.vue'
@@ -290,9 +290,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getGroup()
-            });
+            this.getGroup()
         },
         methods: {
             //When Grid List click on user group record

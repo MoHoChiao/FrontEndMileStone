@@ -284,7 +284,7 @@
     </div>
 </template>
 <script>
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
     import UserEditPanel from './UserEditPanel.vue'
     import UserEditWindow from './UserEditWindow.vue'
@@ -330,9 +330,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getUsers()
-            });
+            this.getUsers()
         },
         methods: {
             //When Grid List click on user record
@@ -384,8 +382,10 @@
             //Get All users info
             getUsers(e) {
                 //用client端暫存的permission table去檢查是否具有權限
-                if (!PermissionTable && !PermissionTable.root && !PermissionTable.admin && !PermissionTable.accountManager)
+                if (!PermissionTable.root && !PermissionTable.admin && !PermissionTable.accountManager)
                     return
+                //if (!PermissionTable && !PermissionTable.root && !PermissionTable.admin && !PermissionTable.accountManager)
+                //    return
 
                 let params = {
                     "paging": {

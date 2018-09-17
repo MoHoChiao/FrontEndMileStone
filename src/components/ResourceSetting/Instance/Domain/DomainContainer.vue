@@ -249,7 +249,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import DomainEditPanel from './DomainEditPanel.vue'
     import DomainEditWindow from './DomainEditWindow.vue'
     import VarAndResourcePanel from './VarAndResourcePanel.vue'
@@ -288,9 +288,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getDomains()
-            });
+            this.getDomains()
         },
         methods: {
             //When Grid List click on domain record

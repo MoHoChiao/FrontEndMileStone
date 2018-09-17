@@ -266,7 +266,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
     import JCSAgentEditWindow from './JCSAgentEditWindow.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
@@ -307,9 +307,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getAgents()
-            });
+            this.getAgents()
         },
         methods: {
             //When Grid List click on agent record

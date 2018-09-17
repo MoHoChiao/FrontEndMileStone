@@ -258,7 +258,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import RoleEditPanel from './RoleEditPanel.vue'
     import RoleMemberPanel from './RoleMemberPanel.vue'
     import RoleEditWindow from './RoleEditWindow.vue'
@@ -301,9 +301,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getRole()
-            });
+            this.getRole()
         },
         methods: {
             //When Grid List click on role record

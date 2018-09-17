@@ -202,7 +202,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import { PermissionTable, loadPermissionTable } from '../../../../util_js/auth'
+    import { PermissionTable } from '../../../../util_js/auth'
     import AliasTableEditPanel from './AliasTableEditPanel.vue'
     import AliasTableEditWindow from './AliasTableEditWindow.vue'
     import AliasTablePermissionWindow from './AliasTablePermissionWindow.vue'
@@ -241,9 +241,7 @@
             }
         },
         mounted() {
-            loadPermissionTable.then((successMessage) => {
-                this.getEntities()
-            });
+            this.getEntities()
         },
         methods: {
             //When Grid List click on entity record
