@@ -30,186 +30,188 @@
                 <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
-        <div class="w3-row w3-section">
-            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Type</label>
-            </div>
-            <div class="w3-col m9">
-                <select :class="inputClassList.connectiontype" v-model="new_content.connectiontype" @click="clickType" style="padding:0px">
-                    <option value="D">Database</option>
-                    <option value="F">FTP</option>
-                    <option value="J">JDBC</option>
-                    <option value="M">Mail</option>
-                    <option value="O">OS Account</option>
-                    <option value="S">SAP</option>
-                    <option value="N">Notes</option>
-                </select>
-            </div>
-        </div>
-        <hr class="w3-border-black">
-        <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
-            <div class="w3-col m12">
-                <span class="w3-text-red">*</span><label>Server Name</label>
-                <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
-            </div>
-        </div>
-        <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
-            <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Server Name</label>
-                <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
-            </div>
-            <div class="w3-col m6">
-                <label>Target Directory</label>
-                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" placeholder="Please Input Target Directory">
-            </div>
-        </div>
-        <div v-show="typeFlag['J']">
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m8">
-                    <span class="w3-text-red">*</span><label>Database Type</label>
-                    <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
-                        <template v-for="(info, key) in jdbcDriverInfo">
-                            <option :value="key">
-                                {{ key }}
-                            </option>
-                        </template>
-                        <option value="Generic">Generic</option>
+        <div v-show="urlOp !== 'move'">
+            <div class="w3-row w3-section">
+                <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                    <label class="w3-right"><span class="w3-text-red">*</span>Type</label>
+                </div>
+                <div class="w3-col m9">
+                    <select :class="inputClassList.connectiontype" v-model="new_content.connectiontype" @click="clickType" style="padding:0px" :disabled="urlOp === 'copy'">
+                        <option value="D">Database</option>
+                        <option value="F">FTP</option>
+                        <option value="J">JDBC</option>
+                        <option value="M">Mail</option>
+                        <option value="O">OS Account</option>
+                        <option value="S">SAP</option>
+                        <option value="N">Notes</option>
                     </select>
                 </div>
-                <div class="w3-col m4">
-                    <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
-                </div>
             </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>JDBC Driver</label>
-                    <input :class="inputClassList.jdbc_driver" v-model="new_content.jdbc_driver" type="text" placeholder="Please Input Connection Driver" readonly>
-                </div>
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>JDBC URL</label>
-                    <input :class="inputClassList.jdbc_url" v-model="new_content.jdbc_url" type="text" placeholder="Please Input Connection URL">
-                </div>
-            </div>
-        </div>
-        <div v-show="typeFlag['M']">
-            <div class="w3-row-padding w3-section">
+            <hr class="w3-border-black">
+            <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
                 <div class="w3-col m12">
-                    <label>Mail Server</label>
-                    <input :class="inputClassList.host" v-model="new_content.host" type="text" placeholder="Please Input Mail Server Host">
+                    <span class="w3-text-red">*</span><label>Server Name</label>
+                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
                 </div>
             </div>
-            <div class="w3-row-padding w3-section">
+            <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
                 <div class="w3-col m6">
-                    <label>Port</label>
-                    <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
+                    <span class="w3-text-red">*</span><label>Server Name</label>
+                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
                 </div>
                 <div class="w3-col m6">
-                    <div class="w3-left" style="margin-top:16px;margin-right:16px;">
-                        <input class="w3-check" v-model="new_content.mailssl" type="checkbox">
-                        <label>SSL</label>
+                    <label>Target Directory</label>
+                    <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" placeholder="Please Input Target Directory">
+                </div>
+            </div>
+            <div v-show="typeFlag['J']">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m8">
+                        <span class="w3-text-red">*</span><label>Database Type</label>
+                        <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
+                            <template v-for="(info, key) in jdbcDriverInfo">
+                                <option :value="key">
+                                    {{ key }}
+                                </option>
+                            </template>
+                            <option value="Generic">Generic</option>
+                        </select>
                     </div>
-                    <div class="w3-left" style="margin-top:16px">
-                        <input class="w3-check" v-model="new_content.mailtls" type="checkbox">
-                        <label>TLS</label>
+                    <div class="w3-col m4">
+                        <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>JDBC Driver</label>
+                        <input :class="inputClassList.jdbc_driver" v-model="new_content.jdbc_driver" type="text" placeholder="Please Input Connection Driver" readonly>
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>JDBC URL</label>
+                        <input :class="inputClassList.jdbc_url" v-model="new_content.jdbc_url" type="text" placeholder="Please Input Connection URL">
                     </div>
                 </div>
             </div>
-        </div>
-        <div v-show="typeFlag['O']"></div>
-        <div v-show="typeFlag['S']">
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>System Name</label>
-                    <input :class="inputClassList.sapSystemName" v-model="new_content.sapSystemName" type="text" placeholder="Please Input System Name">
+            <div v-show="typeFlag['M']">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m12">
+                        <label>Mail Server</label>
+                        <input :class="inputClassList.host" v-model="new_content.host" type="text" placeholder="Please Input Mail Server Host">
+                    </div>
                 </div>
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Host IP</label>
-                    <input :class="inputClassList.sapHostIP" v-model="new_content.sapHostIP" type="text" placeholder="Please Input Host IP">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <label>Port</label>
+                        <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
+                    </div>
+                    <div class="w3-col m6">
+                        <div class="w3-left" style="margin-top:16px;margin-right:16px;">
+                            <input class="w3-check" v-model="new_content.mailssl" type="checkbox">
+                            <label>SSL</label>
+                        </div>
+                        <div class="w3-left" style="margin-top:16px">
+                            <input class="w3-check" v-model="new_content.mailtls" type="checkbox">
+                            <label>TLS</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="typeFlag['O']"></div>
+            <div v-show="typeFlag['S']">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>System Name</label>
+                        <input :class="inputClassList.sapSystemName" v-model="new_content.sapSystemName" type="text" placeholder="Please Input System Name">
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Host IP</label>
+                        <input :class="inputClassList.sapHostIP" v-model="new_content.sapHostIP" type="text" placeholder="Please Input Host IP">
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Client</label>
+                        <input :class="inputClassList.sapClient" v-model="new_content.sapClient" type="text" placeholder="Please Input Client">
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>System #</label>
+                        <input :class="inputClassList.sapSystemNumber" v-model="new_content.sapSystemNumber" type="text" placeholder="Please Input System Number">
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <label>Code Page</label>
+                        <input :class="inputClassList.sapCodePage" v-model="new_content.sapCodePage" type="text" placeholder="Please Input Code Page">
+                    </div>
+                    <div class="w3-col m6">
+                        <label>Language</label>
+                        <input :class="inputClassList.saplanguage" v-model="new_content.saplanguage" type="text" placeholder="Please Input Language">
+                    </div>
+                </div>
+            </div>
+            <div v-show="typeFlag['N']">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Host IP</label>
+                        <input :class="inputClassList.notesHostIP" v-model="new_content.notesHostIP" type="text" placeholder="Please Input Host IP">
+                    </div>
+                    <div class="w3-col m6">
+                        <label>Server Name</label>
+                        <input :class="inputClassList.notesServerName" v-model="new_content.notesServerName" type="text" placeholder="Please Input Server Name">
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Database Name</label>
+                        <input :class="inputClassList.notesDBName" v-model="new_content.notesDBName" type="text" placeholder="Please Input Database Name">
+                    </div>
+                    <div class="w3-col m6">
+                        <label>IOR String</label>
+                        <input :class="inputClassList.notesIor" v-model="new_content.notesIor" type="text" placeholder="Please Input IOR String">
+                    </div>
                 </div>
             </div>
             <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Client</label>
-                    <input :class="inputClassList.sapClient" v-model="new_content.sapClient" type="text" placeholder="Please Input Client">
+                <div class="w3-col m4">
+                    <span class="w3-text-red">*</span><label>Account</label>
+                    <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="Please Input Account">
                 </div>
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>System #</label>
-                    <input :class="inputClassList.sapSystemNumber" v-model="new_content.sapSystemNumber" type="text" placeholder="Please Input System Number">
+                <div class="w3-col m4">
+                    <span class="w3-text-red">*</span><label>Password</label>
+                    <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="Please Input Password">
                 </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <label>Code Page</label>
-                    <input :class="inputClassList.sapCodePage" v-model="new_content.sapCodePage" type="text" placeholder="Please Input Code Page">
-                </div>
-                <div class="w3-col m6">
-                    <label>Language</label>
-                    <input :class="inputClassList.saplanguage" v-model="new_content.saplanguage" type="text" placeholder="Please Input Language">
+                <div class="w3-col m4">
+                    <div style="margin-top:16px;margin-right:16px">
+                        <input class="w3-check" v-model="new_content.withpim" type="checkbox">
+                        <label>PIM</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div v-show="typeFlag['N']">
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Host IP</label>
-                    <input :class="inputClassList.notesHostIP" v-model="new_content.notesHostIP" type="text" placeholder="Please Input Host IP">
+            <div v-show="new_content.withpim">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Endpoint Type</label>
+                        <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="Please Input Endpoint Type">
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Endpoint Name</label>
+                        <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="Please Input Endpoint Name">
+                    </div>
                 </div>
-                <div class="w3-col m6">
-                    <label>Server Name</label>
-                    <input :class="inputClassList.notesServerName" v-model="new_content.notesServerName" type="text" placeholder="Please Input Server Name">
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Account Container</label>
+                        <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="Please Input Account Container">
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>Account Name</label>
+                        <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="Please Input Account Name">
+                    </div>
                 </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Database Name</label>
-                    <input :class="inputClassList.notesDBName" v-model="new_content.notesDBName" type="text" placeholder="Please Input Database Name">
-                </div>
-                <div class="w3-col m6">
-                    <label>IOR String</label>
-                    <input :class="inputClassList.notesIor" v-model="new_content.notesIor" type="text" placeholder="Please Input IOR String">
-                </div>
-            </div>
-        </div>
-        <div class="w3-row-padding w3-section">
-            <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Account</label>
-                <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="Please Input Account">
-            </div>
-            <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Password</label>
-                <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="Please Input Password">
-            </div>
-            <div class="w3-col m4">
-                <div style="margin-top:16px;margin-right:16px">
-                    <input class="w3-check" v-model="new_content.withpim" type="checkbox">
-                    <label>PIM</label>
-                </div>
-            </div>
-        </div>
-        <div v-show="new_content.withpim">
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Endpoint Type</label>
-                    <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="Please Input Endpoint Type">
-                </div>
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Endpoint Name</label>
-                    <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="Please Input Endpoint Name">
-                </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Account Container</label>
-                    <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="Please Input Account Container">
-                </div>
-                <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Account Name</label>
-                    <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="Please Input Account Name">
-                </div>
-            </div>
-            <div class="w3-row-padding w3-section">
-                <div class="w3-col m6">
-                    <button class="w3-button w3-blue-grey w3-round">Get Password</button>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <button class="w3-button w3-blue-grey w3-round">Get Password</button>
+                    </div>
                 </div>
             </div>
         </div>
