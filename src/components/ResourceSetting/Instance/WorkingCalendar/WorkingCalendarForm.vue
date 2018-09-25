@@ -27,26 +27,25 @@
                 </div>
             </div>
             <div class="w3-row w3-container">
-                <div class="w3-col m1">&nbsp;</div>
-                <div class="w3-col m10">
+                <!--<div class="w3-col m1">&nbsp;</div>-->
+                <div class="w3-col m12">
                     <datetime-picker ref="datetimePicker" :date="startTime" :option="option" :limit="limit" :inputMode="false" @change="save"></datetime-picker>
                 </div>
-                <div class="w3-col m1">&nbsp;</div>
+                <!--<div class="w3-col m1">&nbsp;</div>-->
             </div>
-            <div class="w3-row w3-container">
-                <div class="w3-col m1">&nbsp;</div>
-                <div class="w3-col m10 w3-center">
+            <br />
+            <div class="w3-row">
+                <div class="w3-col m12 w3-center">
                     <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">By Pattern</button>
                     <button class="w3-button w3-round w3-teal" @click="clearAllDate">Clear All</button>
                 </div>
-                <div class="w3-col m1">&nbsp;</div>
             </div>
         </div>
     </div>
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import myDatepicker from '../../DatetimePicker.vue'
+    import myDatepicker from '../../WCDatetimePicker.vue'
     import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
     export default {
@@ -73,7 +72,8 @@
                 },
                 option: {
                     type: 'multi-day',
-                    week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+                    SundayFirst: true,
+                    week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
                     month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                     format: 'YYYY-MM-DD',
                     placeholder: 'when?',

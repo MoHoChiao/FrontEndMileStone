@@ -5,6 +5,7 @@
                                      @closeEdit="saveWindowContentForEdit"
                                      :content="wcRecord"
                                      :urlOp="operation"
+                                     style="padding-top:50px"
         ></working-calendar-add-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
@@ -89,7 +90,7 @@
                                     <table id="wcalTable" class="w3-table-all w3-left">
                                         <empty-grid v-if="allWCObjs.length == 0"></empty-grid>
                                         <tr v-else :id="content.wcalendaruid" :key="content.wcalendaruid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
-                                            @click="clickOnPackageRecord(content.wcalendaruid, index)" v-for="(content, index) in allWCObjs">
+                                            @click="clickOnPackageRecord(content.wcalendaruid, index)" v-for="(content, index) in sortedData">
                                             <td id="barsTD" :width="gridWidth[0]">
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
@@ -99,7 +100,10 @@
                                                 </div>
                                             </td>
                                             <td :width="gridWidth[1]">
-                                                <span style="text-decoration:underline;" @click.stop="clickOnPackageRecordName(content.wcalendaruid, index)">
+                                                <span v-if="content.wcalendarname == 'SYSTEMDAY'">
+                                                    {{ content.wcalendarname }}
+                                                </span>
+                                                <span v-else style="text-decoration:underline;" @click.stop="clickOnPackageRecordName(content.wcalendaruid, index)">
                                                     {{ content.wcalendarname }}
                                                 </span>
                                             </td>
@@ -141,7 +145,7 @@
                     </div>
                 </div>
             </div>
-            <div v-else>
+            <!--<div v-else>
                 <div :key="content.wcalendaruid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allWCObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
                         <img src="/src/assets/images/resource_setter/WorkingCalendar.png" alt="Working Calendar" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
@@ -177,7 +181,7 @@
                     </div>
                     <working-calendar-edit-panel v-else :index="index" :content="content" @closeEdit="changeEditable"></working-calendar-edit-panel>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </template>
@@ -232,6 +236,14 @@
         mounted() {
             this.getWCs()
         },
+        computed: {
+            // if 'SYSTEMDAY', show top in grid
+            sortedData: function () {
+                return _.sortBy(this.allWCObjs, function (item) {
+                    return item.wcalendarname === 'SYSTEMDAY' ? 0 : 1
+                });
+            }
+        },
         methods: {
             //When Grid List click on agent record
             clickOnPackageRecord(id, index) {
@@ -241,9 +253,11 @@
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allWCObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
-                    menuBtn.style.display = 'block'
+
+                    if (id.trim() !== 'SYSTEMDAY') // 'SYSTEMDAY' can not delete
+                        menuBtn.style.display = 'block'
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
                     menuBtn.style.display = 'none'
@@ -256,11 +270,12 @@
                     this.clearSelectedRecord(tr)
 
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allWCObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
 
                     let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
-                    menuBtn.style.display = 'block'
+                    if (id.trim() !== 'SYSTEMDAY') // 'SYSTEMDAY' can not delete
+                        menuBtn.style.display = 'block'
                 }
 
                 this.changeAddWindowStatus('edit')
@@ -294,8 +309,8 @@
                     })
             },
             changeEditable(index, content) {
-                if (this.allWCObjs[index] && this.allWCObjs[index].wcalendaruid &&
-                    this.allWCObjs[index].wcalendaruid.trim() === 'SYSTEMDAY') {
+                if (this.sortedData[index] && this.sortedData[index].wcalendaruid &&
+                    this.sortedData[index].wcalendaruid.trim() === 'SYSTEMDAY') {
                     let newStatus = {
                         "msg": "System day can not be edited!",
                         "status": "Warn"
@@ -316,7 +331,14 @@
                 }
 
                 if (content !== undefined) {
-                    this.allWCObjs[index] = content
+                    this.sortedData[index] = content
+                }
+            },
+            showDeleteWindow() {
+                if ((this.selectedRecord.index || this.selectedRecord.index === 0)
+                    && this.selectedRecord.wcalendarname) {
+                    this.deleteWindowAlive = true
+                    this.deleteName = this.selectedRecord.wcalendarname
                 }
             },
             deleteWC() {
@@ -331,7 +353,7 @@
                     }
                 })
                     .then(response => {
-                        this.allWCObjs.splice(this.deleteIndex, 1)
+                        this.sortedData.splice(this.deleteIndex, 1)
                         this.editable.splice(this.deleteIndex, 1)
                         this.editable.fill(false) //close all edit form
                         this.changeDeleteWindowStatus(-1, '', '')
@@ -416,7 +438,7 @@
             },
             saveWindowContentForAdd(new_content) {
                 if (new_content) {
-                    this.allWCObjs.unshift(new_content) //add object to the top of array
+                    this.sortedData.unshift(new_content) //add object to the top of array
                     this.clearSelectedRecord()
                 }
                 this.addWindowAlive = !this.addWindowAlive
@@ -424,7 +446,7 @@
             saveWindowContentForEdit(new_content) {
                 if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
                     new_content.index = this.selectedRecord.index   //asign old index prop to new content
-                    this.allWCObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.sortedData[this.selectedRecord.index] = new_content   //replace object to the array
                     this.selectedRecord = new_content
                 }
                 this.addWindowAlive = !this.addWindowAlive

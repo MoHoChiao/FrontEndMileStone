@@ -5,7 +5,7 @@
         </p>
         <div slot="footer">
             <div class="w3-row w3-small">
-                <button type="button" :class="classList" style="margin-right:3px" @click="confirm"><i class="fa fa-check-circle-o"></i> Sure</button>
+                <button type="button" :class="classList" style="margin-right:3px" @click="confirm"><i class="fa fa-check-circle-o"></i> OK</button>
                 <button type="button" :class="classList" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
             </div>
         </div>

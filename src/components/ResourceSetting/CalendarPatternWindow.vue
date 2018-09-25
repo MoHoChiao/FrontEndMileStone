@@ -311,12 +311,13 @@ export default {
                 // time: ''
             },
             endTime: {
-                time: moment().add(1, 'year').format('YYYY-MM-DD')
+                time: moment().add(1, 'M').format('YYYY-MM-DD')
                 // time: ''
             },
             option: {
                 type: 'day',
-                week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+                SundayFirst: true,
+                week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
                 month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 format: 'YYYY-MM-DD',
                 placeholder: 'Select Date',
@@ -324,11 +325,11 @@ export default {
                     'display': 'inline-block',
                     'padding': '6px',
                     'line-height': '22px',
-                    'font-size': '16px',
+                    //'font-size': '16px',
                     'border': '2px solid #fff',
-                    'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+                    //'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
                     'border-radius': '2px',
-                    'color': '#5F5F5F'
+                    //'color': '#5F5F5F'
                 },
                 color: {
                     header: '#2a6592',
