@@ -160,6 +160,8 @@
                 }
 
                 btn.className = c
+
+                this.scrollTop()
             },
             //以下為頁面中間的部份, 各種Resources都會在這裡
             getAlias(e) {
@@ -248,6 +250,10 @@
             },
             logout(e) {
                 this.$store.dispatch('removeLoginToken')
+            },
+            scrollTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             }
         },
         components: {
