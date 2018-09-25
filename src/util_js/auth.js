@@ -11,12 +11,13 @@ export function Authentication(next) {
                 HTTP_AUTH.get(`authorization/loadPermissionTable`)
                     .then(response => {
                         PermissionTable = response.data
-                            // console.log(PermissionTable)
+                        //console.log(PermissionTable)
+                        next()
                     })
                     .catch(error => {
-                        errorHandle(undefined, error)
+                        //errorHandle(undefined, error)
+                        next({ path: '/' })
                     })
-                next()
             } else {
                 next({ path: '/' })
             }
@@ -25,28 +26,34 @@ export function Authentication(next) {
             next({ path: '/' })
         })
 }
-let loadPermissionTable = new Promise((resolve, reject) => {
-    if (!PermissionTable) {
-        HTTP_AUTH.get(`authentication/find-authn`)
-            .then(response => {
-                if (response.data.status === 'Success') {
-                    HTTP_AUTH.get(`authorization/loadPermissionTable`)
-                        .then(response => {
-                            PermissionTable = response.data
-                            resolve("Success!");
-                        })
-                        .catch(error => {
-                            errorHandle(undefined, error)
-                        })
-                } else {
-                    errorHandle(undefined, error)
-                }
-            })
-            .catch(error => {
-                errorHandle(undefined, error)
-            })
-    } else {
-        resolve("Success!");
-    }
-});
-export { loadPermissionTable }
+
+//function loadPermissionTable() {
+//    return new Promise((resolve, reject) => {
+//        if (!PermissionTable) {
+//            console.log('loadPermissionTable E')
+//            HTTP_AUTH.get(`authentication/find-authn`)
+//                .then(response => {
+//                    if (response.data.status === 'Success') {
+//                        HTTP_AUTH.get(`authorization/loadPermissionTable`)
+//                            .then(response => {
+//                                PermissionTable = response.data
+//                                resolve("Success!");
+//                            })
+//                            .catch(error => {
+//                                errorHandle(undefined, error)
+//                            })
+//                    } else {
+//                        errorHandle(undefined, error)
+//                    }
+//                })
+//                .catch(error => {
+//                    errorHandle(undefined, error)
+//                })
+//        } else {
+//            console.log('loadPermissionTable S')
+//            resolve("Success!");
+//        }
+//    })
+//}
+
+//export { loadPermissionTable }
