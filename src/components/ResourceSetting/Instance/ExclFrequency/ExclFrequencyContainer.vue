@@ -286,7 +286,8 @@
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
 
                     let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
-                    menuBtn.style.display = 'block'
+                    if (id.trim() !== 'global') // 'GLOBAL' can not delete
+                        menuBtn.style.display = 'block'
                 }
 
                 this.changeAddWindowStatus('edit')
