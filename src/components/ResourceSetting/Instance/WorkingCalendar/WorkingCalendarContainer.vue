@@ -3,6 +3,7 @@
         <working-calendar-add-window :windowAlive="addWindowAlive"
                                      @closeAdd="saveWindowContentForAdd"
                                      @closeEdit="saveWindowContentForEdit"
+                                     @closeCopy="saveWindowContentForAdd"
                                      :content="wcRecord"
                                      :urlOp="operation"
                                      style="padding-top:50px"
@@ -12,7 +13,7 @@
                                window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
-                               @closeDelete="changeDeleteWindowStatus"
+                               @closeDelete="closeDeleteWindow"
                                @confirmDelete="deleteWC"></confirm-delete-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div v-if="!showMode" class="w3-row-padding">
@@ -95,7 +96,8 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeAddWindowStatus('copy')"> Copy</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -210,8 +212,6 @@
                 addWindowAlive: false,  //for add Working Calendar modal windows
                 operation: 'add',
                 deleteWindowAlive: false,  //for delete Working Calendar modal windows
-                deleteIndex: -1,    //store which index will be delete
-                deleteUid: '',      //store which obj will be delete
                 deleteName: '',     //store which obj name will be delete
                 allWCObjs: [], //store all working calendar
                 wcRecord: new Object(),
@@ -342,26 +342,20 @@
                 }
             },
             deleteWC() {
-                if (this.deleteIndex === -1)
-                    return
-                if (this.deleteUid === '')
-                    return
-
                 HTTP_TRINITY.get(`working-calendar/delete`, {
                     params: {
-                        uid: this.deleteUid
+                        uid: this.selectedRecord.wcalendaruid
                     }
+                }).then(response => {
+                    this.sortedData.splice(this.selectedRecord.index, 1)
+                    this.clearSelectedRecord()
+                    this.closeDeleteWindow()
+                }).catch(error => {
+                    errorHandle(this.$store, error)
                 })
-                    .then(response => {
-                        this.sortedData.splice(this.deleteIndex, 1)
-                        this.editable.splice(this.deleteIndex, 1)
-                        this.editable.fill(false) //close all edit form
-                        this.changeDeleteWindowStatus(-1, '', '')
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
-
+            },
+            closeDeleteWindow() {
+                this.deleteWindowAlive = false
             },
             changeShowMode() {
                 this.showMode = !this.showMode
@@ -385,25 +379,25 @@
                     this.addWindowAlive = !this.addWindowAlive
                 } 
             },
-            changeDeleteWindowStatus(index, wcalendaruid, wcalendarname) {
-                if (wcalendaruid && wcalendaruid.trim() === 'SYSTEMDAY') {
-                    let newStatus = {
-                        "msg": "System day can not be removed!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    return
-                }
+            //changeDeleteWindowStatus(index, wcalendaruid, wcalendarname) {
+            //    if (wcalendaruid && wcalendaruid.trim() === 'SYSTEMDAY') {
+            //        let newStatus = {
+            //            "msg": "System day can not be removed!",
+            //            "status": "Warn"
+            //        }
+            //        this.$store.dispatch('setSystemStatus', newStatus)
+            //        return
+            //    }
 
-                this.deleteWindowAlive = !this.deleteWindowAlive
+            //    this.deleteWindowAlive = !this.deleteWindowAlive
 
-                /*
-                    store which obj be delete
-                */
-                this.deleteIndex = index
-                this.deleteUid = wcalendaruid
-                this.deleteName = wcalendarname
-            },
+            //    /*
+            //        store which obj be delete
+            //    */
+            //    this.deleteIndex = index
+            //    this.deleteUid = wcalendaruid
+            //    this.deleteName = wcalendarname
+            //},
             searchForList(uid) {
                 let input, filter, table, i
                 input = document.getElementById(uid + 'SearchInput')
@@ -421,9 +415,9 @@
             //clear selected for UI
             clearSelectedRecord(tr) {
                 let table = document.getElementById('wcalTable')
-                if (table && table.childNodes) {  //�P�_�O�_�O�qContent List�Ӫ��ާ@, �����ߪ�ܥ�Grid List�Ӫ��ާ@
-                    for (var i = 0; i < table.childNodes.length; i++) {  //�����]�Ҧ�package row��class
-                        if (table.childNodes[i] !== tr) {  //����ۤv��(�Y�I�쪺���@�C)���έ��]
+                if (table && table.childNodes) {
+                    for (var i = 0; i < table.childNodes.length; i++) {
+                        if (table.childNodes[i] !== tr) {
                             table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
 
                             if (table.childNodes[i].nodeName !== 'DIV') {   // not empty grid
@@ -438,7 +432,7 @@
             },
             saveWindowContentForAdd(new_content) {
                 if (new_content) {
-                    this.sortedData.unshift(new_content) //add object to the top of array
+                    this.allWCObjs.unshift(new_content) //add object to the top of array
                     this.clearSelectedRecord()
                 }
                 this.addWindowAlive = !this.addWindowAlive
@@ -453,21 +447,19 @@
             },
             //above for pagging, ordering, query
             changeNum(e, index) {
-                //�����{�b�I�����O���@��
-                this.selectedNum = Number(index) - 1    //page number�ݭnindex - 1, �]����ݪ������O�q0�}�l��_
+                this.selectedNum = Number(index) - 1
                 this.getWCs()
             },
             changeSize(e) {
-                this.pageNumSelected('1')   //�C�@�����d��, ���n��page number���^��Ĥ@��
+                this.pageNumSelected('1') 
                 this.getWCs()
             },
             pageNumSelected(index) {
-                this.selectedNum = Number(index) - 1    //page number�ݭnindex - 1, �]����ݪ������O�q0�}�l��_
+                this.selectedNum = Number(index) - 1
                 if (this.$refs.paginate)
-                    this.$refs.paginate.selected = Number(index) - 1    //���FchangeNum�]���w�g���ܹLpaginate.selected���ȤF, �䥦���ݭn�A�h����paginate.selected����
+                    this.$refs.paginate.selected = Number(index) - 1
             },
             applyOrder(field) {
-                //���M���Ҧ��ƧǤ覡, only for UI display
                 for (var x in this.orderFields) {
                     if (x !== field)
                         this.orderFields[x] = ''
@@ -485,7 +477,7 @@
                 this.getWCs()
             },
             applyQuery() {
-                this.pageNumSelected('1')   //�C�@�����d��, ���n��page number���^��Ĥ@��
+                this.pageNumSelected('1')
                 this.getWCs()
             }
         }

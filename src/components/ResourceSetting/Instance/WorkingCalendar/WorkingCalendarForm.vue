@@ -102,6 +102,13 @@
 
             }
         },
+        created() {
+            if (this.urlOp === 'copy') {
+                this.new_content.wcalendaruid = ''
+                this.new_content.wcalendarname = ''
+                this.new_content.description = ''
+            }
+        },
         mounted() {
             this.setDatetimePicker(JSON.stringify(this.convertYMDObjtoArray()))
         },
@@ -117,6 +124,10 @@
                         wcalendarlist: []
                     }
                 }
+            },
+            urlOp: {
+                type: String,
+                default: 'add'
             },
             index: Number
         },
