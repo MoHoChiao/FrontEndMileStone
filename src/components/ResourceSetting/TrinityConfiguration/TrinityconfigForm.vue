@@ -52,7 +52,7 @@
                 <label class="w3-right">Host</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList" v-model="content.smtpserver" type="text" maxlength="30" placeholder="Please Input Host">
+                <input :class="inputClassList" v-model="content.smtpserver" type="text" maxlength="30" placeholder="Please Input IP[:Port]">
             </div>
         </div>
         <div class="w3-row w3-section">
