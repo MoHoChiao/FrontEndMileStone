@@ -1,6 +1,6 @@
 <template>
     <div class="w3-modal" style="display:block">
-        <div :class="_classList">
+        <div :class="_classList" :style="styleObj">
             <header :class="_windowBgColor">
                 <span @click="closeModalWindow" class="w3-button w3-hover-none w3-display-topright">
                     <i class="fa fa-window-close"></i>
@@ -53,6 +53,9 @@ export default {
             type: String,
             default: 'animate-top'
         },
+        styleObj: {
+            type: Object
+        }
     },
     methods: {
         closeModalWindow(e) {

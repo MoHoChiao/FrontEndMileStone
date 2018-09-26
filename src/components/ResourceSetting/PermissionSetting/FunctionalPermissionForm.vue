@@ -5,46 +5,33 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">Function Name</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">View</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Add</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Delete</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Edit</th>
-                            <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Function" aria-hidden="true" @click="addFunction"></i>
-                            </th>
+                            <th class="" width="30%">Function Name</th>
+                            <th class="w3-center" width="15%" @click="checkView" style="cursor:pointer">View</th>
+                            <th class="w3-center" width="15%" @click="checkAdd" style="cursor:pointer">Add</th>
+                            <th class="w3-center" width="15%" @click="checkDelete" style="cursor:pointer">Delete</th>
+                            <th class="w3-center" width="15%" @click="checkEdit" style="cursor:pointer">Edit</th>
                         </tr>
                     </table>
                 </div>
-                <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
+                <div class="w3-responsive w3-card w3-round" style="overflow:auto">
                     <table class="w3-table-all">
-                        <tr :key="list_info.peopleuid+':'+list_info.objectuid" v-for="(list_info, index) in functionalList">
-                            <td class="w3-center" width="32%" style="padding:6px 0px 0px 6px">
-                                <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.objectuid" style="width:100%;padding:0px" @change="changeFunction(list_info.objectuid, index)">
-                                        <template v-for="(obj, index) in allFunctionalObjs">
-                                            <option :key="obj.id" v-if="obj.id === list_info.objectuid" :value="obj.id" selected>{{ obj.name }}</option>
-                                            <option :key="obj.id" v-else-if="!objUids.includes(obj.id)" :value="obj.id">{{ obj.name }}</option>
-                                        </template>
-                                    </select>
-                                </span>
+                        <tr :id="funcObj.objectuid" v-for="(funcObj, index) in newFuncList">
+                            <td class="" width="30%">
+                                <label>{{ funcObj.name }}</label>
                             </td>
                             <td class="w3-center" width="15%">
-                                <input class="w3-check" type="checkbox" v-model="list_info.view">
+                                <input class="w3-check" type="checkbox" :true-value="1" :false-value="0" v-model="funcObj.view">
                             </td>
                             <td class="w3-center" width="15%">
-                                <input class="w3-check" type="checkbox" v-model="list_info.add">
+                                <input class="w3-check" type="checkbox" :true-value="1" :false-value="0" v-model="funcObj.add">
                             </td>
                             <td class="w3-center" width="15%">
-                                <input class="w3-check" type="checkbox" v-model="list_info.delete">
+                                <input class="w3-check" type="checkbox" :true-value="1" :false-value="0" v-model="funcObj.delete">
                             </td>
                             <td class="w3-center" width="15%">
-                                <input class="w3-check" type="checkbox" v-model="list_info.edit">
+                                <input class="w3-check" type="checkbox" :true-value="1" :false-value="0" v-model="funcObj.edit">
                             </td>
-                            <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delFunction(index)"></i>
-                            </td>
-                        </tr>
+                        </tr> 
                     </table>
                 </div>
             </div>
@@ -52,173 +39,317 @@
     </div>
 </template>
 <script>
-import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
+    import { HTTP_AUTH, errorHandle } from '../../../util_js/axios_util'
 
-export default {
-    data() {
-        return {
-            allFunctionalObjs: [],
-            functionalList: [],
-            objUids: null //Array for keeping the selected functional object uids
-        }
-    },
-    mounted() {
-        //Initial All Function Object
-        let aliasFun = {
-            "name":'Alias Reference',
-            "id":'function-aliasref'
-        }
-        this.allFunctionalObjs.push(aliasFun)
-
-        let agentFun = {
-            "name":'JCS Agent',
-            "id":'function-jcsagent'
-        }
-        this.allFunctionalObjs.push(agentFun)
-
-        let connFun = {
-            "name":'Connection',
-            "id":'function-connection'
-        }
-        this.allFunctionalObjs.push(connFun)
-
-        let domainFun = {
-            "name":'Domain',
-            "id":'function-domain'
-        }
-        this.allFunctionalObjs.push(domainFun)
-
-        let ruleFun = {
-            "name":'Extension Rule',
-            "id":'function-extrule'
-        }
-        this.allFunctionalObjs.push(ruleFun)
-
-        let filesourceFun = {
-            "name":'File Source',
-            "id":'function-filesource'
-        }
-        this.allFunctionalObjs.push(filesourceFun)
-
-        let freqFun = {
-            "name":'Frequency',
-            "id":'function-frequency'
-        }
-        this.allFunctionalObjs.push(freqFun)
-
-        let metadataFun = {
-            "name":'Metadata',
-            "id":'function-metadata'
-        }
-        this.allFunctionalObjs.push(metadataFun)
-
-        let profileFun = {
-            "name":'Profile',
-            "id":'function-profile'
-        }
-        this.allFunctionalObjs.push(profileFun)
-
-        let performanceFun = {
-            "name":'Performance Viewer',
-            "id":'function-performance'
-        }
-        this.allFunctionalObjs.push(performanceFun)
-
-        let varFun = {
-            "name":'Entity Variable',
-            "id":'function-entityvar'
-        }
-        this.allFunctionalObjs.push(varFun)
-
-        this.getFunctions()
-    },
-    props: {
-        peopleUid: ''
-    },
-    methods: {
-        getFunctions(){
-            HTTP_AUTH.get(`authorization/findFunctionalPermissionByPeopleUid?peopleUid=`+this.peopleUid)
-            .then(response => {
-                this.functionalList = response.data
-                this.objUids = []
-                for (var i = 0, len = this.functionalList.length; i < len; i++) {
-                    this.functionalList[i] = {
-                        peopleuid: this.peopleUid,
-                        objectuid: this.functionalList[i].objectuid,
-                        view: Number(this.functionalList[i].view),
-                        add: Number(this.functionalList[i].add),
-                        delete: Number(this.functionalList[i].delete),
-                        edit: Number(this.functionalList[i].edit),
-                        run: Number(this.functionalList[i].run),
-                        reRun: Number(this.functionalList[i].reRun),
-                        grant: Number(this.functionalList[i].grant),
-                        import_export: Number(this.functionalList[i].import_export)
-                    };
-                    this.objUids.push(this.functionalList[i].objectuid)
-                }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-                this.$emit('cancel')
-            })
-        },
-        changeFunction(uid,index){
-            this.objUids.splice(index, 1, uid)
-        },
-        delFunction(index){
-            this.functionalList.splice(index, 1)
-            this.objUids.splice(index, 1)
-        },
-        addFunction(){
-            let new_function= {
-                peopleuid: this.peopleUid,
-                objectuid: '',
-                view: 0,
-                add: 0,
-                delete: 0,
-                edit: 0,
-                run: 0,
-                reRun: 0,
-                grant: 0,
-                import_export: 0
-            };
-            this.functionalList.push(new_function)
-            this.objUids.push('')
-        },
-        save(){
-            for(let i=0;i<this.functionalList.length;i++){
-                if(this.functionalList[i].objectuid === undefined || this.functionalList[i].objectuid.trim() === ''){
-                    let newStatus = {
-                        "msg": "Function Name can not be empty!",
-                        "status": "Warn"
+    export default {
+        data() {
+            return {
+                newFuncList: [
+                    {
+                        "name": 'Alias Reference',
+                        "objectuid": 'function-aliasref',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Connection',
+                        "objectuid": 'function-connection',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Domain',
+                        "objectuid": 'function-domain',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Entity Variable',
+                        "objectuid": 'function-entityvar',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Extension Rule',
+                        "objectuid": 'function-extrule',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'File Source',
+                        "objectuid": 'function-filesource',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Frequency',
+                        "objectuid": 'function-frequency',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'JCS Agent',
+                        "objectuid": 'function-jcsagent',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Metadata',
+                        "objectuid": 'function-metadata',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Performance Viewer',
+                        "objectuid": 'function-performance',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
+                    },
+                    {
+                        "name": 'Profile',
+                        "objectuid": 'function-profile',
+                        "view": "0",
+                        "add": "0",
+                        "delete": "0",
+                        "edit": "0",
+                        "run": "0",
+                        "reRun": "0",
+                        "grant": "0",
+                        "import_export": "0"
                     }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    return
-                }else{
-                    this.functionalList[i].peopleuid = null //在這裡的應用而言, 此欄位, 對後端無用, 減少一點傳輸量
-                    this.functionalList[i].view = Number(this.functionalList[i].view)
-                    this.functionalList[i].add = Number(this.functionalList[i].add)
-                    this.functionalList[i].delete = Number(this.functionalList[i].delete)
-                    this.functionalList[i].edit = Number(this.functionalList[i].edit)
-                    this.functionalList[i].run = '0'
-                    this.functionalList[i].reRun = '0'
-                    this.functionalList[i].grant = '0'
-                    this.functionalList[i].import_export = '0'
-                }
+                ],
+                oldFuncList: []
             }
-            return this.functionalList
         },
-        reset(){
+        mounted() {
             this.getFunctions()
+        },
+        props: {
+            peopleUid: ''
+        },
+        methods: {
+            getFunctions() {
+                HTTP_AUTH.get(`authorization/findFunctionalPermissionByPeopleUid?peopleUid=` + this.peopleUid)
+                    .then(response => {
+                        this.oldFuncList = response.data
+                        
+                        for (var i = 0; i < this.newFuncList.length; i++) {
+                            for (var j = 0; j < this.oldFuncList.length; j++) {
+                                if (this.newFuncList[i].objectuid == this.oldFuncList[j].objectuid) {
+                                    this.newFuncList[i].view = this.oldFuncList[j].view
+                                    this.newFuncList[i].add = this.oldFuncList[j].add
+                                    this.newFuncList[i].delete = this.oldFuncList[j].delete
+                                    this.newFuncList[i].edit = this.oldFuncList[j].edit
+                                    this.newFuncList[i].run = this.oldFuncList[j].run
+                                    this.newFuncList[i].reRun = this.oldFuncList[j].reRun
+                                    this.newFuncList[i].grant = this.oldFuncList[j].grant
+                                    this.newFuncList[i].import_export = this.oldFuncList[j].import_export
+                                    break
+                                }
+                            }
+                        } 
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                        this.$emit('cancel')
+                    })
+            },
+            checkView() {
+                let allCheck = true
+
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (this.newFuncList[i].view == '0') {
+                        allCheck = false
+                        break
+                    }
+                }
+                console.log(allCheck)
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (allCheck) {
+                        this.newFuncList[i].view = '0'
+                    } else {
+                        this.newFuncList[i].view = '1'
+                    }
+                }
+            },
+            checkAdd() {
+                let allCheck = true
+
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (this.newFuncList[i].add == '0') {
+                        allCheck = false
+                        break
+                    }
+                }
+                console.log(allCheck)
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (allCheck) {
+                        this.newFuncList[i].add = '0'
+                    } else {
+                        this.newFuncList[i].add = '1'
+                    }
+                }
+            },
+            checkDelete() {
+                let allCheck = true
+
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (this.newFuncList[i].delete == '0') {
+                        allCheck = false
+                        break
+                    }
+                }
+                console.log(allCheck)
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (allCheck) {
+                        this.newFuncList[i].delete = '0'
+                    } else {
+                        this.newFuncList[i].delete = '1'
+                    }
+                }
+            },
+            checkEdit() {
+                let allCheck = true
+
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (this.newFuncList[i].edit == '0') {
+                        allCheck = false
+                        break
+                    }
+                }
+                console.log(allCheck)
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    if (allCheck) {
+                        this.newFuncList[i].edit = '0'
+                    } else {
+                        this.newFuncList[i].edit = '1'
+                    }
+                }
+            },
+            //changeFunction(uid, index) {
+            //    this.objUids.splice(index, 1, uid)
+            //},
+            //delFunction(index) {
+            //    this.oldFuncList.splice(index, 1)
+            //    this.objUids.splice(index, 1)
+            //},
+            //addFunction() {
+            //    let new_function = {
+            //        peopleuid: this.peopleUid,
+            //        objectuid: '',
+            //        view: 0,
+            //        add: 0,
+            //        delete: 0,
+            //        edit: 0,
+            //        run: 0,
+            //        reRun: 0,
+            //        grant: 0,
+            //        import_export: 0
+            //    };
+            //    this.oldFuncList.push(new_function)
+            //    this.objUids.push('')
+            //},
+            save() {
+                for (var i = 0; i < this.newFuncList.length; i++) {
+                    let match = false
+
+                    for (var j = 0; j < this.oldFuncList.length; j++) {
+                        if (this.newFuncList[i].objectuid == this.oldFuncList[j].objectuid) {
+                            this.oldFuncList[j].view = this.newFuncList[i].view
+                            this.oldFuncList[j].add = this.newFuncList[i].add
+                            this.oldFuncList[j].delete = this.newFuncList[i].delete
+                            this.oldFuncList[j].edit = this.newFuncList[i].edit
+
+                            match = true
+                            break
+                        }
+                    }
+
+                    if (!match) {
+                        if (this.newFuncList[i].view != '0'
+                            || this.newFuncList[i].add != '0'
+                            || this.newFuncList[i].delete != '0'
+                            || this.newFuncList[i].edit != '0') {
+                            this.oldFuncList.push(this.newFuncList[i])
+                        }
+                    }
+                }
+
+                return this.oldFuncList
+            },
+            reset() {
+                this.getFunctions()
+            }
         }
     }
-}
 </script>
 <style scoped>
-    input,select {
+    input, select {
         height: 24px
     }
-    input.w3-check,input.w3-radio {
-        height: 16px
+
+    input.w3-check, input.w3-radio {
+        height: 16px;
+        top: 2px
     }
 </style>

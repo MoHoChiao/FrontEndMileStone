@@ -1,5 +1,5 @@
 <template>
-    <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+    <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel" :styleObj="styleObj">
         <functional-permission-form slot="content" ref="rolePermissionForm" :peopleUid="peopleUid"></functional-permission-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
@@ -7,58 +7,65 @@
     </modal-window>
 </template>
 <script>
-import { HTTP_AUTH,errorHandle } from '../../../util_js/axios_util'
-import ModalWindow from '../../Common/window/ModalWindow.vue'
-import FunctionalPermissionForm from './FunctionalPermissionForm.vue'
-import FormButton from '../FormButton.vue'
+    import { HTTP_AUTH, errorHandle } from '../../../util_js/axios_util'
+    import ModalWindow from '../../Common/window/ModalWindow.vue'
+    import FunctionalPermissionForm from './FunctionalPermissionForm.vue'
+    import FormButton from '../FormButton.vue'
 
-export default {
-    computed: {
-        _windowTitle() {
-            return this.windowTitle + this.peopleName;
+    export default {
+        computed: {
+            _windowTitle() {
+                return this.windowTitle + this.peopleName;
+            },
         },
-    },
-    props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
-        windowBgColor: {
-            type: String,
-            default: 'camo-black'
-        },
-        windowAlive: {
-            type: Boolean,
-            default: false
-        },
-        peopleUid: '',
-        peopleName: ''
-    },
-    methods: {
-        cancel(){
-            this.$emit('closeApply')
-        },
-        save(){
-            let postContent = this.$refs.rolePermissionForm.save()
-            
-            if(postContent){
-                HTTP_AUTH.post(`authorization/modifyByPeopleUid?peopleUid=`+this.peopleUid, postContent)
-                .then(response => {
-                    this.$emit('closeApply')
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+        data() {
+            return {
+                styleObj: {
+                    'width': '40%'
+                }
             }
         },
-        reset(){
-            this.$refs.rolePermissionForm.reset()
+        props: {
+            windowTitle: {
+                type: String,
+                default: ''
+            },
+            windowBgColor: {
+                type: String,
+                default: 'camo-black'
+            },
+            windowAlive: {
+                type: Boolean,
+                default: false
+            },
+            peopleUid: '',
+            peopleName: ''
+        },
+        methods: {
+            cancel() {
+                this.$emit('closeApply')
+            },
+            save() {
+                let postContent = this.$refs.rolePermissionForm.save()
+                
+                if (postContent) {
+                    HTTP_AUTH.post(`authorization/modifyByPeopleUid?peopleUid=` + this.peopleUid, postContent)
+                        .then(response => {
+                            this.$emit('closeApply')
+                        })
+                        .catch(error => {
+                            errorHandle(this.$store, error)
+                        })
+                }
+            },
+            reset() {
+                this.$refs.rolePermissionForm.reset()
+            }
+        },
+        components: {
+            'modal-window': ModalWindow,
+            'functional-permission-form': FunctionalPermissionForm,
+            'form-button': FormButton
         }
-    },
-    components: {
-        'modal-window': ModalWindow,
-        'functional-permission-form': FunctionalPermissionForm,
-        'form-button': FormButton
     }
-}
 </script>
