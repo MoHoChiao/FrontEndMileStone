@@ -366,13 +366,11 @@
                     params: {
                         uid: this.selectedRecord.excludefrequencyuid
                     }
-                })
-                .then(response => {
-                    this.allExclFreqObjs.splice(this.selectedRecord.index, 1)
+                }).then(response => {
+                    this.sortedData.splice(this.selectedRecord.index, 1)
                     this.clearSelectedRecord()
                     this.closeDeleteWindow()
-                })
-                .catch(error => {
+                }).catch(error => {
                     errorHandle(this.$store, error)
                 })
             },
