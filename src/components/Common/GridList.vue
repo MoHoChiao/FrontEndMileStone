@@ -87,8 +87,8 @@
         },
         computed: {
             imgPath() {
-                //return '/src/assets/images/resource_setter/' + this.iconName + '.png'
-                return '/src/assets/images/resource_setter/User.png'
+                //return 'src/assets/images/resource_setter/' + this.iconName + '.png'
+                return 'src/assets/images/resource_setter/User.png'
             },
             btn1() {
                 return this.btnFlag[0]

@@ -3,7 +3,7 @@
         <div class="w3-display-middle w3-round-xlarge w3-white" style="width:40%">
             <div class="w3-container w3-padding-16">
                 <p class="w3-center">
-                    <img class="w3-center" src="/src/assets/images/TrinityLogo_a.png" style="width:80%" />
+                    <img class="w3-center" src="src/assets/images/TrinityLogo_a.png" style="width:80%" />
                 </p>
                 <form class="w3-left-align" method="POST" :action="_formAction">
                     <string-input ref="ac_input"

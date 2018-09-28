@@ -35,7 +35,7 @@
                         <p>
                             <div class="w3-row w3-border w3-round w3-padding">
                                 <span>
-                                    <img src="/src/assets/images/resource_setter/frequency_category.png" alt="Frequency Category" class="w3-margin-right w3-left w3-hide-small" style="height:26px;width:26px">
+                                    <img src="src/assets/images/resource_setter/frequency_category.png" alt="Frequency Category" class="w3-margin-right w3-left w3-hide-small" style="height:26px;width:26px">
                                 </span>
                                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;/*transform:rotate(-5deg)*/">
                                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
@@ -88,7 +88,7 @@
                 <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
                     <div class="w3-panel w3-row w3-border w3-round w3-padding">
                         <span>
-                            <img src="/src/assets/images/resource_setter/frequency.png" class="w3-margin-right w3-left w3-hide-small"
+                            <img src="src/assets/images/resource_setter/frequency.png" class="w3-margin-right w3-left w3-hide-small"
                                  style="height:26px;width:32px">
                         </span>
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px;/*transform:rotate(-5deg)*/">

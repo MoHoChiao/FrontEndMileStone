@@ -27,7 +27,7 @@
                         <i class="w3-bar-item fa fa-ban fa-fw">&nbsp;&nbsp;Delete Connection(Test_Connection_1) Error!</i>
                     </div>
                 </div>
-                <a href="#" class="w3-bar-item w3-button w3-right w3-padding-large w3-hover-white" title="My Account"><img src="/src/assets/images/resource_setter/People_24.png" class="w3-circle" style="height:25px;width:25px" alt="My Account"></a>
+                <a href="#" class="w3-bar-item w3-button w3-right w3-padding-large w3-hover-white" title="My Account"><img src="src/assets/images/resource_setter/People_24.png" class="w3-circle" style="height:25px;width:25px" alt="My Account"></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white w3-right" title="logout"><i class="fa fa-sign-out" @click="logout"></i></a>
             </div>
         </div>

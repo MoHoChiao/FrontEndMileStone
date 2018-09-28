@@ -6,7 +6,7 @@
                     <p>
                         <div class="w3-panel w3-border w3-round w3-padding">
                             <span>
-                                <img src="/src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small"
+                                <img src="src/assets/images/resource_setter/User.png" class="w3-margin-right w3-left w3-hide-small"
                                      style="height:26px;width:32px">
                             </span>
                             <span>

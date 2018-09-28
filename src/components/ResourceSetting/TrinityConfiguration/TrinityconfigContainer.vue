@@ -6,7 +6,7 @@
                     <div class="w3-container w3-small">
                         <p>
                             <div>
-                                <span><img src="/src/assets/images/resource_setter/User.png" alt="External Rule" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
+                                <span><img src="src/assets/images/resource_setter/User.png" alt="External Rule" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
                                 <span>
                                     <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
                                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">

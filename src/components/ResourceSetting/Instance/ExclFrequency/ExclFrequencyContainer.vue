@@ -55,7 +55,7 @@
                     <div class="w3-container w3-card-4 w3-signal-white w3-round">
                         <div class="w3-panel w3-border w3-round w3-padding">
                             <span>
-                                <img src="/src/assets/images/resource_setter/exclude_frequency.png" class="w3-margin-right w3-left w3-hide-small"
+                                <img src="src/assets/images/resource_setter/exclude_frequency.png" class="w3-margin-right w3-left w3-hide-small"
                                      style="height:26px;width:32px">
                             </span>
                             <span>
@@ -166,7 +166,7 @@
             <div v-else class="w3-small">
                 <div :key="content.excludefrequencyuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allExclFreqObjs">
                     <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="/src/assets/images/resource_setter/exclude_frequency.png" alt="Exclude Frequency" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                        <img src="src/assets/images/resource_setter/exclude_frequency.png" alt="Exclude Frequency" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
                         <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
                         <p>
                             <i v-if="content.excludefrequencyuid.trim() === 'global'" class="fa fa-globe fa-fw w3-text-blue"></i>
