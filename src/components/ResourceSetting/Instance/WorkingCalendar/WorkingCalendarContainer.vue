@@ -195,6 +195,7 @@
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
     import page from '../../page.vue'
     import EmptyGrid from '../../../Common/EmptyGrid.vue'
+    import sortBy from 'lodash/sortBy'
 
     export default {
         components: {
@@ -239,7 +240,7 @@
         computed: {
             // if 'SYSTEMDAY', show top in grid
             sortedData: function () {
-                return _.sortBy(this.allWCObjs, function (item) {
+                return sortBy(this.allWCObjs, function (item) {
                     return item.wcalendarname === 'SYSTEMDAY' ? 0 : 1
                 });
             }

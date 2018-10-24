@@ -79,6 +79,9 @@
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../util_js/axios_util'
     import OverlayLoading from '../../Common/Loading/OverlayLoading.vue'
+    import startsWith from 'lodash/startsWith'
+    import endsWith from 'lodash/endsWith'
+    import filter from 'lodash/filter'
 
     export default {
         components: {
@@ -131,12 +134,12 @@
 
                 var qs = this.queryStr;
 
-                if (_.startsWith(this.queryStr, '%') && _.endsWith(this.queryStr, '%')) {
+                if (startsWith(this.queryStr, '%') && endsWith(this.queryStr, '%')) {
                     qs = qs.slice(1);
                     qs = qs.slice(0, -1); // %xxx% => xxx
-                } else if (_.startsWith(this.queryStr, '%')) {
+                } else if (startsWith(this.queryStr, '%')) {
                     qs = qs.slice(1) + '$'; // %xxx => xxx$
-                } else if (_.endsWith(this.queryStr, '%')) {
+                } else if (endsWith(this.queryStr, '%')) {
                     qs = '^' + qs.slice(0, -1); // xxx% => ^xxx
                 } else {
                     qs = '^' + qs + '$'; // xxx => ^xxx$
@@ -144,7 +147,7 @@
 
                 var reg = new RegExp(qs, 'i');
 
-                return _.filter(this.jcsServerV, obj => { return reg.test(obj.name); });
+                return filter(this.jcsServerV, obj => { return reg.test(obj.name); });
             },
             sortedDISData: function () {
                 return this.filterDISData.sort((a, b) => {
@@ -164,12 +167,12 @@
 
                 var qs = this.queryStr;
 
-                if (_.startsWith(this.queryStr, '%') && _.endsWith(this.queryStr, '%')) {
+                if (startsWith(this.queryStr, '%') && endsWith(this.queryStr, '%')) {
                     qs = qs.slice(1);
                     qs = qs.slice(0, -1);
-                } else if (_.startsWith(this.queryStr, '%')) {
+                } else if (startsWith(this.queryStr, '%')) {
                     qs = qs.slice(1) + '$';
-                } else if (_.endsWith(this.queryStr, '%')) {
+                } else if (endsWith(this.queryStr, '%')) {
                     qs = '^' + qs.slice(0, -1);
                 } else {
                     qs = '^' + qs + '$';
@@ -177,7 +180,7 @@
 
                 var reg = new RegExp(qs, 'i');
 
-                return _.filter(this.disServerV, obj => { return reg.test(obj.name); });
+                return filter(this.disServerV, obj => { return reg.test(obj.name); });
             },
             dataObjs: function () {
                 if (this.tabsFlag[0]) {

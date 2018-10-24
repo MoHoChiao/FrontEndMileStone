@@ -204,6 +204,7 @@
     import ExclFrequencyApplyWindow from './ExclFrequencyApplyWindow.vue'
     import page from '../../page.vue'
     import EmptyGrid from '../../../Common/EmptyGrid.vue'
+    import sortBy from 'lodash/sortBy'
 
     export default {
         components: {
@@ -251,7 +252,7 @@
         computed: {
             // if 'GLOBAL', show top in grid
             sortedData: function () {
-                return _.sortBy(this.allExclFreqObjs, function (item) {
+                return sortBy(this.allExclFreqObjs, function (item) {
                     return item.excludefrequencyname === 'GLOBAL'? 0: 1
                 });
             }

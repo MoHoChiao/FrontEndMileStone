@@ -234,6 +234,10 @@
     import page from '../page.vue'
     import { wait, NON_SPEED, SLOW_SPEED, FAST_SPEED } from '../../../util_js/utils'
     import EmptyGrid from '../../Common/EmptyGrid.vue'
+    import startsWith from 'lodash/startsWith'
+    import endsWith from 'lodash/endsWith'
+    import filter from 'lodash/filter'
+    import orderBy from 'lodash/orderBy'
 
     export default {
         components: {
@@ -286,7 +290,7 @@
         },
         computed: {
             sortedData: function () {
-                return _.orderBy(this.filterData, this.sortKey, this.sortOrder.toLowerCase());
+                return orderBy(this.filterData, this.sortKey, this.sortOrder.toLowerCase());
             },
             filterData: function () {
                 if (this.queryStr.length == 0)
@@ -294,12 +298,12 @@
 
                 var qs = this.queryStr;
 
-                if (_.startsWith(this.queryStr, '%') && _.endsWith(this.queryStr, '%')) {
+                if (startsWith(this.queryStr, '%') && endsWith(this.queryStr, '%')) {
                     qs = qs.slice(1);
                     qs = qs.slice(0, -1); // %xxx% => xxx
-                } else if (_.startsWith(this.queryStr, '%')) {
+                } else if (startsWith(this.queryStr, '%')) {
                     qs = qs.slice(1) + '$'; // %xxx => xxx$
-                } else if (_.endsWith(this.queryStr, '%')) {
+                } else if (endsWith(this.queryStr, '%')) {
                     qs = '^' + qs.slice(0, -1); // xxx% => ^xxx
                 } else {
                     qs = '^' + qs + '$'; // xxx => ^xxx$
@@ -307,7 +311,7 @@
 
                 var reg = new RegExp(qs, 'i');
 
-                return _.filter(this.allDriverObjs, obj => { return reg.test(obj.name); });
+                return filter(this.allDriverObjs, obj => { return reg.test(obj.name); });
             }
         },
         methods: {
