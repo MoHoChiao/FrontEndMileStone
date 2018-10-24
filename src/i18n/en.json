@@ -86,5 +86,68 @@
     "External_Rule": "External Rule",
     "License_Status": "License Status",
     "Version_Info": "Version Info"
+  },
+  "Container": {
+    "Func": {
+      "Search": "Search",
+      "Refresh": "Refresh",
+      "Add": "Add",
+      "Delete": "Delete",
+      "Lock": "Lock",
+      "Unlock": "Unlock",
+      "Member": "Member",
+      "Permission": "Permission"
+    },
+    "Grid": {
+      "Header": {
+        "Name": "Name",
+        "ID": "ID",
+        "Description": "Description",
+        "UpdateTime": "Update Time"
+      }
+    },
+    "PageSize": "Page Size"
+  },
+  "Form": {
+    "Name": "Name",
+    "Activate": "Activate",
+    "Description": "Description",
+    "HomeDir": "Home Directory",
+    "User": {
+      "UserID": "User ID",
+      "UserName": "User Name",
+      "UserPwd": "User Password",
+      "ConfirmPwd": "Confirm Password",
+      "LocalAccount": "Local Account",
+      "OnlyForExe": "Only For Execute",
+      "MobileNum": "Mobile Number",
+      "Email": "Email",
+      "SSOID": "SSO ID",
+      "Language": "Language"
+    }
+  },
+  "Window": {
+    "Account": {
+      "AddUser": "Add User",
+      "EditUser": "Edit User",
+      "AddRole": "Add Role",
+      "EditRole": "Edit Role",
+      "AddUserGroup": "Add User Group",
+      "EditUserGroup": "Edit User Group",
+      "Member": {
+        "Apply": "Apply Member",
+        "Reload": "Reload Member",
+        "SearchUser": "Search User...",
+        "UserList": "Trinity User List"
+      },
+      "Permission": {
+        "Apply": "Apply Permission",
+        "FuncName": "Function Name",
+        "View": "View",
+        "Add": "Add",
+        "Delete": "Delete",
+        "Edit": "Edit"
+      }
+    }
   }
 }

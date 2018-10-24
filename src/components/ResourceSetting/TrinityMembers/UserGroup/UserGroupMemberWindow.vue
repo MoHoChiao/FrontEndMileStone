@@ -14,7 +14,7 @@ import UserGroupMemberPanel from './UserGroupMemberPanel.vue'
 export default {
     computed: {
         windowTitle(){
-            return 'Apply Members - ' + this.content.groupname
+            return this.$t('Window.Account.Member.Apply') + ' - ' + this.content.groupname
         }  
     },
     props: {

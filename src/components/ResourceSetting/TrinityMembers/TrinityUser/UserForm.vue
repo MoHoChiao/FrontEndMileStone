@@ -2,62 +2,62 @@
     <div class="w3-small">
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>User ID</label>
-                <input v-if="content.userid === ''" :class="inputClassList.userid" v-model="new_content.userid" type="text" maxlength="20" placeholder="Please Input ID">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserID') }}</label>
+                <input v-if="content.userid === ''" :class="inputClassList.userid" v-model="new_content.userid" type="text" maxlength="20" placeholder="">
                 <input v-else :class="inputClassList.userid" v-model="new_content.userid" type="text" maxlength="20" readonly>
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>User Name</label>
-                <name-input :class="inputClassList.username" v-model="new_content.username" type="text" maxlength="32" placeholder="Please Input Name" />
+                <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserName') }}</label>
+                <name-input :class="inputClassList.username" v-model="new_content.username" type="text" maxlength="32" placeholder="" />
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>User Password</label>
-                <input :class="inputClassList.password1" v-model="password1" type="password" maxlength="64" placeholder="Please Input Password">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserPwd') }}</label>
+                <input :class="inputClassList.password1" v-model="password1" type="password" maxlength="64" placeholder="">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>CONFIRM Password</label>
-                <input :class="inputClassList.password2" v-model="password2" type="password" maxlength="64" placeholder="Please Password Again">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.User.ConfirmPwd') }}</label>
+                <input :class="inputClassList.password2" v-model="password2" type="password" maxlength="64" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m4">
                 <input class="w3-check" v-model="new_content.activate" type="checkbox">
-                <label>Activate</label>
+                <label>{{ $t('Form.Activate') }}</label>
             </div>
             <div class="w3-col m4">
                 <input class="w3-check" v-model="new_content.localaccount" type="checkbox">
-                <label>Local Account</label>
+                <label>{{ $t('Form.User.LocalAccount') }}</label>
             </div>
             <div class="w3-col m4">
                 <input class="w3-check" v-model="new_content.onlyforexecution" type="checkbox">
-                <label>Only For Exe</label>
+                <label>{{ $t('Form.User.OnlyForExe') }}</label>
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m12">
-                <label>Description</label>
+                <label>{{ $t('Form.Description') }}</label>
                 <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <label>Mobile Number</label>
-                <input :class="inputClassList.mobile" v-model="new_content.mobile" type="text" maxlength="20" placeholder="Please Input Mobile Number">
+                <label>{{ $t('Form.User.MobileNum') }}</label>
+                <input :class="inputClassList.mobile" v-model="new_content.mobile" type="text" maxlength="20" placeholder="">
             </div>
             <div class="w3-col m6">
-                <label>E-mail</label>
-                <input :class="inputClassList.email" v-model="new_content.email" type="text" maxlength="64" placeholder="Please Input E-mail">
+                <label>{{ $t('Form.User.Email') }}</label>
+                <input :class="inputClassList.email" v-model="new_content.email" type="text" maxlength="64" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <label>SSO ID</label>
-                <input :class="inputClassList.ssoid" v-model="new_content.ssoid" type="text" maxlength="20" placeholder="Please Input SSO ID">
+                <label>{{ $t('Form.User.SSOID') }}</label>
+                <input :class="inputClassList.ssoid" v-model="new_content.ssoid" type="text" maxlength="20" placeholder="">
             </div>
             <div class="w3-col m6">
-                <label>DEFAULT Language</label>
+                <label>{{ $t('Form.User.Language') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.defaultlang" style="padding:7px">
                     <option value="en_US" selected>English</option>
                     <option value="zh_TW">Traditional Chinese</option>
@@ -67,8 +67,8 @@
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m12">
-                <label>Home Directory</label>
-                <input :class="inputClassList.homedir" v-model="new_content.homedir" type="text" maxlength="255" placeholder="Please Input Home Directory">
+                <label>{{ $t('Form.HomeDir') }}</label>
+                <input :class="inputClassList.homedir" v-model="new_content.homedir" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>

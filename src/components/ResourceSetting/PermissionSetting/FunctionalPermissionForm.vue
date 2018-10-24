@@ -5,11 +5,11 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="" width="30%">Function Name</th>
-                            <th class="w3-center" width="15%" @click="checkView" style="cursor:pointer">View</th>
-                            <th class="w3-center" width="15%" @click="checkAdd" style="cursor:pointer">Add</th>
-                            <th class="w3-center" width="15%" @click="checkDelete" style="cursor:pointer">Delete</th>
-                            <th class="w3-center" width="15%" @click="checkEdit" style="cursor:pointer">Edit</th>
+                            <th class="" width="30%">{{ $t('Window.Role.Permission.FuncName') }}</th>
+                            <th class="w3-center" width="15%" @click="checkView" style="cursor:pointer">{{ $t('Window.Role.Permission.View') }}</th>
+                            <th class="w3-center" width="15%" @click="checkAdd" style="cursor:pointer">{{ $t('Window.Role.Permission.Add') }}</th>
+                            <th class="w3-center" width="15%" @click="checkDelete" style="cursor:pointer">{{ $t('Window.Role.Permission.Delete') }}</th>
+                            <th class="w3-center" width="15%" @click="checkEdit" style="cursor:pointer">{{ $t('Window.Role.Permission.Edit') }}</th>
                         </tr>
                     </table>
                 </div>
@@ -223,7 +223,7 @@
                         break
                     }
                 }
-                console.log(allCheck)
+                
                 for (var i = 0; i < this.newFuncList.length; i++) {
                     if (allCheck) {
                         this.newFuncList[i].view = '0'
@@ -241,7 +241,7 @@
                         break
                     }
                 }
-                console.log(allCheck)
+                
                 for (var i = 0; i < this.newFuncList.length; i++) {
                     if (allCheck) {
                         this.newFuncList[i].add = '0'
@@ -259,7 +259,7 @@
                         break
                     }
                 }
-                console.log(allCheck)
+                
                 for (var i = 0; i < this.newFuncList.length; i++) {
                     if (allCheck) {
                         this.newFuncList[i].delete = '0'
@@ -277,7 +277,7 @@
                         break
                     }
                 }
-                console.log(allCheck)
+                
                 for (var i = 0; i < this.newFuncList.length; i++) {
                     if (allCheck) {
                         this.newFuncList[i].edit = '0'

@@ -19,11 +19,11 @@
             <div class="w3-row">
                 <div class="w3-col m10">
                     <input :id="'SearchUserInput' + groupuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                        placeholder="Search For Trinity User..." @keyup="searchForUser()">
+                        :placeholder="$t('Window.Account.Member.SearchUser')" @keyup="searchForUser()">
                 </div>
                 <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
-                    <i class="fa fa-plus-square w3-button w3-hover-none" title="Apply Members" aria-hidden="true" @click="changeApplyWindowStatus"></i>
-                    <i class="fa fa-refresh w3-button w3-hover-none" title="Reload Members" aria-hidden="true" @click="getMembers"></i>
+                    <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Account.Member.Apply')" aria-hidden="true" @click="changeApplyWindowStatus"></i>
+                    <i class="fa fa-refresh w3-button w3-hover-none" :title="$t('Window.Account.Member.Reload')" aria-hidden="true" @click="getMembers"></i>
                 </div>
             </div>
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">

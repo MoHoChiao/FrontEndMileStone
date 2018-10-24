@@ -17,9 +17,9 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add User'
+                return this.$t('Window.Account.AddUser')
             else if(this.urlOp === 'edit')
-                return 'Edit User - ' + this.content.username
+                return this.$t('Window.Account.EditUser') + ' - ' +  this.content.username
         }  
     },
     props: {

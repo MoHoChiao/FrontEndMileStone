@@ -17,9 +17,9 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add User Group'
+                return this.$t('Window.Account.AddUserGroup')
             else if(this.urlOp === 'edit')
-                return 'Edit User Group - ' + this.content.groupname
+                return this.$t('Window.Account.EditUserGroup') + ' - ' + this.content.groupname
         }  
     },
     props: {
