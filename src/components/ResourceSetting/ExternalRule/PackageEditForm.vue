@@ -5,7 +5,7 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Package Name</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.packagename" type="text" maxlength="50" placeholder="Please Input Package Name" />
+                <name-input :class="inputClassList.name" v-model="new_content.packagename" type="text" maxlength="50" placeholder="" />
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -13,7 +13,7 @@
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>

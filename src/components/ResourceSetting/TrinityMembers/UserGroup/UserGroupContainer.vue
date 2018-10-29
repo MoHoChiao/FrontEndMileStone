@@ -128,7 +128,7 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        {{ $t('menuContent.User_Group') }}
+                                        {{ $t('Item.User_Group') }}
                                     </i>
                                 </i>
                             </span>
@@ -145,19 +145,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Group Name" @click="applyOrder('groupname')">
-                                                {{ $t('Container.Grid.Header.Name') }}
+                                                {{ $t('Container.Grid.Name') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['groupname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['groupname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
-                                                {{ $t('Container.Grid.Header.Description') }}
+                                                {{ $t('Container.Grid.Description') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="ssw3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                                {{ $t('Container.Grid.Header.UpdateTime') }}
+                                                {{ $t('Container.Grid.UpdateTime') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>

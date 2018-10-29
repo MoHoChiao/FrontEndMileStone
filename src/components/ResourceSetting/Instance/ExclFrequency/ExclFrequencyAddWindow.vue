@@ -25,9 +25,9 @@
         computed: {
             windowTitle() {
                 if (this.urlOp === 'add')
-                    return 'Add Exclude Frequency'
+                    return this.$t('Window.Schedule.AddExcludeFreq')
                 else if (this.urlOp === 'edit')
-                    return 'Edit Exclude Frequency - ' + this.content.excludefrequencyname
+                    return this.$t('Window.Schedule.EditExcludeFreq') + ' - ' + this.content.excludefrequencyname
             }
         },
         props: {

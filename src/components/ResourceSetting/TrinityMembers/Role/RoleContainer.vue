@@ -132,7 +132,7 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        {{ $t('menuContent.Role') }}
+                                        {{ $t('Item.Role') }}
                                     </i>
                                 </i>
                             </span>
@@ -149,19 +149,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" @click="applyOrder('rolename')">
-                                                {{ $t('Container.Grid.Header.Name') }}
+                                                {{ $t('Container.Grid.Name') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['rolename'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['rolename'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" @click="applyOrder('description')">
-                                                {{ $t('Container.Grid.Header.Description') }}
+                                                {{ $t('Container.Grid.Description') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[3]" @click="applyOrder('lastupdatetime')">
-                                                {{ $t('Container.Grid.Header.UpdateTime') }}
+                                                {{ $t('Container.Grid.UpdateTime') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>

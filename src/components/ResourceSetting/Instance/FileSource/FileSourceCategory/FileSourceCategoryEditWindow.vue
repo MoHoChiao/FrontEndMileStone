@@ -14,16 +14,15 @@ import FileSourceCategoryForm from './FileSourceCategoryForm.vue'
 import FormButton from '../../../FormButton.vue'
 
 export default {
-    // data() {
-    //     return {
-    //         urlOp: ''
-    //     }
-    // },
+    computed: {
+        windowTitle(){
+            if(this.urlOp === 'add')
+                return this.$t('Window.Resource.AddFsCate')
+            else if(this.urlOp === 'edit')
+                return this.$t('Window.Resource.EditFsCate') + ' - ' + this.content.fscategoryname
+        }
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'

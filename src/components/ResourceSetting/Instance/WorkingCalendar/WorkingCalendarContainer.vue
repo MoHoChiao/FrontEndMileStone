@@ -48,17 +48,17 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Working Calendar
+                                        {{ $t('Item.WorkingCal') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                    placeholder="Name" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
-                            <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
-                            <i class="w3-right fa fa-plus w3-button" title="Add Working Calendar" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
-                            <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
+                            <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
+                            <i class="w3-right fa fa-plus w3-button" :title="$t('Container.Func.Add')" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
+                            <i class="w3-right fa fa-refresh w3-button" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="applyQuery"></i>
                         </div>
                         <p>
                             <div>
@@ -67,19 +67,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Package Name" @click="applyOrder('wcalendarname')">
-                                                Name
+                                                {{ $t('Form.Name') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['wcalendarname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['wcalendarname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Activate" @click="applyOrder('description')">
-                                                Description
+                                                {{ $t('Form.Description') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
-                                            <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Activate" @click="applyOrder('activate')">
-                                                Activate
+                                            <th class="w3-btn w3-hover-none w3-center" :width="gridWidth[3]" title="Order by Activate" @click="applyOrder('activate')">
+                                                {{ $t('Form.Activate') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['activate'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['activate'] == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -96,8 +96,8 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeAddWindowStatus('copy')"> Copy</button>
-                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> Delete</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeAddWindowStatus('copy')"> {{ $t('Container.Func.Copy') }}</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> {{ $t('Container.Func.Delete') }}</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -114,7 +114,7 @@
                                                     {{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}
                                                 </span>
                                             </td>
-                                            <td :width="gridWidth[3]">
+                                            <td class="w3-center" :width="gridWidth[3]">
                                                 <i v-if="content.activate == 1" class="fa fa-check-circle w3-text-green" />
                                                 <i v-else class="fa fa-times-circle w3-text-red" />
                                             </td>
@@ -128,7 +128,7 @@
                                     <div class="w3-col m3">
                                         <div class="w3-row w3-right">
                                             <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                                Page Size
+                                                {{ $t('Container.PageSize') }}
                                             </span>
                                             <span class="w3-col m6" style="padding-top:8px">
                                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">

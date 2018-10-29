@@ -17,11 +17,11 @@
         computed: {
             windowTitle() {
                 if (this.urlOp === 'add')
-                    return 'Add Working Calendar'
+                    return this.$t('Window.Schedule.AddWorkingCal')
                 else if (this.urlOp === 'edit')
-                    return 'Edit Working Calendar - ' + this.content.wcalendarname
+                    return this.$t('Window.Schedule.EditWorkingCal') + ' - ' + this.content.wcalendarname
                 else if (this.urlOp === 'copy')
-                    return 'Copy Working Calendar ' + this.content.wcalendarname
+                    return this.$t('Window.Schedule.CopyWorkingCal') + ' - ' + this.content.wcalendarname
             }
         },
         props: {

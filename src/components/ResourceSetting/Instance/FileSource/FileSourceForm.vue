@@ -2,13 +2,13 @@
     <div class="w3-container w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m4">
-                <name-input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
+                <name-input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
             </div>
             <div class="w3-col m3">
                 <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
@@ -22,22 +22,22 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div v-show="urlOp !== 'move'">
             <div class="w3-row">
                 <a href="javascript:void(0)" @click="openTab(0)">
-                    <div :class="tabsClass[0]">Directory <span class="w3-hide-medium w3-hide-small">Asign</span></div>
+                    <div :class="tabsClass[0]">{{ $t('Form.Fs.DirAssign') }}</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(1)">
-                    <div :class="tabsClass[1]">File Design</div>
+                    <div :class="tabsClass[1]">{{ $t('Form.Fs.FileDesign') }}</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(2)">
-                    <div :class="tabsClass[2]">Job Trigger</div>
+                    <div :class="tabsClass[2]">{{ $t('Form.Fs.JobTrigger') }}</div>
                 </a>
             </div>
             <div v-show="tabsFlag[0]" class="w3-container" style="overflow:auto;max-height:300px;min-height:300px">

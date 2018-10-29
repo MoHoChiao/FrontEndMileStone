@@ -18,13 +18,13 @@
         computed: {
             windowTitle() {
                 if (this.urlOp === 'add')
-                    return 'Add Frequency'
+                    return this.$t('Window.Schedule.AddFreq')
                 else if (this.urlOp === 'edit')
-                    return 'Edit Frequency - ' + this.content.frequencyname
+                    return this.$t('Window.Schedule.EditFreq') + ' - ' + this.content.frequencyname
                 else if (this.urlOp === 'copy')
-                    return 'Copy Frequency - ' + this.content.frequencyname
+                    return this.$t('Window.Schedule.CopyFreq') + ' - ' + this.content.frequencyname
                 else if (this.urlOp === 'move')
-                    return 'Move Frequency - ' + this.content.frequencyname
+                    return this.$t('Window.Schedule.MoveFreq') + ' - ' + this.content.frequencyname
             }
         },
         props: {

@@ -7,8 +7,8 @@
                 </p>
                 <form class="w3-left-align" method="POST" :action="_formAction">
                     <string-input ref="ac_input"
-                                  :label-text="$t('formContent.User_Account')"
-                                  :input-placeholder="$t('formContent.User_Account_Placeholder')"
+                                  :label-text="$t('Login.UserAccount')"
+                                  :input-placeholder="$t('Login.UserAccountPlaceholder')"
                                   input-type="text"
                                   :label-text-color="labelTextColor"
                                   :field-msg-color="fieldMsgColor"
@@ -18,8 +18,8 @@
                                   :input-hover-color="inputHoverColor">
                     </string-input>
                     <string-input ref="psw_input"
-                                  :label-text="$t('formContent.User_Password')"
-                                  :input-placeholder="$t('formContent.User_Password_Placeholder')"
+                                  :label-text="$t('Login.UserPassword')"
+                                  :input-placeholder="$t('Login.UserPasswordPlaceholder')"
                                   input-type="password"
                                   :input-auto="false"
                                   :label-text-color="labelTextColor"
@@ -32,7 +32,7 @@
                 </form>
                 <w3c-btn @click="onValidate" class="w3-center" :btn-bg-color="windowBtnColor" btn-round="medium">
                     <!--<i v-if="loading" class="fa fa-spinner fa-spin"></i>--> 
-                     {{ $t('windowContent.Login_Button') }}
+                     {{ $t('Login.LoginButton') }}
                 </w3c-btn>
             </div>
         </div>
@@ -121,8 +121,8 @@
                 return {
                     account: this.$refs.ac_input.inputContent,
                     psw: this.$refs.psw_input.inputContent,
-                    flag: (this.$refs.ac_input.checkEmpty('formContent.Field_Empty')) &&
-                        (this.$refs.psw_input.checkEmpty('formContent.Field_Empty'))
+                    flag: (this.$refs.ac_input.checkEmpty('Login.FieldEmpty')) &&
+                        (this.$refs.psw_input.checkEmpty('Login.FieldEmpty'))
                 }
             }
         }

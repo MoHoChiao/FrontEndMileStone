@@ -3,7 +3,7 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-half">
                 <input id="SearchJCSInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text"
-                       placeholder="Search For JCS List..." @keyup="searchForList()">
+                       placeholder="Search For JCS ..." @keyup="searchForList()">
                 <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;height:346px">
                     <table id="JCSListTable" class="w3-table-all w3-small">
                         <tr id="JCSServer" key="JCSServer" class="w3-hover-blue-grey w3-hover-opacity" @click="clickOnJCS('JCSServer', 'JCSServer', 0)">
@@ -25,19 +25,19 @@
                 <div v-if="selectedMonitorConfig.uid === 'JCSServer'" class="w3-row">
                     <div class="w3-col m12 w3-left">
                         <input class="w3-check" v-model="selectedMonitorConfig.suspendJob" style="width:40px;" type="checkbox">
-                        <label>Suspend Dispatch Job With Alert</label>
+                        <label>{{ $t('Form.ServerMonitor.SuspendDispatchJob') }}</label>
                     </div>
                 </div>
                 <div v-else class="w3-row">
                     <div class="w3-col m12 w3-left">
                         <input class="w3-check" v-model="selectedMonitorConfig.processmonitor" style="width:40px;" type="checkbox">
-                        <label>Process Monitor</label>
+                        <label>{{ $t('Form.ServerMonitor.ProcessMonitor') }}</label>
                     </div>
                 </div>
                 <div class="w3-row">
                     <div class="w3-col m12 w3-left">
                         <input class="w3-check" v-model="selectedMonitorConfig.resourcemonitor" style="width:40px;" type="checkbox">
-                        <label>Resource Monitor</label>
+                        <label>{{ $t('Form.ServerMonitor.ResourceMonitor') }}</label>
                     </div>
                 </div>
                 <div v-if="selectedMonitorConfig.resourcemonitor">
@@ -77,7 +77,7 @@
                                         <th class="" width="62%">File System</th>
                                         <th class="" width="30%">MB</th>
                                         <th class="" width="8%">
-                                            <i class="fa fa-plus-square w3-bar w3-hover-none" style="cursor:pointer" title="Add Disk" aria-hidden="true" @click="addDisk"></i>
+                                            <i class="fa fa-plus-square w3-bar w3-hover-none" style="cursor:pointer" :title="$t('Container.Func.Add')" aria-hidden="true" @click="addDisk"></i>
                                         </th>
                                     </tr>
                                 </table>
@@ -87,7 +87,7 @@
                                     <tr :key="list_info.agentuid" v-for="(list_info, index) in selectedMonitorConfig.disk">
                                         <td class="" width="62%">
                                             <input class="w3-input w3-border" v-model="list_info.path" type="text"
-                                                   placeholder="Please Input File System Path">
+                                                   placeholder="">
                                         </td>
                                         <td width="30%">
                                             <span>
@@ -95,7 +95,7 @@
                                             </span>
                                         </td>
                                         <td class="w3-center" width="8%">
-                                            <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delDisk(index)"></i>
+                                            <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delDisk(index)"></i>
                                         </td>
                                     </tr>
                                 </table>
@@ -105,8 +105,8 @@
                 </div>
                 <div class="w3-row">
                     <div class="w3-col m12 w3-center" style="padding-top:18px">
-                        <button class="w3-button w3-round w3-teal" @click="reset">Reset</button>
-                        <button class="w3-button w3-round w3-teal" @click="save">Save</button>
+                        <button class="w3-button w3-round w3-teal" @click="reset">{{ $t('Container.Func.Reset') }}</button>
+                        <button class="w3-button w3-round w3-teal" @click="save">{{ $t('Container.Func.Save') }}</button>
                     </div>
                 </div>
             </div>

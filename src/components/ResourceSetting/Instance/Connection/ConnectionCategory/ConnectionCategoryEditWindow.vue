@@ -17,9 +17,9 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Category'
+                return this.$t('Window.Resource.AddConnCate')
             else if(this.urlOp === 'edit')
-                return 'Edit Category - ' + this.content.conncategoryname
+                return this.$t('Window.Resource.EditConnCate') + ' - ' + this.content.conncategoryname
         }
     },
     props: {

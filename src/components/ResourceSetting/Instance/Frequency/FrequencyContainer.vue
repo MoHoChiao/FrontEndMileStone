@@ -2,7 +2,6 @@
     <div>
         <!-- For Add/Edit Category Window -->
         <frequency-category-edit-window v-if="editCategoryWindowAlive" :windowAlive="editCategoryWindowAlive"
-                                        window-title="Edit Frequency Category"
                                         @closeAdd="saveCategoryWindowContentForAdd"
                                         @closeEdit="saveCategoryWindowContentForEdit"
                                         :content="selectedCategoryRecord"
@@ -39,13 +38,13 @@
                                 </span>
                                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;/*transform:rotate(-5deg)*/">
                                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Frequency Category
+                                        {{ $t('Container.Title.FrequencyCate') }}
                                     </div>
                                 </div>
-                                <i class="fa fa-trash-o w3-button w3-right" title="Delete Frequency Category" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
-                                <i class="fa fa-pencil w3-button w3-right" title="Edit Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
-                                <i class="fa fa-plus w3-button w3-right" title="Add Frequency Category" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
-                                <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency Category" aria-hidden="true" @click="getCategories"></i>
+                                <i class="fa fa-trash-o w3-button w3-right" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="showDeleteCategoryWindow"></i>
+                                <i class="fa fa-pencil w3-button w3-right" :title="$t('Container.Func.Edit')" aria-hidden="true" @click="changeCategoryWindowStatus('edit')"></i>
+                                <i class="fa fa-plus w3-button w3-right" :title="$t('Container.Func.Add')" aria-hidden="true" @click="changeCategoryWindowStatus('add')"></i>
+                                <i class="fa fa-refresh w3-button w3-right" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="getCategories"></i>
                             </div>
                         </p>
                         <p>
@@ -54,9 +53,9 @@
                                     <table class="w3-table-all w3-small">
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
-                                            <th :width="gridWidth[1]">Name</th>
-                                            <th :width="gridWidth[2]">Description</th>
-                                            <th :width="gridWidth[3]">Update Time</th>
+                                            <th :width="gridWidth[1]">{{ $t('Container.Grid.Name') }}</th>
+                                            <th :width="gridWidth[2]">{{ $t('Container.Grid.Description') }}</th>
+                                            <th :width="gridWidth[3]">{{ $t('Container.Grid.UpdateTime') }}</th>
                                         </tr>
                                     </table>
                                 </div>
@@ -93,14 +92,14 @@
                         </span>
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px;/*transform:rotate(-5deg)*/">
                             <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                {{ $t('menuContent.Frequency') }}
+                                {{ $t('Item.Frequency') }}
                             </div>
                         </div>
                         <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                placeholder="Name" style="height:28px;max-width: 200px;text-transform:uppercase" @keyup.enter="applyQuery">
-                        <i class="fa fa-search w3-button" title="Name" aria-hidden="true" @click="applyQuery"></i>
-                        <i class="fa fa-plus w3-button w3-right" title="Add Frequency" aria-hidden="true" @click="changeFrequencyWindowStatus('add')"></i>
-                        <i class="fa fa-refresh w3-button w3-right" title="Reload Frequency" aria-hidden="true" @click="applyQuery"></i>
+                        <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
+                        <i class="fa fa-plus w3-button w3-right" :title="$t('Container.Func.Add')" aria-hidden="true" @click="changeFrequencyWindowStatus('add')"></i>
+                        <i class="fa fa-refresh w3-button w3-right" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="applyQuery"></i>
                     </div>
                     <p>
                         <div>
@@ -109,19 +108,19 @@
                                     <tr class="w3-teal">
                                         <th :width="gridWidth[0]"></th>
                                         <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Connection Name" @click="applyOrder('frequencyname')">
-                                            Name
+                                            {{ $t('Container.Grid.Name') }}
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['frequencyname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                             <span v-else-if="this.orderFields['frequencyname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                         </th>
                                         <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
-                                            Description
+                                            {{ $t('Container.Grid.Description') }}
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                             <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                         </th>
                                         <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                            Update Time
+                                            {{ $t('Container.Grid.UpdateTime') }}
                                             &nbsp;&nbsp;
                                             <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                             <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -171,7 +170,7 @@
                                 <div class="w3-col m3">
                                     <div class="w3-row w3-right">
                                         <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
-                                            Page Size
+                                            {{ $t('Container.PageSize') }}
                                         </span>
                                         <span class="w3-col m6" style="padding-top:10px">
                                             <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize"

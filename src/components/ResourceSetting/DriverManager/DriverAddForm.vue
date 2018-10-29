@@ -2,20 +2,20 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Driver Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Driver.DriverName') }}</label>
             </div>
             <div class="w3-col m6">
                 <input :class="inputClassList.name" v-model="new_content.name" type="text" 
-                    maxlength="128" placeholder="Please Input Driver Name" autocomplete="off">
+                    maxlength="128" placeholder="" autocomplete="off">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>JDBC URL</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Driver.JDBCURL') }}</label>
             </div>
             <div class="w3-col m9">
                 <input :class="inputClassList.url" v-model="new_content.url" type="text" 
-                    maxlength="1024" placeholder="Please Input JDBC URL" autocomplete="off">
+                    maxlength="1024" placeholder="" autocomplete="off">
             </div>
         </div>
         <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving" autocomplete="off">

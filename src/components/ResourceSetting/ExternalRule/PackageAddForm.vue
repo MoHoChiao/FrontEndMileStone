@@ -2,19 +2,19 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Package Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
                 <name-input :class="inputClassList.name" v-model="new_content.packagename" style="text-transform:uppercase"
-                            type="text" maxlength="50" placeholder="Please Input Package Name" />
+                            type="text" maxlength="50" placeholder="" />
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>

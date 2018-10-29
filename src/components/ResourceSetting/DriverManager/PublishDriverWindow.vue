@@ -7,7 +7,7 @@
                     <th class="w3-center" width="10%" style="padding-top:4px">
                         <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click="onClickCheckAll">
                     </th>
-                    <th class="w3-center" width="90%">Driver Names</th>
+                    <th class="w3-center" width="90%">{{ $t('Form.Driver.DriverName') }}</th>
                 </tr>
             </table>
         </div>
@@ -67,7 +67,7 @@ export default {
         },
         onClickCheckAll(){
             this.selectedRecords =[]
-            if(this.checkAllFlag){
+            if(!this.checkAllFlag){
                 for(let i=0;i<this.allDriverObjs.length;i++){
                     this.allDriverObjs[i].checked = true //單純為了在UI把checkbox勾起來而已
                     this.onClickCheck(this.allDriverObjs[i], i)

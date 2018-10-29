@@ -2,54 +2,54 @@
     <div class="w3-small w3-panel w3-card">
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <label>Pattern And Type</label>
+                <label>{{ $t('Form.Fs.PatternAndType') }}</label>
                 <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>File Name Pattern</label>
-                <input :class="inputClassList.filename" v-model="new_content.filename" type="text" maxlength="64" placeholder="Please Input File Name Pattern">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FileNamePattern') }}</label>
+                <input :class="inputClassList.filename" v-model="new_content.filename" type="text" maxlength="64" placeholder="">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Pattern Rule</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.PatternRule') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.pattern" style="padding:0px">
-                    <option value="1" selected>From The Beginning</option>
-                    <option value="2">From The End</option>
-                    <option value="3">Specified Position</option>
-                    <option value="4">Full Match</option>
+                    <option value="1" selected>{{ $t('Form.Fs.FromBeginning') }}</option>
+                    <option value="2">{{ $t('Form.Fs.FromEnd') }}</option>
+                    <option value="3">{{ $t('Form.Fs.SpecifyPosition') }}</option>
+                    <option value="4">{{ $t('Form.Fs.FullMatch') }}</option>
                 </select>
             </div>
         </div>
         <div v-if="new_content.pattern === '3'" class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Start Position</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.StartPosition') }}</label>
                 <input :class="inputClassList.startposition" v-model="new_content.startposition" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>End Position</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.EndPosition') }}</label>
                 <input :class="inputClassList.endposition" v-model="new_content.endposition" type="number" min="0" max="32767">
             </div>
         </div>
         <div v-if="new_content.filetype === 'D'" class="w3-row-padding w3-section">
             <div class="w3-col m12">
-                <span class="w3-text-red">*</span><label>File Type</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FileType') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px">
-                    <option value="D" selected>Regular File</option>
-                    <option value="C">Control File</option>
+                    <option value="D" selected>{{ $t('Form.Fs.RegularFile') }}</option>
+                    <option value="C">{{ $t('Form.Fs.ControlFile') }}</option>
                 </select>
             </div>
         </div>
         <div v-else class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>File Type</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FileType') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.filetype" style="padding:0px">
-                    <option value="D" selected>Regular File</option>
-                    <option value="C">Control File</option>
+                    <option value="D" selected>{{ $t('Form.Fs.RegularFile') }}</option>
+                    <option value="C">{{ $t('Form.Fs.ControlFile') }}</option>
                 </select>
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Implementation Class</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.ImplClass') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.cfImpClass" style="padding:0px">
                     <template v-for="(info, index) in cfs">
                         <option v-if="index % 2 === 0 && cfs[index+1]" :value="cfs[index+1].value">{{ info.value }}</option>
@@ -59,34 +59,34 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <label>Check Mode</label>
+                <label>{{ $t('Form.Fs.CheckMode') }}</label>
                 <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.checkduplicate" type="checkbox">
-                <label>Check Duplication</label>
+                <label>{{ $t('Form.Fs.CheckDup') }}</label>
             </div>
             <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.checksum" type="checkbox">
-                <label>Check Sum</label>
+                <label>{{ $t('Form.Fs.CheckSum') }}</label>
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div v-if="new_content.checkduplicate && new_content.filetype === 'C'" class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Filter Rule</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FilterRule') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.filterduplicate" style="padding:0px">
-                    <option value="0">Filter Out All</option>
-                    <option value="1" selected>Filter Out Duplication</option>
+                    <option value="0">{{ $t('Form.Fs.FilterOutAll') }}</option>
+                    <option value="1" selected>{{ $t('Form.Fs.FilterOutDup') }}</option>
                 </select>
             </div>
             <div v-if="new_content.checksum" class="w3-col m3">
-                <span class="w3-text-red">*</span><label><span class="w3-hide-medium w3-hide-small">Check Sum </span>File Extension</label>
-                <input :class="inputClassList.checksumfe" v-model="new_content.checksumfe" type="text" placeholder="Check Sum File Extension">
+                <span class="w3-text-red">*</span><label><span class="w3-hide-medium w3-hide-small">{{ $t('Form.Fs.CheckSum') }} </span>{{ $t('Form.Fs.FileExt') }}</label>
+                <input :class="inputClassList.checksumfe" v-model="new_content.checksumfe" type="text" placeholder="">
             </div>
             <div v-if="new_content.checksum" class="w3-col m3">
-                <span class="w3-text-red">*</span><label>Algorithm</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.Algorithm') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.checksumalg" style="padding:0px">
                     <option value="M" selected>MD5</option>
                     <option value="S">SHA1</option>
@@ -95,53 +95,53 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <label>File Setting</label>
+                <label>{{ $t('Form.Fs.FileSetting') }}</label>
                 <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Min Amount of Files</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.MinAmountFiles') }}</label>
                 <input :class="inputClassList.minfile" v-model="new_content.minfile" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Max Amount of Files</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.MaxAmountFiles') }}</label>
                 <input :class="inputClassList.maxfile" v-model="new_content.maxfile" type="number" min="0" max="32767">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Timeout (In Minutes)</label>
-                <input :class="inputClassList.timeout" v-model="new_content.timeout" type="number" min="0" max="32767">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.Timeout') }}</label>
+                <input :class="inputClassList.timeout" v-model="new_content.timeout" type="number" min="0" max="32767" placeholder="Minutes">
             </div>
             <div v-if="new_content.filetype === 'C'" class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Control File Amount Mode</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.ControlFileAmountMode') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.datafilecountmode" style="padding:0px">
-                    <option value="R" selected>Data File</option>
-                    <option value="C">Control File</option>
+                    <option value="R" selected>{{ $t('Form.Fs.DataFile') }}</option>
+                    <option value="C">{{ $t('Form.Fs.ControlFile') }}</option>
                 </select>
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m5">
                 <input class="w3-check" v-model="new_content.bypasszero" type="checkbox">
-                <label>Success If No File</label>
+                <label>{{ $t('Form.Fs.SuccessIfNoFile') }}</label>
             </div>
             <div class="w3-col m7">
                 <input class="w3-check" v-model="new_content.appendUid" type="checkbox">
-                <label>Append Task Uid in File(s) Name</label>
+                <label>{{ $t('Form.Fs.AppendTaskUidInFileName') }}</label>
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <label>FTP Setting</label>
+                <label>{{ $t('Form.Fs.FTPSetting') }}</label>
                 <hr class="w3-border-black" style="padding:0px;margin:0px">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.ftpget" type="checkbox">
-                <label>FTP Get</label>
+                <label>{{ $t('Form.Fs.FTPGet') }}</label>
             </div>
             <div v-if="new_content.ftpget" class="w3-col m6">
                 <input class="w3-check" v-model="new_content.sftp" type="checkbox">
@@ -151,16 +151,16 @@
         <div v-if="new_content.ftpget && !new_content.sftp" class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.ftpbinary" type="checkbox">
-                <label>FTP Binary Mode</label>
+                <label>{{ $t('Form.Fs.FTPBinaryMode') }}</label>
             </div>
             <div class="w3-col m6">
                 <input class="w3-check" v-model="new_content.passive" type="checkbox">
-                <label>Passive</label>
+                <label>{{ $t('Form.Fs.Passive') }}</label>
             </div>
         </div>
         <div v-if="new_content.ftpget" class="w3-row-padding w3-section" style="padding-top:10px">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>FTP Connection</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FTPConn') }}</label>
                 <select :class="inputClassList.ftpconnectionuid" v-model="new_content.ftpconnectionuid" style="padding:0px">
                     <template v-for="info in ftpConns">
                         <option :value="info.connectionuid">{{ info.connectionname }}</option>
@@ -168,22 +168,22 @@
                 </select>
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Post FTP Action</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.PostFTPAct') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="new_content.ftppostaction" style="padding:0px">
-                    <option value="0" selected>Do Nothing</option>
-                    <option value="1">Move File To Another Directory</option>
-                    <option value="2">Delete File</option>
+                    <option value="0" selected>{{ $t('Form.Fs.DoNothing') }}</option>
+                    <option value="1">{{ $t('Form.Fs.MoveFileToAnotherDir') }}</option>
+                    <option value="2">{{ $t('Form.Fs.DeleteFile') }}</option>
                 </select>
             </div>
         </div>
         <div v-if="new_content.ftpget" class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>FTP Remote Directory</label>
-                <input :class="inputClassList.ftpremotedir" v-model="new_content.ftpremotedir" type="text" placeholder="Please Input Remote Directory">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FTPRemoteDir') }}</label>
+                <input :class="inputClassList.ftpremotedir" v-model="new_content.ftpremotedir" type="text" placeholder="">
             </div>
             <div v-if="new_content.ftppostaction === '1'" class="w3-col m6">
-                <span class="w3-text-red">*</span><label>FTP Move Directory</label>
-                <input :class="inputClassList.ftpmovedir" v-model="new_content.ftpmovedir" type="text" placeholder="Please Input Move Directory">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.FTPMoveDir') }}</label>
+                <input :class="inputClassList.ftpmovedir" v-model="new_content.ftpmovedir" type="text" placeholder="">
             </div>
         </div>
     </div>

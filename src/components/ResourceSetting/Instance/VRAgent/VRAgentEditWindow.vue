@@ -17,9 +17,9 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Virtual Agent'
+                return this.$t('Window.Resource.AddVirtualAgent')
             else if(this.urlOp === 'edit')
-                return 'Edit Virtual Agent - ' + this.content.virtualagentname
+                return this.$t('Window.Resource.EditVirtualAgent') + ' - ' + this.content.virtualagentname
         }  
     },
     props: {

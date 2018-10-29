@@ -15,7 +15,7 @@ import FormButton from '../../FormButton.vue'
 export default {
     computed: {
         windowTitle(){
-            return 'Edit Alias Under the ' + this.content.busentityname
+            return this.$t('Window.Resource.EditAlias') + ' - ' + this.content.busentityname
         }
     },
     props: {

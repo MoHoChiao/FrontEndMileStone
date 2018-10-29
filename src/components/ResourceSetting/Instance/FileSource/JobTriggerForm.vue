@@ -3,7 +3,7 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m4">
                 <input class="w3-check" v-model="new_content.filetrigger" type="checkbox">
-                <label>File Trigger</label>
+                <label>{{ $t('Form.Fs.JobTrigger') }}</label>
             </div>
             <div v-if="new_content.filetrigger" class="w3-col m8">
                 <input :class="inputClassList.namePath" v-model="namePath" type="text" @click="changeSelectedTableStatus" readonly>
@@ -74,20 +74,20 @@
         <div v-if="new_content.filetrigger" class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <input class="w3-check" v-model="isOverrideTxDate" type="checkbox">
-                <label>Override TXDate</label>
+                <label>{{ $t('Form.Fs.OverrideTXDate') }}</label>
             </div>
         </div>
         <div v-if="isOverrideTxDate && new_content.filetrigger" class="w3-row-padding w3-section">
             <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Date Format</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.DateFormat') }}</label>
                 <input :class="inputClassList.txdateformat" v-model="new_content.txdateformat" type="text" placeholder="yyyyMMdd">
             </div>
             <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Start Position</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.StartPosition') }}</label>
                 <input :class="inputClassList.txdatestartpos" v-model="new_content.txdatestartpos" type="number" min="0" max="32767">
             </div>
             <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>End Position</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.EndPosition') }}</label>
                 <input :class="inputClassList.txdateendpos" v-model="new_content.txdateendpos" type="number" min="0" max="32767">
             </div>
         </div>

@@ -1,29 +1,29 @@
 <template>
     <div>
         <calendar-pattern-window :windowAlive="patternWindowAlive"
-                                 window-title="Generate Date By Pattern"
+                                 :window-title="$t('Form.WorkingCal.GenByPattern')"
                                  @closeAdd="changePatternWindowStatus"
                                  @generate="generateByPattern"></calendar-pattern-window>
         <div class="w3-small">
             <div class="w3-row w3-section">
                 <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                    <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                    <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
                 </div>
                 <div class="w3-col m6">
                     <name-input :class="inputClassList.name" v-model="new_content.wcalendarname" type="text"
-                                maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
+                                maxlength="32" placeholder="" style="text-transform:uppercase" />
                 </div>
                 <div class="w3-col m3 w3-right">
                     <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
-                    <label>Activate</label>
+                    <label>{{ $t('Form.Activate') }}</label>
                 </div>
             </div>
             <div class="w3-row w3-section">
                 <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                    <label class="w3-right">Description</label>
+                    <label class="w3-right">{{ $t('Form.Description') }}</label>
                 </div>
                 <div class="w3-col m9">
-                    <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                    <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
             <div class="w3-row w3-container">
@@ -36,8 +36,8 @@
             <br />
             <div class="w3-row">
                 <div class="w3-col m12 w3-center">
-                    <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">By Pattern</button>
-                    <button class="w3-button w3-round w3-teal" @click="clearAllDate">Clear All</button>
+                    <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">{{ $t('Form.WorkingCal.ByPattern') }}</button>
+                    <button class="w3-button w3-round w3-teal" @click="clearAllDate">{{ $t('Form.WorkingCal.ClearAll') }}</button>
                 </div>
             </div>
         </div>

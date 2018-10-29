@@ -11,7 +11,7 @@
                     :input-hover-color="inputHoverColor" 
         ></reset-psw-form>
         <div slot="footer" class="w3-container">
-            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('windowContent.Reset_Button') }}</w3c-btn>
+            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('Login.ResetButton') }}</w3c-btn>
         </div>
     </modal-window>
 </template>

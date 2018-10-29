@@ -2,7 +2,7 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <input id="SearchAgentInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                    placeholder="Search For JCS Agent List..." @keyup="searchForAgentList()">
+                    :placeholder="$t('Window.System.SearchAgent')" @keyup="searchForAgentList()">
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:140px">
                 <table id="AgentListTable" class="w3-table-all w3-small">
                     <template v-for="(agent, index) in allJCSAgents">
@@ -19,16 +19,16 @@
         <div v-show="this.selectedAgent" class="w3-row w3-section">
             <div>
                 <input id="SearchPackageNameInput" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                    placeholder="Search For Package Name..." @keyup="searchForPackageName()">
+                    :placeholder="$t('Window.System.SearchPackage')" @keyup="searchForPackageName()">
             </div>
             <div class="w3-col m12">
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="10%">Publish</th>
-                            <th class="" width="25%">Package Name</th>
-                            <th class="" width="25%">Rule Name</th>
-                            <th class="" width="40%">Full Class</th>
+                            <th class="w3-center" width="10%">{{ $t('Container.Grid.Publish') }}</th>
+                            <th class="" width="25%">{{ $t('Container.Grid.Package') }}</th>
+                            <th class="" width="25%">{{ $t('Container.Grid.Rule') }}</th>
+                            <th class="" width="40%">{{ $t('Container.Grid.FullClass') }}</th>
                         </tr>
                     </table>
                 </div>

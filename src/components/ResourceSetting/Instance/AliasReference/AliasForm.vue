@@ -5,12 +5,12 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="25%" style="padding-top:12px;padding-bottom:12px">Alias Name</th>
-                            <th class="w3-center" width="18%" style="padding-top:12px;padding-bottom:12px">Type</th>
-                            <th class="w3-center" width="24%" style="padding-top:12px;padding-bottom:12px">Target</th>
-                            <th class="w3-center" width="25%" style="padding-top:12px;padding-bottom:12px">Description</th>
+                            <th class="w3-center" width="25%" style="padding-top:12px;padding-bottom:12px">{{ $t('Container.Grid.AliasName') }}</th>
+                            <th class="w3-center" width="18%" style="padding-top:12px;padding-bottom:12px">{{ $t('Container.Grid.Type') }}</th>
+                            <th class="w3-center" width="24%" style="padding-top:12px;padding-bottom:12px">{{ $t('Container.Grid.Target') }}</th>
+                            <th class="w3-center" width="25%" style="padding-top:12px;padding-bottom:12px">{{ $t('Container.Grid.Description') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Alias" aria-hidden="true" @click="addAlias"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Resource.AddAlias')" aria-hidden="true" @click="addAlias"></i>
                             </th>
                         </tr>
                     </table>
@@ -105,7 +105,7 @@
                                 </span>
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delAlias(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delAlias(index)"></i>
                             </td>
                         </tr>
                     </table>

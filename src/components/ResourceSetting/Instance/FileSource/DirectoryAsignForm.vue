@@ -3,41 +3,41 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m2">&nbsp;</div>
             <div class="w3-col m4">
-                <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" placeholder="Root Path">
+                <input :class="inputClassList.rootdir" v-model="new_content.rootdir" type="text" :placeholder="$t('Form.Fs.RootPath')">
             </div>
             <div class="w3-col m4">
-                <button class="w3-button w3-blue-grey w3-round" @click="applyRoot" style="padding-top:6px;padding-bottom:6px">Generate</button>
+                <button class="w3-button w3-blue-grey w3-round" @click="applyRoot" style="padding-top:6px;padding-bottom:6px">{{ $t('Form.Generate') }}</button>
             </div>
             <div class="w3-col m2">&nbsp;</div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Received Directory</label>
-                <input :class="inputClassList.receivedir" v-model="new_content.receivedir" type="text" maxlength="128" placeholder="Please Input Received Path">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.ReceivedDir') }}</label>
+                <input :class="inputClassList.receivedir" v-model="new_content.receivedir" type="text" maxlength="128" placeholder="">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Corrupt Directory</label>
-                <input :class="inputClassList.corruptdir" v-model="new_content.corruptdir" type="text" maxlength="128" placeholder="Please Input Corrupt Path">
-            </div>
-        </div>
-        <div class="w3-row-padding w3-section">
-            <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Target Directory</label>
-                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" maxlength="128" placeholder="Please Input Target Path">
-            </div>
-            <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Duplicate Directory</label>
-                <input :class="inputClassList.duplicatedir" v-model="new_content.duplicatedir" type="text" maxlength="128" placeholder="Please Input Duplicate Path">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.CorruptDir') }}</label>
+                <input :class="inputClassList.corruptdir" v-model="new_content.corruptdir" type="text" maxlength="128" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Complete Directory</label>
-                <input :class="inputClassList.completedir" v-model="new_content.completedir" type="text" maxlength="128" placeholder="Please Input Complete Path">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.TargetDir') }}</label>
+                <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" maxlength="128" placeholder="">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>Error Directory</label>
-                <input :class="inputClassList.errordir" v-model="new_content.errordir" type="text" maxlength="128" placeholder="Please Input Error Path">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.DuplicateDir') }}</label>
+                <input :class="inputClassList.duplicatedir" v-model="new_content.duplicatedir" type="text" maxlength="128" placeholder="">
+            </div>
+        </div>
+        <div class="w3-row-padding w3-section">
+            <div class="w3-col m6">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.CompleteDir') }}</label>
+                <input :class="inputClassList.completedir" v-model="new_content.completedir" type="text" maxlength="128" placeholder="">
+            </div>
+            <div class="w3-col m6">
+                <span class="w3-text-red">*</span><label>{{ $t('Form.Fs.ErrorDir') }}</label>
+                <input :class="inputClassList.errordir" v-model="new_content.errordir" type="text" maxlength="128" placeholder="">
             </div>
         </div>
     </div>

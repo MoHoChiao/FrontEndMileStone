@@ -3,37 +3,37 @@
     <div slot="content" class="w3-container w3-small">
         <div class="w3-row-padding w3-section">
             <div class="w3-col m4">
-                <label>End Date Type</label>
+                <label>{{ $t('Form.WorkingCal.EndDateType') }}</label>
                 <select class="w3-select w3-border w3-round" v-model="endDateType" style="padding:0px">
-                    <option value="EndBy" selected>End By</option>
-                    <option value="EndAfter" selected>End After</option>
+                    <option value="EndBy" selected>{{ $t('Form.WorkingCal.EndBy') }}</option>
+                    <option value="EndAfter" selected>{{ $t('Form.WorkingCal.EndAfter') }}</option>
                 </select>
             </div>
             <div class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Start Date</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.StartDate') }}</label>
                 <datetime-picker :date="startTime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
             </div>
             <div v-if="endDateType === 'EndBy'" class="w3-col m4">
-                <span class="w3-text-red">*</span><label>End Date</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.EndDate') }}</label>
                 <datetime-picker :date="endTime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
             </div>
             <div v-else class="w3-col m4">
-                <span class="w3-text-red">*</span><label>Occurences</label>
+                <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.Occurrences') }}</label>
                 <input :class="inputClassList.occurences" v-model="occurences" type="number" min="1" max="999">
             </div>
         </div>
         <div class="w3-row">
             <a href="javascript:void(0)" @click="openTab(0)">
-                <div :class="tabsClass[0]">Daily</div>
+                <div :class="tabsClass[0]">{{ $t('Form.WorkingCal.Daily') }}</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(1)">
-                <div :class="tabsClass[1]">Weekly</div>
+                <div :class="tabsClass[1]">{{ $t('Form.WorkingCal.Weekly') }}</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(2)">
-                <div :class="tabsClass[2]">Monthly</div>
+                <div :class="tabsClass[2]">{{ $t('Form.WorkingCal.Monthly') }}</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(3)">
-                <div :class="tabsClass[3]">Yearly</div>
+                <div :class="tabsClass[3]">{{ $t('Form.WorkingCal.Yearly') }}</div>
             </a>
         </div>
 
@@ -41,14 +41,14 @@
             <div class="w3-panel w3-card">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
-                        <label>Daily Type</label>
+                        <label>{{ $t('Form.WorkingCal.DailyType') }}</label>
                         <select class="w3-select w3-border w3-round" v-model="dailyType" style="padding:0px">
-                            <option value="Days">Every Day(s)</option>
-                            <option value="WeekDay">Every Weekday</option>
+                            <option value="Days">{{ $t('Form.WorkingCal.EveryDays') }}</option>
+                            <option value="WeekDay">{{ $t('Form.WorkingCal.EveryWeekday') }}</option>
                         </select>
                     </div>
                     <div v-if="dailyType === 'Days'" class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Day(s)</label>
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.Days') }}</label>
                         <input :class="inputClassList.daily_day" v-model="daily_day" type="number" min="1" max="999">
                     </div>
                 </div>
@@ -59,10 +59,10 @@
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12">
-                        <span class="w3-left" style="padding-top:6px">Every&nbsp;&nbsp;</span>
+                        <span class="w3-left" style="padding-top:6px">{{ $t('Form.WorkingCal.Every') }}&nbsp;&nbsp;</span>
                         <span class="w3-text-red w3-left">*&nbsp;</span>
                         <span class="w3-left"><input :class="inputClassList.weekly_week" v-model="weekly_week" type="number" min="1" max="999"></span>
-                        <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;week(s) on : </span>
+                        <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;{{ $t('Form.WorkingCal.WeeksOn') }} : </span>
                     </div>
                 </div>
                 <div class="w3-row w3-section">
@@ -104,10 +104,9 @@
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12 w3-center">
-                        <label>Monthly Type</label>
                         <select class="w3-select w3-border w3-round" v-model="monthlyType" style="padding:0px">
-                            <option value="DayOfEveryMonth">Day(s) of Every Month(s)</option>
-                            <option value="TheDayOfEveryMonth">The Day of Every Month(s)</option>
+                            <option value="DayOfEveryMonth">{{ $t('Form.WorkingCal.DayOfEveryMonth') }}</option>
+                            <option value="TheDayOfEveryMonth">{{ $t('Form.WorkingCal.TheDayOfEveryMonth') }}</option>
                         </select>
                     </div>
                 </div>
@@ -173,7 +172,6 @@
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12 w3-center">
-                        <label>Yearly Type</label>
                         <select class="w3-select w3-border w3-round" v-model="yearlyType" style="padding:0px">
                             <option value="DayOfEveryYear">Day(s) of Every Year</option>
                             <option value="TheDayOfEveryYear">The Day of Every Year</option>

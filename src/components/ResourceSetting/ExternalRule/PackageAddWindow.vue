@@ -22,9 +22,9 @@
         computed: {
             windowTitle() {
                 if (this.urlOp === 'add')
-                    return 'Add Package'
+                    return this.$t('Window.System.AddPackage')
                 else if (this.urlOp === 'edit')
-                    return 'Edit Package - ' + this.content.packagename
+                    return this.$t('Window.System.EditPackage') + ' - ' + this.content.packagename
             }
         },
         props: {

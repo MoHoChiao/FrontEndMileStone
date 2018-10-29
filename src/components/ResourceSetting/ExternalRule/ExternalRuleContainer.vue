@@ -1,7 +1,6 @@
 <template>
     <div>
         <package-add-window :windowAlive="addWindowAlive"
-                            window-title="Add New External Package"
                             :content="packageRecord"
                             :urlOp="operation"
                             @close="close"
@@ -11,7 +10,6 @@
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                :is-loading="delButtonLoading"
-                               window-title="Confirm window"
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
                                @closeDelete="closeDeleteWindow"
@@ -70,29 +68,29 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        External Rule
+                                        {{ $t('Item.ExternalRule') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
-                                   placeholder="Package Name" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
+                                   placeholder="" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
 
                             <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                             <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
-                            <i class="w3-right w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Rules to JCS Agent" aria-hidden="true" @click="changePublishWindowStatus"></i>
+                            <i class="w3-right w3-bar-item fa fa-share-square w3-button w3-right" :title="$t('Container.Func.PublishRule')" aria-hidden="true" @click="changePublishWindowStatus"></i>
                             <span class="w3-right">
                                 <form enctype="multipart/form-data" novalidate>
                                     <label>
-                                        <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Package" aria-hidden="true"></i>
+                                        <i class="w3-bar-item fa fa-upload w3-button w3-right" :title="$t('Container.Func.ImportPackage')" aria-hidden="true"></i>
                                         <input id="ExternalRuleInputFile" type="file" name="file"
                                                @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
                                                accept=".jar" class="input-file" hidden>
                                     </label>
                                 </form>
                             </span>
-                            <i class="w3-right fa fa-plus w3-button" title="Add Package" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
-                            <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="w3-right fa fa-plus w3-button" :title="$t('Container.Func.AddPackage')" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
+                            <i class="w3-right fa fa-refresh w3-button" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="applyQuery"></i>
                         </div>
                         <p>
                             <div>

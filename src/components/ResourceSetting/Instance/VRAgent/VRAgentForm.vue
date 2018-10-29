@@ -2,28 +2,28 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ this.$t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
                 <name-input :class="inputClassList.name" v-model="new_content.virtualagentname" type="text"
-                            maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
+                            maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
-                <label>Activate</label>
+                <label>{{ this.$t('Form.Activate') }}</label>
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ this.$t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Max Jobs</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ this.$t('Form.Agent.MaxJobs') }}</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.maxjobs" v-model="new_content.maximumjob" type="number" min="0" max="2048">
@@ -31,11 +31,11 @@
             <div class="w3-col m6 w3-right">
                 <span>
                     <input class="w3-radio" type="radio" value="0" checked v-model="new_content.mode">
-                    <label>Load Balance</label>
+                    <label>{{ this.$t('Form.Agent.LoadBalance') }}</label>
                 </span>
                 <span>
                     <input class="w3-radio" type="radio" value="1" v-model="new_content.mode">
-                    <label>By Seq</label>
+                    <label>{{ this.$t('Form.Agent.BySeq') }}</label>
                 </span>
             </div>
         </div>
@@ -44,12 +44,12 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="7%" style="padding-top:12px;padding-bottom:12px">Seq</th>
-                            <th class="w3-center" width="30%" style="padding-top:12px;padding-bottom:12px">Name</th>
-                            <th class="w3-center" width="10%" style="padding-top:12px;padding-bottom:12px">Activate</th>
-                            <th class="w3-center" width="45%" style="padding-top:12px;padding-bottom:12px">Description</th>
+                            <th class="" width="7%" style="padding-top:12px;padding-bottom:12px">{{ this.$t('Form.Seq') }}</th>
+                            <th class="" width="30%" style="padding-top:12px;padding-bottom:12px">{{ this.$t('Form.Name') }}</th>
+                            <th class="" width="10%" style="padding-top:12px;padding-bottom:12px">{{ this.$t('Form.Activate') }}</th>
+                            <th class="" width="45%" style="padding-top:12px;padding-bottom:12px">{{ this.$t('Form.Description') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add JCS Agent" aria-hidden="true" @click="addAgent"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="this.$t('Window.Resource.AddAgent')" aria-hidden="true" @click="addAgent"></i>
                             </th>
                         </tr>
                     </table>
@@ -73,7 +73,7 @@
                             </td>
                             <td width="45%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <input class="w3-input w3-border" style="width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="Please Input Description">
+                                    <input class="w3-input w3-border" style="width:100%" v-model="list_info.description" type="text" maxlength="255" placeholder="">
                                 </span>
                             </td>
                             <td class="w3-center" width="8%">

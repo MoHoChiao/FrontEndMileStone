@@ -2,7 +2,7 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>JDBC Driver</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Driver.JDBCDriver') }}</label>
             </div>
             <div class="w3-col m6">
                 <select class="w3-select w3-border w3-round" v-model="new_content.driver" style="padding:0px">
@@ -14,7 +14,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>JDBC URL</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Driver.JDBCURL') }}</label>
             </div>
             <div class="w3-col m9">
                 <input :class="inputClassList.url" v-model="new_content.url" type="text" maxlength="255" placeholder="Please Input URL">

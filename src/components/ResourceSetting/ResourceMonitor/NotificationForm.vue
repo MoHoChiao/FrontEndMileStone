@@ -5,10 +5,10 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="77%" style="padding-top:12px;padding-bottom:12px">User Name (User ID)</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Activate</th>
+                            <th class="" width="77%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.ServerMonitor.UserAndID') }}</th>
+                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Activate') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add User" aria-hidden="true" @click="addUser"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Container.Func.Add')" aria-hidden="true" @click="addUser"></i>
                             </th>
                         </tr>
                     </table>
@@ -30,7 +30,7 @@
                                 <input class="w3-check" type="checkbox" v-model="list_info.activate">
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delUser(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delUser(index)"></i>
                             </td>
                         </tr>
                     </table>
@@ -40,10 +40,10 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="77%" style="padding-top:12px;padding-bottom:12px">User Group Name</th>
-                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">Activate</th>
+                            <th class="" width="77%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.ServerMonitor.UserGroup') }}</th>
+                            <th class="w3-center" width="15%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Activate') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add User" aria-hidden="true" @click="addGroup"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Container.Func.Add')" aria-hidden="true" @click="addGroup"></i>
                             </th>
                         </tr>
                     </table>
@@ -65,7 +65,7 @@
                                 <input class="w3-check" type="checkbox" v-model="list_info.activate">
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delGroup(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delGroup(index)"></i>
                             </td>
                         </tr>
                     </table>
@@ -73,8 +73,8 @@
             </div>
             <div class="w3-row">
                     <div class="w3-col m12 w3-center" style="padding-top:16px">
-                        <button class="w3-button w3-round w3-teal" @click="reset">Reset</button>
-                        <button class="w3-button w3-round w3-teal" @click="save">Save</button>
+                        <button class="w3-button w3-round w3-teal" @click="reset">{{ $t('Container.Func.Reset') }}</button>
+                        <button class="w3-button w3-round w3-teal" @click="save">{{ $t('Container.Func.Save') }}</button>
                     </div>
                 </div>
         </div>

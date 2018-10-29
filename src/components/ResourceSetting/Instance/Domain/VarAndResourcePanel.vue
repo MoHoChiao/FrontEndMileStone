@@ -3,10 +3,10 @@
         <div class="w3-small">
             <div class="w3-row">
                 <a href="javascript:void(0)" @click="openTab(0)">
-                    <div :class="tabsClass[0]">Domain Variable</div>
+                    <div :class="tabsClass[0]">{{ $t('Window.Resource.DomainVar') }}</div>
                 </a>
                 <a href="javascript:void(0)" @click="openTab(1)">
-                    <div :class="tabsClass[1]">Domain Resource</div>
+                    <div :class="tabsClass[1]">{{ $t('Window.Resource.DomainRes') }}</div>
                 </a>
             </div>
             <br>
@@ -15,8 +15,8 @@
                     <div class="w3-responsive w3-card w3-round">
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
-                                <th class="w3-center" width="60%">Variable Name</th>
-                                <th class="w3-center" width="40%">Variable Value</th>
+                                <th class="w3-center" width="60%">{{ $t('Form.Name') }}</th>
+                                <th class="w3-center" width="40%">{{ $t('Form.Value') }}</th>
                             </tr>
                         </table>
                     </div>
@@ -37,8 +37,8 @@
                     <div class="w3-responsive w3-card w3-round">
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
-                                <th class="w3-center" width="60%">Resource Name</th>
-                                <th class="w3-center" width="40%">Resource Value</th>
+                                <th class="w3-center" width="60%">{{ $t('Form.Name') }}</th>
+                                <th class="w3-center" width="40%">{{ $t('Form.Value') }}</th>
                             </tr>
                         </table>
                     </div>
@@ -61,10 +61,10 @@
                     <div class="w3-responsive w3-card w3-round">
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
-                                <th class="" width="50%" style="padding-top:12px;padding-bottom:12px">Variable Name</th>
-                                <th class="" width="40%" style="padding-top:12px;padding-bottom:12px">Variable Value</th>
+                                <th class="" width="50%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Name') }}</th>
+                                <th class="" width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Value') }}</th>
                                 <th class="w3-center" width="10%" style="padding-top:7px;padding-bottom:7px">
-                                    <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Variable" aria-hidden="true" @click="addVariable"></i>
+                                    <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Resource.AddVar')" aria-hidden="true" @click="addVariable"></i>
                                 </th>
                             </tr>
                         </table>
@@ -74,14 +74,14 @@
                             <tr :key="index+'VarEditTr'" v-for="(list_info, index) in new_domainVars">
                                 <td class="w3-center" width="50%">
                                     <input class="w3-input w3-border" v-model="list_info.variablename" type="text"
-                                           maxlength="64" placeholder="Please Input Domain Variable Name"
+                                           maxlength="64" placeholder=""
                                            style="text-transform:uppercase">
                                 </td>
                                 <td class="w3-center" width="40%">
-                                    <input class="w3-input w3-border" v-model="list_info.variablevalue" type="text" maxlength="64" placeholder="Please Input Domain Variable Value">
+                                    <input class="w3-input w3-border" v-model="list_info.variablevalue" type="text" maxlength="64" placeholder="">
                                 </td>
                                 <td class="w3-center" width="10%">
-                                    <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delVariable(index)"></i>
+                                    <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delVariable(index)"></i>
                                 </td>
                             </tr>
                         </table>
@@ -91,8 +91,8 @@
                     <div class="w3-responsive w3-card w3-round">
                         <table class="w3-table-all w3-small">
                             <tr class="w3-teal">
-                                <th class="" width="50%" style="padding-top:12px;padding-bottom:12px">Resource Name</th>
-                                <th class="" width="40%" style="padding-top:12px;padding-bottom:12px">Resource Value</th>
+                                <th class="" width="50%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Name') }}</th>
+                                <th class="" width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Value') }}</th>
                                 <th class="w3-center" width="10%" style="padding-top:7px;padding-bottom:7px">
                                     <!--<i class="fa fa-plus-square w3-button w3-hover-none" title="Add Resource" aria-hidden="true" @click="addResource"></i>-->
                                 </th>
@@ -104,11 +104,11 @@
                             <tr :key="index+'ResourceEditTr'" v-for="(list_info, index) in new_domainResources">
                                 <td class="w3-center" width="50%">
                                     <input class="w3-input w3-border" v-model="list_info.resourcename" type="text"
-                                           maxlength="64" readonly placeholder="Please Input Domain Resource Name"
+                                           maxlength="64" readonly placeholder=""
                                            style="text-transform:uppercase">
                                 </td>
                                 <td class="w3-center" width="40%">
-                                    <input class="w3-input w3-border" v-model="list_info.resourcevalue" type="text" maxlength="64" placeholder="Please Input Domain Resource Value">
+                                    <input class="w3-input w3-border" v-model="list_info.resourcevalue" type="text" maxlength="64" placeholder="">
                                 </td>
                                 <td class="w3-center" width="10%">
                                     <!--<i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delResource(index)"></i>-->

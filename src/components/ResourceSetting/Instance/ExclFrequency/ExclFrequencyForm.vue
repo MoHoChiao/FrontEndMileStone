@@ -2,25 +2,25 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
                 <input v-if="this.new_content.excludefrequencyuid.trim() === 'global'"
                        :class="inputClassList.name" v-model="new_content.excludefrequencyname"
-                       type="text" maxlength="32" placeholder="Please Input Name" readonly
+                       type="text" maxlength="32" placeholder="" readonly
                        style="text-transform:uppercase">
                 <name-input v-else :class="inputClassList.name" v-model="new_content.excludefrequencyname"
-                            type="text" maxlength="32" placeholder="Please Input Name"
+                            type="text" maxlength="32" placeholder=""
                             style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
-                <label>Activate</label>
+                <label>{{ $t('Form.Activate') }}</label>
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
                 <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
@@ -31,11 +31,11 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th width="10%" style="padding-top:12px;padding-bottom:12px">Seq</th>
-                            <th width="40%" style="padding-top:12px;padding-bottom:12px">Start Time</th>
-                            <th width="40%" style="padding-top:12px;padding-bottom:12px">End Time</th>
+                            <th width="10%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Seq') }}</th>
+                            <th width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.StartTime') }}</th>
+                            <th width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.EndTime') }}</th>
                             <th class="w3-center" width="10%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Time" aria-hidden="true" @click="addTime"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Container.Func.Add')" aria-hidden="true" @click="addTime"></i>
                             </th>
                         </tr>
                     </table>
@@ -51,7 +51,7 @@
                                 <datetime-picker :date="list_info.endtime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
                             </td>
                             <td class="w3-center" width="10%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delTime(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delTime(index)"></i>
                             </td>
                         </tr>
                     </table>

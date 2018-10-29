@@ -2,8 +2,8 @@
     <div class="w3-container">
         <form class="w3-left-align" method="POST" :action="_formAction">
             <string-input ref="ac_input"
-                        :label-text="$t('formContent.User_Account')"
-                        :input-placeholder="$t('formContent.User_Account_Placeholder')" 
+                        :label-text="$t('Login.UserAccount')"
+                        :input-placeholder="$t('Login.UserAccountPlaceholder')" 
                         input-type="text" 
                         :label-text-color="labelTextColor" 
                         :field-msg-color="fieldMsgColor" 
@@ -13,8 +13,8 @@
                         :input-hover-color="inputHoverColor" 
             ></string-input>
             <string-input ref="psw_input"
-                        :label-text="$t('formContent.User_Password')" 
-                        :input-placeholder="$t('formContent.User_Password_Placeholder')" 
+                        :label-text="$t('Login.UserPassword')" 
+                        :input-placeholder="$t('Login.UserPasswordPlaceholder')" 
                         input-type="password"
                         :input-auto="false" 
                         :label-text-color="labelTextColor" 
@@ -24,17 +24,17 @@
                         :input-border="inputBorder" 
                         :input-hover-color="inputHoverColor" 
             ></string-input>
-            <check-box ref="remember_input">{{ $t('formContent.Remember_Me') }}</check-box>
+            <check-box ref="remember_input">{{ $t('Login.RememberMe') }}</check-box>
             <validate-code ref="code_input" 
-                        :label-text="$t('formContent.User_Validator')" 
-                        :input-placeholder="$t('formContent.User_Validator_Placeholder')" 
+                        :label-text="$t('Login.UserValidator')" 
+                        :input-placeholder="$t('Login.UserValidatorPlaceholder')" 
                         :label-text-color="labelTextColor" 
                         :field-msg-color="fieldMsgColor" 
                         :field-msgIn-line="fieldMsgInline" 
                         :input-round="inputRound" 
                         :input-border="inputBorder" 
                         :input-hover-color="inputHoverColor" 
-                        :reload-text="$t('formContent.Reload_Text')" 
+                        :reload-text="$t('Login.ReloadText')" 
             ></validate-code> 
         </form>
     </div>
@@ -85,10 +85,10 @@ export default {
             return {
                 account: this.$refs.ac_input.inputContent,
                 psw: this.$refs.psw_input.inputContent,
-                flag: (this.$refs.ac_input.checkEmpty('formContent.Field_Empty')) &&
-                    (this.$refs.psw_input.checkEmpty('formContent.Field_Empty')) &&
-                    (this.$refs.code_input.checkEmpty('formContent.Field_Empty')) &&
-                    (this.$refs.code_input.checkVerify('formContent.Validate_Error'))
+                flag: (this.$refs.ac_input.checkEmpty('Login.FieldEmpty')) &&
+                    (this.$refs.psw_input.checkEmpty('Login.FieldEmpty')) &&
+                    (this.$refs.code_input.checkEmpty('Login.FieldEmpty')) &&
+                    (this.$refs.code_input.checkVerify('Login.ValidateError'))
             } 
         }
     },

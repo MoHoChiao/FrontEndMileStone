@@ -1,5 +1,5 @@
 <template>
-    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+    <modal-window v-if="this.windowAlive" :window-title="_windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <p class="w3-large" slot="content">
             Do you really want to delete {{ deleteName }} ? 
         </p>
@@ -27,6 +27,9 @@ export default {
                 'w3-round',
                 this._btnColor
             ];
+        },
+        _windowTitle() {
+            return this.windowTitle === null || this.windowTitle.trim() === '' ? 'Confirm' : this.windowTitle.trim();
         },
         _btnColor() {
             return this.btnColor !== null ? `w3-${this.btnColor}` : '';

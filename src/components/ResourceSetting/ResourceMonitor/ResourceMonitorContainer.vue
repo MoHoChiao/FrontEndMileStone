@@ -9,7 +9,7 @@
                             <span>
                                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;/*transform:rotate(-5deg)*/">
                                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Server Monitor
+                                        {{ $t('Item.ServerMonitor') }}
                                     </div>
                                 </div>
                             </span>
@@ -17,10 +17,10 @@
                     </div>
                     <div class="w3-row">
                         <a href="javascript:void(0)" @click="openTab(0)">
-                            <div :class="tabsClass[0]">Monitor</div>
+                            <div :class="tabsClass[0]">{{ $t('Form.ServerMonitor.Monitor') }}</div>
                         </a>
                         <a href="javascript:void(0)" @click="openTab(1)">
-                            <div :class="tabsClass[1]">Notification</div>
+                            <div :class="tabsClass[1]">{{ $t('Form.ServerMonitor.Notification') }}</div>
                         </a>
                     </div>
                     <div class="w3-row" style="overflow:auto;height:410px">

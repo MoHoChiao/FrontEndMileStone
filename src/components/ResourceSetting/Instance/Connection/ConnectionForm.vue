@@ -2,14 +2,14 @@
     <div class="w3-container w3-small" style="overflow:auto;max-height:440px">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div :class="[(urlOp === 'add') ? 'w3-col m9' : 'w3-col m4']">
-                <name-input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
+                <name-input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
             <div v-if="urlOp !== 'add'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                    <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+                    <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
                 </div>
                 <div class="w3-col m3">
                     <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
@@ -24,16 +24,16 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div v-show="urlOp !== 'move'">
             <div class="w3-row w3-section">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                    <label class="w3-right"><span class="w3-text-red">*</span>Type</label>
+                    <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Type') }}</label>
                 </div>
                 <div class="w3-col m9">
                     <select :class="inputClassList.connectiontype" v-model="new_content.connectiontype" @click="clickType" style="padding:0px" :disabled="urlOp === 'copy'">
@@ -42,32 +42,32 @@
                         <option value="J">JDBC</option>
                         <option value="M">Mail</option>
                         <option value="O">OS Account</option>
-                        <option value="S">SAP</option>
-                        <option value="N">Notes</option>
+                        <!--<option value="S">SAP</option>
+                        <option value="N">Notes</option>-->
                     </select>
                 </div>
             </div>
             <hr class="w3-border-black">
             <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
                 <div class="w3-col m12">
-                    <span class="w3-text-red">*</span><label>Server Name</label>
-                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
+                    <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.ServerName') }}</label>
+                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="">
                 </div>
             </div>
             <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
                 <div class="w3-col m6">
-                    <span class="w3-text-red">*</span><label>Server Name</label>
-                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="Please Input Server Name">
+                    <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.ServerName') }}</label>
+                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="">
                 </div>
                 <div class="w3-col m6">
                     <label>Target Directory</label>
-                    <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" placeholder="Please Input Target Directory">
+                    <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" placeholder="">
                 </div>
             </div>
             <div v-show="typeFlag['J']">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m8">
-                        <span class="w3-text-red">*</span><label>Database Type</label>
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.DBType') }}</label>
                         <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
                             <template v-for="(info, key) in jdbcDriverInfo">
                                 <option :value="key">
@@ -78,30 +78,30 @@
                         </select>
                     </div>
                     <div class="w3-col m4">
-                        <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">Test Connection</button>
+                        <button class="w3-button w3-blue-grey w3-round" style="margin-top:16px" @click="testConnection">{{ $t('Form.Conn.TestConn') }}</button>
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>JDBC Driver</label>
-                        <input :class="inputClassList.jdbc_driver" v-model="new_content.jdbc_driver" type="text" placeholder="Please Input Connection Driver" readonly>
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCDriver') }}</label>
+                        <input :class="inputClassList.jdbc_driver" v-model="new_content.jdbc_driver" type="text" placeholder="" readonly>
                     </div>
                     <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>JDBC URL</label>
-                        <input :class="inputClassList.jdbc_url" v-model="new_content.jdbc_url" type="text" placeholder="Please Input Connection URL">
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCURL') }}</label>
+                        <input :class="inputClassList.jdbc_url" v-model="new_content.jdbc_url" type="text" placeholder="">
                     </div>
                 </div>
             </div>
             <div v-show="typeFlag['M']">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m12">
-                        <label>Mail Server</label>
-                        <input :class="inputClassList.host" v-model="new_content.host" type="text" placeholder="Please Input Mail Server Host">
+                        <label>{{ $t('Form.Conn.MailServer') }}</label>
+                        <input :class="inputClassList.host" v-model="new_content.host" type="text" placeholder="">
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
-                        <label>Port</label>
+                        <label>{{ $t('Form.Conn.Port') }}</label>
                         <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
                     </div>
                     <div class="w3-col m6">
@@ -117,7 +117,7 @@
                 </div>
             </div>
             <div v-show="typeFlag['O']"></div>
-            <div v-show="typeFlag['S']">
+            <!--<div v-show="typeFlag['S']">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>System Name</label>
@@ -170,15 +170,15 @@
                         <input :class="inputClassList.notesIor" v-model="new_content.notesIor" type="text" placeholder="Please Input IOR String">
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m4">
-                    <span class="w3-text-red">*</span><label>Account</label>
-                    <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="Please Input Account">
+                    <span class="w3-text-red">*</span><label>{{ $t('Form.Account') }}</label>
+                    <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="">
                 </div>
                 <div class="w3-col m4">
-                    <span class="w3-text-red">*</span><label>Password</label>
-                    <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="Please Input Password">
+                    <span class="w3-text-red">*</span><label>{{ $t('Form.Pwd') }}</label>
+                    <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="">
                 </div>
                 <div class="w3-col m4">
                     <div style="margin-top:16px;margin-right:16px">
@@ -190,27 +190,27 @@
             <div v-show="new_content.withpim">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Endpoint Type</label>
-                        <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="Please Input Endpoint Type">
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.EndPointType') }}</label>
+                        <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="">
                     </div>
                     <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Endpoint Name</label>
-                        <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="Please Input Endpoint Name">
-                    </div>
-                </div>
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Account Container</label>
-                        <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="Please Input Account Container">
-                    </div>
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Account Name</label>
-                        <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="Please Input Account Name">
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.EndPointName') }}</label>
+                        <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="">
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
-                        <button class="w3-button w3-blue-grey w3-round">Get Password</button>
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.AccountContainer') }}</label>
+                        <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="">
+                    </div>
+                    <div class="w3-col m6">
+                        <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.AccountName') }}</label>
+                        <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-section">
+                    <div class="w3-col m6">
+                        <button class="w3-button w3-blue-grey w3-round">{{ $t('Form.Conn.GetPwd') }}</button>
                     </div>
                 </div>
             </div>

@@ -1,13 +1,13 @@
 <template>
 <div>
     <apply-account-window v-if="applyAccountWindowAlive" :windowAlive="applyAccountWindowAlive" 
-            window-title="Apply Accounts Window" 
+            :window-title="$t('Window.Account.AddUser')" 
             :userUids="userUids" 
             @closeApply="changeApplyAccountWindowStatus" 
             @applyMembers="addUsers" 
     ></apply-account-window>
     <apply-role-window v-if="applyRoleWindowAlive" :windowAlive="applyRoleWindowAlive" 
-            window-title="Apply Roles Window" 
+            :window-title="$t('Window.Account.AddRole')" 
             :roleUids="roleUids" 
             @closeApply="changeApplyRoleWindowStatus" 
             @applyMembers="addRoles" 
@@ -15,10 +15,10 @@
     <div class="w3-small">
         <div class="w3-row">
             <a href="javascript:void(0)" @click="openTab(0)">
-                <div :class="tabsClass[0]">Apply Accounts</div>
+                <div :class="tabsClass[0]">{{ $t('Item.Account') }}</div>
             </a>
             <a href="javascript:void(0)" @click="openTab(1)">
-                <div :class="tabsClass[1]">Apply Roles</div>
+                <div :class="tabsClass[1]">{{ $t('Item.Role') }}</div>
             </a>
         </div>
         <div class="w3-row w3-section">
@@ -26,14 +26,14 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">User Name (ID)</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">View</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Use</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Delete</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Edit</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Grant</th>
+                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.UserAndID') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.View') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Use') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Delete') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Edit') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Grant') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Trinity Users" aria-hidden="true" @click="changeApplyAccountWindowStatus"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Account.AddUser')" aria-hidden="true" @click="changeApplyAccountWindowStatus"></i>
                             </th>
                         </tr>
                     </table>
@@ -60,7 +60,7 @@
                                 <input class="w3-check" type="checkbox" v-model="list_info.grant">
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delUser(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delUser(index)"></i>
                             </td>
                         </tr>
                     </table>
@@ -70,14 +70,14 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">Role Name</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">View</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Use</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Delete</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Edit</th>
-                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">Grant</th>
+                            <th class="w3-center" width="32%" style="padding-top:12px;padding-bottom:12px">{{ $t('Item.Role') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.View') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Use') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Delete') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Edit') }}</th>
+                            <th class="w3-center" width="12%" style="padding-top:12px;padding-bottom:12px">{{ $t('Window.Permission.Grant') }}</th>
                             <th class="w3-center" width="8%" style="padding-top:7px;padding-bottom:7px">
-                                <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Roles" aria-hidden="true" @click="changeApplyRoleWindowStatus"></i>
+                                <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Account.AddRole')" aria-hidden="true" @click="changeApplyRoleWindowStatus"></i>
                             </th>
                         </tr>
                     </table>
@@ -104,7 +104,7 @@
                                 <input class="w3-check" type="checkbox" v-model="list_info.grant">
                             </td>
                             <td class="w3-center" width="8%">
-                                <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" aria-hidden="true" @click="delRole(index)"></i>
+                                <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delRole(index)"></i>
                             </td>
                         </tr>
                     </table>

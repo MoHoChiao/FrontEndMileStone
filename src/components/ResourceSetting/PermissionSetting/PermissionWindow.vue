@@ -17,7 +17,7 @@ import FormButton from '../FormButton.vue'
 export default {
     computed: {
         _windowTitle() {
-            return this.windowTitle + this.objectName;
+            return this.$t('Window.Permission.Apply') + ' - ' + this.objectName;
         },
     },
     props: {

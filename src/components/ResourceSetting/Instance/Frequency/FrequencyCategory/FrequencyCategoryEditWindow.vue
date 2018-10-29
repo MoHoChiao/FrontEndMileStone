@@ -19,11 +19,15 @@ export default {
     //         urlOp: ''
     //     }
     // },
+    computed: {
+        windowTitle() {
+            if (this.urlOp === 'add')
+                return this.$t('Window.Schedule.AddFreqCate')
+            else if (this.urlOp === 'edit')
+                return this.$t('Window.Schedule.EditFreqCate') + ' - ' + this.content.freqcategoryname
+        }
+    },
     props: {
-        windowTitle: {
-            type: String,
-            default: ''
-        },
         windowBgColor: {
             type: String,
             default: 'camo-black'

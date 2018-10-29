@@ -61,17 +61,17 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Exclude Frequency
+                                        {{ $t('Item.ExcludeFreq') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                    placeholder="Name" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
                             <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
                             <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
-                            <i class="w3-right fa fa-plus w3-button" title="Add Exclude frequency" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
-                            <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="w3-right fa fa-plus w3-button" :title="$t('Container.Func.Add')" aria-hidden="true" @click="changeAddWindowStatus('add')"></i>
+                            <i class="w3-right fa fa-refresh w3-button" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="applyQuery"></i>
                         </div>
                         <p>
                             <div>
@@ -80,25 +80,25 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Package Name" @click="applyOrder('excludefrequencyname')">
-                                                Name
+                                                {{ $t('Container.Grid.Name') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['excludefrequencyname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['excludefrequencyname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Activate" @click="applyOrder('description')">
-                                                Description
+                                                {{ $t('Container.Grid.Description') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Activate" @click="applyOrder('activate')">
-                                                Activate
+                                                {{ $t('Container.Grid.Activate') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['activate'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['activate'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[4]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                                Update Time
+                                                {{ $t('Container.Grid.UpdateTime') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -127,7 +127,7 @@
                                             <td :width="gridWidth[2]">
                                                 <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
                                             </td>
-                                            <td :width="gridWidth[3]">
+                                            <td :width="gridWidth[3]" class="w3-center">
                                                 <i v-if="content.activate == 1" class="fa fa-check-circle w3-text-green" />
                                                 <i v-else class="fa fa-times-circle w3-text-red" />
                                             </td>
@@ -144,7 +144,7 @@
                                     <div class="w3-col m3">
                                         <div class="w3-row w3-right">
                                             <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                                Page Size
+                                                {{ $t('Container.PageSize') }}
                                             </span>
                                             <span class="w3-col m6" style="padding-top:8px">
                                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">

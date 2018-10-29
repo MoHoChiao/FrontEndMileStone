@@ -24,7 +24,7 @@
         },
         computed: {
             windowTitle() {
-                return 'Edit Driver - ' + this.content.name
+                return this.$t('Window.System.EditDriver') + ' - ' + this.content.name
             }
         },
         data() {

@@ -130,15 +130,15 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Virtual Agent
+                                        {{ $t('Item.VirtualAgent') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                    placeholder="Name" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="applyQuery"></i>
-                            <i class="w3-right fa fa-plus w3-button" title="Add" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
-                            <i class="w3-right fa fa-refresh w3-button" title="Reload" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
+                            <i class="w3-right fa fa-plus w3-button" :title="$t('Container.Func.Add')" aria-hidden="true" @click="changeAgentWindowStatus('add')"></i>
+                            <i class="w3-right fa fa-refresh w3-button" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="applyQuery"></i>
                         </div>
                         <p>
                             <div>
@@ -147,19 +147,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Virtual Name" @click="applyOrder('virtualagentname')">
-                                                Name
+                                                {{ $t('Container.Grid.Name') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['virtualagentname'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['virtualagentname'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
-                                                Description
+                                                {{ $t('Container.Grid.Description') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                                Update Time
+                                                {{ $t('Container.Grid.UpdateTime') }}
                                                 &nbsp;
                                                 <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -176,8 +176,8 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
-                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changePermissionWindowStatus"> Permission</button>
-                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> Delete</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changePermissionWindowStatus"> {{ $t('Container.Func.Permission') }}</button>
+                                                        <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> {{ $t('Container.Func.Delete') }}</button>
                                                     </div>
                                                 </div>
                                             </td>
@@ -202,7 +202,7 @@
                                     <div class="w3-col m3">
                                         <div class="w3-row w3-right">
                                             <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
-                                                Page Size
+                                                {{ $t('Container.PageSize') }}
                                             </span>
                                             <span class="w3-col m6" style="padding-top:10px">
                                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">

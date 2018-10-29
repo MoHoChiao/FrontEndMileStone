@@ -18,13 +18,13 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Filesource'
+                return this.$t('Window.Resource.AddFs')
             else if(this.urlOp === 'edit')
-                return 'Edit Filesource - ' + this.content.filesourcename
+                return this.$t('Window.Resource.EditFs') + ' - ' + this.content.filesourcename
             else if(this.urlOp === 'copy')
-                return 'Copy Filesource from ' + this.content.filesourcename
+                return this.$t('Window.Resource.CopyFs') + ' - ' + this.content.filesourcename
             else if(this.urlOp === 'move')
-                return 'Move Filesource from ' + this.content.filesourcename
+                return this.$t('Window.Resource.MoveFs') + ' - ' + this.content.filesourcename
         }
         
     },

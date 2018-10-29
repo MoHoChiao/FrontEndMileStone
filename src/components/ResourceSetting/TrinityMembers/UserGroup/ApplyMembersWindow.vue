@@ -7,7 +7,7 @@
                     <th class="w3-center" width="10%" style="padding-top:4px">
                         <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click="onClickCheckAll">
                     </th>
-                    <th class="w3-center" width="90%">{{ $t('Window.Account.Member.UserList') }}</th>
+                    <th class="w3-center" width="90%">{{ $t('Window.Member.UserList') }}</th>
                 </tr>
             </table>
         </div>

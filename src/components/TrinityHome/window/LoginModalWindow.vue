@@ -11,9 +11,9 @@
                     :input-hover-color="inputHoverColor" 
         ></login-form>
         <div slot="footer" class="w3-container">
-            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('windowContent.Login_Button') }}</w3c-btn>
+            <w3c-btn @click="onValidate" class="w3-right" :btn-bg-color="windowBtnColor" btn-round="medium">{{ $t('Login.LoginButton') }}</w3c-btn>
             <span class="w3-left w3-padding">
-                <a :class="_leftTextColor" href="#">{{ $t('windowContent.Forget_PSW') }}</a>
+                <a :class="_leftTextColor" href="#">{{ $t('Login.ForgetPSW') }}</a>
             </span>
         </div>
     </modal-window>

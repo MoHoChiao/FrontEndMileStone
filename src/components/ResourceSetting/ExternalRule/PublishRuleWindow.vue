@@ -1,5 +1,5 @@
 <template>
-    <modal-window window-title="Publish External Rules To JCS Agent" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+    <modal-window :window-title="$t('Window.System.PublishToJCSAgent')" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <publish-rule-form slot="content" ref="publishForm"></publish-rule-form>
         <div slot="footer">
             <form-button btn-color="signal-white" :is-loading="buttonLoading" @cancel="cancel" @reset="reset" @save="save"></form-button>

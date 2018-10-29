@@ -22,8 +22,8 @@
                         :placeholder="$t('Window.Account.Member.SearchUser')" @keyup="searchForUser()">
                 </div>
                 <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
-                    <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Account.Member.Apply')" aria-hidden="true" @click="changeApplyWindowStatus"></i>
-                    <i class="fa fa-refresh w3-button w3-hover-none" :title="$t('Window.Account.Member.Reload')" aria-hidden="true" @click="getMembers"></i>
+                    <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Member.Apply')" aria-hidden="true" @click="changeApplyWindowStatus"></i>
+                    <i class="fa fa-refresh w3-button w3-hover-none" :title="$t('Window.Member.Reload')" aria-hidden="true" @click="getMembers"></i>
                 </div>
             </div>
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">

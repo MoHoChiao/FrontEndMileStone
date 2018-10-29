@@ -11,14 +11,14 @@
                         <span>
                             <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                    Version Info
+                                    {{ $t('Item.VersionInfo') }}
                                 </i>
                             </i>
                         </span>
                         <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
                                 placeholder="Name" style="height:28px;max-width: 200px;" @keyup.enter="searchBy">
-                        <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
-                        <i class="fa fa-download w3-button w3-right" title="Export" aria-hidden="true" @click="exportCSV"></i>
+                        <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="searchBy"></i>
+                        <i class="fa fa-download w3-button w3-right" :title="$t('Container.Func.Export')" aria-hidden="true" @click="exportCSV"></i>
                     </div>
                     <!-- tabs -->
                     <div class="w3-row">
@@ -97,7 +97,12 @@
                 jcsServerV: [],
                 disServerV: [],
                 btnFlag: [1, 0, 0, 1],
-                gridHeader: ['Path', 'Name', 'Version', 'Build Time'],
+                gridHeader: [
+                    this.$t('Container.Grid.Path'),
+                    this.$t('Container.Grid.Name'),
+                    this.$t('Container.Grid.Version'),
+                    this.$t('Container.Grid.BuildTime')
+                ],
                 gridWidth: ['10%', '35%', '25%', '30%'],
                 inputStr: '',
                 queryStr: '',

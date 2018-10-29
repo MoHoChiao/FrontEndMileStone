@@ -17,11 +17,11 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Domain'
+                return this.$t('Window.Resource.AddDomain')
             else if(this.urlOp === 'edit')
-                return 'Edit Domain - ' + this.content.name
+                return this.$t('Window.Resource.EditDomain') + ' - ' + this.content.name
             else if(this.urlOp === 'copy')
-                return 'Copy Domain from ' + this.content.name
+                return this.$t('Window.Resource.CopyDomain') + ' - ' + this.content.name
         }  
     },
     props: {

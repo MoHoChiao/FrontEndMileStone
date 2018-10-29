@@ -18,13 +18,13 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Connection'
+                return this.$t('Window.Resource.AddConn')
             else if(this.urlOp === 'edit')
-                return 'Edit Connection - ' + this.content.connectionname
+                return this.$t('Window.Resource.EditConn') + ' - ' + this.content.connectionname
             else if(this.urlOp === 'copy')
-                return 'Copy Connection - ' + this.content.connectionname
+                return this.$t('Window.Resource.CopyConn') + ' - ' + this.content.connectionname
             else if(this.urlOp === 'move')
-                return 'Move Connection - ' + this.content.connectionname
+                return this.$t('Window.Resource.MoveConn') + ' - ' + this.content.connectionname
         }
     },
     props: {

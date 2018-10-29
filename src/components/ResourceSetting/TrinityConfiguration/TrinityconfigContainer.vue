@@ -1,25 +1,23 @@
 <template>
     <div class=" w3-col m9 w3-animate-opacity">
-        <div class="w3-row-padding">
+        <div class="w3-row-padding w3-small">
             <div class="w3-col m12">
-                <div class="w3-card-4 w3-round w3-signal-white">
-                    <div class="w3-container w3-small">
-                        <p>
-                            <div>
-                                <span><img src="src/assets/images/resource_setter/User.png" alt="External Rule" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>
-                                <span>
-                                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
-                                        <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                            Configuration
-                                        </div>
+                <div class="w3-container w3-card-4 w3-signal-white w3-round">
+                    <p>
+                        <div class="w3-panel w3-border w3-round w3-padding">
+                            <!--  <span><img src="src/assets/images/resource_setter/User.png" alt="External Rule" class="w3-margin-right w3-left w3-hide-small" style="height26px;width:32px"></span>-->
+                            <span>
+                                <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;">
+                                    <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
+                                        {{ $t('Configuration') }}
                                     </div>
-                                </span>
-                            </div>
-                        </p>
-                        <trinity-config-form slot="content" ref="configForm"></trinity-config-form>
-                        <div slot="footer">
-                            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
+                                </div>
+                            </span>
                         </div>
+                    </p>
+                    <trinity-config-form slot="content" ref="configForm"></trinity-config-form>
+                    <div slot="footer">
+                        <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
                     </div>
                 </div>
             </div>

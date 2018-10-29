@@ -7,15 +7,15 @@
         <div class="w3-container w3-small" style="overflow:auto;max-height:480px">
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                    <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                    <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
                     <name-input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text"
-                                maxlength="32" placeholder="Please Input Name" style="text-transform:uppercase" />
+                                maxlength="32" placeholder="" style="text-transform:uppercase" />
                 </div>
                 <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                        <label class="w3-right"><span class="w3-text-red">*</span>Category</label>
+                        <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
                     </div>
                     <div class="w3-col m3">
                         <select :class="inputClassList.freqcategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
@@ -29,7 +29,7 @@
             </div>
             <div v-show="urlOp !== 'move'" class="w3-row-padding w3-section">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                    <label class="w3-right">Date Type</label>
+                    <label class="w3-right">{{ $t('Form.Freq.DateType') }}</label>
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m6' : 'w3-col m4']">
                     <select :class="inputClassList.datetype" v-model="datetype" style="padding:0px">
@@ -43,15 +43,15 @@
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m3 w3-right' : 'w3-col m5 w3-right']">
                     <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
-                    <label>Activate</label>
+                    <label>{{ $t('Form.Activate') }}</label>
                 </div>
             </div>
             <div class="w3-row-padding">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                    <label class="w3-right">Description</label>
+                    <label class="w3-right">{{ $t('Form.Description') }}</label>
                 </div>
                 <div class="w3-col m9">
-                    <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                    <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
             <div v-show="datetype === 'Daily'" class="w3-row-padding"></div>
@@ -125,8 +125,8 @@
                 </div>
                 <div class="w3-row-padding">
                     <div class="w3-col m12 w3-center">
-                        <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">By Pattern</button>
-                        <button class="w3-button w3-round w3-teal" @click="clearAllDate">Clear All</button>
+                        <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">{{ $t('Form.WorkingCal.ByPattern') }}</button>
+                        <button class="w3-button w3-round w3-teal" @click="clearAllDate">{{ $t('Form.WorkingCal.ClearAll') }}</button>
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@
                 <div class="w3-row-padding">
                     <hr class="w3-border-black">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                        <label class="w3-right">Time Type</label>
+                        <label class="w3-right">{{ $t('Form.Freq.TimeType') }}</label>
                     </div>
                     <div class="w3-col m4">
                         <select :class="inputClassList.timetype" v-model="timetype" style="padding:0px">

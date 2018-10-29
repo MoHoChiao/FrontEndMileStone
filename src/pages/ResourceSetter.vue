@@ -5,10 +5,6 @@
                     window-title="Trinity Configuration Setting" 
                     @closeAdd="changeConfigWindowStatus" 
         ></trinity-config-window>
-        <resource-monitor-window :windowAlive="resourceMonitorAlive" 
-                    window-title="Resource Monitor Setting" 
-                    @closeAdd="changeMonitorWindowStatus" 
-        ></resource-monitor-window>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -40,56 +36,56 @@
                     <!-- Accordion -->
                     <div class="w3-card-4 w3-round">
                         <div class="w3-signal-white w3-round">
-                            <button @click="menuFunction('accountMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-user-plus fa-fw w3-margin-right"></i>{{ $t('menuContent.Account') }}</button>
+                            <button @click="menuFunction('accountMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-user-plus fa-fw w3-margin-right"></i>{{ $t('Item.Account') }}</button>
                             <div id="accountMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a id="userBtn" @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('menuContent.User') }}</a>
-                                        <a id="roleBtn"@click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('menuContent.Role') }}</a>
-                                        <a id="usergroupBtn"@click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('menuContent.User_Group') }}</a>
+                                        <a id="userBtn" @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('Item.User') }}</a>
+                                        <a id="roleBtn"@click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('Item.Role') }}</a>
+                                        <a id="usergroupBtn"@click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('Item.UserGroup') }}</a>
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('resourceMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>{{ $t('menuContent.Resource') }}</button>
+                            <button @click="menuFunction('resourceMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-cubes fa-fw w3-margin-right"></i>{{ $t('Item.Resource') }}</button>
                             <div id="resourceMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getAlias" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>{{ $t('menuContent.Alias_Reference') }}</a>
-                                        <a @click="getDomains" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>{{ $t('menuContent.Domain') }}</a>
-                                        <a @click="getConnections" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-plug fa-fw w3-margin-right"></i>{{ $t('menuContent.Connection') }}</a>
-                                        <a @click="getFileSources" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-files-o fa-fw w3-margin-right"></i>{{ $t('menuContent.File_Source') }}</a>
-                                        <a @click="getAgents" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cog fa-fw w3-margin-right"></i>{{ $t('menuContent.JCS_Agent') }}</a>
-                                        <a @click="getVRAgents" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>{{ $t('menuContent.Virtual_Agent') }}</a>
+                                        <a @click="getAlias" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-american-sign-language-interpreting fa-fw w3-margin-right"></i>{{ $t('Item.AliasReference') }}</a>
+                                        <a @click="getDomains" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-ravelry fa-fw w3-margin-right"></i>{{ $t('Item.Domain') }}</a>
+                                        <a @click="getConnections" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-plug fa-fw w3-margin-right"></i>{{ $t('Item.Connection') }}</a>
+                                        <a @click="getFileSources" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-files-o fa-fw w3-margin-right"></i>{{ $t('Item.FileSource') }}</a>
+                                        <a @click="getAgents" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cog fa-fw w3-margin-right"></i>{{ $t('Item.JCSAgent') }}</a>
+                                        <a @click="getVRAgents" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-cogs fa-fw w3-margin-right"></i>{{ $t('Item.VirtualAgent') }}</a>
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('scheduleMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Schedule') }}</button>
+                            <button @click="menuFunction('scheduleMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-clock-o fa-fw w3-margin-right"></i>{{ $t('Item.Schedule') }}</button>
                             <div id="scheduleMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ $t('menuContent.Working_Cal') }}</a>
-                                        <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Frequency') }}</a>
-                                        <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Exclude_Freq') }}</a>
-                                        <!--<button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Exclude_Freq') }}</button>
+                                        <a @click="getWorkingCalendar" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ $t('Item.WorkingCal') }}</a>
+                                        <a @click="getFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i>{{ $t('Item.Frequency') }}</a>
+                                        <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('Item.ExcludeFreq') }}</a>
+                                        <!--<button @click="menuFunction('excludeFreqMenu')" class="w3-button w3-block w3-left-align w3-text-teal"><i class="fa fa-calendar-times-o fa-fw w3-margin-right"></i>{{ $t('Item.ExcludeFreq') }}</button>
                                         <div id="excludeFreqMenu" class="w3-hide w3-container w3-animate-opacity">
                                             <div class="w3-bar-block">
-                                                <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>{{ $t('menuContent.General') }}</a>
-                                                <a @click="getGlobalExclFrequency" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-globe fa-fw w3-margin-right"></i>{{ $t('menuContent.Global') }}</a>
+                                                <a @click="getExclFrequencies" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-calendar-o fa-fw w3-margin-right"></i>{{ $t('Item.General') }}</a>
+                                                <a @click="getGlobalExclFrequency" class="w3-bar-item w3-button w3-block w3-padding w3-text-teal"><i class="fa fa-globe fa-fw w3-margin-right"></i>{{ $t('Item.Global') }}</a>
                                             </div>
                                         </div>-->
                                     </div>
                                 </p>
                             </div>
-                            <button @click="menuFunction('systemMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-wrench fa-fw w3-margin-right"></i>{{ $t('menuContent.System') }}</button>
+                            <button @click="menuFunction('systemMenu')" class="w3-button w3-block w3-theme-d1 w3-hover-blue-grey w3-hover-opacity w3-left-align"><i class="fa fa-wrench fa-fw w3-margin-right"></i>{{ $t('Item.System') }}</button>
                             <div id="systemMenu" class="w3-container w3-animate-opacity">
                                 <p>
                                     <div class="w3-bar-block">
-                                        <a @click="getTrinityconfig" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-file-text-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Configuration') }}</a>
-                                        <a @click="getResourceMonitor" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>{{ $t('menuContent.Server_Monitor') }}</a>
-                                        <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>{{ $t('menuContent.Driver_Manager') }}</a>
-                                        <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>{{ $t('menuContent.External_Rule') }}</a>
-                                        <a @click="getPluginLicense" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>{{ $t('menuContent.License_Status') }}</a>
-                                        <a @click="getVersionInfo" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-code-fork fa-fw w3-margin-right"></i>{{ $t('menuContent.Version_Info') }}</a>
+                                        <a @click="getTrinityconfig" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-file-text-o fa-fw w3-margin-right"></i>{{ $t('Item.Configuration') }}</a>
+                                        <a @click="getResourceMonitor" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-desktop fa-fw w3-margin-right"></i>{{ $t('Item.ServerMonitor') }}</a>
+                                        <a @click="getDrivers" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-hdd-o fa-fw w3-margin-right"></i>{{ $t('Item.DriverManager') }}</a>
+                                        <a @click="getExternalRules" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-magic fa-fw w3-margin-right"></i>{{ $t('Item.ExternalRule') }}</a>
+                                        <a @click="getPluginLicense" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-id-card-o fa-fw w3-margin-right"></i>{{ $t('Item.LicenseStatus') }}</a>
+                                        <a @click="getVersionInfo" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-code-fork fa-fw w3-margin-right"></i>{{ $t('Item.VersionInfo') }}</a>
                                     </div>
                                 </p>
                             </div>
@@ -118,7 +114,6 @@
 </template>
 <script>
     import TrinityconfigWindow from '../components/ResourceSetting/TrinityConfiguration/TrinityconfigWindow.vue'
-    import ResourceMonitorWindow from '../components/ResourceSetting/ResourceMonitor/ResourceMonitorWindow.vue'
 
     export default {
         data() {
@@ -257,8 +252,7 @@
             }
         },
         components: {
-            'trinity-config-window': TrinityconfigWindow,
-            'resource-monitor-window': ResourceMonitorWindow
+            'trinity-config-window': TrinityconfigWindow
         }
     }
 </script>

@@ -2,32 +2,32 @@
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
                 <name-input :class="inputClassList.name" v-model="new_content.agentname" type="text"
-                            maxlength="32" placeholder="Please Input Agent Name" style="text-transform:uppercase" />
+                            maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" type="checkbox">
-                <label>Activate</label>
+                <label>{{ $t('Form.Activate') }}</label>
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Description</label>
+                <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.compresstransfer" type="checkbox">
-                <label>Compress</label>
+                <label>{{ $t('Form.Agent.Compress') }}</label>
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>OS Type</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.OSType') }}</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.ostype" style="padding:7px">
@@ -38,21 +38,21 @@
                 </select>
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">OS Name</label>
+                <label class="w3-right">{{ $t('Form.Agent.OSName') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.osname" v-model="new_content.osname" type="text" maxlength="20" placeholder="Please Input OS Name">
+                <input :class="inputClassList.osname" v-model="new_content.osname" type="text" maxlength="20" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Host</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Host') }}</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.host" v-model="new_content.host" type="text" maxlength="30" placeholder="Please Input Host">
+                <input :class="inputClassList.host" v-model="new_content.host" type="text" maxlength="30" placeholder="">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Port</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Port') }}</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
@@ -60,7 +60,7 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Max Jobs</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.MaxJobs') }}</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.maximumjob" style="padding:7px">
@@ -71,15 +71,15 @@
                 </select>
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">Encoding</label>
+                <label class="w3-right">{{ $t('Form.Agent.Encoding') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.encoding" v-model="new_content.encoding" type="text" placeholder="Please Input Encoding">
+                <input :class="inputClassList.encoding" v-model="new_content.encoding" type="text" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Dead Period</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.DeadPeriod') }}</label>
             </div>
             <div class="w3-col m4">
                 <select class="w3-select w3-border w3-round" v-model="new_content.deadperiod" style="padding:7px">
@@ -90,7 +90,7 @@
                 </select>
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>Monitor Period</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.MonitorPeriod') }}</label>
             </div>
             <div class="w3-col m3">
                 <select class="w3-select w3-border w3-round" v-model="new_content.monitortime" style="padding:7px">
@@ -103,13 +103,13 @@
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>CPU Weight</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.CPUWeight') }}</label>
             </div>
             <div class="w3-col m4">
                 <input :class="inputClassList.cpu" v-model="new_content.cpuweight" type="number" min="0" max="999">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>MEM Weight</label>
+                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.MEMWeight') }}</label>
             </div>
             <div class="w3-col m3">
                 <input :class="inputClassList.mem" v-model="new_content.memweight" type="number" min="0" max="999">

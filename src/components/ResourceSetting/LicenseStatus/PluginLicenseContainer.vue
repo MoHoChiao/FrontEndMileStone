@@ -12,14 +12,14 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        License Status
+                                        {{ $t('Item.LicenseStatus') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
                                    placeholder="Plugin Name" style="height:28px;max-width: 200px" @keyup.enter="searchBy">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
-                            <i class="fa fa-download w3-button w3-right" title="Export" aria-hidden="true" @click="exportCSV"></i>
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="searchBy"></i>
+                            <i class="fa fa-download w3-button w3-right" :title="$t('Container.Func.Export')" aria-hidden="true" @click="exportCSV"></i>
                         </div>
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
@@ -34,7 +34,7 @@
                                         <span v-if="this.sortKey == 'expireddate' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
                                         <span v-else-if="this.sortKey == 'expireddate' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                                     </th>
-                                    <th class="w3-left" :width=gridWidth[2] @click="sortBy('status')">
+                                    <th class="w3-center" :width=gridWidth[2] @click="sortBy('status')">
                                         {{ gridHeader[2] }}
                                         <span v-if="this.sortKey == 'status' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
                                         <span v-else-if="this.sortKey == 'status' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -47,7 +47,7 @@
                                 <tr v-for="obj in sortedData" class="w3-hover-blue-grey w3-hover-opacity">
                                     <td class="w3-left" :width=gridWidth[0]>{{ obj.pluginname }}</td>
                                     <td class="w3-left" :width=gridWidth[1]>{{ obj.expireddate }}</td>
-                                    <td class="w3-left" :width=gridWidth[2]>
+                                    <td class="w3-center" :width=gridWidth[2]>
                                         <i v-if="obj.status" class="fa fa-check-circle w3-text-green" />
                                         <i v-else class="fa fa-times-circle w3-text-red" />
                                     </td>
@@ -74,7 +74,11 @@
         data() {
             return {
                 dataObjs: [],
-                gridHeader: ['Plugin Name', 'Expired Date', 'Status'],
+                gridHeader: [
+                    this.$t('Container.Grid.PluginName'),
+                    this.$t('Container.Grid.ExpiredDate'),
+                    this.$t('Container.Grid.Status')
+                ],
                 gridWidth: ['60%', '25%', '15%'],
                 inputStr: '',
                 queryStr: '',

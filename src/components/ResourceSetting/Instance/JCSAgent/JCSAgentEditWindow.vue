@@ -17,11 +17,11 @@ export default {
     computed: {
         windowTitle(){
             if(this.urlOp === 'add')
-                return 'Add Agent'
+                return this.$t('Window.Resource.AddAgent')
             else if(this.urlOp === 'edit')
-                return 'Edit Agent - ' + this.content.agentname
+                return this.$t('Window.Resource.EditAgent') +　' - ' + this.content.agentname
             else if(this.urlOp === 'copy')
-                return 'Copy Agent from ' + this.content.agentname
+                return this.$t('Window.Resource.CopyAgent')　+ ' - ' + this.content.agentname
         }  
     },
     props: {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <driver-add-window v-if="addWindowAlive"
-                           window-title="Add New Driver"
+                           :window-title="$t('Container.Func.AddDriver')"
                            @closeAdd="saveAddWindow">
         </driver-add-window>
         <driver-edit-window :windowAlive="editWindowAlive"
@@ -12,7 +12,7 @@
         <confirm-delete-window :windowAlive="deleteWindowAlive"
                                :deleteName="deleteName"
                                :is-loading="delButtonLoading"
-                               window-title="Confirm window"
+                               window-title=""
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
                                @closeDelete="closeDeleteWindow"
@@ -25,7 +25,7 @@
                            @closeApply="changeJarWindowStatus">
         </driver-jar-window>
         <publish-driver-window v-if="publishWindowAlive"
-                               window-title="Publish Drivers To JCS"
+                               :window-title="$t('Window.System.PublishDriver')"
                                @closeApply="changePublishWindowStatus">
         </publish-driver-window>
         <div class="w3-col m9 w3-animate-opacity">
@@ -80,35 +80,35 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        Driver Manager
+                                        {{ $t('Item.DriverManager') }}
                                     </i>
                                 </i>
                             </span>
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="inputStr"
                                    placeholder="Name" style="height:28px;max-width: 200px" @keyup.enter="searchBy">
-                            <i class="fa fa-search w3-button" title="Search" aria-hidden="true" @click="searchBy"></i>
+                            <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="searchBy"></i>
 
                             <!--<i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
                             <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button>-->
                             <span class="w3-dropdown-hover w3-right">
-                                <i class="fa fa-file-archive-o w3-button" title="Import/Export/Publish" aria-hidden="true"></i>
+                                <i class="fa fa-file-archive-o w3-button" aria-hidden="true"></i>
                                 <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block w3-small">
                                     <div v-if="!allOverlayLoading">
                                         <form enctype="multipart/form-data" novalidate>
                                             <label>
-                                                <i class="w3-bar-item fa fa-upload w3-button w3-right" title="Import Drivers" aria-hidden="true"> Import Drivers</i>
+                                                <i class="w3-bar-item fa fa-upload w3-button w3-right" aria-hidden="true"> {{ $t('Container.Func.ImportDriver')}}</i>
                                                 <input id="DriverInputFile" type="file" name="file"
                                                        @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
                                                        accept=".zip" class="input-file">
                                             </label>
                                         </form>
-                                        <i class="w3-bar-item fa fa-download w3-button w3-right" title="Export Drivers" aria-hidden="true" @click="exportJDBC"> Export Drivers</i>
-                                        <i class="w3-bar-item fa fa-share-square w3-button w3-right" title="Publish Drivers" aria-hidden="true" @click="changePublishWindowStatus"> Publish Drivers</i>
+                                        <i class="w3-bar-item fa fa-download w3-button w3-right" aria-hidden="true" @click="exportJDBC"> {{ $t('Container.Func.ExportDriver')}}</i>
+                                        <i class="w3-bar-item fa fa-share-square w3-button w3-right" aria-hidden="true" @click="changePublishWindowStatus"> {{ $t('Container.Func.PublishDriver')}}</i>
                                     </div>
                                 </div>
                             </span>
-                            <i class="fa fa-plus w3-button w3-right" title="Add New Driver" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
-                            <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getDrivers"></i>
+                            <i class="fa fa-plus w3-button w3-right" :title="$t('Container.Func.AddDriver')" aria-hidden="true" @click="changeEditWindowStatus('add')"></i>
+                            <i class="fa fa-refresh w3-button w3-right" :title="$t('Container.Func.Refresh')" aria-hidden="true" @click="getDrivers"></i>
                         </div>
                         <p>
                             <div>
@@ -117,19 +117,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Name" @click="sortBy('name')">
-                                                Name
+                                                {{ $t('Form.Name') }}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.sortKey == 'name' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.sortKey == 'name' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Driver" @click="sortBy('driver')">
-                                                JDBC Driver
+                                                {{ $t('Form.Driver.JDBCDriver') }}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.sortKey == 'driver' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.sortKey == 'driver' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="sortBy('url')">
-                                                JDBC URL
+                                                {{ $t('Form.Driver.JDBCURL') }}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.sortKey == 'url' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.sortKey == 'url' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -171,7 +171,7 @@
                                     <div class="w3-col m3">
                                         <div class="w3-row w3-right">
                                             <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                                Page Size
+                                                {{ $t('Container.PageSize') }}
                                             </span>
                                             <span class="w3-col m6" style="padding-top:8px">
                                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
