@@ -3,22 +3,25 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserID') }}</label>
-                <input v-if="content.userid === ''" :class="inputClassList.userid" v-model="new_content.userid" type="text" maxlength="20" placeholder="">
-                <input v-else :class="inputClassList.userid" v-model="new_content.userid" type="text" maxlength="20" readonly>
+                <input name="userid" v-validate.initial="'required|alpha_dash'" :class="[inputClassList.userid, {'w3-pale-red': errors.has('userid')}]" 
+                       v-model="new_content.userid" type="text" maxlength="20" placeholder="" :readonly="content.userid !== ''">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserName') }}</label>
-                <name-input :class="inputClassList.username" v-model="new_content.username" type="text" maxlength="32" placeholder="" />
+                <name-input name="username" v-validate.initial="'required|alpha_dash'" :class="[inputClassList.username, {'w3-pale-red': errors.has('username')}]" 
+                            v-model="new_content.username" type="text" maxlength="32" placeholder="" />
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserPwd') }}</label>
-                <input :class="inputClassList.password1" v-model="password1" type="password" maxlength="64" placeholder="">
+                <input name="pwd1" v-validate.initial="'required'" :class="[inputClassList.password1, {'w3-pale-red': errors.has('pwd1')}]" 
+                       v-model="password1" type="password" maxlength="64" placeholder="" ref="password">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.ConfirmPwd') }}</label>
-                <input :class="inputClassList.password2" v-model="password2" type="password" maxlength="64" placeholder="">
+                <input name="pwd2" v-validate.initial="'required|confirmed:password'" :class="[inputClassList.password2, {'w3-pale-red': errors.has('pwd2')}]" 
+                       v-model="password2" type="password" maxlength="64" placeholder="" data-vv-as="password">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
@@ -139,34 +142,18 @@
         },
         methods: {
             save() {
-                this.clearInValid()
-
-                if (this.new_content.userid.trim().length <= 0) {
-                    this.inputClassList.userid.splice(2, 1, 'w3-red')
-                } else if (this.new_content.username.trim().length <= 0) {
-                    this.inputClassList.username.splice(2, 1, 'w3-red')
-                    // }else if(this.password1.trim() === '') {
-                    //     this.inputClassList.password1.splice(2, 1, 'w3-red')
-                    // }else if(this.password2.trim() === '') {
-                    //     this.inputClassList.password2.splice(2, 1, 'w3-red')
-                } else if (this.password1 !== this.password2) {
-                    let newStatus = {
-                        "msg": "Passwords are not identical!",
-                        "status": "Warn"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    this.inputClassList.password1.splice(2, 1, 'w3-red')
-                    this.inputClassList.password2.splice(2, 1, 'w3-red')
-                } else {
-                    this.new_content.activate = Number(this.new_content.activate)
-                    this.new_content.localaccount = Number(this.new_content.localaccount)
-                    this.new_content.onlyforexecution = Number(this.new_content.onlyforexecution)
-                    this.new_content.password = this.password1
-                    return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                this.new_content.activate = Number(this.new_content.activate)
+                this.new_content.localaccount = Number(this.new_content.localaccount)
+                this.new_content.onlyforexecution = Number(this.new_content.onlyforexecution)
+                this.new_content.password = this.password1
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
+                //this.clearInValid()
 
                 this.new_content.useruid = this.content.useruid
                 this.new_content.userid = this.content.userid

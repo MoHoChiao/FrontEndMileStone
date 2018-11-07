@@ -334,5 +334,12 @@
       "SearchAgent": "Search JCS Agent...",
       "SearchPackage": "Search Package..."
     }
+  },
+  "Msg": {
+    "NoDelPermission": "No 'Delete' Permission",
+    "NoAddPermission": "No 'Add' Permission",
+    "Alias": {
+      "NameEmpty": "Alias Name can not be empty"
+    }
   }
 }

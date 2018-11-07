@@ -5,11 +5,11 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th class="" width="30%">{{ $t('Window.Role.Permission.FuncName') }}</th>
-                            <th class="w3-center" width="15%" @click="checkView" style="cursor:pointer">{{ $t('Window.Role.Permission.View') }}</th>
-                            <th class="w3-center" width="15%" @click="checkAdd" style="cursor:pointer">{{ $t('Window.Role.Permission.Add') }}</th>
-                            <th class="w3-center" width="15%" @click="checkDelete" style="cursor:pointer">{{ $t('Window.Role.Permission.Delete') }}</th>
-                            <th class="w3-center" width="15%" @click="checkEdit" style="cursor:pointer">{{ $t('Window.Role.Permission.Edit') }}</th>
+                            <th class="" width="30%">{{ $t('Window.Permission.FuncName') }}</th>
+                            <th class="w3-center" width="15%" @click="checkView" style="cursor:pointer">{{ $t('Window.Permission.View') }}</th>
+                            <th class="w3-center" width="15%" @click="checkAdd" style="cursor:pointer">{{ $t('Window.Permission.Add') }}</th>
+                            <th class="w3-center" width="15%" @click="checkDelete" style="cursor:pointer">{{ $t('Window.Permission.Delete') }}</th>
+                            <th class="w3-center" width="15%" @click="checkEdit" style="cursor:pointer">{{ $t('Window.Permission.Edit') }}</th>
                         </tr>
                     </table>
                 </div>

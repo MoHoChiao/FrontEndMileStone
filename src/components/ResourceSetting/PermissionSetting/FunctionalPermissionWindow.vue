@@ -15,7 +15,7 @@
     export default {
         computed: {
             _windowTitle() {
-                return this.$t('Window.Role.Permission.Apply') + ' - ' + this.peopleName;
+                return this.$t('Window.Permission.Apply') + ' - ' + this.peopleName;
             },
         },
         data() {

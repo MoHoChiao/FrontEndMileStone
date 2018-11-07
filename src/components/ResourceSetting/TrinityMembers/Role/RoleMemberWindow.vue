@@ -14,7 +14,7 @@ import RoleMemberPanel from './RoleMemberPanel.vue'
 export default {
     computed: {
         windowTitle(){
-            return this.$t('Window.Account.Member.Apply') + ' - ' + this.content.rolename
+            return this.$t('Window.Member.Apply') + ' - ' + this.content.rolename
         }  
     },
     props: {
