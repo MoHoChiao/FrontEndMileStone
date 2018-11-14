@@ -106,19 +106,19 @@
                             <table class="w3-table-all">
                                 <tr class="w3-teal">
                                     <th :width="gridWidth[0]"></th>
-                                    <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Filesource Name" @click="applyOrder('filesourcename')">
+                                    <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="" @click="applyOrder('filesourcename')">
                                         {{ $t('Container.Grid.Name') }}
                                         &nbsp;
                                         <span v-if="this.orderFields['filesourcename'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                         <span v-else-if="this.orderFields['filesourcename'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                     </th>
-                                    <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
+                                    <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="" @click="applyOrder('description')">
                                         {{ $t('Container.Grid.Description') }}
                                         &nbsp;
                                         <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                         <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                     </th>
-                                    <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
+                                    <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="" @click="applyOrder('lastupdatetime')">
                                         {{ $t('Container.Grid.UpdateTime') }}
                                         &nbsp;
                                         <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
@@ -167,7 +167,7 @@
                             <div class="w3-col m3">
                                 <div class="w3-row w3-right">
                                     <span class="w3-col m6 w3-hide-medium" style="padding-top:15px">
-                                        Page Size
+                                        {{ $t('Container.PageSize') }}
                                     </span>
                                     <span class="w3-col m6" style="padding-top:10px">
                                         <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">

@@ -4,20 +4,24 @@
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
-            <div class="w3-col m4">
-                <name-input :class="inputClassList.name" v-model="new_content.filesourcename" type="text" maxlength="32" placeholder="" style="text-transform:uppercase" />
+            <div :class="[(urlOp === 'add') ? 'w3-col m9' : 'w3-col m4']">
+                <name-input name="filesourcename" :class="[inputClassList.name, {'w3-pale-red': errors.has('filesourcename')}]" 
+                            v-validate="'required'" v-model="new_content.filesourcename" type="text" 
+                            maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
-            <div class="w3-col m2" style="padding:6px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
-            </div>
-            <div class="w3-col m3">
-                <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
-                <select v-else :class="inputClassList.fscategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
-                    <option value="root" selected>/</option>
-                    <template v-for="category in allCategoryObjs">
-                        <option :key="category.fscategoryuid" :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
-                    </template>
-                </select>
+            <div v-if="urlOp !== 'add'">
+                <div class="w3-col m2" style="padding:6px 4px 8px 0px">
+                    <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
+                </div>
+                <div class="w3-col m3">
+                    <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
+                    <select v-else :class="inputClassList.fscategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
+                        <option value="root" selected>/</option>
+                        <template v-for="category in allCategoryObjs">
+                            <option :key="category.fscategoryuid" :value="category.fscategoryuid">{{ category.fscategoryname }}</option>
+                        </template>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -207,65 +211,90 @@
                 }
                 this.$set(this.tabsClass, whichTab, this.tabsClass[whichTab] + " w3-border-theme")
             },
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                //check form value
-                if (this.new_content.filesourcename === undefined || this.new_content.filesourcename.trim().length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
+                if (this.errors.any()) {
                     return
-                }
-
-                //collect basic necessary value
-                let returnValue = {
-                    "filesourceuid": this.new_content.filesourceuid,
-                    "filesourcename": this.new_content.filesourcename.trim().toUpperCase(),
-                    "description": this.new_content.description,
-                    "categoryuid": this.new_content.categoryuid,
-                    "categoryname": this.new_content.categoryname
-                }
-
-                // //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
-                // if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
-                //     returnValue.fscategoryuid = this.fscategoryuid
-
-                //call Directory Asign form to check value
-                let directoryAsignContent = this.$refs.directoryAsignForm.save()
-                //collect all necessary value from Directory Asign form
-                if (directoryAsignContent) {
-                    for (let key in directoryAsignContent) {
-                        returnValue[key] = directoryAsignContent[key]
-                    }
                 } else {
-                    this.openTab(0)
-                    return
-                }
-
-                //call File Design form to check value
-                let fileDesignContent = this.$refs.fileDesignForm.save()
-                //collect all necessary value from File Design form
-                if (fileDesignContent) {
-                    for (let key in fileDesignContent) {
-                        returnValue[key] = fileDesignContent[key]
+                    //collect basic necessary value
+                    let returnValue = {
+                        "filesourceuid": this.new_content.filesourceuid,
+                        "filesourcename": this.new_content.filesourcename.trim().toUpperCase(),
+                        "description": this.new_content.description,
+                        "categoryuid": this.new_content.categoryuid,
+                        "categoryname": this.new_content.categoryname
                     }
-                } else {
-                    this.openTab(1)
-                    return
-                }
 
-                //call Job Trigger form to check value
-                let jobTriggerContent = this.$refs.jobTriggerForm.save()
-                //collect all necessary value from Job Trigger form
-                if (jobTriggerContent) {
-                    for (let key in jobTriggerContent) {
-                        returnValue[key] = jobTriggerContent[key]
+                    // //fscategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
+                    // if(this.fscategoryuid && this.fscategoryuid.trim().length > 0)
+                    //     returnValue.fscategoryuid = this.fscategoryuid
+
+                    //call Directory Asign form to check value
+                    //let directoryAsignContent = this.$refs.directoryAsignForm.save()
+                    let directoryAsignContent
+
+                    await this.$refs.directoryAsignForm.save().then(content => {
+                        directoryAsignContent = content
+                    }).catch(response => {
+                        console.log(response);
+                    })
+
+                    //collect all necessary value from Directory Asign form
+                    if (directoryAsignContent) {
+                        for (let key in directoryAsignContent) {
+                            returnValue[key] = directoryAsignContent[key]
+                        }
+                    } else {
+                        this.openTab(0)
+                        return
                     }
-                } else {
-                    this.openTab(2)
-                    return
-                }
 
-                return returnValue
+                    //call File Design form to check value
+                    //let fileDesignContent = this.$refs.fileDesignForm.save()
+                    let fileDesignContent
+
+                    await this.$refs.fileDesignForm.save().then(content => {
+                        fileDesignContent = content
+                    }).catch(response => {
+                        console.log(response);
+                    })
+
+                    //collect all necessary value from File Design form
+                    if (fileDesignContent) {
+                        for (let key in fileDesignContent) {
+                            returnValue[key] = fileDesignContent[key]
+                        }
+                    } else {
+                        this.openTab(1)
+                        return
+                    }
+
+                    //call Job Trigger form to check value
+                    //let jobTriggerContent = this.$refs.jobTriggerForm.save()
+                    let jobTriggerContent
+
+                    await this.$refs.jobTriggerForm.save().then(content => {
+                        jobTriggerContent = content
+                    }).catch(response => {
+                        console.log(response);
+                    })
+
+                    //collect all necessary value from Job Trigger form
+                    if (jobTriggerContent) {
+                        for (let key in jobTriggerContent) {
+                            returnValue[key] = jobTriggerContent[key]
+                        }
+                    } else {
+                        this.openTab(2)
+                        return
+                    }
+
+                    return returnValue
+                }
+            },
+            valid() {
+
             },
             reset() {
                 //clear red font

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VeeValidate from 'vee-validate'  //npm install vee-validate
+import VeeValidate, {Validator} from 'vee-validate'  //npm install vee-validate
 import App from './App.vue'
 import store from './store'
 import i18n from './i18n/i18n'
@@ -11,6 +11,13 @@ import NameInput from './components/Common/form/NameInput.vue'
 Vue.component('name-input', NameInput)
 
 Vue.use(VeeValidate);
+
+// VeeValidate Custom Rule
+Validator.extend('isBigger', (value, [otherValue]) => {
+    return value - otherValue > 0;
+}, {
+    hasTarget: true
+});
 
 new Vue({
     el: '#app',

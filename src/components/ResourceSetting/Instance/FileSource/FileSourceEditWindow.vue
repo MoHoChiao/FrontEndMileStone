@@ -113,8 +113,8 @@ export default {
             }else if(this.urlOp === 'move')
                 this.$emit('closeMove')
         },
-        save(){
-            let postContent = this.$refs.fileSourceForm.save()
+        async save() {
+            let postContent = await this.$refs.fileSourceForm.save()
             
             let urlPath = ''
             if(this.urlOp === 'add'){   //新增一筆file source
