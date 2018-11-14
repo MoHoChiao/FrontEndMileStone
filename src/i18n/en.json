@@ -6,7 +6,7 @@
     "ConfirmationPassword": "Confirmation Password",
     "UserValidator": "Verify Code",
     "UserAccountPlaceholder": "Please input your user account",
-    "UserPasswordPlaceholder": "Please input your user account",
+    "UserPasswordPlaceholder": "Please input your user password",
     "UserValidatorPlaceholder": "Please enter the verify code",
     "ReloadText": "Image Reload",
     "RememberMe": " Remember Me",
@@ -224,8 +224,8 @@
       "Days": "Day(s)",
       "Every": "Every",
       "WeeksOn": "week(s) on",
-      "DayOfEveryMonth": "Day(s) of Every Month(s)",
-      "TheDayOfEveryMonth": "The Day of Every Month(s)"
+      "DayOfEveryMonth": "Type 1",
+      "TheDayOfEveryMonth": "Type 2"
     },
     "Freq": {
       "DateType": "Date Type",
@@ -310,7 +310,10 @@
       "EditAgent": "Edit Agent",
       "CopyAgent": "Copy Agent",
       "AddVirtualAgent": "Add Virtual Agent",
-      "EditVirtualAgent": "Edit Virtual Agent"
+      "EditVirtualAgent": "Edit Virtual Agent",
+      "Entity": "Business Entity",
+      "Category": "Category",
+      "Job": "Job"
     },
     "Schedule": {
       "AddWorkingCal": "Add Working Calendar",
@@ -336,8 +339,8 @@
     }
   },
   "Msg": {
-    "NoDelPermission": "No 'Delete' Permission",
-    "NoAddPermission": "No 'Add' Permission",
+    "NoDelPermission": "permission denied: Unable to do 'delete'",
+    "NoAddPermission": "permission denied: Unable to do 'add'",
     "Alias": {
       "NameEmpty": "Alias Name can not be empty"
     }
