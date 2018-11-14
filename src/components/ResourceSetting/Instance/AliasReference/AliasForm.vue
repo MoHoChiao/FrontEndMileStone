@@ -19,7 +19,7 @@
                     <table class="w3-table-all">
                         <tr v-for="(list_info, index) in new_content.alias">
                             <td class="w3-center" width="25%">
-                                <input :name="'name' + index" v-validate.initial="'required|min:2|regex:^\\$'"
+                                <input :name="'name' + index" v-validate="'required|min:2|regex:^\\$'"
                                        :class="['w3-input', 'w3-border', {'w3-pale-red': errors.has('name' + index)}]"
                                        v-model="list_info.aliasname" type="text"
                                        maxlength="32" style="text-transform:uppercase" placeholder="" :readonly="!list_info.addFlag">
@@ -38,7 +38,7 @@
                             <td class="w3-center" width="24%">
                                 <span>
                                     <!--{{list_info.objectuid}}-->
-                                    <select :name="'target' + index" v-validate.initial="'required|excluded:-1'"
+                                    <select :name="'target' + index" v-validate="'required|excluded:-1'"
                                             :class="['w3-select', 'w3-border', 'w3-round', {'w3-pale-red': errors.has('target' + index)}]"
                                             v-model="list_info.objectuid" style="width:100%;padding:0px" :disabled="!list_info.use">
                                         <option value="-1" disabled selected></option>
@@ -238,66 +238,41 @@
                     this.$store.dispatch('setSystemStatus', newStatus)
                 }
             },
-            save() {
+            async save() {
+                await this.$validator.validateAll()
+
                 if (this.errors.any()) {
                     return
+                } else {
+                    let return_alias = []
+                    let aliasNames = []
+                    for (let i = 0; i < this.new_content.alias.length; i++) {
+                        this.new_content.alias[i].aliasname = this.new_content.alias[i].aliasname.trim().toUpperCase()
+
+                        if (aliasNames.includes(this.new_content.alias[i].aliasname)) {
+                            let newStatus = {
+                                "msg": "Duplicate Alias Name",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                            return
+                        }
+
+                        aliasNames.push(this.new_content.alias[i].aliasname)
+
+                        let alias = {
+                            "aliasname": this.new_content.alias[i].aliasname,
+                            "aliastype": this.new_content.alias[i].aliastype,
+                            "objectuid": this.new_content.alias[i].objectuid,
+                            "description": this.new_content.alias[i].description,
+                            //補/objectname, 這是為了後端回傳回來的資料中, objectname不為null
+                            "objectname": this.allTargetObjectMap.get(this.new_content.alias[i].objectuid)
+                        }
+                        return_alias.push(alias)
+
+                        return return_alias
+                    }
                 }
-
-                let return_alias = []
-                let aliasNames = []
-                for (let i = 0; i < this.new_content.alias.length; i++) {
-                    this.new_content.alias[i].aliasname = this.new_content.alias[i].aliasname.trim().toUpperCase()
-
-                    if (this.new_content.alias[i].aliasname.length < 2) {
-                        let newStatus = {
-                            "msg": this.$t('Msg.Alias.NameEmpty'),
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
-
-                    if (this.new_content.alias[i].aliasname.indexOf("$") !== 0) {
-                        let newStatus = {
-                            "msg": "Alias Name must be start with '$'!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
-
-                    if (aliasNames.includes(this.new_content.alias[i].aliasname)) {
-                        let newStatus = {
-                            "msg": "Duplicate Alias Name!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
-
-                    if (!this.new_content.alias[i].objectuid) {
-                        let newStatus = {
-                            "msg": "Target Object can not be empty!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
-
-                    aliasNames.push(this.new_content.alias[i].aliasname)
-
-                    let alias = {
-                        "aliasname": this.new_content.alias[i].aliasname,
-                        "aliastype": this.new_content.alias[i].aliastype,
-                        "objectuid": this.new_content.alias[i].objectuid,
-                        "description": this.new_content.alias[i].description,
-                        //補/objectname, 這是為了後端回傳回來的資料中, objectname不為null
-                        "objectname": this.allTargetObjectMap.get(this.new_content.alias[i].objectuid)
-                    }
-                    return_alias.push(alias)
-                }
-
-                return return_alias
             },
             reset() {
                 this.new_content.busentityuid = this.content.busentityuid

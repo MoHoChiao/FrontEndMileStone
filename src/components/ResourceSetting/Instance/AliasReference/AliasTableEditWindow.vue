@@ -38,16 +38,17 @@ export default {
         cancel(){
             this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.aliasForm.save()
-            if(postContent){
-                HTTP_TRINITY.post(`objectalias/modify?parentUid=`+this.content.busentityuid, postContent)
-                .then(response => {
-                    this.$emit('closeEdit', response.data)
-                })
-                .catch(error => {
-                    errorHandle(this.$store, error)
-                })
+        async save() {
+            let postContent = await this.$refs.aliasForm.save()
+
+            if (postContent) {
+                HTTP_TRINITY.post(`objectalias/modify?parentUid=` + this.content.busentityuid, postContent)
+                    .then(response => {
+                        this.$emit('closeEdit', response.data)
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
             }
         },
         reset(){
