@@ -55,8 +55,8 @@
             cancel() {
                 this.$emit('close')
             },
-            save() {
-                let postContent = this.$refs.packageAddForm.save()
+            async save() {
+                let postContent = await this.$refs.packageAddForm.save()
 
                 if (postContent) {
                     HTTP_TRINITY.post(`dm-ext-package/` + this.urlOp, postContent)

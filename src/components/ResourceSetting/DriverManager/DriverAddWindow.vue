@@ -37,8 +37,8 @@ export default {
         filePreview(flag){
             this.buttonLoading = flag
         },
-        save(){
-            let formData = this.$refs.driverAddForm.save()
+        async save(){
+            let formData = await this.$refs.driverAddForm.save()
 
             if(formData){
                 this.buttonLoading = true

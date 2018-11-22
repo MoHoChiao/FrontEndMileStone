@@ -16,9 +16,9 @@
                                @confirmDelete="deletePackage">
         </confirm-delete-window>
         <files-rules-window v-if="attachWindowAlive"
-                            :window-title="'Attach Rule Files To ' + selectedPackageRecord.packagename"
-                            :packageuid="selectedPackageRecord.packageuid"
-                            :files="selectedPackageRecord.files"
+                            :window-title="'Attach Rule Files To ' + selectedRecord.packagename"
+                            :packageuid="selectedRecord.packageuid"
+                            :files="selectedRecord.files"
                             @closeApply="changeJarWindowStatus"></files-rules-window>
         <publish-rule-window v-if="publishWindowAlive"
                              @closePublish="changePublishWindowStatus"></publish-rule-window>
@@ -75,9 +75,8 @@
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                    placeholder="" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
                             <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
-
-                            <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
+                            <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
                             <i class="w3-right w3-bar-item fa fa-share-square w3-button w3-right" :title="$t('Container.Func.PublishRule')" aria-hidden="true" @click="changePublishWindowStatus"></i>
                             <span class="w3-right">
                                 <form enctype="multipart/form-data" novalidate>
@@ -128,6 +127,7 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeJarWindowStatus"> Library</button>
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -172,32 +172,39 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="w3-small">
-                <div :key="content.packageuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allPackageObjs">
-                    <over-lay-loading-div v-if="editable[index] === undefined || !editable[index]" loadingSize="100px" textSize="20px">
-                        <div slot="content">
-                            <img src="src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
-                            <span class="w3-right w3-opacity">{{content.lastupdatetime}}</span>
-                            <p>
-                                {{ content.packagename }}
-                            </p>
-                            <files-rules-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></files-rules-panel>
-                            <hr class="w3-border-black w3-clear">
-                            <p class="w3-small">{{ content.description }}</p>
-                            <span class="w3-right">
-                                <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit" @click="clickOnPackagePanel('edit', index, content)">
-                                    <i class="fa fa-pencil" />
-                                </button>
-                                <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete" @click="clickOnPackagePanel('delete', index, content)">
-                                    <i class="fa fa-trash-o" />
-                                </button>
-                            </span>
-                        </div>
-                    </over-lay-loading-div>
-                    <package-edit-panel v-else :key="content.packageuid+'EditPanel1'"
-                                        :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
+            <div v-if="selectedRecord && selectedRecord.packageuid && selectedRecord.packageuid !== ''" class="w3-small">
+                <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
+                    <div class="w3-container w3-signal-white w3-round">
+                        <files-rules-panel :key="packageRecord.packageuid+'FilePanel'" :packageuid="packageRecord.packageuid" :files="packageRecord.files" />
+                    </div>
                 </div>
             </div>
+            <!--<div v-else class="w3-small">
+        <div :key="content.packageuid" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin loading-area" v-for="(content, index) in allPackageObjs">
+            <over-lay-loading-div v-if="editable[index] === undefined || !editable[index]" loadingSize="100px" textSize="20px">
+                <div slot="content">
+                    <img src="src/assets/images/resource_setter/package.png" alt="Package" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
+                    <span class="w3-right w3-opacity">{{content.lastupdatetime}}</span>
+                    <p>
+                        {{ content.packagename }}
+                    </p>
+                    <files-rules-panel :key="content.packageuid+'FilePanel'" :packageuid="content.packageuid" :files="content.files"></files-rules-panel>
+                    <hr class="w3-border-black w3-clear">
+                    <p class="w3-small">{{ content.description }}</p>
+                    <span class="w3-right">
+                        <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit" @click="clickOnPackagePanel('edit', index, content)">
+                            <i class="fa fa-pencil" />
+                        </button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete" @click="clickOnPackagePanel('delete', index, content)">
+                            <i class="fa fa-trash-o" />
+                        </button>
+                    </span>
+                </div>
+            </over-lay-loading-div>
+            <package-edit-panel v-else :key="content.packageuid+'EditPanel1'"
+                                :index="index" :content="content" @closeEdit="changeEditable"></package-edit-panel>
+        </div>
+    </div>-->
         </div>
         <over-lay-loading :is-loading="allOverlayLoading" :loading-text="allOverlayLoadingText"></over-lay-loading>
     </div>
@@ -243,7 +250,8 @@
                 deleteName: '',     //store which obj name will be delete
                 allPackageObjs: [], //store all Package info
                 editable: [],   //for all Package content edit panel
-                selectedPackageRecord: new Object(),   //store which Package has been clicked.
+                isLoading: true,
+                selectedRecord: new Object(),   //store which Package has been clicked.
                 packageRecord: new Object(), //store detail record
                 searchText: '',
                 gridWidth: ['2%', '30%', '45%', '23%'],
@@ -278,9 +286,13 @@
                     this.selectedRecord = this.allPackageObjs[index]
                     this.selectedRecord.index = index //New prop is stores which obj will be deleted in UI
                     menuBtn.style.display = 'block'
+
+                    this.getPackage(this.selectedRecord.packageuid)
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
                     menuBtn.style.display = 'none'
+
+                    this.packageRecord = new Object()
                 }
             },
             clickOnPackageRecordName(id, index) {
@@ -339,6 +351,15 @@
                         errorHandle(this.$store, error)
                     })
             },
+            getPackage(packageuid) {
+                HTTP_TRINITY.get(`dm-ext-package/findByUid?uid=` + packageuid)
+                    .then(response => {
+                        this.packageRecord = response.data
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+            },
             changeEditable(index, content) {
                 /*
                     this.$set is for above :
@@ -356,9 +377,7 @@
                     this.allPackageObjs[index] = content
                 }
             },
-            changeJarWindowStatus(record) {
-                if (record)
-                    this.selectedPackageRecord = record
+            changeJarWindowStatus() {
                 this.attachWindowAlive = !this.attachWindowAlive
             },
             changePublishWindowStatus() {
@@ -400,21 +419,12 @@
             changeEditWindowStatus(which) {
                 if (which != 'add') {
                     if (this.selectedRecord && this.selectedRecord.packageuid && this.selectedRecord.packageuid !== '') {
-                        //Get detail record
-                        HTTP_TRINITY.get(`dm-ext-package/findByUid?uid=` + this.selectedRecord.packageuid)
-                            .then(response => {
-                                this.packageRecord = response.data
-                                this.operation = which
-                                this.addWindowAlive = !this.addWindowAlive
-                            })
-                            .catch(error => {
-                                errorHandle(this.$store, error)
-                            })
+                        this.getPackage(this.selectedRecord.packageuid)
                     }
-                } else {
-                    this.operation = which
-                    this.addWindowAlive = !this.addWindowAlive
                 }
+
+                this.operation = which
+                this.addWindowAlive = !this.addWindowAlive
             },
             close() {
                 this.addWindowAlive = false

@@ -48,7 +48,8 @@
                                     <span>CPU:</span>
                                 </div>
                                 <div class="w3-col m6 w3-left">
-                                    <input id="CPU" :class="inputClassList" v-model="selectedMonitorConfig.cpu" type="number" min="0" max="100">
+                                    <input id="CPU" name="cpu" :class="[inputClassList.common, errors.has('cpu')? inputClassList.invalid: '']"
+                                           v-validate="'required|between:1,100'" v-model="selectedMonitorConfig.cpu" type="number" min="1" max="100">
                                 </div>
                                 <div class="w3-col m3 w3-left">
                                     <span>%</span>
@@ -61,7 +62,8 @@
                                     <span>Memory:</span>
                                 </div>
                                 <div class="w3-col m6 w3-left">
-                                    <input id="Memory" :class="inputClassList" v-model="selectedMonitorConfig.memory" type="number" min="0" max="100">
+                                    <input id="Memory" name="memory" :class="[inputClassList.common, errors.has('memory')? inputClassList.invalid: '']"
+                                           v-validate="'required|between:1,100'" v-model="selectedMonitorConfig.memory" type="number" min="1" max="100">
                                 </div>
                                 <div class="w3-col m1 w3-left">
                                     <span>%</span>
@@ -86,12 +88,14 @@
                                 <table class="w3-table-all">
                                     <tr :key="list_info.agentuid" v-for="(list_info, index) in selectedMonitorConfig.disk">
                                         <td class="" width="62%">
-                                            <input class="w3-input w3-border" v-model="list_info.path" type="text"
-                                                   placeholder="">
+                                            <input name="path" :class="[inputClassList.common, errors.has('path')? inputClassList.invalid: '']"
+                                                   v-validate="'required'" v-model="list_info.path" type="text" placeholder="">
                                         </td>
                                         <td width="30%">
                                             <span>
-                                                <input class="w3-input w3-border" style="width:100%" v-model="list_info.value" type="number" min="0" max="2147483647">
+                                                <input name="value" :class="[inputClassList.common, errors.has('value')? inputClassList.invalid: '']"
+                                                       v-validate="'required|between:1,2147483647'" v-model="list_info.value" style="width:100%" type="number"
+                                                       min="1" max="2147483647" oninput="if(value.length>10) value=value.slice(0,10)">
                                             </span>
                                         </td>
                                         <td class="w3-center" width="8%">
@@ -119,7 +123,10 @@
     export default {
         data() {
             return {
-                inputClassList: ['w3-input', 'w3-border'],
+                inputClassList: {
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
+                },
                 selectedMonitorConfig: new Object(),
                 selectedMachineName: '',
                 allJCSAgents: [],
@@ -172,9 +179,16 @@
                         errorHandle(this.$store, error)
                     })
             },
-            save() {
+            async save() {
+                await this.$validator.validateAll()
+
+                if (this.errors.any()) {
+                    return
+                }
+
                 delete this.selectedMonitorConfig.lastupdatetime  //不需要傳送
                 delete this.selectedMonitorConfig.xml  //不需要傳送
+
                 if (!this.selectedMonitorConfig.resourcemonitor) {
                     this.selectedMonitorConfig.cpu = 0
                     this.selectedMonitorConfig.memory = 0

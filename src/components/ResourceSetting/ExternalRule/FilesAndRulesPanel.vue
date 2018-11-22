@@ -37,11 +37,12 @@
             <div class="w3-row">
                 <!--All Files-->
                 <div class="w3-col m12 w3-section">
-                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;">
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                             External Library List
                         </div>
                     </div>
+                    <p/>
                     <div class="w3-col m12">
                         <div class="w3-row">
                             <div class="w3-col m10">
@@ -59,7 +60,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:72px;word-break:break-all">
+                        <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                             <table :id="'filesTable' + packageuid" class="w3-table-all">
                                 <tr :id="file.extjaruid" :key="index+'FileListTr'" class="w3-hover-blue-grey w3-hover-opacity" 
                                         v-for="(file, index) in new_files">
@@ -82,16 +83,17 @@
                 </div>
                 <!--All Rules-->
                 <div v-if="this.selectedFileRecord" class="w3-col m12 w3-section">
-                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;transform:rotate(-5deg)">
+                    <div class="w3-tag w3-round w3-blue-grey" style="padding:3px">
                         <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
                             External Rule List
                         </div>
                     </div>
+                    <p />
                     <div class="w3-col m12">
                         <div class="w3-row">
                             <div class="w3-col m10">
-                                <input :id="'SearchRuleInput' + packageuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                                    placeholder="Search For Rule Name..." @keyup="searchForRule()">
+                                <input :id="'SearchRuleInput' + packageuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text"
+                                       placeholder="Search For Rule Name..." @keyup="searchForRule()">
                             </div>
                             <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
                                 <i class="fa fa-plus-square w3-button w3-hover-none" title="Add Rule" aria-hidden="true" @click="clickOnAddRule"></i>
@@ -99,8 +101,8 @@
                         </div>
                         <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                             <table :id="'rulesTable' + packageuid" class="w3-table-all">
-                                <tr :id="list_info.rulename" :key="list_index+'RuleListTr'" class="w3-hover-blue-grey w3-hover-opacity" 
-                                            v-for="(list_info, list_index) in rules">
+                                <tr :id="list_info.rulename" :key="list_index+'RuleListTr'" class="w3-hover-blue-grey w3-hover-opacity"
+                                    v-for="(list_info, list_index) in rules">
                                     <td class="w3-center" width="30%">
                                         {{ list_info.rulename }}
                                     </td>
@@ -108,10 +110,10 @@
                                         {{ list_info.description }}
                                     </td>
                                     <td class="w3-center" width="16%" style="padding-top:0px;padding-bottom:0px">
-                                        <i class="fa fa-pencil w3-button w3-hover-none" title="Edit" 
-                                            aria-hidden="true" @click="clickOnEditRule(list_index, list_info)"></i>
-                                        <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete" 
-                                            aria-hidden="true" @click="changeDeleteRuleWindowStatus(list_index, list_info)"></i>
+                                        <i class="fa fa-pencil w3-button w3-hover-none" title="Edit"
+                                           aria-hidden="true" @click="clickOnEditRule(list_index, list_info)"></i>
+                                        <i class="fa fa-minus-circle w3-button w3-hover-none" title="Delete"
+                                           aria-hidden="true" @click="changeDeleteRuleWindowStatus(list_index, list_info)"></i>
                                     </td>
                                 </tr>
                             </table>

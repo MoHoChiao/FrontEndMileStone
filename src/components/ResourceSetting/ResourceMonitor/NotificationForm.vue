@@ -15,10 +15,12 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:283px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.destinationuid" v-for="(list_info, index) in new_content.userlist">
+                        <tr :key="list_info.destinationuid + index" v-for="(list_info, index) in new_content.userlist">
                             <td class="w3-center" width="77%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.destinationuid" style="width:86%;padding:0px" @change="changeUser(list_info.destinationuid,index)">
+                                    <select :name="'user' + index" :class="[inputClassList.common, errors.has('user' + index)? inputClassList.invalid: '']"
+                                            v-validate="'required'" v-model="list_info.destinationuid"
+                                            style="width:86%;padding:0px" @change="changeUser(list_info.destinationuid,index)">
                                         <template v-for="(user, index) in allUsers">
                                             <option v-if="user.useruid === list_info.destinationuid" :value="user.useruid" selected>{{ user.username }} ({{ user.userid }})</option>
                                             <option v-else-if="!userUids.includes(user.useruid)" :value="user.useruid">{{ user.username }} ({{ user.userid }})</option>
@@ -50,10 +52,12 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:283px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.destinationuid" v-for="(list_info, index) in new_content.grouplist">
+                        <tr :key="list_info.destinationuid + index" v-for="(list_info, index) in new_content.grouplist">
                             <td class="w3-center" width="77%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.destinationuid" style="width:86%;padding:0px" @change="changeGroup(list_info.destinationuid,index)">
+                                    <select :name="'group' + index" :class="[inputClassList.common, errors.has('group' + index)? inputClassList.invalid: '']"
+                                            v-validate="'required'" v-model="list_info.destinationuid"
+                                            style="width:86%;padding:0px" @change="changeGroup(list_info.destinationuid,index)">
                                         <template v-for="(group, index) in allGroups">
                                             <option v-if="group.groupuid === list_info.destinationuid" :value="group.groupuid" selected>{{ group.groupname }}</option>
                                             <option v-else-if="!groupUids.includes(group.groupuid)" :value="group.groupuid">{{ group.groupname }}</option>
@@ -86,7 +90,10 @@ import { HTTP_TRINITY,errorHandle } from '../../../util_js/axios_util'
 export default {
     data() {
         return {
-            inputClassList: ['w3-input','w3-border'],
+            inputClassList: {
+                common: 'w3-select w3-border w3-round',
+                invalid: 'w3-pale-red'
+            },
             new_content: {
                 notificationuid: 'JCSServer',
                 notificationname: '',
@@ -135,14 +142,14 @@ export default {
         getAllGroups(){
             let params = {
                 "ordering":{
-                    "orderType":'ASC',
-                    "orderField":'groupname'
+                    "orderType": 'ASC',
+                    "orderField": 'groupname'
                 }
             }
 
             HTTP_TRINITY.post(`user-group/findByFilter`, params)
             .then(response => {
-                this.allGroups = response.data
+                this.allGroups = response.data.content
 
                 this.groupMap = new Map()
                 for(let i=0;i<this.allGroups.length;i++){
@@ -184,7 +191,13 @@ export default {
                 errorHandle(this.$store, error)
             })
         },
-        save(){
+        async save() {
+            await this.$validator.validateAll()
+
+            if (this.errors.any()) {
+                return
+            }
+
             if(this.userUids.indexOf('') > -1 || this.userUids.indexOf(undefined) > -1){
                 let newStatus = {
                     "msg": "User Name(ID) must be selected!",

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class=" w3-col m9 w3-animate-opacity">
         <div class="w3-row-padding w3-small">
             <div class="w3-col m12">
@@ -9,7 +9,7 @@
                             <span>
                                 <div class="w3-tag w3-round w3-blue-grey" style="padding:3px;">
                                     <div class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        {{ $t('Configuration') }}
+                                        {{ $t('Item.Configuration') }}
                                     </div>
                                 </div>
                             </span>
@@ -17,7 +17,7 @@
                     </p>
                     <trinity-config-form slot="content" ref="configForm"></trinity-config-form>
                     <div slot="footer">
-                        <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
+                        <form-button btn-color="signal-white" :hasCancel="false" @reset="reset" @save="save"></form-button>
                     </div>
                 </div>
             </div>
@@ -35,9 +35,9 @@
             'form-button': FormButton
         },
         methods: {
-            cancel() {
-                this.$emit('closeAdd')
-            },
+            //cancel() {
+            //    this.$emit('closeAdd')
+            //},
             save() {
                 let postContent = this.$refs.configForm.save()
                 if (postContent) {
