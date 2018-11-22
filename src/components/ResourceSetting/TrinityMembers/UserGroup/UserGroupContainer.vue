@@ -128,7 +128,7 @@
                             <span>
                                 <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white w3-left" style="padding:3px">
                                     <i class="w3-tag w3-round w3-blue-grey w3-border w3-border-white">
-                                        {{ $t('Item.User_Group') }}
+                                        {{ $t('Item.UserGroup') }}
                                     </i>
                                 </i>
                             </span>

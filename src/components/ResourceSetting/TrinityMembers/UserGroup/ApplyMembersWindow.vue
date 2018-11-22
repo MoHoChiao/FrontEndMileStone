@@ -75,13 +75,13 @@ export default {
         onClickCheckAll(){
             this.selectedRecords =[]
             if(this.checkAllFlag){
-                for(let i=0;i<this.trinityusers.length;i++){
-                    this.trinityusers[i].checked = true //單純為了在UI把checkbox勾起來而已
-                    this.onClickCheck(this.trinityusers[i], i)
+                for (let i = 0; i < this.trinityusers.length; i++) {
+                    this.trinityusers[i].checked = false //單純為了在UI把checkbox取消而已
                 }
             }else{
-                for(let i=0;i<this.trinityusers.length;i++){
-                    this.trinityusers[i].checked = false //單純為了在UI把checkbox取消而已
+                for (let i = 0; i < this.trinityusers.length; i++) {
+                    this.trinityusers[i].checked = true //單純為了在UI把checkbox勾起來而已
+                    this.onClickCheck(this.trinityusers[i], i)
                 }
             }
         },

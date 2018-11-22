@@ -19,7 +19,7 @@
             <div class="w3-row">
                 <div class="w3-col m10">
                     <input :id="'SearchUserInput' + groupuid" class="w3-input w3-border w3-border-camo-black w3-grey" type="text" 
-                        :placeholder="$t('Window.Account.Member.SearchUser')" @keyup="searchForUser()">
+                        :placeholder="$t('Window.Member.SearchUser')" @keyup="searchForUser()">
                 </div>
                 <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
                     <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Member.Apply')" aria-hidden="true" @click="changeApplyWindowStatus"></i>

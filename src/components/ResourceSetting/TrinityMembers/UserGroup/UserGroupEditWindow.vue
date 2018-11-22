@@ -54,8 +54,8 @@ export default {
             else if(this.urlOp === 'edit')
                 this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.userGroupForm.save()
+        async save(){
+            let postContent = await this.$refs.userGroupForm.save()
 
             let urlPath = ''
             if(this.urlOp === 'add'){   //新增Group

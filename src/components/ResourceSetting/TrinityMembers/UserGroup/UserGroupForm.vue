@@ -5,8 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>Name</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.groupname" type="text"
-                            maxlength="32" placeholder="Please Input Name" />
+                <name-input name="groupname" :class="[inputClassList.common, errors.has('groupname')? inputClassList.invalid: '']" 
+                            v-validate="'required'" v-model="new_content.groupname" type="text" maxlength="32" placeholder="" />
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -14,7 +14,7 @@
                 <label class="w3-right">Description</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>
@@ -25,8 +25,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -52,25 +52,29 @@
             }
         },
         methods: {
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                if (this.new_content.groupname === undefined || this.new_content.groupname.trim().length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 this.new_content.groupuid = this.content.groupuid
                 this.new_content.groupname = this.content.groupname
                 this.new_content.description = this.content.description
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             }
         }
     }
 </script>
+<style scoped>
+    input, select {
+        height: 30px
+    }
+
+    input.w3-check {
+        height: 20px
+    }
+</style>

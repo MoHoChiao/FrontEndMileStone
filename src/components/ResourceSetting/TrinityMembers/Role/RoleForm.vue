@@ -1,33 +1,30 @@
 <template>
     <div class="w3-small">
-        <div class="w3-row w3-section">
+        <div class="w3-row-padding w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <input v-if="this.new_content.roleuid.startsWith('Role')" :class="inputClassList.name" v-model="new_content.rolename" type="text"
-                       maxlength="32" placeholder="" readonly>
-                <name-input v-else :class="inputClassList.name" v-model="new_content.rolename" type="text"
-                            maxlength="32" placeholder="" />
+                <name-input name="rolename" :class="[inputClassList.common, errors.has('rolename')? inputClassList.invalid: '']" 
+                            v-validate="'required|alpha_dash'" v-model="new_content.rolename" type="text"
+                            maxlength="32" placeholder="" :readonly="this.new_content.roleuid.startsWith('Role')"/>
             </div>
         </div>
-        <div class="w3-row w3-section">
+        <div class="w3-row-padding w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input v-if="this.new_content.roleuid.startsWith('Role')" :class="inputClassList.desc"
-                       v-model="new_content.description" type="text" maxlength="255" placeholder="" readonly>
-                <input v-else :class="inputClassList.desc" v-model="new_content.description" type="text"
-                       maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text"
+                       maxlength="255" placeholder="" :readonly="this.new_content.roleuid.startsWith('Role')">
             </div>
         </div>
-        <div class="w3-row w3-section">
+        <div class="w3-row-padding w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right">{{ $t('Form.HomeDir') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.homedir" v-model="new_content.homedir" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.homedir" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>
@@ -38,9 +35,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border'],
-                    homedir: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -68,26 +64,30 @@
             }
         },
         methods: {
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                if (this.new_content.rolename === undefined || this.new_content.rolename.trim().length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 this.new_content.roleuid = this.content.roleuid
                 this.new_content.rolename = this.content.rolename
                 this.new_content.description = this.content.description
                 this.new_content.homedir = this.content.homedir
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             }
         }
     }
 </script>
+<style scoped>
+    input, select {
+        height: 30px
+    }
+
+    input.w3-check {
+        height: 20px
+    }
+</style>

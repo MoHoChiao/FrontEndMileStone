@@ -1,27 +1,28 @@
-<template>
+﻿<template>
     <div class="w3-small">
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserID') }}</label>
-                <input name="userid" v-validate.initial="'required|alpha_dash'" :class="[inputClassList.userid, {'w3-pale-red': errors.has('userid')}]" 
-                       v-model="new_content.userid" type="text" maxlength="20" placeholder="" :readonly="content.userid !== ''">
+                <input name="userid" :class="[inputClassList.common, errors.has('userid')? inputClassList.invalid: '']" 
+                       v-validate="'required|alpha_dash'" v-model="new_content.userid" type="text" maxlength="20" placeholder="" 
+                       :readonly="content.userid !== ''">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserName') }}</label>
-                <name-input name="username" v-validate.initial="'required|alpha_dash'" :class="[inputClassList.username, {'w3-pale-red': errors.has('username')}]" 
-                            v-model="new_content.username" type="text" maxlength="32" placeholder="" />
+                <name-input name="username" :class="[inputClassList.common, errors.has('username')? inputClassList.invalid: '']" 
+                            v-validate="'required|alpha_dash'" v-model="new_content.username" type="text" maxlength="32" placeholder="" />
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserPwd') }}</label>
-                <input name="pwd1" v-validate.initial="'required'" :class="[inputClassList.password1, {'w3-pale-red': errors.has('pwd1')}]" 
-                       v-model="password1" type="password" maxlength="64" placeholder="" ref="password">
+                <input name="pwd1" :class="[inputClassList.common, errors.has('pwd1')? inputClassList.invalid: '']" 
+                       v-validate="'required'" v-model="password1" type="password" maxlength="64" placeholder="" ref="password">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.ConfirmPwd') }}</label>
-                <input name="pwd2" v-validate.initial="'required|confirmed:password'" :class="[inputClassList.password2, {'w3-pale-red': errors.has('pwd2')}]" 
-                       v-model="password2" type="password" maxlength="64" placeholder="" data-vv-as="password">
+                <input name="pwd2" :class="[inputClassList.common, errors.has('pwd2')? inputClassList.invalid: '']" 
+                       v-validate="'required|confirmed:password'" v-model="password2" type="password" maxlength="64" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
@@ -41,23 +42,25 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m12">
                 <label>{{ $t('Form.Description') }}</label>
-                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <label>{{ $t('Form.User.MobileNum') }}</label>
-                <input :class="inputClassList.mobile" v-model="new_content.mobile" type="text" maxlength="20" placeholder="">
+                <input name="mobile" :class="[inputClassList.common, errors.has('email')? inputClassList.invalid: '']" 
+                       v-validate="'numeric'" v-model="new_content.mobile" type="text" maxlength="20" placeholder="">
             </div>
             <div class="w3-col m6">
                 <label>{{ $t('Form.User.Email') }}</label>
-                <input :class="inputClassList.email" v-model="new_content.email" type="text" maxlength="64" placeholder="">
+                <input name="email" :class="[inputClassList.common, errors.has('email')? inputClassList.invalid: '']" 
+                       v-validate="'email'" v-model="new_content.email" type="text" maxlength="64" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
                 <label>{{ $t('Form.User.SSOID') }}</label>
-                <input :class="inputClassList.ssoid" v-model="new_content.ssoid" type="text" maxlength="20" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.ssoid" type="text" maxlength="20" placeholder="">
             </div>
             <div class="w3-col m6">
                 <label>{{ $t('Form.User.Language') }}</label>
@@ -71,7 +74,7 @@
         <div class="w3-row-padding w3-section">
             <div class="w3-col m12">
                 <label>{{ $t('Form.HomeDir') }}</label>
-                <input :class="inputClassList.homedir" v-model="new_content.homedir" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.homedir" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>
@@ -82,15 +85,8 @@
         data() {
             return {
                 inputClassList: {
-                    userid: ['w3-input', 'w3-border'],
-                    username: ['w3-input', 'w3-border'],
-                    password1: ['w3-input', 'w3-border'],
-                    password2: ['w3-input', 'w3-border'],
-                    email: ['w3-input', 'w3-border'],
-                    mobile: ['w3-input', 'w3-border'],
-                    description: ['w3-input', 'w3-border'],
-                    ssoid: ['w3-input', 'w3-border'],
-                    homedir: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -141,7 +137,9 @@
             index: Number
         },
         methods: {
-            save() {
+            async save() {
+                await this.$validator.validateAll()
+
                 if (this.errors.any()) {
                     return
                 }
@@ -153,8 +151,6 @@
                 return this.new_content
             },
             reset() {
-                //this.clearInValid()
-
                 this.new_content.useruid = this.content.useruid
                 this.new_content.userid = this.content.userid
                 this.new_content.username = this.content.username
@@ -171,18 +167,11 @@
 
                 this.password1 = ''
                 this.password2 = ''
-            },
-            clearInValid() {
-                this.inputClassList.userid.splice(2, 1)
-                this.inputClassList.username.splice(2, 1)
-                this.inputClassList.password1.splice(2, 1)
-                this.inputClassList.password2.splice(2, 1)
             }
         }
     }
 </script>
 <style scoped>
-
     input, select {
         height: 30px
     }
