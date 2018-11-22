@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <file-source-category-form v-if="urlOp === 'add'" slot="content" ref="fileSourceCategoryForm"></file-source-category-form>
         <file-source-category-form v-else slot="content" ref="fileSourceCategoryForm" :content="content"></file-source-category-form>
@@ -53,8 +53,8 @@ export default {
             else
                 this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.fileSourceCategoryForm.save()
+        async save(){
+            let postContent = await this.$refs.fileSourceCategoryForm.save()
             
             if(postContent){
                 HTTP_TRINITY.post(`file-source-category/` + this.urlOp, postContent)

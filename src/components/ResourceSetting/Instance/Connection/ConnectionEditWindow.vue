@@ -102,8 +102,8 @@ export default {
             }else if(this.urlOp === 'move')
                 this.$emit('closeMove')
         },
-        save(){
-            let postContent = this.$refs.connectionForm.save()
+        async save(){
+            let postContent = await this.$refs.connectionForm.save()
 
             let urlPath = ''
             if (this.urlOp === 'add') {   //新增一筆connection

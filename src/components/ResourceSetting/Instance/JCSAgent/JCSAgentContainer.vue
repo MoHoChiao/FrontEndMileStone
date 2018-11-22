@@ -267,7 +267,6 @@
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
     import { PermissionTable } from '../../../../util_js/auth'
-    import JCSAgentEditPanel from './JCSAgentEditPanel.vue'
     import JCSAgentEditWindow from './JCSAgentEditWindow.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
     import PermissionWindow from '../../PermissionSetting/PermissionWindow.vue'
@@ -564,7 +563,6 @@
             }
         },
         components: {
-            'agent-edit-panel': JCSAgentEditPanel,
             'agent-edit-window': JCSAgentEditWindow,
             'confirm-delete-window': ConfirmDeleteWindow,
             'permission-window': PermissionWindow,

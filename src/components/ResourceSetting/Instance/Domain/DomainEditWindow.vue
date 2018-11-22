@@ -60,8 +60,8 @@ export default {
             else if(this.urlOp === 'copy')
                 this.$emit('closeCopy')
         },
-        save(){
-            let postContent = this.$refs.domainForm.save()
+        async save(){
+            let postContent = await this.$refs.domainForm.save()
 
             let urlPath = ''
             if(this.urlOp === 'add' || this.urlOp === 'copy'){   //新增或複制一筆domain

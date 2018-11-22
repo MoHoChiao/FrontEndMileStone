@@ -5,8 +5,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.name" type="text"
-                            maxlength="32" placeholder=""
+                <name-input name="name" :class="[inputClassList.common, errors.has('name')? inputClassList.invalid: '']" 
+                            v-validate="'required'" v-model="new_content.name" type="text" maxlength="32" placeholder="" 
                             style="text-transform:uppercase" />
             </div>
         </div>
@@ -15,12 +15,12 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m10">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
             <div class="w3-col m12">
-                <var-resource-panel ref="varAndResourceTable" :domainVars="content.domainVars" :domainResources="content.domainResources"></var-resource-panel>
+                <var-resource-panel ref="varAndResourceTable" :domainVars="content.domainVars" :domainResources="content.domainResources" />
             </div>
         </div>
     </div>
@@ -32,8 +32,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -73,48 +73,40 @@
             }
         },
         methods: {
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                this.new_content.name = this.new_content.name.trim().toUpperCase()
-
-                if (this.new_content.name.length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    if (this.$refs.varAndResourceTable.isDuplicateInDomainVars()) {
-                        let newStatus = {
-                            "msg": "Duplicate Domain Variable Names!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        this.new_content.domainVars = this.$refs.varAndResourceTable.openTab(0)
-                        return
-                    } else {
-                        this.new_content.domainVars = this.$refs.varAndResourceTable.getDomainVars()
-                    }
-
-                    if (this.$refs.varAndResourceTable.isEmptyInDomainResources()) {
-                        let newStatus = {
-                            "msg": "Domain Resource Value can not be empty!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        this.new_content.domainVars = this.$refs.varAndResourceTable.openTab(1)
-                        return
-                    } else {
-                        this.new_content.domainResources = this.$refs.varAndResourceTable.getDomainResources()
-                    }
-
-                    return this.new_content
-
-                    // this.new_content.domainVars = this.$refs.varAndResourceTable.getDomainVars()
-                    // this.new_content.domainResources = this.$refs.varAndResourceTable.getDomainResources()
-                    // return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                if (this.$refs.varAndResourceTable.isDuplicateInDomainVars()) {
+                    let newStatus = {
+                        "msg": "Duplicate Domain Variable Name",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                    this.new_content.domainVars = this.$refs.varAndResourceTable.openTab(0)
+                    return
+                } else {
+                    this.new_content.domainVars = this.$refs.varAndResourceTable.getDomainVars()
+                }
+
+                if (this.$refs.varAndResourceTable.isEmptyInDomainResources()) {
+                    let newStatus = {
+                        "msg": "Domain Resource Value can not be empty",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                    this.new_content.domainVars = this.$refs.varAndResourceTable.openTab(1)
+                    return
+                } else {
+                    this.new_content.domainResources = this.$refs.varAndResourceTable.getDomainResources()
+                }
+
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 if (this.urlOp === 'copy') {
                     this.new_content.domainuid = ''
                     this.new_content.name = ''
@@ -126,9 +118,6 @@
                 }
 
                 this.$refs.varAndResourceTable.reset()
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             }
         },
         components: {

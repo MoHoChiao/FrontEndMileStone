@@ -5,15 +5,17 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div :class="[(urlOp === 'add') ? 'w3-col m9' : 'w3-col m4']">
-                <name-input :class="inputClassList.connectionname" v-model="new_content.connectionname" type="text" maxlength="32" placeholder="" style="text-transform:uppercase" />
+                <name-input name="connectionname" :class="[inputClassList.common, errors.has('connectionname')? inputClassList.invalid: '']" 
+                            v-validate="'required'" v-model="new_content.connectionname" type="text" maxlength="32" placeholder=""
+                            style="text-transform:uppercase" />
             </div>
             <div v-if="urlOp !== 'add'">
                 <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                     <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
                 </div>
                 <div class="w3-col m3">
-                    <input v-if="urlOp === 'edit'" v-model="new_content.categoryname" type="text" readonly>
-                    <select v-else :class="inputClassList.conncategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
+                    <select :class="[inputClassList.common, inputClassList.round]" v-model="new_content.categoryuid"
+                            style="padding:0px" @change="changeCategory" :disabled="urlOp === 'edit'">
                         <option value="root" selected>/</option>
                         <template v-for="category in allCategoryObjs">
                             <option :key="category.conncategoryuid" :value="category.conncategoryuid">{{ category.conncategoryname }}</option>
@@ -27,7 +29,7 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div v-show="urlOp !== 'move'">
@@ -36,39 +38,41 @@
                     <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Type') }}</label>
                 </div>
                 <div class="w3-col m9">
-                    <select :class="inputClassList.connectiontype" v-model="new_content.connectiontype" @click="clickType" style="padding:0px" :disabled="urlOp === 'copy'">
+                    <select :class="[inputClassList.common, inputClassList.round]" v-model="new_content.connectiontype" @click="clickType"
+                            style="padding:0px" :disabled="urlOp === 'copy'">
                         <option value="D">Database</option>
                         <option value="F">FTP</option>
                         <option value="J">JDBC</option>
                         <option value="M">Mail</option>
                         <option value="O">OS Account</option>
-                        <!--<option value="S">SAP</option>
-                        <option value="N">Notes</option>-->
                     </select>
                 </div>
             </div>
             <hr class="w3-border-black">
-            <div v-show="typeFlag['D']" class="w3-row-padding w3-section">
+            <div v-if="typeFlag['D']" class="w3-row-padding w3-section">
                 <div class="w3-col m12">
                     <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.ServerName') }}</label>
-                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="">
+                    <input name="server" :class="[inputClassList.common, errors.has('server')? inputClassList.invalid: '']"
+                           v-validate="'required'" v-model="new_content.server" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
-            <div v-show="typeFlag['F']" class="w3-row-padding w3-section">
+            <div v-if="typeFlag['F']" class="w3-row-padding w3-section">
                 <div class="w3-col m6">
                     <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.ServerName') }}</label>
-                    <input :class="inputClassList.server" v-model="new_content.server" type="text" placeholder="">
+                    <input name="server" :class="[inputClassList.common, errors.has('server')? inputClassList.invalid: '']"
+                           v-validate="'required'" v-model="new_content.server" type="text" maxlength="255" placeholder="">
                 </div>
                 <div class="w3-col m6">
                     <label>Target Directory</label>
-                    <input :class="inputClassList.targetdir" v-model="new_content.targetdir" type="text" placeholder="">
+                    <input :class="inputClassList.common" v-model="new_content.targetdir" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
-            <div v-show="typeFlag['J']">
+            <div v-if="typeFlag['J']">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m8">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.DBType') }}</label>
-                        <select :class="inputClassList.jdbc_dbType" v-model="new_content.jdbc_dbType" style="padding:0px" @change="clickJDBCType()">
+                        <select :class="[inputClassList.common, inputClassList.round]" v-model="new_content.jdbc_dbType"
+                                style="padding:0px" @change="clickJDBCType()">
                             <template v-for="(info, key) in jdbcDriverInfo">
                                 <option :value="key">
                                     {{ key }}
@@ -84,25 +88,29 @@
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCDriver') }}</label>
-                        <input :class="inputClassList.jdbc_driver" v-model="new_content.jdbc_driver" type="text" placeholder="" readonly>
+                        <input name="jdbc_driver" :class="[inputClassList.common, errors.has('jdbc_driver')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.jdbc_driver" type="text" maxlength="255" placeholder="" readonly>
                     </div>
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCURL') }}</label>
-                        <input :class="inputClassList.jdbc_url" v-model="new_content.jdbc_url" type="text" placeholder="">
+                        <input name="jdbc_url" :class="[inputClassList.common, errors.has('jdbc_url')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.jdbc_url" type="text" maxlength="255" placeholder="">
                     </div>
                 </div>
             </div>
-            <div v-show="typeFlag['M']">
+            <div v-if="typeFlag['M']">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m12">
                         <label>{{ $t('Form.Conn.MailServer') }}</label>
-                        <input :class="inputClassList.host" v-model="new_content.host" type="text" placeholder="">
+                        <input name="host" :class="[inputClassList.common, errors.has('host')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.host" type="text" maxlength="255" placeholder="">
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
                         <label>{{ $t('Form.Conn.Port') }}</label>
-                        <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
+                        <input name="port" :class="[inputClassList.common, errors.has('port')? inputClassList.invalid: '']"
+                               v-validate="'required|numeric'" v-model="new_content.port" type="number" min="0" max="65535">
                     </div>
                     <div class="w3-col m6">
                         <div class="w3-left" style="margin-top:16px;margin-right:16px;">
@@ -116,69 +124,17 @@
                     </div>
                 </div>
             </div>
-            <div v-show="typeFlag['O']"></div>
-            <!--<div v-show="typeFlag['S']">
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>System Name</label>
-                        <input :class="inputClassList.sapSystemName" v-model="new_content.sapSystemName" type="text" placeholder="Please Input System Name">
-                    </div>
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Host IP</label>
-                        <input :class="inputClassList.sapHostIP" v-model="new_content.sapHostIP" type="text" placeholder="Please Input Host IP">
-                    </div>
-                </div>
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Client</label>
-                        <input :class="inputClassList.sapClient" v-model="new_content.sapClient" type="text" placeholder="Please Input Client">
-                    </div>
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>System #</label>
-                        <input :class="inputClassList.sapSystemNumber" v-model="new_content.sapSystemNumber" type="text" placeholder="Please Input System Number">
-                    </div>
-                </div>
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <label>Code Page</label>
-                        <input :class="inputClassList.sapCodePage" v-model="new_content.sapCodePage" type="text" placeholder="Please Input Code Page">
-                    </div>
-                    <div class="w3-col m6">
-                        <label>Language</label>
-                        <input :class="inputClassList.saplanguage" v-model="new_content.saplanguage" type="text" placeholder="Please Input Language">
-                    </div>
-                </div>
-            </div>
-            <div v-show="typeFlag['N']">
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Host IP</label>
-                        <input :class="inputClassList.notesHostIP" v-model="new_content.notesHostIP" type="text" placeholder="Please Input Host IP">
-                    </div>
-                    <div class="w3-col m6">
-                        <label>Server Name</label>
-                        <input :class="inputClassList.notesServerName" v-model="new_content.notesServerName" type="text" placeholder="Please Input Server Name">
-                    </div>
-                </div>
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <span class="w3-text-red">*</span><label>Database Name</label>
-                        <input :class="inputClassList.notesDBName" v-model="new_content.notesDBName" type="text" placeholder="Please Input Database Name">
-                    </div>
-                    <div class="w3-col m6">
-                        <label>IOR String</label>
-                        <input :class="inputClassList.notesIor" v-model="new_content.notesIor" type="text" placeholder="Please Input IOR String">
-                    </div>
-                </div>
-            </div>-->
+            <div v-if="typeFlag['O']"></div>
             <div class="w3-row-padding w3-section">
                 <div class="w3-col m4">
                     <span class="w3-text-red">*</span><label>{{ $t('Form.Account') }}</label>
-                    <input :class="inputClassList.userid" v-model="new_content.userid" type="text" placeholder="">
+                    <input name="userid" :class="[inputClassList.common, errors.has('userid')? inputClassList.invalid: '']"
+                           v-validate="'required'" v-model="new_content.userid" type="text" maxlength="255" placeholder="">
                 </div>
                 <div class="w3-col m4">
                     <span class="w3-text-red">*</span><label>{{ $t('Form.Pwd') }}</label>
-                    <input :class="inputClassList.password" v-model="new_content.password" type="password" placeholder="">
+                    <input name="password" :class="[inputClassList.common, errors.has('password')? inputClassList.invalid: '']"
+                           v-validate="'required'" v-model="new_content.password" type="password" maxlength="255" placeholder="">
                 </div>
                 <div class="w3-col m4">
                     <div style="margin-top:16px;margin-right:16px">
@@ -187,25 +143,29 @@
                     </div>
                 </div>
             </div>
-            <div v-show="new_content.withpim">
+            <div v-if="new_content.withpim">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.EndPointType') }}</label>
-                        <input :class="inputClassList.pimendpointtype" v-model="new_content.pimendpointtype" type="text" placeholder="">
+                        <input name="pimendpointtype" :class="[inputClassList.common, errors.has('pimendpointtype')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.pimendpointtype" type="text" placeholder="">
                     </div>
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.EndPointName') }}</label>
-                        <input :class="inputClassList.pimendpointname" v-model="new_content.pimendpointname" type="text" placeholder="">
+                        <input name="pimendpointname" :class="[inputClassList.common, errors.has('pimendpointname')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.pimendpointname" type="text" placeholder="">
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.AccountContainer') }}</label>
-                        <input :class="inputClassList.pimaccountcontainer" v-model="new_content.pimaccountcontainer" type="text" placeholder="">
+                        <input name="pimaccountcontainer" :class="[inputClassList.common, errors.has('pimaccountcontainer')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.pimaccountcontainer" type="text" placeholder="">
                     </div>
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.AccountName') }}</label>
-                        <input :class="inputClassList.pimaccountname" v-model="new_content.pimaccountname" type="text" placeholder="">
+                        <input name="pimaccountname" :class="[inputClassList.common, errors.has('pimaccountname')? inputClassList.invalid: '']"
+                               v-validate="'required'" v-model="new_content.pimaccountname" type="text" placeholder="">
                     </div>
                 </div>
                 <div class="w3-row-padding w3-section">
@@ -233,33 +193,9 @@
                     N: false
                 },
                 inputClassList: {
-                    connectionname: ['w3-input', 'w3-border'],
-                    description: ['w3-input', 'w3-border'],
-                    connectiontype: ['w3-select', 'w3-border', 'w3-round'],
-                    server: ['w3-input', 'w3-border'],
-                    targetdir: ['w3-input', 'w3-border'],
-                    jdbc_dbType: ['w3-select', 'w3-border', 'w3-round'],
-                    jdbc_driver: ['w3-input', 'w3-border'],
-                    jdbc_url: ['w3-input', 'w3-border'],
-                    host: ['w3-input', 'w3-border'],
-                    port: ['w3-input', 'w3-border'],
-                    sapSystemName: ['w3-input', 'w3-border'],
-                    sapHostIP: ['w3-input', 'w3-border'],
-                    sapClient: ['w3-input', 'w3-border'],
-                    sapSystemNumber: ['w3-input', 'w3-border'],
-                    sapCodePage: ['w3-input', 'w3-border'],
-                    saplanguage: ['w3-input', 'w3-border'],
-                    notesHostIP: ['w3-input', 'w3-border'],
-                    notesServerName: ['w3-input', 'w3-border'],
-                    notesDBName: ['w3-input', 'w3-border'],
-                    notesIor: ['w3-input', 'w3-border'],
-                    userid: ['w3-input', 'w3-border'],
-                    password: ['w3-input', 'w3-border'],
-                    pimendpointtype: ['w3-input', 'w3-border'],
-                    pimendpointname: ['w3-input', 'w3-border'],
-                    pimaccountcontainer: ['w3-input', 'w3-border'],
-                    pimaccountname: ['w3-input', 'w3-border'],
-                    conncategoryuid: ['w3-select', 'w3-border', 'w3-round']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red',
+                    round: 'w3-round'
                 },
                 allCategoryObjs: new Object(), //store all remote data.(File Source Categories) for copy/move operation
                 jdbcDriverInfo: new Object(),
@@ -391,85 +327,11 @@
                     }
                 }
             },
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                //check form value
-                if (this.new_content.connectionname === undefined || this.new_content.connectionname.trim().length <= 0) {
-                    this.inputClassList.connectionname.splice(2, 1, 'w3-red')
+                if (this.errors.any()) {
                     return
-                }
-
-                if (this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0) {
-                    this.inputClassList.userid.splice(2, 1, 'w3-red')
-                    return
-                }
-
-                if (this.new_content.password === undefined || this.new_content.password.trim().length <= 0) {
-                    this.inputClassList.password.splice(2, 1, 'w3-red')
-                    return
-                }
-
-                if (this.new_content.withpim) {
-                    if (this.new_content.pimendpointtype === undefined || this.new_content.pimendpointtype.trim().length <= 0) {
-                        this.inputClassList.pimendpointtype.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.pimendpointname === undefined || this.new_content.pimendpointname.trim().length <= 0) {
-                        this.inputClassList.pimendpointname.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.pimaccountcontainer === undefined || this.new_content.pimaccountcontainer.trim().length <= 0) {
-                        this.inputClassList.pimaccountcontainer.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.pimaccountname === undefined || this.new_content.pimaccountname.trim().length <= 0) {
-                        this.inputClassList.pimaccountname.splice(2, 1, 'w3-red')
-                        return
-                    }
-                }
-
-                if (this.new_content.connectiontype === 'D') {
-                    if (this.new_content.server === undefined || this.new_content.server.trim().length <= 0) {
-                        this.inputClassList.server.splice(2, 1, 'w3-red')
-                        return
-                    }
-                } else if (this.new_content.connectiontype === 'F') {
-                    if (this.new_content.server === undefined || this.new_content.server.trim().length <= 0) {
-                        this.inputClassList.server.splice(2, 1, 'w3-red')
-                        return
-                    }
-                } else if (this.new_content.connectiontype === 'J') {
-                    if (this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0) {
-                        this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0) {
-                        this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
-                        return
-                    }
-                } else if (this.new_content.connectiontype === 'M') {
-
-                } else if (this.new_content.connectiontype === 'O') {
-
-                } else if (this.new_content.connectiontype === 'S') {
-                    if (this.new_content.sapSystemName === undefined || this.new_content.sapSystemName.trim().length <= 0) {
-                        this.inputClassList.sapSystemName.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.sapHostIP === undefined || this.new_content.sapHostIP.trim().length <= 0) {
-                        this.inputClassList.sapHostIP.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.sapClient === undefined || this.new_content.sapClient.trim().length <= 0) {
-                        this.inputClassList.sapClient.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.sapSystemNumber === undefined || this.new_content.sapSystemNumber.trim().length <= 0) {
-                        this.inputClassList.sapSystemNumber.splice(2, 1, 'w3-red')
-                        return
-                    }
-                } else if (this.new_content.connectiontype === 'N') {
-                    if (this.new_content.notesHostIP === undefined || this.new_content.notesHostIP.trim().length <= 0) {
-                        this.inputClassList.notesHostIP.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.notesDBName === undefined || this.new_content.notesDBName.trim().length <= 0) {
-                        this.inputClassList.notesDBName.splice(2, 1, 'w3-red')
-                        return
-                    }
                 }
 
                 //collect basic necessary value
@@ -534,14 +396,11 @@
 
                 return returnValue
             },
-            testConnection() {
-                if (this.new_content.userid === undefined || this.new_content.userid.trim().length <= 0) {
-                    this.inputClassList.userid.splice(2, 1, 'w3-red')
-                    return
-                }
+            async testConnection() {
+                await this.$validator.validate('userid')
+                await this.$validator.validate('password')
 
-                if (this.new_content.password === undefined || this.new_content.password.trim().length <= 0) {
-                    this.inputClassList.password.splice(2, 1, 'w3-red')
+                if (this.errors.has('userid') || this.errors.has('password')) {
                     return
                 }
 
@@ -549,13 +408,13 @@
                 let urlPath = ``
 
                 if (this.new_content.connectiontype === 'J') {
-                    if (this.new_content.jdbc_driver === undefined || this.new_content.jdbc_driver.trim().length <= 0) {
-                        this.inputClassList.jdbc_driver.splice(2, 1, 'w3-red')
-                        return
-                    } else if (this.new_content.jdbc_url === undefined || this.new_content.jdbc_url.trim().length <= 0) {
-                        this.inputClassList.jdbc_url.splice(2, 1, 'w3-red')
+                    await this.$validator.validate('jdbc_driver')
+                    await this.$validator.validate('jdbc_url')
+
+                    if (this.errors.has('jdbc_driver') || this.errors.has('jdbc_url')) {
                         return
                     }
+
                     urlPath = `connection/test-jdbc-conn`
                     postData.jdbc_url = this.new_content.jdbc_url
                     postData.jdbc_driver = this.new_content.jdbc_driver
@@ -579,9 +438,6 @@
                     })
             },
             reset() {
-                //clear red font
-                this.clearInValid()
-
                 //reset value to initial
                 if (this.urlOp === 'copy') { //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
                     this.new_content.connectionname = ''
@@ -628,24 +484,6 @@
 
                 //當connectiontype值變了之後, 尚需要改變UI的功能選項
                 this.clickType()
-            },
-            clearInValid() {
-                this.inputClassList.connectionname.splice(2, 1)
-                this.inputClassList.userid.splice(2, 1)
-                this.inputClassList.password.splice(2, 1)
-                this.inputClassList.server.splice(2, 1)
-                this.inputClassList.jdbc_driver.splice(2, 1)
-                this.inputClassList.jdbc_url.splice(2, 1)
-                this.inputClassList.sapSystemName.splice(2, 1)
-                this.inputClassList.sapHostIP.splice(2, 1)
-                this.inputClassList.sapClient.splice(2, 1)
-                this.inputClassList.sapSystemNumber.splice(2, 1)
-                this.inputClassList.notesHostIP.splice(2, 1)
-                this.inputClassList.notesDBName.splice(2, 1)
-                this.inputClassList.pimendpointtype.splice(2, 1)
-                this.inputClassList.pimendpointname.splice(2, 1)
-                this.inputClassList.pimaccountcontainer.splice(2, 1)
-                this.inputClassList.pimaccountname.splice(2, 1)
             },
             changeCategory(e) {
                 let selectElement = e.target
@@ -694,13 +532,11 @@
     }
 </script>
 <style scoped>
-
-    input,
-    select {
+    input, select {
         height: 30px
     }
 
-        input.w3-check {
-            height: 20px
-        }
+    input.w3-check {
+        height: 20px
+    }
 </style>

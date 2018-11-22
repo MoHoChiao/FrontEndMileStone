@@ -594,13 +594,12 @@
         padding: 0px 0px 0px 0px;
     }
     input {
-        height: 31px;
+        height: 30px;
         width: 210px;
     }
     #barsTD {
         padding: 0px 0px;
     }
-
     #barsLabel {
         padding-top: 7px;
         padding-left: 8px;

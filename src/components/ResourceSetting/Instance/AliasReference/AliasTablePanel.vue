@@ -12,10 +12,10 @@
         <div class="w3-responsive w3-card w3-round">
             <table class="w3-table-all">
                 <tr class="w3-teal">
-                    <th class="w3-center" width="25%">Alias Name</th>
+                    <th class="" width="25%">Alias Name</th>
                     <th class="w3-center" width="12%">Type</th>
-                    <th class="w3-center" width="25%">Target</th>
-                    <th class="w3-center" width="30%">Description</th>
+                    <th class="" width="25%">Target</th>
+                    <th class="" width="30%">Description</th>
                     <th class="w3-center" width="8%">Permission</th>
                 </tr>
             </table>

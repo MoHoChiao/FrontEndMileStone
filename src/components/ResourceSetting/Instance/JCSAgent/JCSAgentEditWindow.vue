@@ -70,8 +70,8 @@ export default {
             else if(this.urlOp === 'copy')
                 this.$emit('closeCopy')
         },
-        save(){
-            let postContent = this.$refs.agentForm.save()
+        async save(){
+            let postContent = await this.$refs.agentForm.save()
 
             let urlPath = ''
             if(this.urlOp === 'add' || this.urlOp === 'copy'){   //新增或複制一筆Agent

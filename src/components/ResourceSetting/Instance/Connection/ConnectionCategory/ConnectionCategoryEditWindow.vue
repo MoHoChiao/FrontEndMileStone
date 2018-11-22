@@ -53,8 +53,8 @@ export default {
             else
                 this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.connectionCategoryForm.save()
+        async save(){
+            let postContent = await this.$refs.connectionCategoryForm.save()
             
             if(postContent){
                 HTTP_TRINITY.post(`connection-category/` + this.urlOp, postContent)

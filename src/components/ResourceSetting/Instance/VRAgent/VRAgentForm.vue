@@ -5,8 +5,9 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ this.$t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.virtualagentname" type="text"
-                            maxlength="32" placeholder="" style="text-transform:uppercase" />
+                <name-input name="virtualagentname" :class="[inputClassList.common, errors.has('virtualagentname')? inputClassList.invalid: '']"
+                            v-validate="'required'" v-model="new_content.virtualagentname" type="text" maxlength="32" placeholder=""
+                            style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
@@ -18,7 +19,7 @@
                 <label class="w3-right">{{ this.$t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -26,7 +27,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ this.$t('Form.Agent.MaxJobs') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.maxjobs" v-model="new_content.maximumjob" type="number" min="0" max="2048">
+                <input name="maximumjob" :class="[inputClassList.common, errors.has('maximumjob')? inputClassList.invalid: '']"
+                       v-validate="'required|numeric'" v-model="new_content.maximumjob" type="number" min="0" max="2048">
             </div>
             <div class="w3-col m6 w3-right">
                 <span>
@@ -56,11 +58,12 @@
                 </div>
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table-all">
-                        <tr :key="list_info.agentuid" draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
+                        <tr draggable="true" @dragover.prevent @drag="dragAgent(index)" @drop="dropAgent(index)" v-for="(list_info, index) in new_content.agentlist">
                             <td width="7%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="30%" style="padding:6px 0px 0px 0px">
                                 <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.agentuid" style="width:100%;padding:0px" @change="changeAgent(list_info.agentuid,index)">
+                                    <select :name="'agentuid'+index" :class="['w3-select', 'w3-border', 'w3-round', errors.has('agentuid'+index)? inputClassList.invalid: '']" 
+                                            v-validate="'required'" v-model="list_info.agentuid" style="width:100%;padding:0px" @change="changeAgent(list_info.agentuid,index)">
                                         <template v-for="(jcsagent, index) in allJCSAgents">
                                             <option :key="jcsagent.agentuid" v-if="jcsagent.agentuid === list_info.agentuid" :value="jcsagent.agentuid" selected>{{ jcsagent.agentname }}</option>
                                             <option :key="jcsagent.agentuid" v-else-if="!jcsAgentUids.includes(jcsagent.agentuid)" :value="jcsagent.agentuid">{{ jcsagent.agentname }}</option>
@@ -93,9 +96,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border'],
-                    maxjobs: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -183,42 +185,37 @@
                 this.$set(this.new_content.agentlist, index, this.new_content.agentlist[this.dragIndex])
                 this.$set(this.new_content.agentlist, this.dragIndex, temp)
             },
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
+
+                if (this.errors.any()) {
+                    return
+                }
 
                 this.new_content.virtualagentname = this.new_content.virtualagentname.trim().toUpperCase()
+                this.new_content.activate = Number(this.new_content.activate)
 
-                if (this.new_content.virtualagentname.length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else if (this.new_content.maximumjob.toString().trim() === '' || isNaN(this.new_content.maximumjob) ||
-                    (this.new_content.maximumjob < 1 || this.new_content.maximumjob > 2048)) {
-                    this.inputClassList.maxjobs.splice(2, 1, 'w3-red')
-                } else {
-                    this.new_content.activate = Number(this.new_content.activate)
+                let new_agentlist = []
+                for (let i = 0; i < this.new_content.agentlist.length; i++) {
+                    if (this.new_content.agentlist[i].agentuid) {
+                        //補agent name給list, 這是為了回傳回來的list資料中, 讓agent name不為null
+                        this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
+                        //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
+                        this.new_content.agentlist[i].virtualagentuid = null
+                        //activate value must be cast to integer 0 or 1
+                        this.new_content.agentlist[i].activate = Number(this.new_content.agentlist[i].activate)
+                        //重新取得按照UI次序之seq之值
+                        this.new_content.agentlist[i].seq = i + 1
 
-                    let new_agentlist = []
-                    for (let i = 0; i < this.new_content.agentlist.length; i++) {
-                        if (this.new_content.agentlist[i].agentuid) {
-                            //補agent name給list, 這是為了回傳回來的list資料中, 讓agent name不為null
-                            this.new_content.agentlist[i].agentname = this.jcsAgentMap.get(this.new_content.agentlist[i].agentuid)
-                            //把virtualagentuid設為null值, 因為後端不需要這個值, 減少傳輸量
-                            this.new_content.agentlist[i].virtualagentuid = null
-                            //activate value must be cast to integer 0 or 1
-                            this.new_content.agentlist[i].activate = Number(this.new_content.agentlist[i].activate)
-                            //重新取得按照UI次序之seq之值
-                            this.new_content.agentlist[i].seq = i + 1
-
-                            new_agentlist.push(this.new_content.agentlist[i])
-                        }
+                        new_agentlist.push(this.new_content.agentlist[i])
                     }
-                    this.new_content.agentlist = []
-                    this.new_content.agentlist = new_agentlist
-                    return this.new_content
                 }
+                this.new_content.agentlist = []
+                this.new_content.agentlist = new_agentlist
+
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 this.new_content.virtualagentuid = this.content.virtualagentuid
                 this.new_content.virtualagentname = this.content.virtualagentname
                 this.new_content.description = this.content.description
@@ -247,21 +244,16 @@
                         seq: this.content.agentlist[i].seq
                     };
                 }
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
-                this.inputClassList.maxjobs.splice(2, 1)
             }
         }
     }
 </script>
 <style scoped>
-
     input, select {
-        height: 24px
+        height: 30px
     }
 
-        input.w3-check, input.w3-radio {
-            height: 16px
-        }
+    input.w3-check, input.w3-radio {
+        height: 20px
+    }
 </style>

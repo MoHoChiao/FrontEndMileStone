@@ -58,8 +58,8 @@ export default {
             else if(this.urlOp === 'edit')
                 this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.vrAgentForm.save()
+        async save(){
+            let postContent = await this.$refs.vrAgentForm.save()
 
             let urlPath = ''
             if(this.urlOp === 'add' || this.urlOp === 'copy'){   //新增或複制一筆Agent

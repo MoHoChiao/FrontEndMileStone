@@ -5,8 +5,9 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.agentname" type="text"
-                            maxlength="32" placeholder="" style="text-transform:uppercase" />
+                <name-input name="agentname" :class="[inputClassList.common, errors.has('agentname')? inputClassList.invalid: '']"
+                            v-validate="'required'" v-model="new_content.agentname" type="text" maxlength="32" placeholder=""
+                            style="text-transform:uppercase" />
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" type="checkbox">
@@ -18,7 +19,7 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m6">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.compresstransfer" type="checkbox">
@@ -41,7 +42,7 @@
                 <label class="w3-right">{{ $t('Form.Agent.OSName') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.osname" v-model="new_content.osname" type="text" maxlength="20" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.osname" type="text" maxlength="20" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -49,13 +50,15 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Host') }}</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.host" v-model="new_content.host" type="text" maxlength="30" placeholder="">
+                <input name="host" :class="[inputClassList.common, errors.has('host')? inputClassList.invalid: '']"
+                       v-validate="'required'" v-model="new_content.host" type="text" maxlength="30" placeholder="">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Port') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.port" v-model="new_content.port" type="number" min="0" max="65535">
+                <input name="port" :class="[inputClassList.common, errors.has('port')? inputClassList.invalid: '']"
+                       v-validate="'required|numeric'" v-model="new_content.port" type="number" min="0" max="65535">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -71,10 +74,10 @@
                 </select>
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right">{{ $t('Form.Agent.Encoding') }}</label>
+                <label class="w3-right">{{ $t('Form.Encoding') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.encoding" v-model="new_content.encoding" type="text" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.encoding" type="text" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -106,13 +109,15 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.CPUWeight') }}</label>
             </div>
             <div class="w3-col m4">
-                <input :class="inputClassList.cpu" v-model="new_content.cpuweight" type="number" min="0" max="999">
+                <input name="cpuweight" :class="[inputClassList.common, errors.has('cpuweight')? inputClassList.invalid: '']"
+                       v-validate="'required|numeric'" v-model="new_content.cpuweight" type="number" min="0" max="999">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Agent.MEMWeight') }}</label>
             </div>
             <div class="w3-col m3">
-                <input :class="inputClassList.mem" v-model="new_content.memweight" type="number" min="0" max="999">
+                <input name="memweight" :class="[inputClassList.common, errors.has('memweight')? inputClassList.invalid: '']"
+                       v-validate="'required|numeric'" v-model="new_content.memweight" type="number" min="0" max="999">
             </div>
         </div>
     </div>
@@ -123,14 +128,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border'],
-                    host: ['w3-input', 'w3-border'],
-                    port: ['w3-input', 'w3-border'],
-                    osname: ['w3-input', 'w3-border'],
-                    encoding: ['w3-input', 'w3-border'],
-                    cpu: ['w3-input', 'w3-border'],
-                    mem: ['w3-input', 'w3-border'],
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -192,32 +191,19 @@
             }
         },
         methods: {
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                if (this.new_content.agentname.trim().length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else if (this.new_content.host.trim().length <= 0) {
-                    this.inputClassList.host.splice(2, 1, 'w3-red')
-                } else if (this.new_content.port.toString().trim() === '' || isNaN(this.new_content.port) ||
-                    this.new_content.port < 0 || this.new_content.port > 65535) {
-                    this.inputClassList.port.splice(2, 1, 'w3-red')
-                } else if (this.new_content.cpuweight.toString().trim() === '' || isNaN(this.new_content.cpuweight) ||
-                    this.new_content.cpuweight < 0) {
-                    this.inputClassList.cpu.splice(2, 1, 'w3-red')
-                } else if (this.new_content.memweight.toString().trim() === '' || isNaN(this.new_content.memweight) ||
-                    this.new_content.memweight < 0) {
-                    this.inputClassList.mem.splice(2, 1, 'w3-red')
-                } else {
-                    this.new_content.agentname = this.new_content.agentname.trim().toUpperCase()
-                    this.new_content.activate = Number(this.new_content.activate)
-                    this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
-                    return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                this.new_content.agentname = this.new_content.agentname.trim().toUpperCase()
+                this.new_content.activate = Number(this.new_content.activate)
+                this.new_content.compresstransfer = Number(this.new_content.compresstransfer)
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 if (this.urlOp === 'copy') {
                     this.new_content.agentuid = ''
                     this.new_content.agentname = ''
@@ -240,24 +226,16 @@
                 this.new_content.encoding = this.content.encoding
                 this.new_content.monitortime = this.content.monitortime
                 this.new_content.cpuweight = this.content.cpuweight
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
-                this.inputClassList.host.splice(2, 1)
-                this.inputClassList.port.splice(2, 1)
-                this.inputClassList.cpu.splice(2, 1)
-                this.inputClassList.mem.splice(2, 1)
             }
         }
     }
 </script>
 <style scoped>
-
     input, select {
         height: 30px
     }
 
-        input.w3-check {
-            height: 20px
-        }
+    input.w3-check {
+        height: 20px
+    }
 </style>
