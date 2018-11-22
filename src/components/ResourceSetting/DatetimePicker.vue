@@ -1,11 +1,11 @@
 <template>
     <div>
         <!-- For Select Mutiple Date Card UI -->
-        <div v-if="inputMode" class="w3-dropdown-hover" style="display:block">
+        <div v-if="inputMode" class="w3-dropdown-click" style="display:inherit">
             <input type="text" :title="option.placeholder" class="w3-input w3-border" readonly="readonly" :placeholder="option.placeholder"
-                   v-model="date.time" :required="required" 
+                   v-model="date.time" :required="required" @click="changeShow"
                    :style="option.inputStyle ? option.inputStyle : {}" :class="option.inputClass ? option.inputClass : {}" />
-            <div class="w3-dropdown-content w3-card-4" style="width:100%;overflow:auto">
+            <div :id="this.datepickid" class="w3-dropdown-content w3-card-4" style="width:100%;overflow:auto">
                 <div class="w3-row w3-teal">
                     <div class="w3-col m2" @click="nextMonth('pre')" style="padding-top:8px;padding-bottom:8px">
                         <button class="w3-button w3-left w3-hover-none">
@@ -48,6 +48,72 @@
             
         </div>
         <!-- For Select Date InputBox UI -->
+        <div v-else class="cov-vue-date" :class="option.wrapperClass ? option.wrapperClass : {}">
+            <div class="datepickbox">
+                <input type="text" :title="option.placeholder" class="w3-input w3-border" readonly="readonly" :placeholder="option.placeholder"
+                       v-model="date.time" :required="required" @click="changeShow"
+                       :style="option.inputStyle ? option.inputStyle : {}" :class="option.inputClass ? option.inputClass : {}" />
+            </div>
+            <div :id="this.datepickid" class="datepicker-overlay w3-hide" @click="dismiss($event)"
+                 :style="{'background' : option.overlayOpacity? 'rgba(0,0,0,'+option.overlayOpacity+')' : 'rgba(0,0,0,0.5)'}">
+                <div class="cov-date-body">
+                    <div class="w3-row w3-teal">
+                        <div class="w3-col m2" @click="nextMonth('pre')" style="padding-top:8px;padding-bottom:8px">
+                            <button class="w3-button w3-left w3-hover-none">
+                                <i class="fa fa-arrow-left" title="pre month" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="w3-col m8 w3-center">
+                            <button class="w3-button w3-hover-none" style="padding-top:6px;padding-bottom:3px" @click="showYear">{{checked.year}}</button>
+                            <br>
+                            <button class="w3-button w3-hover-none" style="padding-top:0px;padding-bottom:6px" @click="showMonth">{{displayInfo.month}}</button>
+                        </div>
+                        <div class="w3-col m2" @click="nextMonth('next')" style="padding-top:8px;padding-bottom:8px">
+                            <button class="w3-button w3-right w3-hover-none"><i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div v-if="showInfo.day" class="w3-row w3-section">
+                        <div class="w3-col m12">
+                            <div class="week">
+                                <ul class="w3-text-indigo">
+                                    <li v-for="weekie in library.week">{{weekie}}</li>
+                                </ul>
+                            </div>
+                            <div class="day w3-hover-flat-silver" v-for="day in dayList" track-by="$index" @click="checkDay(day)" :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}"
+                                 :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">
+                                {{day.value}}
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="showInfo.year" class="w3-row w3-section">
+                        <div class="w3-col m12 cov-picker-box date-list" id="yearList">
+                            <div class="date-item" v-for="yearItem in library.year" track-by="$index" @click="setYear(yearItem)">{{yearItem}}</div>
+                        </div>
+                    </div>
+                    <div v-if="showInfo.month" class="w3-row w3-section">
+                        <div class="w3-col m12 cov-picker-box date-list">
+                            <div class="date-item" v-for="monthItem in library.month" track-by="$index" @click="setMonth(monthItem)">{{monthItem}}</div>
+                        </div>
+                    </div>
+                    <div v-if="showInfo.hour" class="w3-row w3-section">
+                        <div class="cov-picker-box date-list">
+                            <div class="watch-box">
+                                <div class="hour-box">
+                                    <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                                    <ul>
+                                        <li class="hour-item" v-for="hitem in hours" @click="setTime('hour', hitem, hours)" :class="{'active':hitem.checked}">{{hitem.value}}</li>
+                                    </ul>
+                                </div>
+                                <div class="min-box">
+                                    <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
+                                    <div class="min-item" v-for="mitem in mins" @click="setTime('min',mitem, mins)" :class="{'active':mitem.checked}">{{mitem.value}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--<div v-else class="cov-vue-date" :class="option.wrapperClass ? option.wrapperClass : {}">
             <div class="datepickbox">
                 <input type="text" :title="option.placeholder" class="w3-input w3-border" readonly="readonly" :placeholder="option.placeholder"
@@ -120,6 +186,10 @@
             this.showCheck()
         },
         props: {
+            datepickid: {
+                type: String,
+                default: ''
+            },
             inputMode: true,
             required: false,
             date: {
@@ -140,7 +210,7 @@
                             header: '#3f51b5',
                             headerText: '#fff'
                         },
-                        wrapperClass: '',
+                        wrapperClass: 'w3-dropdown-click',
                         inputClass: '',
                         inputStyle: {
                             'display': 'inline-block',
@@ -172,9 +242,8 @@
         data: function data() {
             function hours() {
                 var list = [];
-                var hour = 24;
-                while (hour > 0) {
-                    hour--;
+                var hour = 0;
+                for (;hour < 24; hour++) {
                     list.push({
                         checked: false,
                         value: hour < 10 ? '0' + hour : hour
@@ -184,9 +253,8 @@
             }
             function mins() {
                 var list = [];
-                var min = 60;
-                while (min > 0) {
-                    min--;
+                var min = 0;
+                for (; min < 60; min++) {
                     list.push({
                         checked: false,
                         value: min < 10 ? '0' + min : min
@@ -226,6 +294,23 @@
             };
         },
         methods: {
+            changeShow() {
+                var x = document.getElementById(this.datepickid);
+
+                if (this.inputMode) {
+                    if (x.className.indexOf("w3-show") == -1) {
+                        x.className += " w3-show";
+                    } else {
+                        x.className = x.className.replace(" w3-show", "");
+                    }
+                } else {
+                    if (x.className.indexOf("w3-hide") == -1) {
+                        x.className += " w3-hide";
+                    } else {
+                        x.className = x.className.replace(" w3-hide", "");
+                    }
+                }
+            },
             pad: function pad(n) {
                 n = Math.floor(n);
                 return n < 10 ? '0' + n : n;
@@ -241,6 +326,7 @@
                 } else {
                     this.checked.currentMoment = (0, _moment2.default)(time, this.option.format);
                 }
+
                 this.showOne('day');
                 this.checked.year = (0, _moment2.default)(this.checked.currentMoment).format('YYYY');
                 this.checked.month = (0, _moment2.default)(this.checked.currentMoment).format('MM');
@@ -266,7 +352,7 @@
                         moment: (0, _moment2.default)(currentMoment).date(i)
                     });
                     if (i === Math.ceil((0, _moment2.default)(currentMoment).format('D')) && (0, _moment2.default)(oldtime, this.option.format).year() === (0, _moment2.default)(currentMoment).year() && (0, _moment2.default)(oldtime, this.option.format).month() === (0, _moment2.default)(currentMoment).month()) {
-                        if (this.inputMode)  //當clear time時, 時間為空, 此時會預設插入一筆當日日期, 當不是inputMode時, 不應該有預設勾選的日期
+                        //if (this.inputMode)  //當clear time時, 時間為空, 此時會預設插入一筆當日日期, 當不是inputMode時, 不應該有預設勾選的日期
                             days[i - 1].checked = true;
                     }
                     this.checkBySelectDays(i, days);
@@ -537,14 +623,21 @@
                 } else {
                     this.date.time = JSON.stringify(this.selectedDays);
                 }
+
+                if (this.option.type === 'min') {
+                    this.showOne('day')
+                }
+
                 this.showInfo.check = false;
                 this.$emit('change', this.date.time);
+                this.changeShow()
             },
             dismiss: function dismiss(evt) {
                 if (evt.target.className === 'datepicker-overlay') {
                     if (this.option.dismissible === undefined || this.option.dismissible) {
                         this.showInfo.check = false;
                         this.$emit('cancel');
+                        this.changeShow()
                     }
                 }
             },
@@ -634,7 +727,7 @@
     }
 
     .cov-date-body {
-        background: #3F51B5;
+        background: #fff; /*#3F51B5;*/
         overflow: hidden;
         font-size: 16px;
         font-family: 'Roboto';
@@ -661,7 +754,7 @@
         -webkit-box-sizing: border-box !important;
         -ms-box-sizing: border-box !important;
         max-width: 100%;
-        height: 140px;
+        height: 180px;
         text-align: start !important;
     }
 
@@ -878,8 +971,8 @@
 
     .hour-item,
     .min-item {
-        padding: 10px;
-        font-size: 36px;
+        padding: 0px;
+        font-size: 24px;
         cursor: pointer;
     }
 

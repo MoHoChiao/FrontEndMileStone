@@ -5,13 +5,9 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <input v-if="this.new_content.excludefrequencyuid.trim() === 'global'"
-                       :class="inputClassList.name" v-model="new_content.excludefrequencyname"
-                       type="text" maxlength="32" placeholder="" readonly
-                       style="text-transform:uppercase">
-                <name-input v-else :class="inputClassList.name" v-model="new_content.excludefrequencyname"
-                            type="text" maxlength="32" placeholder=""
-                            style="text-transform:uppercase" />
+                <name-input name="excludefrequencyname" :class="[inputClassList.common, errors.has('excludefrequencyname')? inputClassList.invalid: '']"
+                            v-validate="'required'" v-model="new_content.excludefrequencyname" type="text" maxlength="32" placeholder=""
+                            style="text-transform:uppercase" :readonly="this.new_content.excludefrequencyuid.trim() === 'global'"/>
             </div>
             <div class="w3-col m3 w3-right">
                 <input class="w3-check" v-model="new_content.activate" style="width:40px;" type="checkbox">
@@ -23,7 +19,7 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -45,10 +41,10 @@
                         <tr :key="index+'TimeEdit'" draggable="true" @dragover.prevent @drag="dragTime(index)" @drop="dropTime(index)" v-for="(list_info, index) in new_content.excludefrequencylist">
                             <td width="10%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="40%" style="padding:6px 0px 0px 0px">
-                                <datetime-picker :date="list_info.starttime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
+                                <datetime-picker :date="list_info.starttime" :option="option" :limit="limit" :inputMode="false" :datepickid="'startdate'+index" />
                             </td>
                             <td width="40%" style="padding:6px 0px 0px 0px">
-                                <datetime-picker :date="list_info.endtime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
+                                <datetime-picker :date="list_info.endtime" :option="option" :limit="limit" :inputMode="false" :datepickid="'enddate'+index" />
                             </td>
                             <td class="w3-center" width="10%">
                                 <i class="fa fa-minus-circle w3-button w3-hover-none" :title="$t('Container.Func.Delete')" aria-hidden="true" @click="delTime(index)"></i>
@@ -63,6 +59,8 @@
 <script>
     import myDatepicker from '../../DatetimePicker.vue'
     import ConfirmDeleteWindow from '../../ConfirmDeleteWindow.vue'
+    import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
+    import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.min.css'
 
     var moment = require('moment')
 
@@ -70,8 +68,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border'],
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -87,7 +85,8 @@
                 dragIndex: 0,
                 option: {
                     type: 'min',
-                    week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+                    SundayFirst: true,
+                    week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
                     month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                     format: 'YYYY-MM-DD HH:mm',
                     placeholder: 'Select Date',
@@ -158,80 +157,75 @@
                 }
                 return new_excludefrequencylist
             },
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
+
+                if (this.errors.any()) {
+                    return
+                }
 
                 this.new_content.excludefrequencyname = this.new_content.excludefrequencyname.trim().toUpperCase()
 
-                if (this.new_content.excludefrequencyname.length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    if (this.new_content.excludefrequencylist.length > 2000) {
-                        let newStatus = {
-                            "msg": "The total number of datetime selected can not exceed 2000!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        /*
-                         * 這裡要再創一個return_content之object的原因是需要讓this.new_content保持starttime及endtime是object的格式, 因為這種格式是DatetimePicker元件吃的
-                         * 當starttime改變成後端所吃的Json格式, 即例如"starttime": 201801191004, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
-                         * 當endtime改變成後端所吃的格式, 即例如"endtime": 201801191005, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
-                        */
-                        let return_content = new Object()
-                        return_content.excludefrequencyuid = this.new_content.excludefrequencyuid
-                        return_content.excludefrequencyname = this.new_content.excludefrequencyname
-                        return_content.description = this.new_content.description
-                        return_content.activate = Number(this.new_content.activate)
-                        let return_lists = []   //新的excludefrequencylist
-                        let timeTemp = []   //這單純是為了檢查是否有重覆時間用的
-                        for (let i = 0; i < this.new_content.excludefrequencylist.length; i++) {
-                            let starttime = this.new_content.excludefrequencylist[i].starttime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
-                            let endtime = this.new_content.excludefrequencylist[i].endtime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
-
-                            if (starttime > endtime) {    //Check Start time can not be greater than the end time
-                                let newStatus = {
-                                    "msg": "Start time can not be greater than the end time!",
-                                    "status": "Warn"
-                                }
-                                this.$store.dispatch('setSystemStatus', newStatus)
-                                return
-                            }
-
-                            if (timeTemp.includes(starttime + "~" + endtime)) {   //Check duplicate time
-                                let newStatus = {
-                                    "msg": "Duplicate time!",
-                                    "status": "Warn"
-                                }
-                                this.$store.dispatch('setSystemStatus', newStatus)
-                                return
-                            } else {
-                                timeTemp.push(starttime + "~" + endtime)
-                            }
-
-                            let return_list = {
-                                "seq": i + 1,
-                                "starttime": starttime,
-                                "endtime": endtime
-                            }
-                            return_lists.push(return_list)
-                        }
-                        return_content.excludefrequencylist = return_lists
-                        return return_content
+                if (this.new_content.excludefrequencylist.length > 2000) {
+                    let newStatus = {
+                        "msg": "The total number of datetime selected can not exceed 2000!",
+                        "status": "Warn"
                     }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    /*
+                     * 這裡要再創一個return_content之object的原因是需要讓this.new_content保持starttime及endtime是object的格式, 因為這種格式是DatetimePicker元件吃的
+                     * 當starttime改變成後端所吃的Json格式, 即例如"starttime": 201801191004, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
+                     * 當endtime改變成後端所吃的格式, 即例如"endtime": 201801191005, 則DatetimePicker元件會立刻丟出錯所吃的元件為object而非String的錯誤
+                    */
+                    let return_content = new Object()
+                    return_content.excludefrequencyuid = this.new_content.excludefrequencyuid
+                    return_content.excludefrequencyname = this.new_content.excludefrequencyname
+                    return_content.description = this.new_content.description
+                    return_content.activate = Number(this.new_content.activate)
+                    let return_lists = []   //新的excludefrequencylist
+                    let timeTemp = []   //這單純是為了檢查是否有重覆時間用的
+                    for (let i = 0; i < this.new_content.excludefrequencylist.length; i++) {
+                        let starttime = this.new_content.excludefrequencylist[i].starttime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
+                        let endtime = this.new_content.excludefrequencylist[i].endtime.time.replace(/-/g, "").replace(/ /g, "").replace(/:/g, "")
+
+                        if (starttime > endtime) {    //Check Start time can not be greater than the end time
+                            let newStatus = {
+                                "msg": "Start time can not be greater than the end time!",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                            return
+                        }
+
+                        if (timeTemp.includes(starttime + "~" + endtime)) {   //Check duplicate time
+                            let newStatus = {
+                                "msg": "Duplicate time!",
+                                "status": "Warn"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                            return
+                        } else {
+                            timeTemp.push(starttime + "~" + endtime)
+                        }
+
+                        let return_list = {
+                            "seq": i + 1,
+                            "starttime": starttime,
+                            "endtime": endtime
+                        }
+                        return_lists.push(return_list)
+                    }
+                    return_content.excludefrequencylist = return_lists
+                    return return_content
                 }
             },
             reset() {
-                this.clearInValid()
-
                 this.new_content.excludefrequencyuid = this.content.excludefrequencyuid
                 this.new_content.excludefrequencyname = this.content.excludefrequencyname
                 this.new_content.description = this.content.description
                 this.new_content.activate = Number(this.content.activate)
                 this.new_content.excludefrequencylist = this.initialNewTimeList()
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             },
             addTime() {
                 let new_timeObj = {
@@ -277,7 +271,8 @@
         },
         components: {
             'datetime-picker': myDatepicker,
-            'confirm-delete-window': ConfirmDeleteWindow
+            'confirm-delete-window': ConfirmDeleteWindow,
+            'ctk-date-time-picker': VueCtkDateTimePicker
         }
     }
 </script>
@@ -287,7 +282,7 @@
         height: 30px
     }
 
-        input.w3-check {
-            height: 20px
-        }
+    input.w3-check {
+        height: 20px
+    }
 </style>

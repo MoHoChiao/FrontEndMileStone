@@ -61,8 +61,8 @@
             cancel() {
                 this.$emit('closeAdd')
             },
-            save() {
-                let postContent = this.$refs.exclFreqForm.save()
+            async save() {
+                let postContent = await this.$refs.exclFreqForm.save()
 
                 if (postContent) {
                     HTTP_TRINITY.post(`excl-frequency/` + this.urlOp, postContent)

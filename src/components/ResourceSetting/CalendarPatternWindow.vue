@@ -11,15 +11,16 @@
             </div>
             <div class="w3-col m4">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.StartDate') }}</label>
-                <datetime-picker :date="startTime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
+                <datetime-picker :date="startTime" :option="option" :limit="limit" :inputMode="true" :datepickid="'startdate'" />
             </div>
             <div v-if="endDateType === 'EndBy'" class="w3-col m4">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.EndDate') }}</label>
-                <datetime-picker :date="endTime" :option="option" :limit="limit" :inputMode="true"></datetime-picker>
+                <datetime-picker :date="endTime" :option="option" :limit="limit" :inputMode="true" :datepickid="'enddate'" />
             </div>
             <div v-else class="w3-col m4">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.Occurrences') }}</label>
-                <input :class="inputClassList.occurences" v-model="occurences" type="number" min="1" max="999">
+                <input name="occurences" :class="[inputClassList.common, errors.has('occurences')? inputClassList.invalid: '']" 
+                       v-validate="'required|between:1,999'" v-model="occurences" type="number" min="1" max="999">
             </div>
         </div>
         <div class="w3-row">
@@ -37,7 +38,7 @@
             </a>
         </div>
 
-        <div v-show="tabsFlag[0]" class="w3-container">
+        <div v-if="tabsFlag[0]" class="w3-container">
             <div class="w3-panel w3-card">
                 <div class="w3-row-padding w3-section">
                     <div class="w3-col m6">
@@ -49,58 +50,61 @@
                     </div>
                     <div v-if="dailyType === 'Days'" class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.WorkingCal.Days') }}</label>
-                        <input :class="inputClassList.daily_day" v-model="daily_day" type="number" min="1" max="999">
+                        <input name="daily_day" :class="[inputClassList.common, errors.has('daily_day')? inputClassList.invalid: '']"
+                               v-validate="'required|between:1,999'" v-model="daily_day" type="number" min="1" max="999">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div v-show="tabsFlag[1]" class="w3-container">
+        <div v-if="tabsFlag[1]" class="w3-container">
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12">
                         <span class="w3-left" style="padding-top:6px">{{ $t('Form.WorkingCal.Every') }}&nbsp;&nbsp;</span>
                         <span class="w3-text-red w3-left">*&nbsp;</span>
-                        <span class="w3-left"><input :class="inputClassList.weekly_week" v-model="weekly_week" type="number" min="1" max="999"></span>
+                        <span class="w3-left">
+                            <input name="weekly_week" :class="[inputClassList.common, errors.has('weekly_week')? inputClassList.invalid: '']"
+                                   v-validate="'required|between:1,999'" v-model="weekly_week" type="number" min="1" max="999">
+                        </span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;{{ $t('Form.WorkingCal.WeeksOn') }} : </span>
                     </div>
                 </div>
-                <div class="w3-row w3-section">
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('1')" type="checkbox" v-model="weekly_days">
-                        <label>SUN</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('2')" type="checkbox" v-model="weekly_days">
-                        <label>MON</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('3')" type="checkbox" v-model="weekly_days">
-                        <label>TUE</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('4')" type="checkbox" v-model="weekly_days">
-                        <label>WED</label>
-                    </div>
-                </div>
-                <div class="w3-row w3-section">
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('5')" type="checkbox" v-model="weekly_days">
-                        <label>THU</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('6')" type="checkbox" v-model="weekly_days">
-                        <label>FRI</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" :value="Number('7')" type="checkbox" v-model="weekly_days">
-                        <label>SAT</label>
+                <div :class="['w3-section', errors.has('weekly_group')? inputClassList.invalid: '']">
+                    <div class="w3-row-padding">
+                        <input name="weekly_group" class="w3-check" :value="Number('7')" type="checkbox"
+                               v-validate="'required'" v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Sun')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('1')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Mon')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('2')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Tue')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('3')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Wed')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('4')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Thu')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('5')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Fri')}}</label>
+                        &emsp;&emsp;
+                        <input name="weekly_group" class="w3-check" :value="Number('6')" type="checkbox"
+                               v-model="weekly_days" style="position:inherit">
+                        <label>{{$t('Time.Week.Sat')}}</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div v-show="tabsFlag[2]" class="w3-container">
+        <div v-if="tabsFlag[2]" class="w3-container">
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12 w3-center">
@@ -113,10 +117,16 @@
                 <div v-if="monthlyType === 'DayOfEveryMonth'" class="w3-row w3-section">
                     <div class="w3-col m12">
                         <span class="w3-text-red w3-left">*&nbsp;</span>
-                        <span class="w3-left"><input :class="inputClassList.monthly_day" v-model="monthly_day" type="number" min="1" max="999"></span>
+                        <span class="w3-left">
+                            <input name="monthly_day" :class="[inputClassList.common, errors.has('monthly_day')? inputClassList.invalid: '']"
+                                   v-validate="'required|between:1,999'" v-model="monthly_day" type="number" min="1" max="999">
+                        </span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;day(s) of every&nbsp;&nbsp;</span>
                         <span class="w3-text-red w3-left">*&nbsp;</span>
-                        <span class="w3-left"><input :class="inputClassList.monthly_month" v-model="monthly_month" type="number" min="1" max="999"></span>
+                        <span class="w3-left">
+                            <input name="monthly_month" :class="[inputClassList.common, errors.has('monthly_month')? inputClassList.invalid: '']"
+                                   v-validate="'required|between:1,999'" v-model="monthly_month" type="number" min="1" max="999">
+                        </span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;month(s)</span>
                     </div>
                 </div>
@@ -151,7 +161,8 @@
                             <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;of every&nbsp;&nbsp;</span>
                             <span class="w3-text-red w3-left">*&nbsp;</span>
                             <span class="w3-left">
-                                <input :class="inputClassList.monthly_month" v-model="monthly_month" type="number" min="1" max="999">
+                                <input name="monthly_month" :class="[inputClassList.common, errors.has('monthly_month')? inputClassList.invalid: '']"
+                                       v-validate="'required|between:1,999'" v-model="monthly_month" type="number" min="1" max="999">
                             </span>
                             <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;month(s)</span>
                         </div>
@@ -160,7 +171,8 @@
                         <div class="w3-col m12">
                             <span class="w3-left" style="padding-top:6px">Plus or Minus&nbsp;&nbsp;</span>
                             <span class="w3-left">
-                                <input :class="inputClassList.monthly_plusOrMinus" v-model="monthly_plusOrMinus" type="number" min="-999" max="999">
+                                <input name="monthly_plusOrMinus" :class="[inputClassList.common, errors.has('monthly_plusOrMinus')? inputClassList.invalid: '']"
+                                       v-validate="'required|between:-999,999'" v-model="monthly_plusOrMinus" type="number" min="-999" max="999">
                             </span>
                         </div>
                     </div>
@@ -168,7 +180,7 @@
             </div>
         </div>
 
-        <div v-show="tabsFlag[3]" class="w3-container">
+        <div v-if="tabsFlag[3]" class="w3-container">
             <div class="w3-panel w3-card">
                 <div class="w3-row w3-section">
                     <div class="w3-col m12 w3-center">
@@ -198,7 +210,10 @@
                             </select>
                         </span>
                         <span class="w3-text-red w3-left">&nbsp;&nbsp;*&nbsp;</span>
-                        <span class="w3-left"><input :class="inputClassList.yearly_day" v-model="yearly_day" type="number" min="1" max="999"></span>
+                        <span class="w3-left">
+                            <input name="yearly_day" :class="[inputClassList.common, errors.has('yearly_day')? inputClassList.invalid: '']"
+                                   v-validate="'required|between:1,999'" v-model="yearly_day" type="number" min="1" max="999">
+                        </span>
                         <span class="w3-left" style="padding-top:6px">&nbsp;&nbsp;day(s)</span>
                     </div>
                 </div>
@@ -255,8 +270,12 @@
     </div>
     <div slot="footer">
         <div class="w3-row w3-small">
-            <button type="button" class="w3-button w3-right w3-round w3-theme-d2" style="margin-right:3px" @click="generate"><i class="fa fa-hand-lizard-o"></i> Generate</button>
-            <button type="button" class="w3-button w3-right w3-round w3-theme-d2" style="margin-right:3px" @click="cancel"><i class="fa fa-ban"></i> Cancel</button>
+            <button type="button" class="w3-button w3-right w3-round w3-theme-d2" style="margin-right:3px" @click="generate">
+                <i class="fa fa-hand-lizard-o"></i> Generate
+            </button>
+            <button type="button" class="w3-button w3-right w3-round w3-theme-d2" style="margin-right:3px" @click="cancel">
+                <i class="fa fa-ban"></i> Cancel
+            </button>
         </div>
     </div>
   </modal-window>
@@ -278,13 +297,8 @@ export default {
                         'w3-quarter tablink w3-bottombar w3-hover-light-grey w3-padding'],
             tabsFlag: [true, false, false, false],
             inputClassList: {
-                occurences: ['w3-input','w3-border'],
-                daily_day: ['w3-input','w3-border'],
-                weekly_week: ['w3-input','w3-border'],
-                monthly_day: ['w3-input','w3-border'],
-                monthly_month: ['w3-input','w3-border'],
-                monthly_plusOrMinus: ['w3-input','w3-border'],
-                yearly_day: ['w3-input','w3-border']
+                common: 'w3-input w3-border',
+                invalid: 'w3-pale-red'
             },
             occurences: 10,
             endDateType: 'EndBy',
@@ -372,16 +386,16 @@ export default {
             }
             this.$set(this.tabsClass, whichTab, this.tabsClass[whichTab] + " w3-border-theme")
         },
-        generate(){
-            this.clearInValid()
-            
-            if(this.endDateType === 'EndAfter' && this.occurences <= 0){
-                this.inputClassList.occurences.splice(2, 1, 'w3-red')
+        async generate() {
+            await this.$validator.validateAll()
+
+            console.log(this.errors.all())
+            if (this.errors.any()) {
                 return
             }
 
             let diffDays = moment(this.endTime.time).diff(moment(this.startTime.time), 'days')
-            if(diffDays < 0){
+            if (diffDays < 0) {
                 let newStatus = {
                     "msg": 'End Date can not be earlier than the Start Date!',
                     "status": "Error"
@@ -395,61 +409,24 @@ export default {
                 "startDate": this.startTime.time
             }
 
-            if(this.endDateType === 'EndBy'){   //end by
+            if (this.endDateType === 'EndBy') {   //end by
                 patternValue.endDate = this.endTime.time
-            }else{  //end after
+            } else {  //end after
                 patternValue.occurences = this.occurences
             }
-            
 
-            if(this.tabsFlag[0]){
-                if(this.dailyType === 'Days'){  //days
-                    if(this.daily_day <= 0){
-                        this.inputClassList.daily_day.splice(2, 1, 'w3-red')
-                        return
-                    }
-                    patternValue.day = this.daily_day
-                }else{  //WeekDay
-                    //do nothing
-                }
-
+            if (this.tabsFlag[0]) {
                 patternValue.patternType = "Daily"
                 patternValue.dailyType = this.dailyType
-
-            }else if(this.tabsFlag[1]){
-                if(this.weekly_week <= 0){
-                    this.inputClassList.weekly_week.splice(2, 1, 'w3-red')
-                    return
-                }
-                if(this.weekly_days.length <= 0){
-                    let newStatus = {
-                        "msg": 'The day of week can not be empty!',
-                        "status": "Error"
-                    }
-                    this.$store.dispatch('setSystemStatus', newStatus)
-                    return
-                }
-
+            } else if (this.tabsFlag[1]) {
                 patternValue.patternType = 'Weekly'
                 patternValue.week = this.weekly_week
                 patternValue.days = this.weekly_days
-
-            }else if(this.tabsFlag[2]){
-                if(this.monthly_month <= 0){
-                    this.inputClassList.monthly_month.splice(2, 1, 'w3-red')
-                    return
-                }
-
-                if(this.monthlyType === 'DayOfEveryMonth'){ //DayOfEveryMonth
-                    if(this.monthly_day <= 0){
-                        this.inputClassList.monthly_day.splice(2, 1, 'w3-red')
-                        return
-                    }
-                    
+            } else if (this.tabsFlag[2]) {
+                if (this.monthlyType === 'DayOfEveryMonth') { //DayOfEveryMonth
                     patternValue.monthlyType = 'DayOfEveryMonth'
                     patternValue.day = this.monthly_day
-
-                }else{  //TheDayOfEveryMonth
+                } else {  //TheDayOfEveryMonth
                     patternValue.monthlyType = 'TheDayOfEveryMonth'
                     patternValue.seq = this.monthly_seq
                     patternValue.dayType = this.monthly_dayType
@@ -459,17 +436,12 @@ export default {
                 patternValue.patternType = 'Monthly'
                 patternValue.month = this.monthly_month
 
-            }else if(this.tabsFlag[3]){
-                if(this.yearlyType === 'DayOfEveryYear'){   //DayOfEveryYear
-                    if(this.yearly_day <= 0){
-                        this.inputClassList.yearly_day.splice(2, 1, 'w3-red')
-                        return
-                    }
-
+            } else if (this.tabsFlag[3]) {
+                if (this.yearlyType === 'DayOfEveryYear') {   //DayOfEveryYear
                     patternValue.yearlyType = 'DayOfEveryYear'
                     patternValue.month = this.yearly_month1
                     patternValue.day = this.yearly_day
-                }else{  //TheDayOfEveryYear
+                } else {  //TheDayOfEveryYear
                     patternValue.yearlyType = 'TheDayOfEveryYear'
                     patternValue.month = this.yearly_month2
                     patternValue.seq = this.yearly_seq
@@ -477,16 +449,13 @@ export default {
                 }
 
                 patternValue.patternType = 'Yearly'
-            }else{
+            } else {
                 return
             }
 
             this.$emit('generate', patternValue)
         },
         reset(){
-            //clear red font
-            this.clearInValid()
-
             //reset value to initial
             this.new_content.filesourceuid = this.content.filesourceuid
             if(this.urlOp === 'copy'){  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
@@ -501,13 +470,6 @@ export default {
             this.$refs.directoryAsignForm.reset()
             this.$refs.fileDesignForm.reset()
             this.$refs.jobTriggerForm.reset()
-        },
-        clearInValid(){
-            this.inputClassList.occurences.splice(2, 1)
-            this.inputClassList.daily_day.splice(2, 1)
-            this.inputClassList.weekly_week.splice(2, 1)
-            this.inputClassList.monthly_day.splice(2, 1)
-            this.inputClassList.monthly_month.splice(2, 1)
         },
         getCategories(){
             let params = {

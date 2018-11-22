@@ -1,11 +1,12 @@
-<template>
+﻿<template>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
             </div>
             <div class="w3-col m6">
-                <name-input :class="inputClassList.name" v-model="new_content.freqcategoryname" type="text"
+                <name-input name="freqcategoryname" :class="[inputClassList.common, errors.has('freqcategoryname')? inputClassList.invalid: '']"
+                            v-validate="'required'" v-model="new_content.freqcategoryname" type="text"
                             maxlength="32" placeholder="" style="text-transform:uppercase" />
             </div>
         </div>
@@ -14,7 +15,7 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>
@@ -24,8 +25,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 new_content: {
                     /*
@@ -51,25 +52,20 @@
             }
         },
         methods: {
-            save() {
-                this.clearInValid()
+            async save() {
+                await this.$validator.validateAll()
 
-                if (this.new_content.freqcategoryname === undefined || this.new_content.freqcategoryname.trim().length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    this.new_content.freqcategoryname = this.new_content.freqcategoryname.trim().toUpperCase()
-                    return this.new_content
+                if (this.errors.any()) {
+                    return
                 }
+
+                this.new_content.freqcategoryname = this.new_content.freqcategoryname.trim().toUpperCase()
+                return this.new_content
             },
             reset() {
-                this.clearInValid()
-
                 this.new_content.freqcategoryuid = this.content.freqcategoryuid
                 this.new_content.freqcategoryname = this.content.freqcategoryname
                 this.new_content.description = this.content.description
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             }
         }
     }

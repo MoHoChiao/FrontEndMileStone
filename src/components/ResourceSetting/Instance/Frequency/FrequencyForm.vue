@@ -10,7 +10,8 @@
                     <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m9' : 'w3-col m4']">
-                    <name-input :class="inputClassList.frequencyname" v-model="new_content.frequencyname" type="text"
+                    <name-input name="frequencyname" :class="[inputClassList.common, errors.has('frequencyname')? inputClassList.invalid: '']"
+                                v-validate="'required'" v-model="new_content.frequencyname" type="text"
                                 maxlength="32" placeholder="" style="text-transform:uppercase" />
                 </div>
                 <div v-if="urlOp !== 'add' && urlOp !== 'edit'">
@@ -18,7 +19,7 @@
                         <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Category') }}</label>
                     </div>
                     <div class="w3-col m3">
-                        <select :class="inputClassList.freqcategoryuid" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
+                        <select :class="inputClassList.common" v-model="new_content.categoryuid" style="padding:0px" @change="changeCategory">
                             <option value="root" selected>/</option>
                             <template v-for="category in allCategoryLists">
                                 <option :key="category.freqcategoryuid" :value="category.freqcategoryuid">{{ category.freqcategoryname }}</option>
@@ -32,7 +33,7 @@
                     <label class="w3-right">{{ $t('Form.Freq.DateType') }}</label>
                 </div>
                 <div :class="[(urlOp === 'add' || urlOp === 'edit') ? 'w3-col m6' : 'w3-col m4']">
-                    <select :class="inputClassList.datetype" v-model="datetype" style="padding:0px">
+                    <select :class="[inputClassList.common, inputClassList.round]" v-model="datetype" style="padding:0px">
                         <option value="Daily">Daily</option>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -51,64 +52,60 @@
                     <label class="w3-right">{{ $t('Form.Description') }}</label>
                 </div>
                 <div class="w3-col m9">
-                    <input :class="inputClassList.description" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                    <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
-            <div v-show="datetype === 'Daily'" class="w3-row-padding"></div>
-            <div v-show="datetype === 'Weekly'">
+            <div v-if="datetype === 'Daily'" class="w3-row-padding"></div>
+            <div v-else>
                 <hr class="w3-border-black">
-                <div class="w3-row-padding">
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Monday" :value="Number('1')" v-model="checkedWeekday">
-                        <label for="Monday">Monday</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Tuesday" :value="Number('2')" v-model="checkedWeekday">
-                        <label for="Tuesday">Tuesday</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Wednesday" :value="Number('3')" v-model="checkedWeekday">
-                        <label for="Wednesday">Wednesday</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Thursday" :value="Number('4')" v-model="checkedWeekday">
-                        <label for="Thursday">Thursday</label>
-                    </div>
-                </div>
-                <div class="w3-row-padding">
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Friday" :value="Number('5')" v-model="checkedWeekday">
-                        <label for="Friday">Friday</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Saturday" :value="Number('6')" v-model="checkedWeekday">
-                        <label for="Saturday">Saturday</label>
-                    </div>
-                    <div class="w3-col m3">
-                        <input class="w3-check" type="checkbox" id="Sunday" :value="Number('0')" v-model="checkedWeekday">
-                        <label for="Sunday">Sunday</label>
-                    </div>
+            </div>
+            <div v-show="datetype === 'Weekly'" :class="errors.has('weekly_group')? inputClassList.invalid: ''">
+                <div class="w3-row-padding w3-center">
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Sunday" :value="Number('0')"
+                           v-validate="'required'" v-model="checkedWeekday">
+                    <label for="Sunday"> {{$t('Time.Week.Sun')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Monday" :value="Number('1')" v-model="checkedWeekday">
+                    <label for="Monday"> {{$t('Time.Week.Mon')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Tuesday" :value="Number('2')" v-model="checkedWeekday">
+                    <label for="Tuesday"> {{$t('Time.Week.Tue')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Wednesday" :value="Number('3')" v-model="checkedWeekday">
+                    <label for="Wednesday"> {{$t('Time.Week.Wed')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Thursday" :value="Number('4')" v-model="checkedWeekday">
+                    <label for="Thursday"> {{$t('Time.Week.Thu')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Friday" :value="Number('5')" v-model="checkedWeekday">
+                    <label for="Friday"> {{$t('Time.Week.Fri')}} </label>
+                    &emsp;&emsp;
+                    <input name="weekly_group" class="w3-check" type="checkbox" id="Saturday" :value="Number('6')" v-model="checkedWeekday">
+                    <label for="Saturday"> {{$t('Time.Week.Sat')}} </label>
                 </div>
             </div>
-            <div v-show="datetype === 'Monthly'">
-                <hr class="w3-border-black">
+            <div v-show="datetype === 'Monthly'" :class="errors.has('monthly_group')? inputClassList.invalid: ''">
                 <div class="w3-row-padding">
-                    <div class="w3-col m1" v-for="n in 31">
-                        <input class="w3-check" type="checkbox" :id="n" :value="n" v-model="checkedDay">
-                        <label for="Monday">{{ n }}</label>
+                    <div class="w3-col m1">
+                        <input name="monthly_group" v-validate="'required'" class="w3-check" type="checkbox" :id="1" :value="1" v-model="checkedDay">
+                        <label>{{ 1 }}</label>
                     </div>
-                    <div class="w3-col m5">
-                        <input class="w3-check" type="checkbox" id="0" :value="Number('0')" v-model="checkedDay">
-                        <label for="Monday">The end of the month</label>
+                    <div class="w3-col m1" v-for="n in 30">
+                        <input name="monthly_group" class="w3-check" type="checkbox" :id="n + 1" :value="n + 1" v-model="checkedDay">
+                        <label>{{ n + 1 }}</label>
+                    </div>
+                    <div class="w3-col m3">
+                        <input name="monthly_group" class="w3-check" type="checkbox" id="0" :value="Number('0')" v-model="checkedDay">
+                        <label>The end of the month</label>
                     </div>
                 </div>
             </div>
-            <div v-show="datetype === 'WorkingCalendar'">
-                <hr class="w3-border-black">
+            <div v-if="datetype === 'WorkingCalendar'">
                 <div class="w3-row-padding">
                     <div class="w3-col m8">
                         <span class="w3-text-red">*</span><label>All Working Calendar</label>
-                        <select :class="inputClassList.wcalendaruid" v-model="new_content.wcalendaruid" style="padding:0px">
+                        <select name="wcalendaruid" :class="[inputClassList.common, inputClassList.round, errors.has('wcalendaruid')? inputClassList.invalid: '']"
+                                v-validate="'required'" v-model="new_content.wcalendaruid" style="padding:0px">
                             <template v-for="wc in allWCLists">
                                 <option :value="wc.wcalendaruid">{{ wc.wcalendarname }}</option>
                             </template>
@@ -116,13 +113,13 @@
                     </div>
                 </div>
             </div>
-            <div v-show="datetype === 'Calendar'">
-                <hr class="w3-border-black">
+            <div v-show="datetype === 'Calendar'" :class="errors.has('datetypeCalendar')? inputClassList.invalid: ''">
                 <div class="w3-row-padding">
                     <div class="w3-col m12">
                         <datetime-picker ref="datetimePicker" :date="startTime" :option="option" :limit="limit" :inputMode="false" @change="save"></datetime-picker>
                     </div>
                 </div>
+                <br />
                 <div class="w3-row-padding">
                     <div class="w3-col m12 w3-center">
                         <button class="w3-button w3-round w3-teal" @click="changePatternWindowStatus">{{ $t('Form.WorkingCal.ByPattern') }}</button>
@@ -132,7 +129,6 @@
             </div>
             <div v-show="datetype === 'Manually'">
                 <div class="w3-row-padding w3-section">
-                    <hr class="w3-border-black">
                     <div class="w3-col m12">
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
@@ -222,25 +218,34 @@
                             </table>
                         </div>
                     </div>
+                    <div class="w3-center">
+                        <span v-if="errors.has('datetypeManually')">
+                            <i class="w3-text-red fa fa-exclamation-triangle"> {{ errors.first('datetypeManually') }}</i>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div v-show="urlOp !== 'move' && datetype != 'Manually'">
+                <hr class="w3-border-black">
                 <div class="w3-row-padding">
-                    <hr class="w3-border-black">
                     <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                         <label class="w3-right">{{ $t('Form.Freq.TimeType') }}</label>
                     </div>
                     <div class="w3-col m4">
-                        <select :class="inputClassList.timetype" v-model="timetype" style="padding:0px">
+                        <select :class="[inputClassList.common, inputClassList.round]" v-model="timetype" style="padding:0px">
                             <option value="EveryHour">Every Hour</option>
                             <option value="SelectedTime">Selected Time</option>
                         </select>
                     </div>
                 </div>
-                <div v-show="timetype === 'EveryHour'" class="w3-row-padding w3-section">
-                    <div class="w3-col m1" v-for="n in [0,5,10,15,20,25,30,35,40,45,50,55]">
-                        <input class="w3-check" type="checkbox" :id="n" :value="n" v-model="checkedMinutes">
-                        <label for="Monday">{{ n }}</label>
+                <div v-show="timetype === 'EveryHour'" :class="['w3-row-padding', 'w3-section', errors.has('hour_group')? inputClassList.invalid: '']">
+                    <div class="w3-col m1">
+                        <input name="hour_group" v-validate="'required'" class="w3-check" type="checkbox" :id="0" :value="0" v-model="checkedMinutes">
+                        <label>{{ 0 }}</label>
+                    </div>
+                    <div class="w3-col m1" v-for="n in [5,10,15,20,25,30,35,40,45,50,55]">
+                        <input name="hour_group" class="w3-check" type="checkbox" :id="n" :value="n" v-model="checkedMinutes">
+                        <label>{{ n }}</label>
                     </div>
                 </div>
                 <div v-show="timetype === 'SelectedTime'" class="w3-row-padding w3-section">
@@ -258,10 +263,10 @@
                         </div>
                         <div class="w3-responsive w3-card w3-round">
                             <table class="w3-table-all">
-                                <tr :key="time_info.hour + ':' + time_info.minute" v-for="(time_info, index) in selectedTime">
+                                <tr v-for="(time_info, index) in selectedTime">
                                     <td class="w3-center" width="45%" style="padding:6px 0px 0px 0px">
                                         <span>
-                                            <select class="w3-select w3-border w3-round" v-model="time_info.hour" style="width:95%;padding:0px">
+                                            <select class="w3-select w3-border w3-round" v-model="time_info.hour" style="width:95%;padding:0px" @change="checkSelectedTime">
                                                 <template v-for="n in 24">
                                                     <option :value="n-1">{{ n-1 }}</option>
                                                 </template>
@@ -270,7 +275,7 @@
                                     </td>
                                     <td class="w3-center" width="45%" style="padding:6px 0px 0px 0px">
                                         <span>
-                                            <select class="w3-select w3-border w3-round" v-model="time_info.minute" style="width:95%;padding:0px">
+                                            <select class="w3-select w3-border w3-round" v-model="time_info.minute" style="width:95%;padding:0px" @change="checkSelectedTime">
                                                 <template v-for="n in 60">
                                                     <option :value="n-1">{{ n-1 }}</option>
                                                 </template>
@@ -284,6 +289,11 @@
                             </table>
                         </div>
                     </div>
+                    <div class="w3-center">
+                        <span v-if="errors.has('timetypeSelectedTime')">
+                            <i class="w3-text-red fa fa-exclamation-triangle"> {{ errors.first('timetypeSelectedTime') }}</i>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -291,7 +301,7 @@
 </template>
 <script>
     import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
-    import myDatepicker from '../../DatetimePicker.vue'
+    import myDatepicker from '../../WCDatetimePicker.vue'
     import CalendarPatternWindow from '../../CalendarPatternWindow.vue'
 
     var moment = require('moment')
@@ -304,12 +314,9 @@
         data() {
             return {
                 inputClassList: {
-                    frequencyname: ['w3-input', 'w3-border'],
-                    description: ['w3-input', 'w3-border'],
-                    datetype: ['w3-select', 'w3-border', 'w3-round'],
-                    timetype: ['w3-select', 'w3-border', 'w3-round'],
-                    freqcategoryuid: ['w3-select', 'w3-border', 'w3-round'],
-                    wcalendaruid: ['w3-select', 'w3-border', 'w3-round']
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red',
+                    round: 'w3-round'
                 },
                 freqcategoryuid: '',  //store categoryuid for copy/move operation
                 datetype: 'Daily',  //store which date type has been selected
@@ -375,7 +382,7 @@
         },
         mounted() {
             this.getAllWCs()    //取得所有的working calendar資料
-            //
+            // 
             if (this.urlOp === 'add') {
                 //新增時, 不用取得frequency list
                 this.setDatetimePicker('[]')
@@ -386,14 +393,12 @@
 
             if (this.urlOp === 'copy' || this.urlOp === 'move') {
                 this.getCategories()    //取得所有可供選擇的frequency categories
-
                 if (this.urlOp === 'copy') {
                     //copy動作, 把name和description設空值
                     this.new_content.frequencyname = ''
                     this.new_content.description = ''
                 }
             }
-
             //initial yearRange for year select box of the mamually mode
             this.getYearNumbers()
         },
@@ -423,10 +428,41 @@
             picked() {
                 this.$refs.datetimePicker.picked()
             },
-            save(datetime) {
-                this.clearInValid()
-                if (this.new_content.frequencyname === undefined || this.new_content.frequencyname.trim().length <= 0) {
-                    this.inputClassList.frequencyname.splice(2, 1, 'w3-red')
+            async save(datetime) {
+                // datetype validation
+                this.errors.remove('datetypeCalendar')
+
+                if (this.datetype === 'Calendar') {
+                    let datetimeArr = JSON.parse(datetime)
+                    if (datetimeArr.length <= 0 || datetimeArr.length > 2000) {
+                        let dateErrObj = {
+                            field: 'datetypeCalendar',
+                            msg: 'Calendar date is required or out of range'
+                        };
+                        this.errors.add(dateErrObj)
+                    }
+                }
+
+                this.checkTypeManually()
+                this.checkSelectedTime()
+
+                await this.$validator.validateAll()
+
+                // ignore non-select v-show element
+                if (this.datetype !== 'Weekly') {
+                    this.errors.remove('weekly_group')
+                }
+                if (this.timetype !== 'EveryHour' || this.datetype === 'Manually') {
+                    this.errors.remove('hour_group')
+                }
+                if (this.timetype !== 'SelectedTime' || this.datetype === 'Manually') {
+                    this.errors.remove('timetypeSelectedTime')
+                }
+                if (this.datetype !== 'Monthly') {
+                    this.errors.remove('monthly_group')
+                }
+
+                if (this.errors.any()) {
                     return
                 }
 
@@ -455,14 +491,6 @@
                     };
                     currentFreqDateList.push(newDateData)
                 } else if (this.datetype === 'Weekly') {
-                    if (this.checkedWeekday.length <= 0) {
-                        let newStatus = {
-                            "msg": "Date Type = '" + this.datetype + "', The total number of weekday can not be zero!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
                     returnValue.manuallyedit = "0"
                     returnValue.bywcalendar = "0"
                     returnValue.wcalendaruid = ""
@@ -478,14 +506,6 @@
                         currentFreqDateList.push(newDateData)
                     }
                 } else if (this.datetype === 'Monthly') {
-                    if (this.checkedDay.length <= 0) {
-                        let newStatus = {
-                            "msg": "Date Type = '" + this.datetype + "', The total number of day can not be zero!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
                     returnValue.manuallyedit = "0"
                     returnValue.bywcalendar = "0"
                     returnValue.wcalendaruid = ""
@@ -501,22 +521,6 @@
                         currentFreqDateList.push(newDateData)
                     }
                 } else if (this.datetype === 'Calendar') {
-                    let datetimeArr = JSON.parse(datetime)
-                    if (datetimeArr.length <= 0) {
-                        let newStatus = {
-                            "msg": "Date Type = '" + this.datetype + "', Frequency Calendar List can not be empty!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    } else if (datetimeArr.length > 2000) {
-                        let newStatus = {
-                            "msg": "Date Type = '" + this.datetype + "', The total number of date selected can not exceed 2000!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
                     returnValue.manuallyedit = "2"
                     returnValue.bywcalendar = "0"
                     returnValue.wcalendaruid = ""
@@ -534,9 +538,6 @@
                         }
                     }
                 } else if (this.datetype === 'WorkingCalendar') {
-                    if (!this.new_content.wcalendaruid || this.new_content.wcalendaruid.length <= 0) {
-                        this.inputClassList.wcalendaruid.splice(2, 1, 'w3-red')
-                    }
                     returnValue.manuallyedit = "0"
                     returnValue.bywcalendar = "1"
                     returnValue.wcalendaruid = this.new_content.wcalendaruid
@@ -549,14 +550,6 @@
                     };
                     currentFreqDateList.push(newDateData)
                 } else if (this.datetype === 'Manually') {
-                    if (this.allFrequencyLists.length <= 0) {
-                        let newStatus = {
-                            "msg": "Date Type = '" + this.datetype + "', The total number of date time list selected can not be empty!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                        return
-                    }
                     returnValue.manuallyedit = "1"
                     returnValue.bywcalendar = "0"
                     returnValue.wcalendaruid = ""
@@ -568,14 +561,6 @@
                 if (this.datetype !== 'Manually') {
                     let currentFreqTimeList = []   //暫存所有需要傳到service的time資料
                     if (this.timetype === 'EveryHour') {
-                        if (this.checkedMinutes.length <= 0) {
-                            let newStatus = {
-                                "msg": "Time Type = '" + this.timetype + "', The total number of minute selected can not be empty!",
-                                "status": "Warn"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                            return
-                        }
                         this.checkedMinutes = this.checkedMinutes.sort(function (a, b) { return a - b });
                         for (let index in this.checkedMinutes) {
                             let newTimeData = {
@@ -585,29 +570,6 @@
                             currentFreqTimeList.push(newTimeData)
                         }
                     } else if (this.timetype === 'SelectedTime') {
-                        if (this.selectedTime.length <= 0) {
-                            let newStatus = {
-                                "msg": "Time Type = '" + this.timetype + "', The total number of time selected can not be empty!",
-                                "status": "Warn"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                            return
-                        }
-
-                        //以下檢查selected time是否重覆
-                        var valueArr = this.selectedTime.map(function (time) { return time.hour + ':' + time.minute });
-                        var isDuplicate = valueArr.some(function (time, idx) {
-                            return valueArr.indexOf(time) != idx
-                        });
-                        if (isDuplicate) {
-                            let newStatus = {
-                                "msg": "Time Type = '" + this.timetype + "', Duplicate time!",
-                                "status": "Warn"
-                            }
-                            this.$store.dispatch('setSystemStatus', newStatus)
-                            return
-                        }
-
                         for (let index in this.selectedTime) {
                             let newTimeData = {
                                 hour: this.selectedTime[index].hour,
@@ -654,12 +616,51 @@
                 //freqcategoryuid這個值只為了如果是move/copy的情況下, 需要把值傳回去前個元件, 才能知道目前選擇的是那一個category
                 if (this.freqcategoryuid && this.freqcategoryuid.trim().length > 0)
                     returnValue.freqcategoryuid = this.freqcategoryuid
+
                 this.$emit('save', returnValue);
             },
-            reset() {
-                //clear red font
-                this.clearInValid()
+            checkTypeManually() {
+                let fieldName = 'datetypeManually'
+                this.errors.remove(fieldName)
 
+                if (this.datetype === 'Manually' && this.allFrequencyLists.length <= 0) {
+                    let errObj = {
+                        field: fieldName,
+                        msg: 'Manual date is required'
+                    };
+                    this.errors.add(errObj)
+                }
+            },
+            checkSelectedTime() {
+                let fieldName = 'timetypeSelectedTime'
+                this.errors.remove(fieldName)
+
+                if (this.timetype === 'SelectedTime') {
+                    let timeErrObj = {
+                        field: '',
+                        msg: ''
+                    };
+
+                    if (this.selectedTime.length <= 0) {
+                        timeErrObj.field = fieldName
+                        timeErrObj.msg = 'Selected time is required'
+                        this.errors.add(timeErrObj)
+                    } else {
+                        //以下檢查selected time是否重覆
+                        var valueArr = this.selectedTime.map(function (time) { return time.hour + ':' + time.minute });
+                        var isDuplicate = valueArr.some(function (time, idx) {
+                            return valueArr.indexOf(time) != idx
+                        });
+
+                        if (isDuplicate) {
+                            timeErrObj.field = fieldName
+                            timeErrObj.msg = 'Selected time is duplicate'
+                            this.errors.add(timeErrObj)
+                        }
+                    }
+                }
+            },
+            reset() {
                 //reset value to initial
                 if (this.urlOp === 'copy') {  //如果是copy動作,它的reset不能恢復name及description,要讓它們維持空字串
                     this.new_content.frequencyname = ''
@@ -690,10 +691,6 @@
                 } else {
                     this.getFrequencyList() //重新再取得及判斷一次frequency list
                 }
-            },
-            clearInValid() {
-                this.inputClassList.frequencyname.splice(2, 1)
-                this.inputClassList.wcalendaruid.splice(2, 1)
             },
             changeCategory(e) {
                 let selectElement = e.target
@@ -732,8 +729,8 @@
                         if (!this.distinctDateLists[0])  //if empth array
                             return
 
-                        if (this.distinctDateLists[0].yearnum != -1 && this.distinctDateLists[0].monthnum != -1 && this.distinctDateLists[0].daynum != -1 &&
-                            this.distinctDateLists[0].weekdaynum === -1) { //by calendar
+                        if (this.distinctDateLists[0].yearnum != -1 && this.distinctDateLists[0].monthnum != -1
+                                && this.distinctDateLists[0].daynum != -1 && this.distinctDateLists[0].weekdaynum === -1) { //by calendar
                             this.setDatetimePicker(JSON.stringify(this.convertYMDObjtoArray()))
                             this.datetype = "Calendar"
 
@@ -889,9 +886,13 @@
                     minute: 0
                 };
                 this.allFrequencyLists.push(new_time)
+
+                this.checkTypeManually()
             },
             delManuallyTime(index) {
                 this.allFrequencyLists.splice(index, 1)
+
+                this.checkTypeManually()
             },
             addSelectedTime() {
                 let new_time = {
@@ -899,21 +900,23 @@
                     minute: 0
                 };
                 this.selectedTime.push(new_time)
+
+                this.checkSelectedTime()
             },
             delSelectedTime(index) {
                 this.selectedTime.splice(index, 1)
+
+                this.checkSelectedTime()
             },
         }
     }
 </script>
 <style scoped>
-
-
     input, select {
         height: 30px
     }
 
-        input.w3-check {
-            height: 20px
-        }
+    input.w3-check {
+        height: 24px
+    }
 </style>

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <frequency-category-form v-if="urlOp === 'add'" slot="content" ref="frequencyCategoryForm"></frequency-category-form>
         <frequency-category-form v-else slot="content" ref="frequencyCategoryForm" :content="content"></frequency-category-form>
@@ -58,8 +58,8 @@ export default {
             else
                 this.$emit('closeEdit')
         },
-        save(){
-            let postContent = this.$refs.frequencyCategoryForm.save()
+        async save(){
+            let postContent = await this.$refs.frequencyCategoryForm.save()
             
             if(postContent){
                 HTTP_TRINITY.post(`frequency-category/` + this.urlOp, postContent)

@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="w3-row">
-            <div class="w3-col m4 w3-border" v-for="(item, mi) in 6">
+            <div class="w3-col m4 w3-border" v-for="(item, mi) in 6" :key="mi" >
                 <div class="w3-row w3-teal" @click="checkMonth(mi)">
                     <label v-if="isFirstHalf" class="w3-col m12 w3-center" style="cursor:pointer">
                         {{firstHalf[mi]}}
@@ -27,10 +27,11 @@
                     <div class="w3-col m10">
                         <div class="week">
                             <ul class="w3-text-indigo">
-                                <li v-for="(weekie, wi) in library.week" @click="checkWeek(mi, wi)" style="cursor:pointer">{{weekie}}</li>
+                                <li v-for="(weekie, wi) in library.week" :key="wi" @click="checkWeek(mi, wi)" style="cursor:pointer">{{weekie}}</li>
                             </ul>
                         </div>
-                        <div class="day w3-hover-flat-silver" v-for="day in dayList[mi]" track-by="$index" @click="checkDay(day)" :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}"
+                        <div class="day w3-hover-flat-silver" v-for="(day, idx) in dayList[mi]" :key="idx" track-by="$index" @click="checkDay(day)"
+                             :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}"
                              :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">
                             {{day.value}}
                         </div>
@@ -631,53 +632,6 @@
         }
     }
 
-    .cov-date-body {
-        background: #3F51B5;
-        overflow: hidden;
-        font-size: 16px;
-        font-family: 'Roboto';
-        font-weight: 400;
-        position: fixed;
-        display: block;
-        width: 400px;
-        max-width: 100%;
-        z-index: 999;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .cov-picker-box {
-        width: 100%;
-        display: inline-block;
-        padding: 25px;
-        box-sizing: border-box !important;
-        -moz-box-sizing: border-box !important;
-        -webkit-box-sizing: border-box !important;
-        -ms-box-sizing: border-box !important;
-        max-width: 100%;
-        height: 202.5px;
-        text-align: start !important;
-    }
-
-        .cov-picker-box td {
-            height: 34px;
-            width: 34px;
-            padding: 0;
-            line-height: 34px;
-            color: #000;
-            background: #fff;
-            text-align: center;
-            cursor: pointer;
-        }
-
-            .cov-picker-box td:hover {
-                background: #E6E6E6;
-            }
-
     table {
         border-collapse: collapse;
         border-spacing: 0;
@@ -701,13 +655,13 @@
         list-style: none;
     }
 
-        .week ul li {
-            width: 14.2%;
-            display: inline-block;
-            text-align: center;
-            background: transparent;
-            font-weight: bold;
-        }
+    .week ul li {
+        width: 14.2%;
+        display: inline-block;
+        text-align: center;
+        background: transparent;
+        font-weight: bold;
+    }
 
     .passive-day {
         color: #bbb;
@@ -724,47 +678,6 @@
         cursor: not-allowed;
     }
 
-    .cov-date-monthly {
-        height: 150px;
-    }
-
-        .cov-date-monthly > div {
-            display: inline-block;
-            padding: 0;
-            margin: 0;
-            vertical-align: middle;
-            color: #fff;
-            height: 150px;
-            float: left;
-            text-align: center;
-            cursor: pointer;
-        }
-
-    .cov-date-previous,
-    .cov-date-next {
-        position: relative;
-        width: 20% !important;
-        text-indent: -300px;
-        overflow: hidden;
-        color: #fff;
-    }
-
-    .cov-date-caption {
-        width: 60%;
-        padding: 50px 0 !important;
-        box-sizing: border-box;
-        font-size: 24px;
-    }
-
-        .cov-date-caption span:hover {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-    .cov-date-previous:hover,
-    .cov-date-next:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
     .unavailable:hover {
         background: none;
     }
@@ -773,63 +686,15 @@
         background: #FF4F8E;
     }
 
-    .cov-date-next::before,
-    .cov-date-previous::before {
-        width: 20px;
-        height: 2px;
-        text-align: center;
-        position: absolute;
-        background: #fff;
-        top: 50%;
-        margin-top: -7px;
-        margin-left: -7px;
-        left: 50%;
-        line-height: 0;
-        content: '';
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
-
-    .cov-date-next::after,
-    .cov-date-previous::after {
-        width: 20px;
-        height: 2px;
-        text-align: center;
-        position: absolute;
-        background: #fff;
-        margin-top: 6px;
-        margin-left: -7px;
-        top: 50%;
-        left: 50%;
-        line-height: 0;
-        content: '';
-        -webkit-transform: rotate(-45deg);
-        -moz-transform: rotate(-45deg);
-        transform: rotate(-45deg);
-    }
-
-    .cov-date-previous::after {
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
-
-    .cov-date-previous::before {
-        -webkit-transform: rotate(-45deg);
-        -moz-transform: rotate(-45deg);
-        transform: rotate(-45deg);
-    }
-
     .date-item {
         text-align: center;
         padding: 6px 0;
         cursor: pointer;
     }
 
-        .date-item:hover {
-            background: #e0e0e0;
-        }
+    .date-item:hover {
+        background: #e0e0e0;
+    }
 
     .date-list {
         overflow: auto;
@@ -837,20 +702,15 @@
         padding: 0;
     }
 
-    .cov-vue-date {
-        display: inline-block;
-        color: #5D5D5D;
-    }
-
     .button-box {
         background: #2a6592;
         height: 20px;
     }
 
-        .button-box span {
-            cursor: pointer;
-            padding: 10px 20px;
-        }
+    .button-box span {
+        cursor: pointer;
+        padding: 10px 20px;
+    }
 
     .watch-box {
         height: 100%;
@@ -867,12 +727,12 @@
         float: left;
     }
 
-        .hour-box ul,
-        .min-box ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
+    .hour-box ul,
+    .min-box ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
 
     .hour-item,
     .min-item {
@@ -881,10 +741,10 @@
         cursor: pointer;
     }
 
-        .hour-item:hover,
-        .min-item:hover {
-            background: #E3E3E3;
-        }
+    .hour-item:hover,
+    .min-item:hover {
+        background: #E3E3E3;
+    }
 
     .hour-box .active,
     .min-box .active {

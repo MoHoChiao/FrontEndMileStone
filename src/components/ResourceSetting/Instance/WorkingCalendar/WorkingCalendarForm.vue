@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <calendar-pattern-window :windowAlive="patternWindowAlive"
                                  :window-title="$t('Form.WorkingCal.GenByPattern')"
@@ -10,7 +10,8 @@
                     <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
                 </div>
                 <div class="w3-col m6">
-                    <name-input :class="inputClassList.name" v-model="new_content.wcalendarname" type="text"
+                    <name-input name="wcalendarname" :class="[inputClassList.common, errors.has('wcalendarname')? inputClassList.invalid: '']"
+                                v-validate="'required'" v-model="new_content.wcalendarname" type="text"
                                 maxlength="32" placeholder="" style="text-transform:uppercase" />
                 </div>
                 <div class="w3-col m3 w3-right">
@@ -23,7 +24,7 @@
                     <label class="w3-right">{{ $t('Form.Description') }}</label>
                 </div>
                 <div class="w3-col m9">
-                    <input :class="inputClassList.desc" v-model="new_content.description" type="text" maxlength="255" placeholder="">
+                    <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
                 </div>
             </div>
             <div class="w3-row w3-container">
@@ -52,8 +53,8 @@
         data() {
             return {
                 inputClassList: {
-                    name: ['w3-input', 'w3-border'],
-                    desc: ['w3-input', 'w3-border'],
+                    common: 'w3-input w3-border',
+                    invalid: 'w3-pale-red'
                 },
                 patternWindowAlive: false,  //for add Working Calendar modal windows
                 new_content: {
@@ -135,44 +136,44 @@
             picked() {
                 this.$refs.datetimePicker.picked()
             },
-            save(datetime) {
-                this.clearInValid()
+            async save(datetime) {
+                await this.$validator.validateAll()
+
+                if (this.errors.any()) {
+                    return
+                }
 
                 this.new_content.wcalendarname = this.new_content.wcalendarname.trim().toUpperCase()
 
-                if (this.new_content.wcalendarname.length <= 0) {
-                    this.inputClassList.name.splice(2, 1, 'w3-red')
-                } else {
-                    let datetimeArr = JSON.parse(datetime)
-                    if (datetimeArr.length <= 0) {
-                        let newStatus = {
-                            "msg": "Working Calendar List can not be empty!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else if (datetimeArr.length > 2000) {
-                        let newStatus = {
-                            "msg": "The total number of date selected can not exceed 2000!",
-                            "status": "Warn"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
-                    } else {
-                        let wcalendarlist = []
-                        for (let i = 0; i < datetimeArr.length; i++) {
-                            let ymdArr = datetimeArr[i].split('-')
-                            if (ymdArr.length === 3) {
-                                let ymdObj = {
-                                    "yearnum": ymdArr[0],
-                                    "monthnum": ymdArr[1],
-                                    "daynum": ymdArr[2]
-                                }
-                                wcalendarlist.push(ymdObj)
-                            }
-                        }
-                        this.new_content.wcalendarlist = wcalendarlist
-                        this.new_content.activate = Number(this.new_content.activate)
-                        this.$emit('save', this.new_content)
+                let datetimeArr = JSON.parse(datetime)
+                if (datetimeArr.length <= 0) {
+                    let newStatus = {
+                        "msg": "Working Calendar List can not be empty!",
+                        "status": "Warn"
                     }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else if (datetimeArr.length > 2000) {
+                    let newStatus = {
+                        "msg": "The total number of date selected can not exceed 2000!",
+                        "status": "Warn"
+                    }
+                    this.$store.dispatch('setSystemStatus', newStatus)
+                } else {
+                    let wcalendarlist = []
+                    for (let i = 0; i < datetimeArr.length; i++) {
+                        let ymdArr = datetimeArr[i].split('-')
+                        if (ymdArr.length === 3) {
+                            let ymdObj = {
+                                "yearnum": ymdArr[0],
+                                "monthnum": ymdArr[1],
+                                "daynum": ymdArr[2]
+                            }
+                            wcalendarlist.push(ymdObj)
+                        }
+                    }
+                    this.new_content.wcalendarlist = wcalendarlist
+                    this.new_content.activate = Number(this.new_content.activate)
+                    this.$emit('save', this.new_content)
                 }
             },
             reset() {
@@ -185,9 +186,6 @@
 
                 //reset working calendar list to default
                 this.setDatetimePicker(JSON.stringify(this.convertYMDObjtoArray()))
-            },
-            clearInValid() {
-                this.inputClassList.name.splice(2, 1)
             },
             convertYMDObjtoArray() {
                 let ymdArr = []
