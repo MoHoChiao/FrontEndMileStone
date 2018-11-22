@@ -27,10 +27,11 @@
                                   :field-msgIn-line="fieldMsgInline"
                                   :input-round="inputRound"
                                   :input-border="inputBorder"
-                                  :input-hover-color="inputHoverColor">
+                                  :input-hover-color="inputHoverColor"
+                                   @validate="onValidate">
                     </string-input>
                 </form>
-                <w3c-btn @click="onValidate" class="w3-center" :btn-bg-color="windowBtnColor" btn-round="medium">
+                <w3c-btn class="w3-center" :btn-bg-color="windowBtnColor" btn-round="medium" @click="onValidate">
                     <!--<i v-if="loading" class="fa fa-spinner fa-spin"></i>--> 
                      {{ $t('Login.LoginButton') }}
                 </w3c-btn>

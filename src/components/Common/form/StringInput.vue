@@ -8,7 +8,8 @@
         </div>
         <div class="w3-col w3-text-black">
             <input v-if="_inputType === 'text'" v-model="inputContent" :class="_classList" type="text" :placeholder="inputPlaceholder" :autocomplete="_inputAuto">
-            <input v-else-if="_inputType === 'password'" v-model="inputContent" :class="_classList" type="password" :placeholder="inputPlaceholder" :autocomplete="_inputAuto">
+            <input v-else-if="_inputType === 'password'" v-model="inputContent" :class="_classList" type="password"
+                   :placeholder="inputPlaceholder" :autocomplete="_inputAuto" @keyup.enter="onValidate">
         </div>
     </div>
 </template>
@@ -126,6 +127,9 @@ export default {
                 this.showMsg = false;
                 return true;
             }
+        },
+        onValidate() {
+            this.$emit('validate')
         }
     },
     components: {

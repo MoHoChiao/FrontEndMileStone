@@ -1,11 +1,11 @@
 <template>
     <div class="w3-modal" style="display:block">
         <div :class="_classList" :style="styleObj">
-            <header :class="_windowBgColor">
-                <span @click="closeModalWindow" class="w3-button w3-hover-none w3-display-topright">
-                    <i class="fa fa-window-close"></i>
+            <header :class="[_windowBgColor, 'w3-center']">
+                <span @click="closeModalWindow" class="w3-btn w3-hover-none w3-display-topright">
+                    <i class="fa fa-window-close w3-hover-text-red"></i>
                 </span>
-                <h4 class="w3-center winTitle">{{ _windowTitle }}</h4>
+                <span>{{ _windowTitle }}</span>
             </header>
             <div class="w3-padding">
                 <slot name="content"></slot>

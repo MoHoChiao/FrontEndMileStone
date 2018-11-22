@@ -111,6 +111,7 @@
     "Host": "Host",
     "Port": "Port",
     "Seq": "Seq",
+    "Encoding": "Encoding",
     "User": {
       "UserID": "User ID",
       "UserName": "User Name",
@@ -343,6 +344,17 @@
     "NoAddPermission": "permission denied: Unable to do 'add'",
     "Alias": {
       "NameEmpty": "Alias Name can not be empty"
+    }
+  },
+  "Time": {
+    "Week": {
+      "Sun": "Sun",
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat"
     }
   }
 }
