@@ -14,7 +14,8 @@
                                window-bg-color="highway-schoolbus"
                                btn-color="signal-white"
                                @closeDelete="closeDeleteWindow"
-                               @confirmDelete="deleteWC"></confirm-delete-window>
+                               @confirmDelete="deleteWC">
+        </confirm-delete-window>
         <div class="w3-col m9 w3-animate-opacity">
             <div v-if="!showMode" class="w3-row-padding">
                 <div class="w3-col m12">
@@ -350,10 +351,12 @@
                 }).then(response => {
                     this.sortedData.splice(this.selectedRecord.index, 1)
                     this.clearSelectedRecord()
-                    this.closeDeleteWindow()
+
                 }).catch(error => {
                     errorHandle(this.$store, error)
                 })
+
+                this.closeDeleteWindow()
             },
             closeDeleteWindow() {
                 this.deleteWindowAlive = false

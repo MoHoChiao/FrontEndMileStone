@@ -18,7 +18,9 @@
                         <button class="w3-button w3-hover-none" style="padding-top:0px;padding-bottom:6px" @click="showMonth">{{displayInfo.month}}</button>
                     </div>
                     <div class="w3-col m2" @click="nextMonth('next')" style="padding-top:8px;padding-bottom:8px">
-                        <button class="w3-button w3-right w3-hover-none"><i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i></button>
+                        <button class="w3-button w3-right w3-hover-none">
+                            <i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
                 <div v-if="showInfo.day" class="w3-row w3-section">
@@ -67,6 +69,7 @@
                             <button class="w3-button w3-hover-none" style="padding-top:6px;padding-bottom:3px" @click="showYear">{{checked.year}}</button>
                             <br>
                             <button class="w3-button w3-hover-none" style="padding-top:0px;padding-bottom:6px" @click="showMonth">{{displayInfo.month}}</button>
+                            <button v-if="this.showInfo.hour" class="w3-button w3-hover-none" style="padding-top:0px;padding-bottom:6px" @click="showOne('day')">{{checked.day}}</button>
                         </div>
                         <div class="w3-col m2" @click="nextMonth('next')" style="padding-top:8px;padding-bottom:8px">
                             <button class="w3-button w3-right w3-hover-none"><i class="fa fa-arrow-right" title="next page" aria-hidden="true"></i></button>
@@ -101,12 +104,12 @@
                                 <div class="hour-box">
                                     <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
                                     <ul>
-                                        <li class="hour-item" v-for="hitem in hours" @click="setTime('hour', hitem, hours)" :class="{'active':hitem.checked}">{{hitem.value}}</li>
+                                        <li v-for="hitem in hours" :class="['hour-item', {'active':hitem.checked}]" @click="setTime('hour', hitem, hours)">{{hitem.value}}</li>
                                     </ul>
                                 </div>
                                 <div class="min-box">
                                     <div class="mui-pciker-rule mui-pciker-rule-ft"></div>
-                                    <div class="min-item" v-for="mitem in mins" @click="setTime('min',mitem, mins)" :class="{'active':mitem.checked}">{{mitem.value}}</div>
+                                    <div v-for="mitem in mins" :class="['min-item', {'active':mitem.checked}]" @click="setTime('min',mitem, mins)">{{mitem.value}}</div>
                                 </div>
                             </div>
                         </div>
@@ -175,16 +178,11 @@
     </div>
 </template>
 <script>
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
     var _moment = require('moment');
     var _moment2 = _interopRequireDefault(_moment);
     function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-    exports.default = {
-        mounted() {
-            this.showCheck()
-        },
+
+    export default {
         props: {
             datepickid: {
                 type: String,
@@ -197,40 +195,61 @@
                 required: true
             },
             option: {
-                type: Object,
-                default: function _default() {
-                    return {
-                        type: 'day',
-                        SundayFirst: true,
-                        week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                        month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                        format: 'YYYY-MM-DD',
-                        color: {
-                            checked: '#F50057',
-                            header: '#3f51b5',
-                            headerText: '#fff'
-                        },
-                        wrapperClass: 'w3-dropdown-click',
-                        inputClass: '',
-                        inputStyle: {
-                            'display': 'inline-block',
-                            'padding': '6px',
-                            'line-height': '22px',
-                            'font-size': '16px',
-                            'border': '2px solid #fff',
-                            'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
-                            'border-radius': '2px',
-                            'color': '#5F5F5F'
-                        },
-                        placeholder: 'when?',
-                        buttons: {
-                            ok: 'OK',
-                            cancel: 'Cancel'
-                        },
-                        overlayOpacity: 0.5,
-                        dismissible: true
-                    };
-                }
+                type: Object
+                //default: function _default() {
+                //    return {
+                //        type: 'day',
+                //        SundayFirst: true,
+                //        week: [
+                //            this.$t('Time.Week.Sun'),
+                //            this.$t('Time.Week.Mon'),
+                //            this.$t('Time.Week.Tue'),
+                //            this.$t('Time.Week.Wed'),
+                //            this.$t('Time.Week.Thu'),
+                //            this.$t('Time.Week.Fri'),
+                //            this.$t('Time.Week.Sat')
+                //        ],
+                //        month: [
+                //            this.$t('Time.Month.Jan'),
+                //            this.$t('Time.Month.Feb'),
+                //            this.$t('Time.Month.Mar'),
+                //            this.$t('Time.Month.Apr'),
+                //            this.$t('Time.Month.May'),
+                //            this.$t('Time.Month.Jun'),
+                //            this.$t('Time.Month.Jul'),
+                //            this.$t('Time.Month.Aug'),
+                //            this.$t('Time.Month.Sep'),
+                //            this.$t('Time.Month.Oct'),
+                //            this.$t('Time.Month.Nov'),
+                //            this.$t('Time.Month.Dec'),
+                //        ],
+                //        format: 'YYYY-MM-DD',
+                //        color: {
+                //            checked: '#F50057',
+                //            header: '#3f51b5',
+                //            headerText: '#fff'
+                //        },
+                //        wrapperClass: 'w3-dropdown-click',
+                //        inputClass: '',
+                //        inputStyle: {
+                //            'display': 'inline-block',
+                //            'padding': '6px',
+                //            'line-height': '22px',
+                //            'font-size': '16px',
+                //            'border': '2px solid #fff',
+                //            'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+                //            'border-radius': '2px',
+                //            'color': '#5F5F5F'
+                //        },
+                //        placeholder: 'when?',
+                //        buttons: {
+                //            ok: 'OK',
+                //            cancel: 'Cancel'
+                //        },
+                //        overlayOpacity: 0.5,
+                //        dismissible: true
+                //    };
+                //}
             },
             limit: {
                 type: Array,
@@ -239,32 +258,8 @@
                 }
             }
         },
-        data: function data() {
-            function hours() {
-                var list = [];
-                var hour = 0;
-                for (;hour < 24; hour++) {
-                    list.push({
-                        checked: false,
-                        value: hour < 10 ? '0' + hour : hour
-                    });
-                }
-                return list;
-            }
-            function mins() {
-                var list = [];
-                var min = 0;
-                for (; min < 60; min++) {
-                    list.push({
-                        checked: false,
-                        value: min < 10 ? '0' + min : min
-                    });
-                }
-                return list;
-            }
+        data() {
             return {
-                hours: hours(),
-                mins: mins(),
                 showInfo: {
                     hour: false,
                     day: false,
@@ -292,6 +287,33 @@
                 dayList: [],
                 selectedDays: []
             };
+        },
+        mounted() {
+            this.showCheck()
+        },
+        computed: {
+            hours: function () {
+                var list = [];
+                var hour = 0;
+                for (; hour < 24; hour++) {
+                    list.push({
+                        checked: (hour == this.checked.hour)? true: false,
+                        value: hour < 10 ? '0' + hour : hour
+                    });
+                }
+                return list;
+            },
+            mins: function() {
+                var list = [];
+                var min = 0;
+                for (; min < 60; min++) {
+                    list.push({
+                        checked: (min == this.checked.min) ? true : false,
+                        value: min < 10 ? '0' + min : min
+                    });
+                }
+                return list;
+            }
         },
         methods: {
             changeShow() {
@@ -331,6 +353,8 @@
                 this.checked.year = (0, _moment2.default)(this.checked.currentMoment).format('YYYY');
                 this.checked.month = (0, _moment2.default)(this.checked.currentMoment).format('MM');
                 this.checked.day = (0, _moment2.default)(this.checked.currentMoment).format('DD');
+                this.checked.hour = (0, _moment2.default)(this.checked.currentMoment).format('HH');
+                this.checked.min = (0, _moment2.default)(this.checked.currentMoment).format('mm');
                 this.displayInfo.month = this.library.month[(0, _moment2.default)(this.checked.currentMoment).month()];
                 var days = [];
                 var currentMoment = this.checked.currentMoment;
@@ -351,11 +375,13 @@
                         checked: false,
                         moment: (0, _moment2.default)(currentMoment).date(i)
                     });
-                    if (i === Math.ceil((0, _moment2.default)(currentMoment).format('D')) && (0, _moment2.default)(oldtime, this.option.format).year() === (0, _moment2.default)(currentMoment).year() && (0, _moment2.default)(oldtime, this.option.format).month() === (0, _moment2.default)(currentMoment).month()) {
+                    if (i === Math.ceil((0, _moment2.default)(oldtime).format('D'))
+                            && (0, _moment2.default)(oldtime, this.option.format).year() === (0, _moment2.default)(currentMoment).year()
+                            && (0, _moment2.default)(oldtime, this.option.format).month() === (0, _moment2.default)(currentMoment).month()) {
                         //if (this.inputMode)  //當clear time時, 時間為空, 此時會預設插入一筆當日日期, 當不是inputMode時, 不應該有預設勾選的日期
-                            days[i - 1].checked = true;
+                        days[i - 1].checked = true;
                     }
-                    this.checkBySelectDays(i, days);
+                    //this.checkBySelectDays(i, days);
                 }
                 if (firstDay === 0) firstDay = 7;
                 for (var _i = 0; _i < firstDay - (this.option.SundayFirst ? 0 : 1); _i++) {
@@ -417,7 +443,9 @@
             checkBySelectDays: function checkBySelectDays(d, days) {
                 var _this = this;
                 this.selectedDays.forEach(function (day) {
-                    if (_this.checked.year === (0, _moment2.default)(day).format('YYYY') && _this.checked.month === (0, _moment2.default)(day).format('MM') && d === Math.ceil((0, _moment2.default)(day).format('D'))) {
+                    if (_this.checked.year === (0, _moment2.default)(day).format('YYYY')
+                            && _this.checked.month === (0, _moment2.default)(day).format('MM')
+                            && d === Math.ceil((0, _moment2.default)(day).format('D'))) {
                         days[d - 1].checked = true;
                     }
                 });
@@ -451,7 +479,7 @@
                     return !tmpMoment.isBetween(limit.from, limit.to);
                 }
             },
-            checkDay: function checkDay(obj) {
+            checkDay(obj) {
                 if (obj.unavailable || obj.value === '') {
                     return false;
                 }
@@ -478,6 +506,7 @@
                         obj.checked = true;
                     }
                 }
+
                 switch (this.option.type) {
                     case 'day':
                         this.picked();
@@ -553,16 +582,17 @@
                 }, false);
             },
             setYear: function setYear(year) {
-                this.checked.currentMoment = (0, _moment2.default)(year + '-' + this.checked.month + '-' + this.checked.day);
-                this.showDay(this.checked.currentMoment);
+                //this.checked.currentMoment = (0, _moment2.default)(year + '-' + this.checked.month + '-' + this.checked.day);
+                this.showDay((0, _moment2.default)(year + '-' + this.checked.month + '-' + this.checked.day));
             },
             setMonth: function setMonth(month) {
                 var mo = this.library.month.indexOf(month) + 1;
                 if (mo < 10) {
                     mo = '0' + '' + mo;
                 }
-                this.checked.currentMoment = (0, _moment2.default)(this.checked.year + '-' + mo + '-' + this.checked.day);
-                this.showDay(this.checked.currentMoment);
+
+                //this.checked.currentMoment = (0, _moment2.default)(this.checked.year + '-' + mo + '-' + this.checked.day);
+                this.showDay((0, _moment2.default)(this.checked.year + '-' + mo + '-' + this.checked.day));
             },
             showCheck: function showCheck() {
                 if (this.date.time === '') {
@@ -624,9 +654,10 @@
                     this.date.time = JSON.stringify(this.selectedDays);
                 }
 
-                if (this.option.type === 'min') {
-                    this.showOne('day')
-                }
+                this.checked.oldtime = this.date.time
+                //if (this.option.type === 'min') {
+                //    this.showOne('day')
+                //}
 
                 this.showInfo.check = false;
                 this.$emit('change', this.date.time);
@@ -641,14 +672,15 @@
                     }
                 }
             },
-            shiftActTime: function shiftActTime() {
+            shiftActTime() {
                 // shift activated time items to visible position.
                 this.$nextTick(function () {
                     if (!document.querySelector('.hour-item.active')) {
                         return false;
                     }
-                    document.querySelector('.hour-box').scrollTop = (document.querySelector('.hour-item.active').offsetTop || 0) - 250;
-                    document.querySelector('.min-box').scrollTop = (document.querySelector('.min-item.active').offsetTop || 0) - 250;
+
+                    document.querySelector('.hour-box').scrollTop = (document.querySelector('.hour-item.active').offsetTop || 0) - 150;
+                    document.querySelector('.min-box').scrollTop = (document.querySelector('.min-item.active').offsetTop || 0) - 150;
                 });
             }
         }
@@ -734,7 +766,7 @@
         font-weight: 400;
         position: fixed;
         display: block;
-        width: 400px;
+        width: 300px;
         max-width: 100%;
         z-index: 999;
         top: 50%;

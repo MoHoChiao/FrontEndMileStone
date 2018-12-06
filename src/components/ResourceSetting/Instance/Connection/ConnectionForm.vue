@@ -1,5 +1,5 @@
 <template>
-    <div class="w3-container w3-small" style="overflow:auto;max-height:440px">
+    <div class="w3-container w3-small" style="overflow:auto;max-height:450px">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:6px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Name') }}</label>
@@ -136,10 +136,15 @@
                     <input name="password" :class="[inputClassList.common, errors.has('password')? inputClassList.invalid: '']"
                            v-validate="'required'" v-model="new_content.password" type="password" maxlength="255" placeholder="">
                 </div>
-                <div class="w3-col m4">
-                    <div style="margin-top:16px;margin-right:16px">
+                <div class="w3-col m2">
+                    <div style="margin-top:16px;">
                         <input class="w3-check" v-model="new_content.withpim" type="checkbox">
                         <label>PIM</label>
+                    </div>
+                </div>
+                <div v-if="new_content.withpim" class="w3-col m2">
+                    <div style="margin-top:16px;">
+                        <button class="w3-button w3-blue-grey w3-round">{{ $t('Form.Conn.GetPwd') }}</button>
                     </div>
                 </div>
             </div>
@@ -166,11 +171,6 @@
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.AccountName') }}</label>
                         <input name="pimaccountname" :class="[inputClassList.common, errors.has('pimaccountname')? inputClassList.invalid: '']"
                                v-validate="'required'" v-model="new_content.pimaccountname" type="text" placeholder="">
-                    </div>
-                </div>
-                <div class="w3-row-padding w3-section">
-                    <div class="w3-col m6">
-                        <button class="w3-button w3-blue-grey w3-round">{{ $t('Form.Conn.GetPwd') }}</button>
                     </div>
                 </div>
             </div>
@@ -511,6 +511,22 @@
                 HTTP_TRINITY.get(`connection/findJDBCDriverInfo`)
                     .then(response => {
                         this.jdbcDriverInfo = response.data
+                    })
+                    .catch(error => {
+                        errorHandle(this.$store, error)
+                    })
+            },
+            getPIMPwd() {
+                let params = {
+                    "pimendpointtype": this.new_content.pimendpointtype,
+                    "pimendpointname": this.new_content.pimendpointname,
+                    "pimaccountcontainer": this.new_content.pimaccountcontainer,
+                    "pimaccountname": this.new_content.pimaccountname,
+                }
+
+                HTTP_TRINITY.post(`connection/findPimPwd`, params)
+                    .then(response => {
+                        this.new_content.password = response.data
                     })
                     .catch(error => {
                         errorHandle(this.$store, error)

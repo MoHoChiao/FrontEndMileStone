@@ -19,7 +19,7 @@
                 <label class="w3-right">{{ $t('Form.Description') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="Please Input Description">
+                <input :class="inputClassList.common" v-model="new_content.description" type="text" maxlength="255" placeholder="">
             </div>
         </div>
         <div class="w3-row w3-section">
@@ -27,9 +27,9 @@
                 <div class="w3-responsive w3-card w3-round">
                     <table class="w3-table-all">
                         <tr class="w3-teal">
-                            <th width="10%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Seq') }}</th>
-                            <th width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.StartTime') }}</th>
-                            <th width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.EndTime') }}</th>
+                            <th class="w3-center" width="10%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Seq') }}</th>
+                            <th class="w3-center" width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.StartTime') }}</th>
+                            <th class="w3-center" width="40%" style="padding-top:12px;padding-bottom:12px">{{ $t('Form.Freq.EndTime') }}</th>
                             <th class="w3-center" width="10%" style="padding-top:7px;padding-bottom:7px">
                                 <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Container.Func.Add')" aria-hidden="true" @click="addTime"></i>
                             </th>
@@ -39,11 +39,11 @@
                 <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:226px">
                     <table class="w3-table">
                         <tr :key="index+'TimeEdit'" draggable="true" @dragover.prevent @drag="dragTime(index)" @drop="dropTime(index)" v-for="(list_info, index) in new_content.excludefrequencylist">
-                            <td width="10%" style="padding-top:13px">{{ index + 1 }}</td>
+                            <td class="w3-center" width="10%" style="padding-top:13px">{{ index + 1 }}</td>
                             <td class="w3-center" width="40%" style="padding:6px 0px 0px 0px">
                                 <datetime-picker :date="list_info.starttime" :option="option" :limit="limit" :inputMode="false" :datepickid="'startdate'+index" />
                             </td>
-                            <td width="40%" style="padding:6px 0px 0px 0px">
+                            <td class="w3-center" width="40%" style="padding:6px 0px 0px 0px">
                                 <datetime-picker :date="list_info.endtime" :option="option" :limit="limit" :inputMode="false" :datepickid="'enddate'+index" />
                             </td>
                             <td class="w3-center" width="10%">
@@ -86,8 +86,29 @@
                 option: {
                     type: 'min',
                     SundayFirst: true,
-                    week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                    month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    week: [
+                        this.$t('Time.Week.Sun'),
+                        this.$t('Time.Week.Mon'),
+                        this.$t('Time.Week.Tue'),
+                        this.$t('Time.Week.Wed'),
+                        this.$t('Time.Week.Thu'),
+                        this.$t('Time.Week.Fri'),
+                        this.$t('Time.Week.Sat')
+                    ],
+                    month: [
+                        this.$t('Time.Month.Jan'),
+                        this.$t('Time.Month.Feb'),
+                        this.$t('Time.Month.Mar'),
+                        this.$t('Time.Month.Apr'),
+                        this.$t('Time.Month.May'),
+                        this.$t('Time.Month.Jun'),
+                        this.$t('Time.Month.Jul'),
+                        this.$t('Time.Month.Aug'),
+                        this.$t('Time.Month.Sep'),
+                        this.$t('Time.Month.Oct'),
+                        this.$t('Time.Month.Nov'),
+                        this.$t('Time.Month.Dec'),
+                    ],
                     format: 'YYYY-MM-DD HH:mm',
                     placeholder: 'Select Date',
                     inputStyle: {

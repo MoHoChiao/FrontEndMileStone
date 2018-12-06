@@ -182,13 +182,13 @@
                                         <span>
                                             <select class="w3-select w3-border w3-round" v-model="list_info.weekdaynum" style="width:95%;padding:0px">
                                                 <option :value="Number(-1)" selected>All</option>
-                                                <option value="0">Sun.</option>
-                                                <option value="1">Mon.</option>
-                                                <option value="2">Tues.</option>
-                                                <option value="3">Wed.</option>
-                                                <option value="4">Thurs.</option>
-                                                <option value="5">Fri.</option>
-                                                <option value="6">Sat.</option>
+                                                <option value="0">{{$t('Time.Week.Sun')}}</option>
+                                                <option value="1">{{$t('Time.Week.Mon')}}</option>
+                                                <option value="2">{{$t('Time.Week.Tue')}}</option>
+                                                <option value="3">{{$t('Time.Week.Wed')}}</option>
+                                                <option value="4">{{$t('Time.Week.Thu')}}</option>
+                                                <option value="5">{{$t('Time.Week.Fri')}}</option>
+                                                <option value="6">{{$t('Time.Week.Sat')}}</option>
                                             </select>
                                         </span>
                                     </td>

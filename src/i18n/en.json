@@ -65,6 +65,7 @@
       "Move": "Move",
       "Reset": "Reset",
       "Save": "Save",
+      "Cancel": "Cancel",
       "AddDriver": "Add Driver",
       "ImportDriver": "Import Driver",
       "ExportDriver": "Export Driver",
@@ -348,13 +349,27 @@
   },
   "Time": {
     "Week": {
-      "Sun": "Sun",
-      "Mon": "Mon",
-      "Tue": "Tue",
-      "Wed": "Wed",
-      "Thu": "Thu",
-      "Fri": "Fri",
-      "Sat": "Sat"
+      "Sun": "Su",
+      "Mon": "Mo",
+      "Tue": "Tu",
+      "Wed": "We",
+      "Thu": "Th",
+      "Fri": "Fr",
+      "Sat": "Sa"
+    },
+    "Month": {
+      "Jan": "January",
+      "Feb": "February",
+      "Mar": "March",
+      "Apr": "April",
+      "May": "May",
+      "Jun": "June",
+      "Jul": "July",
+      "Aug": "August",
+      "Sep": "September",
+      "Oct": "October",
+      "Nov": "November",
+      "Dec": "December"
     }
   }
 }

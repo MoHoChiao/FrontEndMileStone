@@ -2,55 +2,50 @@
     <!-- For Select Mutiple Date Card UI -->
     <div class="w3-card-4">
         <div class="w3-row w3-teal w3-border">
-            <div class="w3-col m1" @click="nextHalfYear('pre')" style="text-align:center;cursor:pointer">
-                <i class="fa fa-arrow-left" title="pre half" aria-hidden="true"></i>
+            <div class="w3-col m1 w3-center">
+                <button class="w3-button fa fa-arrow-left w3-hover-none" title="pre half" @click="preHalfYear()" :disabled="!isPreRange" />
             </div>
             <div class="w3-col m10 w3-center">
-                {{checked.year}}
+                <span class="w3-large">{{checked.year}}</span>
             </div>
-            <div class="w3-col m1" @click="nextHalfYear('next')" style="text-align:center;cursor:pointer">
-                <i class="fa fa-arrow-right" title="next half" aria-hidden="true"></i>
+            <div class="w3-col m1 w3-center">
+                <button class="w3-button fa fa-arrow-right w3-hover-none" title="next half" @click="nextHalfYear()" :disabled="!isNextRange" />
             </div>
         </div>
         <div class="w3-row">
-            <div class="w3-col m4 w3-border" v-for="(item, mi) in 6" :key="mi" >
-                <div class="w3-row w3-teal" @click="checkMonth(mi)">
+            <div class="w3-col m4 w3-border" v-for="(item, index) in 6" :key="index" >
+                <div class="w3-row w3-teal" @click="checkMonth(index)">
                     <label v-if="isFirstHalf" class="w3-col m12 w3-center" style="cursor:pointer">
-                        {{firstHalf[mi]}}
+                        {{option.month[index]}}
                     </label>
                     <label v-else class="w3-col m12 w3-center" style="cursor:pointer">
-                        {{secondHalf[mi]}}
+                        {{option.month[index + 6]}}
                     </label>
                 </div>
                 <div v-if="showInfo.day" class="w3-row">
-                    <div class="w3-col m1">&nbsp;</div>
-                    <div class="w3-col m10">
+                    <div class="w3-col m12">
                         <div class="week">
                             <ul class="w3-text-indigo">
-                                <li v-for="(weekie, wi) in library.week" :key="wi" @click="checkWeek(mi, wi)" style="cursor:pointer">{{weekie}}</li>
+                                <li v-for="(weekie, wi) in library.week" :key="wi" @click="checkWeek(index, wi)" style="cursor:pointer">{{weekie}}</li>
                             </ul>
                         </div>
-                        <div class="day w3-hover-flat-silver" v-for="(day, idx) in dayList[mi]" :key="idx" track-by="$index" @click="checkDay(day)"
+                        <div class="day w3-hover-flat-silver" v-for="(day, idx) in dayList[index]" :key="idx" track-by="$index" @click="checkDay(day)"
                              :class="{'checked':day.checked,'unavailable':day.unavailable,'passive-day': !(day.inMonth)}"
                              :style="day.checked ? (option.color && option.color.checkedDay ? { background: option.color.checkedDay } : { background: '#F50057' }) : {}">
                             {{day.value}}
                         </div>
                     </div>
-                    <div class="w3-col m1">&nbsp;</div>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
     var _moment = require('moment');
     var _moment2 = _interopRequireDefault(_moment);
     function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    exports.default = {
+     export default {
         props: {
             inputMode: true,
             required: false,
@@ -59,40 +54,7 @@
                 required: true
             },
             option: {
-                type: Object,
-                default: function _default() {
-                    return {
-                        type: 'day',
-                        SundayFirst: true,
-                        week: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                        month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                        format: 'YYYY-MM-DD',
-                        color: {
-                            checked: '#F50057',
-                            header: '#3f51b5',
-                            headerText: '#fff'
-                        },
-                        wrapperClass: '',
-                        inputClass: '',
-                        inputStyle: {
-                            'display': 'inline-block',
-                            'padding': '6px',
-                            'line-height': '22px',
-                            'font-size': '16px',
-                            'border': '2px solid #fff',
-                            'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
-                            'border-radius': '2px',
-                            'color': '#5F5F5F'
-                        },
-                        placeholder: 'when?',
-                        buttons: {
-                            ok: 'OK',
-                            cancel: 'Cancel'
-                        },
-                        overlayOpacity: 0.5,
-                        dismissible: true
-                    };
-                }
+                type: Object
             },
             limit: {
                 type: Array,
@@ -127,8 +89,8 @@
                 return list;
             }
             return {
-                firstHalf: ['January', 'February', 'March', 'April', 'May', 'June'],
-                secondHalf: ['July', 'August', 'September', 'October', 'November', 'December'],
+                isPreRange: true,
+                isNextRange: true,
                 isFirstHalf: true,
                 hours: hours(),
                 mins: mins(),
@@ -167,14 +129,33 @@
             },
             nextMonth: function nextMonth(type) {
                 var next = null;
-                type === 'next' ? next = (0, _moment2.default)(this.checked.currentMoment).add(1, 'M') : next = (0, _moment2.default)(this.checked.currentMoment).add(-1, 'M');
+                type === 'next' ? next = (0, _moment2.default)(this.checked.currentMoment).add(1, 'M')
+                    : next = (0, _moment2.default)(this.checked.currentMoment).add(-1, 'M');
                 
                 this.showDay(next);
             },
-            nextHalfYear(type) {
-                var next = null;
-                type === 'next' ? next = (0, _moment2.default)(this.checked.currentMoment).add(6, 'M') : next = (0, _moment2.default)(this.checked.currentMoment).add(-6, 'M');
-                
+            preHalfYear() {
+                this.isNextRange = true
+                let now = (0, _moment2.default)()
+                let pre = (0, _moment2.default)(this.checked.currentMoment).add(-6, 'M');
+
+                if (now.diff(pre, 'months') > 11) {
+                    this.isPreRange = false
+                    return
+                }
+
+                this.showDay(pre);
+            },
+            nextHalfYear() {
+                this.isPreRange = true
+                let end = (0, _moment2.default)().add(1, 'y').endOf("year")
+                let next = (0, _moment2.default)(this.checked.currentMoment).add(6, 'M')
+
+                if (next.diff(end, 'days') >= 0) {
+                    this.isNextRange = false
+                    return
+                }
+
                 this.showDay(next);
             },
             showDay: function showDay(time) {
@@ -288,12 +269,12 @@
                 return days;
             },
             checkBySelectDays: function checkBySelectDays(d, m, days) {
-                var _this = this;
+                var _this = this
 
                 this.selectedDays.forEach(function (day) {
-                    if (_this.checked.year === (0, _moment2.default)(day).format('YYYY')
-                            && m === (0, _moment2.default)(day).format('MM')
-                            && d === Math.ceil((0, _moment2.default)(day).format('D'))) {
+                    if (_this.checked.year == day.substring(0, 4)
+                            && m == day.substring(5, 7)
+                            && d == day.substring(8, 10)) {
                         days[d - 1].checked = true;
                     }
                 });
@@ -463,12 +444,10 @@
                 }, false);
             },
             setYear: function setYear(year) {
-                console.log('setYear ' + year)
                 this.checked.currentMoment = (0, _moment2.default)(year + '-' + this.checked.month + '-' + this.checked.day);
                 this.showDay(this.checked.currentMoment);
             },
             setMonth: function setMonth(month) {
-                console.log('setMonth ' + month)
                 var mo = this.library.month.indexOf(month) + 1;
                 if (mo < 10) {
                     mo = '0' + '' + mo;
@@ -485,12 +464,13 @@
                         this.showDay(this.date.time);
                     } else {
                         this.selectedDays = JSON.parse(this.date.time);
-                        if (this.selectedDays.length) {
-                            this.checked.oldtime = this.selectedDays[0];
-                            this.showDay(this.selectedDays[0]);
-                        } else {
-                            this.showDay();
-                        }
+                        //if (this.selectedDays.length) {
+                        //    this.checked.oldtime = this.selectedDays[0];
+                        //    this.showDay(this.selectedDays[0]);
+                        //} else {
+                        //    this.showDay();
+                        //}
+                        this.showDay();
                     }
                 }
                 this.showInfo.check = true;
@@ -560,8 +540,6 @@
     };
 </script>
 <style scoped>
-
-
 
     .datepicker-overlay {
         position: fixed;

@@ -51,7 +51,7 @@
             </div>
             <div class="w3-col m4">
                 <input name="host" :class="[inputClassList.common, errors.has('host')? inputClassList.invalid: '']"
-                       v-validate="'required'" v-model="new_content.host" type="text" maxlength="30" placeholder="">
+                       v-validate="'required|ip'" v-model="new_content.host" type="text" maxlength="30" placeholder="">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Port') }}</label>

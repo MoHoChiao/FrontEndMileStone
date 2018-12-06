@@ -65,6 +65,7 @@
       "Move": "\u79fb\u52d5",
       "Reset": "\u91cd\u7f6e",
       "Save": "\u5132\u5b58",
+      "Cancel": "\u53d6\u6d88",
       "AddDriver": "\u65b0\u589e\u9a45\u52d5\u7a0b\u5f0f",
       "ImportDriver": "\u532f\u5165\u9a45\u52d5\u7a0b\u5f0f",
       "ExportDriver": "\u532f\u51fa\u9a45\u52d5\u7a0b\u5f0f",
@@ -87,7 +88,7 @@
       "Publish": "\u90e8\u7f72",
       "Package": "\u7d44\u4ef6",
       "Rule": "\u898f\u5247",
-      "FullClass": "\u5b8c\u6574\u985e\u5225\u540d\u7a31", 
+      "FullClass": "\u5b8c\u6574\u985e\u5225\u540d\u7a31",
       "PluginName": "\u7d44\u4ef6\u540d\u7a31",
       "ExpiredDate": "\u671f\u9650",
       "Status": "\u72c0\u614b",
@@ -95,7 +96,7 @@
       "Version": "\u7248\u672c",
       "BuildTime": "\u7248\u672c\u6642\u9593"
     },
-    "PageSize": "\u986f\u793a\u7b46\u6578" 
+    "PageSize": "\u986f\u793a\u7b46\u6578"
   },
   "Form": {
     "Name": "\u540d\u7a31",
@@ -149,7 +150,7 @@
       "DuplicateDir": "\u91cd\u8907\u76ee\u9304",
       "CompleteDir": "\u5b8c\u6210\u76ee\u9304",
       "ErrorDir": "\u932f\u8aa4\u76ee\u9304",
-      "PatternAndType": "\u63a5\u6536\u6a94\u6848\u8a2d\u5b9a", 
+      "PatternAndType": "\u63a5\u6536\u6a94\u6848\u8a2d\u5b9a",
       "FileNamePattern": "\u6a94\u540d\u683c\u5f0f",
       "PatternRule": "\u6a94\u540d\u683c\u5f0f\u898f\u5247",
       "FromBeginning": "\u958b\u982d\u7b26\u5408",
@@ -239,9 +240,9 @@
       "Primary": "\u4e3b\u8981\u4f3a\u670d\u5668",
       "Standby": "\u5099\u63f4\u4f3a\u670d\u5668",
       "SMTPSetting": "SMTP \u8a2d\u5b9a",
-      "AuthSetting": "\u5e33\u865f\u8a8d\u8b49\u8a2d\u5b9a", 
+      "AuthSetting": "\u5e33\u865f\u8a8d\u8b49\u8a2d\u5b9a",
       "AccountAuth": "\u5e33\u865f\u8a8d\u8b49",
-      "LDAPServer": "LDAP Server" 
+      "LDAPServer": "LDAP Server"
     },
     "ServerMonitor": {
       "Monitor": "\u76e3\u63a7\u8a2d\u5b9a",
@@ -325,7 +326,7 @@
       "AddExcludeFreq": "\u65b0\u589e\u4f8b\u5916\u983b\u7387",
       "EditExcludeFreq": "\u7de8\u8f2f\u4f8b\u5916\u983b\u7387"
     },
-    "System": {               
+    "System": {
       "EditDriver": "\u7de8\u8f2f",
       "PublishDriver": "\u90e8\u7f72",
       "AddPackage": "\u65b0\u589e\u7d44\u4ef6",
@@ -340,6 +341,31 @@
     "NoAddPermission": "\u4e0d\u5141\u8a31\u65b0\u589e\uff0c\u56e0\u672a\u6388\u6b0a",
     "Alias": {
       "NameEmpty": "\u5225\u540d\u540d\u7a31\u4e0d\u53ef\u7a7a\u767d"
+    }
+  },
+  "Time": {
+    "Week": {
+      "Sun": "\u65e5",
+      "Mon": "\u4e00",
+      "Tue": "\u4e8c",
+      "Wed": "\u4e09",
+      "Thu": "\u56db",
+      "Fri": "\u4e94",
+      "Sat": "\u516d"
+    },
+    "Month": {
+      "Jan": "\u4e00\u6708",
+      "Feb": "\u4e8c\u6708",
+      "Mar": "\u4e09\u6708",
+      "Apr": "\u56db\u6708",
+      "May": "\u4e94\u6708",
+      "Jun": "\u516d\u6708",
+      "Jul": "\u4e03\u6708",
+      "Aug": "\u516b\u6708",
+      "Sep": "\u4e5d\u6708",
+      "Oct": "\u5341\u6708",
+      "Nov": "\u5341\u4e00\u6708",
+      "Dec": "\u5341\u4e8c\u6708"
     }
   }
 }
