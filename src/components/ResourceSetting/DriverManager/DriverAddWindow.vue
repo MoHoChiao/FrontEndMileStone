@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <modal-window :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <driver-add-form slot="content" ref="driverAddForm" @filePreview="filePreview"></driver-add-form>
         <div slot="footer">

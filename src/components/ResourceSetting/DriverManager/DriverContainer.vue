@@ -5,12 +5,12 @@
                            @closeAdd="saveAddWindow">
         </driver-add-window>
         <driver-edit-window :windowAlive="editWindowAlive"
-                            :content="selectedRecord"
+                            :content="sortedData[this.selectedRecord.index]"
                             :driverClassList="driverClassList"
-                            @closeEdit="closeEditWindow">
+                            @closeEdit="saveEditWindow">
         </driver-edit-window>
         <confirm-delete-window :windowAlive="deleteWindowAlive"
-                               :deleteName="deleteName"
+                               :deleteName="selectedRecord.name"
                                :is-loading="delButtonLoading"
                                window-title=""
                                window-bg-color="highway-schoolbus"
@@ -146,6 +146,14 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-border w3-card-4">
+                                                        <form enctype="multipart/form-data" novalidate>
+                                                            <label>
+                                                                <span class="w3-bar-item w3-button w3-padding-small" aria-hidden="true"> Upload</span>
+                                                                <input type="file" name="files"
+                                                                       @change="uploadFilesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+                                                                       accept=".jar" class="input-file">
+                                                            </label>
+                                                        </form>
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -264,9 +272,6 @@
                 attachWindowAlive: false, //for upload jar file modal windows
                 publishWindowAlive: false, //for publish driver file modal windows
                 deleteWindowAlive: false,  //for delete driver modal windows
-                deleteIndex: -1,    //store which index will be delete
-                deleteUid: '',      //store which obj will be delete
-                deleteName: '',     //store which obj name will be delete
                 allDriverObjs: [], //store all drivers info
                 driverClassList: [],
                 editable: [],   //for all driver content edit panel
@@ -290,7 +295,7 @@
         },
         computed: {
             sortedData: function () {
-                return orderBy(this.filterData, this.sortKey, this.sortOrder.toLowerCase());
+                return orderBy(this.filterData, [item => item[this.sortKey].toLowerCase()], this.sortOrder.toLowerCase());
             },
             filterData: function () {
                 if (this.queryStr.length == 0)
@@ -334,7 +339,7 @@
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allDriverObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
                     menuBtn.style.display = 'block'
                 } else {
@@ -349,7 +354,7 @@
                     this.clearSelectedRecord(tr)
 
                     tr.className = 'w3-blue-grey'
-                    this.selectedRecord = this.allDriverObjs[index]
+                    this.selectedRecord = this.sortedData[index]
                     this.selectedRecord.index = index //New prop is stores which agent obj will be deleted in UI
 
                     let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
@@ -393,15 +398,14 @@
                 }
 
                 if (content !== undefined) {
-                    content.jarFiles = this.allDriverObjs[index].jarFiles   //由於後端不會再回傳jar files, 因此這裡把舊的代入
-                    this.allDriverObjs[index] = content
+                    content.jarFiles = this.sortedData[index].jarFiles   //由於後端不會再回傳jar files, 因此這裡把舊的代入
+                    this.sortedData[index] = content
                 }
             },
             showDeleteWindow() {
                 if ((this.selectedRecord.index || this.selectedRecord.index === 0)
                     && this.selectedRecord.name) {
                     this.deleteWindowAlive = true
-                    this.deleteName = this.selectedRecord.name
                 }
             },
             changeJarWindowStatus(record) {
@@ -413,21 +417,16 @@
                 this.publishWindowAlive = !this.publishWindowAlive
             },
             deleteDriver() {
-                if (this.deleteIndex === -1)
-                    return
-                if (this.deleteUid === '')
-                    return
-
                 this.delButtonLoading = true
                 HTTP_TRINITY.get(`driver-manager/deleteDriverFolderAndProp`, {
                     params: {
-                        driverName: this.deleteUid
+                        driverName: this.selectedRecord.name
                     }
                 })
                     .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s
                     .then(response => {
-                        this.allDriverObjs.splice(this.deleteIndex, 1)
-                        this.editable.splice(this.deleteIndex, 1)
+                        this.sortedData.splice(this.selectedRecord.index, 1)
+                        this.editable.splice(this.selectedRecord.index, 1)
                         this.editable.fill(false) //close all edit form
                         this.delButtonLoading = false
                         this.closeDeleteWindow()
@@ -448,6 +447,7 @@
                 if (which == 'edit') {
                     if (this.selectedRecord && this.selectedRecord.name && this.selectedRecord.name !== '') {
                         //Get detail record
+                        this.isLoading = true
                         HTTP_TRINITY.get(`driver-manager/findDriverClassByDriverName?driverName=` + this.selectedRecord.name)
                             .then(wait(FAST_SPEED)) // DEV ONLY: wait for 0.5s
                             .then(response => {
@@ -468,17 +468,17 @@
             saveAddWindow(new_content) {
                 let index = -1
                 if (new_content) {    //new_content !== undefined, it means from Window Save Click
-                    for (let i = 0; i < this.allDriverObjs.length; i++) {
-                        if (this.allDriverObjs[i].name === content.name) {
+                    for (let i = 0; i < this.sortedData.length; i++) {
+                        if (this.sortedData[i].name === new_content.name) {
                             index = i
                             break
                         }
                     }
                     if (index !== -1) {   //若不為-1, 表示UI上有driver name相同的紀錄
-                        this.allDriverObjs.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
+                        this.sortedData.splice(index, 1) //刪掉同名的driver, 免得在UI的呈現上出現重覆
                     }
 
-                    this.allDriverObjs.unshift(content) //add object to the top of array
+                    this.sortedData.unshift(new_content) //add object to the top of array
                     this.editable.fill(false) //close all edit form
                     // this.editable.unshift(false)
                 }
@@ -486,14 +486,11 @@
             },
             saveEditWindow(new_content) {
                 //new_content !== undefined, it means from Agent Window Save Click
-                if (new_content && this.selectedRecord && (this.selectedRecord.index || this.selectedRecord.index === 0)) {
+                if (new_content && this.selectedRecord) {
                     new_content.index = this.selectedRecord.index   //asign old index prop to new content
-                    this.allDriverObjs[this.selectedRecord.index] = new_content   //replace object to the array
+                    this.sortedData[this.selectedRecord.index] = new_content   //replace object to the array
                     this.selectedRecord = new_content
                 }
-                this.editWindowAlive = !this.editWindowAlive
-            },
-            closeEditWindow() {
                 this.editWindowAlive = false
             },
             exportJDBC() {
@@ -510,11 +507,11 @@
                         link.click();
                         this.allOverlayLoading = false
 
-                        let newStatus = {
-                            "msg": "Export ZIP File - jdbc.zip Success.",
-                            "status": "Success"
-                        }
-                        this.$store.dispatch('setSystemStatus', newStatus)
+                        //let newStatus = {
+                        //    "msg": "Export ZIP File - jdbc.zip Success.",
+                        //    "status": "Success"
+                        //}
+                        //this.$store.dispatch('setSystemStatus', newStatus)
                         return
                     })
                     .catch(error => {
@@ -560,10 +557,12 @@
                 // handle file changes
                 var formData = new FormData()
 
-                if (!fileList.length !== 1) return
+                if (fileList.length !== 1)
+                    return
 
                 var fileName = fileList[0].name
-                if (fileName.toLowerCase().indexOf('.zip') === -1) return
+                if (fileName.toLowerCase().indexOf('.zip') === -1)
+                    return
 
                 // append the files to FormData
                 Array
@@ -578,6 +577,50 @@
                 //清掉file input內容, 讓它可以再次選擇相同的檔案名稱
                 let input = document.getElementById("DriverInputFile")
                 input.value = ''
+            },
+            uploadFilesChange(fieldName, fileList) {
+                // handle file changes
+                var formData = new FormData()
+
+                if (fileList.length == 0)
+                    return
+
+                var fileName = fileList[0].name
+                if (fileName.toLowerCase().indexOf('.jar') === -1)
+                    return
+
+                // append the files to FormData
+                Array
+                    .from(Array(fileList.length).keys())
+                    .map(x => {
+                        formData.append(fieldName, fileList[x], fileList[x].name);
+                    });
+
+                formData.append("driverName", this.selectedRecord.name);
+                this.uploadJar(formData);
+            },
+            uploadJar(formData) {
+                this.allOverlayLoadingText = 'Upload Jar File ...'
+                this.allOverlayLoading = true
+
+                HTTP_TRINITY_Upload.post(`driver-manager/addJarFileByDriverName`, formData)
+                    .then(response => {
+                        this.allOverlayLoading = false
+
+                        if (response.status !== 200) {
+                            tthis.getDrivers()
+                            let newStatus = {
+                                "msg": response.data,
+                                "status": "Error"
+                            }
+                            this.$store.dispatch('setSystemStatus', newStatus)
+                        }
+                    })
+                    .catch(error => {
+                        this.allOverlayLoading = false
+                        this.getDrivers()
+                        errorHandle(this.$store, error)
+                    });
             },
             //clear selected for UI
             clearSelectedRecord(tr) {

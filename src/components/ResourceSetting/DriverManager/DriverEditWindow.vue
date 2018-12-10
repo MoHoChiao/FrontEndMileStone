@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <modal-window v-if="windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <div slot="content">
             <driver-edit-form ref="driverEditForm" :content="content" :driverClassList="driverClassList"></driver-edit-form>
@@ -62,14 +62,14 @@
             cancel() {
                 this.$emit('closeEdit')
             },
-            save() {
-                let postContent = this.$refs.driverEditForm.save()
-                console.log('aaa= ' + postContent)
+            async save() {
+                let postContent = await this.$refs.driverEditForm.save()
+                
                 if (postContent) {
                     HTTP_TRINITY.post(`driver-manager/modifyDriverProp`, postContent)
                         .then(wait(SLOW_SPEED)) // DEV ONLY: wait for 1s 
                         .then(response => {
-                            this.$emit('closeEdit', this.index, response.data)
+                            this.$emit('closeEdit', response.data)
                             this.isLoading = false
                         })
                         .catch(error => {

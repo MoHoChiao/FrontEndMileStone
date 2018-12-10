@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
@@ -17,7 +17,8 @@
                 <label class="w3-right"><span class="w3-text-red">*</span>{{ $t('Form.Driver.JDBCURL') }}</label>
             </div>
             <div class="w3-col m9">
-                <input :class="inputClassList.url" v-model="new_content.url" type="text" maxlength="255" placeholder="Please Input URL">
+                <input name="url" :class="[inputClassList.common, errors.has('url')? inputClassList.invalid: '']"
+                       v-validate="'required'" v-model="new_content.url" type="text" maxlength="255" placeholder="">
             </div>
         </div>
     </div>
@@ -27,7 +28,8 @@ export default {
     data() {
         return {
             inputClassList: {
-                url: ['w3-input','w3-border']
+                common: 'w3-input w3-border',
+                invalid: 'w3-pale-red'
             },
             new_content: {
                 /*
@@ -59,25 +61,20 @@ export default {
         }
     },
     methods: {
-        save(){
-            this.clearInValid()
+        async save() {
+            await this.$validator.validateAll()
 
-            if(this.new_content.url === undefined || this.new_content.url.trim().length <= 0){
-                this.inputClassList.url.splice(2, 1, 'w3-red')
-            }else{
-                return this.new_content
-            }                
+            if (this.errors.any()) {
+                return
+            }
+
+            return this.new_content
         },
         reset(){
-            this.clearInValid()
-            
             this.new_content.name = this.content.name
             this.new_content.url = this.content.url
             this.new_content.driver = this.content.driver
             this.new_content.owner = this.content.owner
-        },
-        clearInValid(){
-            this.inputClassList.url.splice(2, 1)
         },
         parseDriverClass(driverClass){
             return driverClass.substring(0,driverClass.indexOf(" "))
