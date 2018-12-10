@@ -13,7 +13,7 @@
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="Other Apps"><i class="fa fa-laptop"></i></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="Help"><i class="fa fa-question-circle"></i></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white" title="About"><i class="fa fa-info-circle"></i></a>
-                <div class="w3-dropdown-hover">
+                <!--<div class="w3-dropdown-hover">
                     <button class="w3-button w3-padding-large" title="Auditing"><i class="fa fa-bell"></i><span class="w3-badge w3-right w3-small w3-green">5</span></button>
                     <div class="w3-dropdown-content w3-card-4 w3-bar-block w3-small">
                         <i class="w3-bar-item fa fa-check-square-o fa-fw">&nbsp;&nbsp;Add Agent(Test_Agent_1) Success.</i>
@@ -22,7 +22,7 @@
                         <i class="w3-bar-item fa fa-check-square-o fa-fw">&nbsp;&nbsp;Delete Connection(Test_Connection_1) Success.</i>
                         <i class="w3-bar-item fa fa-ban fa-fw">&nbsp;&nbsp;Delete Connection(Test_Connection_1) Error!</i>
                     </div>
-                </div>
+                </div>-->
                 <a href="#" class="w3-bar-item w3-button w3-right w3-padding-large w3-hover-white" title="My Account"><img src="src/assets/images/resource_setter/People_24.png" class="w3-circle" style="height:25px;width:25px" alt="My Account"></a>
                 <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-white w3-right" title="logout"><i class="fa fa-sign-out" @click="logout"></i></a>
             </div>

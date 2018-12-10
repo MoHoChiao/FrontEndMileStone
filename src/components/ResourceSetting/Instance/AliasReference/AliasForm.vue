@@ -269,9 +269,9 @@
                             "objectname": this.allTargetObjectMap.get(this.new_content.alias[i].objectuid)
                         }
                         return_alias.push(alias)
-
-                        return return_alias
                     }
+
+                    return return_alias
                 }
             },
             reset() {
