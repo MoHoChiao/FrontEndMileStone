@@ -75,8 +75,8 @@
                             <input class="w3-input w3-border w3-col m10 w3-margin-left" type="text" maxlength="32" v-model="queryParam"
                                    placeholder="" style="height:28px;max-width: 200px" @keyup.enter="applyQuery">
                             <i class="fa fa-search w3-button" :title="$t('Container.Func.Search')" aria-hidden="true" @click="applyQuery"></i>
-                            <i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
-                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>
+                            <!--<i v-if="showMode" class="w3-right fa fa-toggle-on w3-button" title="Switch to Content List" aria-hidden="true" @click="changeShowMode()"></i>
+                            <i v-else class="w3-right fa fa-toggle-off w3-button" title="Switch to Grid List" aria-hidden="true" @click="changeShowMode()"></i>-->
                             <i class="w3-right w3-bar-item fa fa-share-square w3-button w3-right" :title="$t('Container.Func.PublishRule')" aria-hidden="true" @click="changePublishWindowStatus"></i>
                             <span class="w3-right">
                                 <form enctype="multipart/form-data" novalidate>
@@ -98,19 +98,19 @@
                                         <tr class="w3-teal">
                                             <th :width="gridWidth[0]"></th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[1]" title="Order by Package Name" @click="applyOrder('packagename')">
-                                                Package Name
+                                                {{$t('Container.Grid.Package')}}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.orderFields['packagename'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['packagename'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[2]" title="Order by Description" @click="applyOrder('description')">
-                                                Description
+                                                {{$t('Container.Grid.Description')}}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.orderFields['description'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['description'] == 'ASC'" class="w3-text-black">&#9650;</span>
                                             </th>
                                             <th class="w3-btn w3-hover-none" :width="gridWidth[3]" title="Order by Update Time" @click="applyOrder('lastupdatetime')">
-                                                Update Time
+                                                {{$t('Container.Grid.UpdateTime')}}
                                                 &nbsp;&nbsp;
                                                 <span v-if="this.orderFields['lastupdatetime'] == 'DESC'" class="w3-text-black">&#9660;</span>
                                                 <span v-else-if="this.orderFields['lastupdatetime'] == 'ASC'" class="w3-text-black">&#9650;</span>
@@ -127,7 +127,7 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeJarWindowStatus"> Library</button>
+                                                        <!--<button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeJarWindowStatus"> Library</button>-->
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -153,7 +153,7 @@
                                     <div class="w3-col m3">
                                         <div class="w3-row w3-right">
                                             <span class="w3-col m6 w3-hide-medium" style="padding-top:16px">
-                                                Page Size
+                                                {{$t('Container.PageSize')}}
                                             </span>
                                             <span class="w3-col m6" style="padding-top:8px">
                                                 <select class="w3-select w3-border w3-round" v-model="selectedSize" @change="changeSize">
@@ -172,7 +172,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="selectedRecord && selectedRecord.packageuid && selectedRecord.packageuid !== ''" class="w3-small">
+            <div class="w3-small">
                 <div class="w3-container w3-card-4 w3-signal-white w3-round w3-margin">
                     <div class="w3-container w3-signal-white w3-round">
                         <files-rules-panel :key="packageRecord.packageuid+'FilePanel'" :packageuid="packageRecord.packageuid" :files="packageRecord.files" />
