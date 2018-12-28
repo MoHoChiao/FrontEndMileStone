@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div>
         <div v-if="isLoading" class="w3-row w3-small">
             <button type="button" :class="classList" style="margin-right:3px" disabled>

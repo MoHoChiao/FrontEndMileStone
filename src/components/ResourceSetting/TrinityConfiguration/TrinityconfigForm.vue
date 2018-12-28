@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
@@ -36,14 +36,14 @@
             </div>
             <div class="w3-col m4">
                 <input name="standbyhost" :class="[inputClassList.common, errors.has('standbyhost')? inputClassList.invalid: '']"
-                       v-validate="'required|ip'" v-model="content.standbyhost" type="text" maxlength="30" placeholder="">
+                       v-validate="'ip'" v-model="content.standbyhost" type="text" maxlength="30" placeholder="">
             </div>
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">
-                <label class="w3-right"><span class="w3-hide-medium w3-hide-small">{{ $t('Form.Conf.Standby') }} </span>{{ $t('Form.Host') }}</label>
+                <label class="w3-right"><span class="w3-hide-medium w3-hide-small">{{ $t('Form.Conf.Standby') }} </span>{{ $t('Form.Port') }}</label>
             </div>
             <div class="w3-col m3">
                 <input name="standbyport" :class="[inputClassList.common, errors.has('standbyport')? inputClassList.invalid: '']"
-                       v-validate="'required|between:0,65535'" v-model="content.standbyport" type="number" min="0" max="65535">
+                       v-validate="'between:0,65535'" v-model="content.standbyport" type="number" min="0" max="65535">
             </div>
         </div>
         <div class="w3-row w3-section">

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="w3-small">
         <div class="w3-row w3-section">
             <div class="w3-col m2" style="padding:8px 4px 8px 0px">

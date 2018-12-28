@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div>
         <calendar-pattern-window :windowAlive="patternWindowAlive"
                                  :window-title="$t('Form.WorkingCal.GenByPattern')"

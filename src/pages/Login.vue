@@ -28,12 +28,12 @@
                                   :input-round="inputRound"
                                   :input-border="inputBorder"
                                   :input-hover-color="inputHoverColor"
-                                   @validate="onValidate">
+                                  @validate="onValidate">
                     </string-input>
                 </form>
                 <w3c-btn class="w3-center" :btn-bg-color="windowBtnColor" btn-round="medium" @click="onValidate">
-                    <!--<i v-if="loading" class="fa fa-spinner fa-spin"></i>--> 
-                     {{ $t('Login.LoginButton') }}
+                    <!--<i v-if="loading" class="fa fa-spinner fa-spin"></i>-->
+                    {{ $t('Login.LoginButton') }}
                 </w3c-btn>
             </div>
         </div>

@@ -1,10 +1,9 @@
-<template>
+﻿<template>
     <div>
         <!-- msg window -->
-        <trinity-config-window :windowAlive="trinityconfigAlive" 
-                    window-title="Trinity Configuration Setting" 
-                    @closeAdd="changeConfigWindowStatus" 
-        ></trinity-config-window>
+        <trinity-config-window :windowAlive="trinityconfigAlive"
+                               window-title="Trinity Configuration Setting"
+                               @closeAdd="changeConfigWindowStatus"></trinity-config-window>
         <!-- Navbar -->
         <div class="w3-top w3-animate-opacity">
             <div class="w3-bar w3-camo-black w3-left-align w3-large">
@@ -41,8 +40,8 @@
                                 <p>
                                     <div class="w3-bar-block">
                                         <a id="userBtn" @click="getUser" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-secret fa-fw w3-margin-right"></i>{{ $t('Item.User') }}</a>
-                                        <a id="roleBtn"@click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('Item.Role') }}</a>
-                                        <a id="usergroupBtn"@click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('Item.UserGroup') }}</a>
+                                        <a id="roleBtn" @click="getRole" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-users fa-fw w3-margin-right"></i>{{ $t('Item.Role') }}</a>
+                                        <a id="usergroupBtn" @click="getUserGroup" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>{{ $t('Item.UserGroup') }}</a>
                                     </div>
                                 </p>
                             </div>
@@ -102,7 +101,6 @@
             <!-- End Page Container -->
         </div>
         <br>
-
         <!-- Footer -->
         <!--<footer class="w3-container w3-center w3-camo-black w3-padding-16">
             <p>Resource Setter - 5.0.0.alpha Build 20170915</p>

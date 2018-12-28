@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class=" w3-col m9 w3-animate-opacity">
         <div class="w3-row-padding w3-small">
             <div class="w3-col m12">
@@ -38,8 +38,8 @@
             //cancel() {
             //    this.$emit('closeAdd')
             //},
-            save() {
-                let postContent = this.$refs.configForm.save()
+            async save() {
+                let postContent = await this.$refs.configForm.save()
                 if (postContent) {
                     HTTP_TRINITY.post(`trinity-config/edit`, postContent)
                         .then(response => {

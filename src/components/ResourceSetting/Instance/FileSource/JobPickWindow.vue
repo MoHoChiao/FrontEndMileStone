@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <modal-window v-if="this.windowAlive" :window-title="$t('Form.Fs.JobTrigger')" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
         <div slot="content" class="w3-row">
             <a href="javascript:void(0)" @click="openTab(0)">

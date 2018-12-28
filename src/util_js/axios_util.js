@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export const HTTP_AUTH = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + ``,
+    baseURL: `http://` + '127.0.0.1:8080' + `/ResourceAdminService/`,
+    //baseURL: '/ResourceAdminService/',
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -14,7 +15,8 @@ export const HTTP_AUTH = axios.create({
     },
 })
 export const HTTP_TRINITY = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + ``,
+    baseURL: `http://` + '127.0.0.1:8080' + `/ResourceAdminService/`,
+    //baseURL: '/ResourceAdminService/',
     timeout: 10000,
     withCredentials: true,
     headers: {
@@ -27,7 +29,8 @@ export const HTTP_TRINITY = axios.create({
     },
 })
 export const HTTP_TRINITY_Upload = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + ``,
+    baseURL: `http://` + '127.0.0.1:8080' + `/ResourceAdminService/`,
+    //baseURL: '/ResourceAdminService/',
     timeout: 100000,
     withCredentials: true,
     headers: {
@@ -40,7 +43,8 @@ export const HTTP_TRINITY_Upload = axios.create({
     },
 })
 export const HTTP_TRINITY_Download = axios.create({
-    baseURL: `http://` + '127.0.0.1:8080' + ``,
+    baseURL: `http://` + '127.0.0.1:8080' + `/ResourceAdminService/`,
+    //baseURL: '/ResourceAdminService/',
     timeout: 60000,
     withCredentials: true,
     responseType: 'blob',

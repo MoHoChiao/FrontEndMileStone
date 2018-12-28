@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div>
         <working-calendar-add-window :windowAlive="addWindowAlive"
                                      @closeAdd="saveWindowContentForAdd"
