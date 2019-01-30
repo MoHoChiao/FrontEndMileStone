@@ -1,6 +1,7 @@
 import { HTTP_AUTH } from '../../../util_js/axios_util';
 import * as common_types from '../../common_mutations_type.js';
 import router from '../../../router/vue-router'
+import i18n from '../../../i18n/i18n'
 
 const types = {
     Check_Login_Token: 'check/Login_Token',
@@ -137,6 +138,7 @@ const actions = {
 // mutations
 const mutations = {
     [types.Gen_Login_Token](state, data) {
+        i18n.locale = data.userLang
         state.loginMsg = data.msg
         state.loginStatus = data.status
         state.userInfo = data.userinfo

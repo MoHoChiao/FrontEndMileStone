@@ -6,12 +6,12 @@ import cn from './cn.json'; // 存放簡體中文翻譯
 
 Vue.use(VueI18n);
 const messages = {
-    en: en,
-    tw: tw,
-    cn: cn
+    en_US: en,
+    zh_TW: tw,
+    zh_CN: cn
 }
 export default new VueI18n({
-    locale: 'en', // set locale
-    fallbackLocale: 'en', // default locale
+    locale: 'en_US', // set locale
+    fallbackLocale: 'en_US', // default locale
     messages, // set locale messages
 })
