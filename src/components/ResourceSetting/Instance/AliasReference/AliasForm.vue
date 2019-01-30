@@ -22,11 +22,12 @@
                                 <input :name="'name' + index" v-validate="'required|min:2|regex:^\\$'"
                                        :class="['w3-input', 'w3-border', {'w3-pale-red': errors.has('name' + index)}]"
                                        v-model="list_info.aliasname" type="text"
-                                       maxlength="32" style="text-transform:uppercase" placeholder="" :readonly="!list_info.addFlag">
+                                       maxlength="32" style="text-transform:uppercase" placeholder="" :disabled="!list_info.addFlag">
                             </td>
                             <td class="w3-center" width="18%">
                                 <span>
-                                    <select class="w3-select w3-border w3-round" v-model="list_info.aliastype" style="width:100%;padding:0px" @change="changeType(index, list_info)" :disabled="!list_info.use">
+                                    <select class="w3-select w3-border w3-round" v-model="list_info.aliastype" style="width:100%;padding:0px"
+                                            @change="changeType(index, list_info)" :disabled="!list_info.use || !list_info.addFlag">
                                         <option value="Connection">Connection</option>
                                         <option value="Domain">Domain</option>
                                         <option value="Agent">Agent</option>
@@ -206,13 +207,35 @@
                     })
             },
             delAlias(index) {
-                if (PermissionTable.root || PermissionTable.admin
-                    || (PermissionTable.alias_func && PermissionTable.alias_func.delete)
-                    || this.new_content.alias[index].addFlag) {
+                if (this.new_content.alias[index].addFlag) {
                     this.new_content.alias.splice(index, 1)
+                } else if (PermissionTable.root || PermissionTable.admin
+                    || (PermissionTable.alias_func && PermissionTable.alias_func.delete)) {
+
+                    HTTP_TRINITY.post(`objectalias/checkIsRefBy`, this.new_content.alias[index])
+                        .then(response => {
+                            if (response.data == '1') {
+                                let newStatus = {
+                                    "msg": "Referenced by job",
+                                    "status": "Warn"
+                                }
+                                this.$store.dispatch('setSystemStatus', newStatus)
+                            } else if (response.data == '2') {
+                                let newStatus = {
+                                    "msg": "Referenced by jobstep",
+                                    "status": "Warn"
+                                }
+                                this.$store.dispatch('setSystemStatus', newStatus)
+                            } else {
+                                this.new_content.alias.splice(index, 1)
+                            }
+                        })
+                        .catch(error => {
+                            errorHandle(this.$store, error)
+                        })
                 } else {
                     let newStatus = {
-                        "msg": "No 'Delete' Permission",
+                        "msg": "No Permission",
                         "status": "Warn"
                     }
                     this.$store.dispatch('setSystemStatus', newStatus)

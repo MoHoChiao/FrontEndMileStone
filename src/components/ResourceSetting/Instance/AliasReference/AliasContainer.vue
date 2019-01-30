@@ -17,63 +17,6 @@
                                        :alias="selectedRecord.alias"
                                        @closeApplyPermission="applyPermission"></alias-table-permission-window>
         <div class="w3-col m9 w3-animate-opacity">
-            <div v-if="!showMode" class="w3-row-padding">
-                <div class="w3-col m12">
-                    <div class="w3-card-4 w3-round w3-signal-white">
-                        <div class="w3-container">
-                            <div class="w3-panel w3-col m12 w3-border w3-round w3-padding">
-                                <div class="w3-row">
-                                    <span class="w3-col m6 w3-left">
-                                        <input class="w3-input w3-border w3-border w3-small w3-left" type="text" maxlength="32" v-model="queryParam"
-                                               placeholder="Search For Name" style="text-transform:uppercase">
-                                        <i class="fa fa-search w3-button w3-theme-d2" title="Search For Name" aria-hidden="true" @click="applyQuery"></i>
-                                    </span>
-                                    <span class="w3-col m6 w3-right">
-                                        <!--i v-if="showMode" class="fa fa-toggle-on w3-button w3-right" title="Switch to Table List" aria-hidden="true" @click="changeShowMode"></i></button>
-                                        <i v-else class="fa fa-toggle-off w3-button w3-right" title="Switch to Content List" aria-hidden="true" @click="changeShowMode"></i></button-->
-                                        <i v-if="showMode" class="fa fa-trash-o w3-button w3-hide-small w3-hide-medium w3-right" title="Delete All Alias" aria-hidden="true" @click="showDeleteWindow"></i>
-                                        <i v-if="showMode" class="fa fa-pencil w3-button w3-hide-small w3-hide-medium w3-right" title="Edit Alias" aria-hidden="true" @click="changeAliasWindowStatus()"></i>
-                                        <i class="fa fa-refresh w3-button w3-right" title="Reload" aria-hidden="true" @click="getEntities"></i>
-                                        <span class="w3-dropdown-hover w3-right">
-                                            <i class="fa fa-bars w3-button" title="Menu" aria-hidden="true"></i>
-                                            <div class="w3-dropdown-content w3-card-4 w3-round w3-bar-block" style="min-width:205px">
-                                                <div v-if="showMode">
-                                                    <i class="w3-bar-item fa fa-pencil w3-button w3-hide-large" aria-hidden="true" @click="changeAliasWindowStatus()"> Edit Alias</i>
-                                                    <i class="w3-bar-item fa fa-trash-o w3-button w3-hide-large" aria-hidden="true" @click="changePermissionWindowStatus()"> Delete All Alias</i>
-                                                    <i class="w3-bar-item fa fa-universal-access w3-button" aria-hidden="true" @click="applyPermission()"> Apply Permission</i>
-                                                </div>
-                                                <hr v-if="showMode" class="w3-border-black" style="padding:0px;margin:0px">
-                                                <div class="w3-row-padding w3-small">
-                                                    <span class="w3-col m5" style="padding-top:13px">Page Num</span>
-                                                    <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Number"
-                                                            v-model="selectedPage" @change="pageNumSelectedComboBox">
-                                                        <template v-for="n in totalPages">
-                                                            <option :key="n" :value="n" selected>{{ n }}</option>
-                                                        </template>
-                                                    </select>
-                                                </div>
-                                                <div class="w3-row-padding w3-small" style="padding-bottom:10px">
-                                                    <span class="w3-col m5" style="padding-top:13px">Page Size</span>
-                                                    <select class="w3-select w3-col m7 w3-border w3-round w3-tiny" style="margin-top:10px;height:24px" title="Page Size"
-                                                            v-model="selectedSize" @change="changeSize">
-                                                        <option value="-1" disabled selected>Page Size</option>
-                                                        <option value="10">10</option>
-                                                        <option value="20">20</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                        <option value="200">200</option>
-                                                        <option value="500">500</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div v-if="showMode" class="w3-small w3-row-padding">
                 <div class="w3-col m12">
                     <div class="w3-container w3-card-4 w3-signal-white w3-round">
@@ -130,7 +73,7 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> {{ $t('Container.Func.ClearAllAlias') }}</button>
+                                                        <!--<button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> {{ $t('Container.Func.ClearAllAlias') }}</button>-->
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="applyPermission"> {{ $t('Container.Func.Permission') }}</button>
                                                     </div>
                                                 </div>
@@ -173,28 +116,6 @@
                             </div>
                         </p>
                     </div>
-                </div>
-            </div>
-            <div v-else class="w3-small">
-                <div :key="content.busentityuid+'table'" class="w3-container w3-card-4 w3-signal-white w3-round w3-margin" v-for="(content, index) in allEntityObjs">
-                    <div v-if="editable[index] === undefined || !editable[index]">
-                        <img src="src/assets/images/resource_setter/entity.png" alt="Entity Name" class="w3-left w3-circle w3-margin-right w3-hide-small" style="height:48px;width:48px">
-                        <span class="w3-right w3-opacity">{{ content.lastupdatetime }}</span>
-                        <p>{{ content.busentityname }}</p>
-                        <br>
-                        <alias-table-panel :alias="content.alias"></alias-table-panel>
-                        <hr class="w3-border-black w3-clear">
-                        <p>{{ content.description }}</p>
-                        <span class="w3-right">
-                            <button type="button" class="w3-button w3-theme-d1 w3-round w3-margin-bottom" title="Edit Alias" @click="clickOnEntityPanel('edit', index, content)">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button type="button" class="w3-button w3-theme-d2 w3-round w3-margin-bottom" title="Delete All Alias" @click="clickOnEntityPanel('delete', index, content)">
-                                <i class="fa fa-trash-o"></i>
-                            </button>
-                        </span>
-                    </div>
-                    <alias-table-edit-panel v-else :index="index" :content="content" @closeEdit="closeEditable"></alias-table-edit-panel>
                 </div>
             </div>
         </div>
@@ -276,18 +197,6 @@
 
                 this.changeAliasWindowStatus()
             },
-            //When Content List click on vragent operation button
-            clickOnEntityPanel(which, index, content) {
-                if (content) {
-                    this.selectedRecord = content
-                    this.selectedRecord.index = index //New prop stores which entity alias obj will be deleted in UI
-
-                    if (which == 'edit')
-                        this.openEditable(index)
-                    else if (which == 'delete')
-                        this.showDeleteWindow()
-                }
-            },
             //Get All business entity info
             getEntities() {
                 if (!PermissionTable.root && !PermissionTable.admin) {
@@ -310,8 +219,19 @@
                 HTTP_TRINITY.post(`busentity/findByFilter?withAlias=true`, params)
                     .then(response => {
                         this.editable.fill(false) //close all edit form
+
                         if (response.data.content !== undefined) {
                             this.allEntityObjs = response.data.content
+
+                            // global alias
+                            let global = {
+                                "busentityuid": "global",
+                                "busentityname": "GLOBAL",
+                                "description": "",
+                                "alias": ""
+                            }
+                            this.allEntityObjs.unshift(global)
+
                             this.totalPages = response.data.totalPages
                         } else {
                             this.allEntityObjs = response.data
@@ -321,37 +241,6 @@
                     .catch(error => {
                         errorHandle(this.$store, error)
                     })
-            },
-            //for Content List, edit panel
-            openEditable(index) {
-                //Get Virtual Agent detail record
-                HTTP_TRINITY.get(`busentity/findByUid?withAlias=true&uid=` + this.selectedRecord.busentityuid)
-                    .then(response => {
-                        /*
-                            this.$set is for above :
-                            http://www.jianshu.com/p/358c1974d9a5
-                            https://jsfiddle.net/qnq2munr/2/
-                        */
-                        if (this.editable[index] === undefined) {
-                            this.$set(this.editable, index, true)
-                        } else {
-                            this.$set(this.editable, index, !this.editable[index])
-                        }
-
-                        if (response.data !== undefined) {
-                            this.allEntityObjs[index] = response.data
-                        }
-                    })
-                    .catch(error => {
-                        errorHandle(this.$store, error)
-                    })
-            },
-            closeEditable(index, content) {
-                this.$set(this.editable, index, false)
-
-                if (content) {
-                    this.allEntityObjs[index] = content
-                }
             },
             //above for delete window
             showDeleteWindow() {
