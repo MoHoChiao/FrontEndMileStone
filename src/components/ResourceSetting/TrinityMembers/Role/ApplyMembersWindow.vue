@@ -1,151 +1,159 @@
 <template>
-  <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-    <div class="w3-small w3-section w3-card" slot="content">
-        <div class="w3-responsive w3-card-0 w3-round">
-            <table class="w3-table-all w3-small">
-                <tr class="w3-teal">
-                    <th class="w3-center" width="10%" style="padding-top:4px">
-                        <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click="onClickCheckAll">
-                    </th>
-                    <th class="w3-center" width="90%">{{ $t('Window.Member.UserList') }}</th>
-                </tr>
-            </table>
-        </div>
-        <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;max-height:200px">
-            <table id="freqCategoryTable" class="w3-table-all w3-small">
-                <template v-for="(user, index) in trinityusers">
-                    <tr :id="user.useruid" :key="user.useruid">
-                        <td class="w3-center" width="10%" style="padding-top:4px">
-                            <input class="w3-check" type="checkbox" v-model="user.checked" @change="onClickCheck(user, index)">
-                        </td>
-                        <td class="w3-center" width="90%">
-                            <span>{{ user.username }} ({{ user.userid }})</span>
-                        </td>
+    <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
+        <div class="w3-small w3-section w3-card" slot="content">
+            <div class="w3-responsive w3-card-0 w3-round">
+                <table class="w3-table-all w3-small">
+                    <tr class="w3-teal" style="cursor: pointer">
+                        <th class="w3-left" width="10%" style="padding-top:4px" @click="sortBy('checked')">
+                            <input class="w3-check" type="checkbox" v-model="checkAllFlag" @click.stop="onClickCheckAll">
+                            <span v-if="this.sortKey == 'checked' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                            <span v-else-if="this.sortKey == 'checked' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
+                        </th>
+                        <th class="w3-left" width="90%" @click="sortBy('username')">
+                            {{ $t('Window.Member.UserList') }}
+                            <span v-if="this.sortKey == 'username' && sortOrder == 'DESC'" class="w3-text-black">&#9660;</span>
+                            <span v-else-if="this.sortKey == 'username' && sortOrder == 'ASC'" class="w3-text-black">&#9650;</span>
+                        </th>
                     </tr>
-                </template>
-            </table>
+                </table>
+            </div>
+            <div class="w3-responsive w3-card-0 w3-round" style="overflow:auto;max-height:200px">
+                <table id="freqCategoryTable" class="w3-table-all w3-small">
+                    <template v-for="(user, index) in sortedData">
+                        <tr :id="user.useruid" :key="user.useruid">
+                            <td class="w3-left" width="10%" style="padding-top:4px">
+                                <input class="w3-check" type="checkbox" v-model="user.checked">
+                            </td>
+                            <td class="w3-left" width="90%">
+                                <span>{{ user.username }} ({{ user.userid }})</span>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
         </div>
-    </div>
-    <div slot="footer">
-        <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
-    </div>
-  </modal-window>
+        <div slot="footer">
+            <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
+        </div>
+    </modal-window>
 </template>
 <script>
-import { HTTP_TRINITY,errorHandle } from '../../../../util_js/axios_util'
-import ModalWindow from '../../../Common/window/ModalWindow.vue'
-import FormButton from '../../FormButton.vue'
+    import { HTTP_TRINITY, errorHandle } from '../../../../util_js/axios_util'
+    import ModalWindow from '../../../Common/window/ModalWindow.vue'
+    import FormButton from '../../FormButton.vue'
+    import orderBy from 'lodash/orderBy'
 
-export default {
-    data() {
-        return {
-            selectedRecords: [],
-            checkAllFlag: false,      
-            trinityusers: []
-        }
-    },
-    computed: {
-        windowTitle(){
-            return this.$t('Window.Account.AddUser')
-        }  
-    },
-    props: {
-        windowBgColor: {
-            type: String,
-            default: 'camo-black'
-        },
-        windowAlive: {
-            type: Boolean,
-            default: false
-        },
-        roleuid: '',
-        rolename: '',
-        memberUids: {
-            type: Array,
-            default: () => []
-        }
-    },
-    created(){
-        this.getTrinityUser()
-    },
-    methods: {
-        cancel(){
-            this.$emit('closeApply')
-        },
-        onClickCheckAll(){
-            this.selectedRecords =[]
-            if(this.checkAllFlag){
-                for (let i = 0; i < this.trinityusers.length; i++) {
-                    this.trinityusers[i].checked = false //單純為了在UI把checkbox取消而已
-                }
-            }else{
-                for (let i = 0; i < this.trinityusers.length; i++) {
-                    this.trinityusers[i].checked = true //單純為了在UI把checkbox勾起來而已
-                    this.onClickCheck(this.trinityusers[i], i)
-                }
+    export default {
+        data() {
+            return {
+                checkAllFlag: false,
+                trinityusers: [],
+                sortKey: 'username',
+                sortOrder: 'ASC'
             }
         },
-        onClickCheck(user, index){
-            if(user.checked){
-                let new_member = {
-                    "useruid": user.useruid
-                }
-                this.selectedRecords[index] = new_member
-            }else{
-                delete this.selectedRecords[index]
+        computed: {
+            windowTitle() {
+                return this.$t('Window.Account.AddUser')
+            },
+            sortedData: function () {
+                if (this.sortKey == 'checked')
+                    return orderBy(this.trinityusers, [this.sortKey, 'username'], [this.sortOrder.toLowerCase(), 'asc']);
+                else
+                    return orderBy(this.trinityusers, this.sortKey, this.sortOrder.toLowerCase());
             }
         },
-        getTrinityUser(){
-            HTTP_TRINITY.get(`trinity-user/findAll`)
-            .then(response => {
-                this.trinityusers = []
-                for(let i=0;i<response.data.length;i++){
-                    if(!this.memberUids.includes(response.data[i].useruid) && response.data[i].useruid.trim() !== 'trinity'){
-                        this.trinityusers.push(response.data[i])
-                    }
-                }
-            })
-            .catch(error => {
-                errorHandle(this.$store, error)
-            })
+        props: {
+            windowBgColor: {
+                type: String,
+                default: 'camo-black'
+            },
+            windowAlive: {
+                type: Boolean,
+                default: false
+            },
+            roleuid: '',
+            rolename: '',
+            memberUids: {
+                type: Array,
+                default: () => []
+            }
         },
-        reset(){
-            this.checkAllFlag = false
-            this.selectedRecords = []
+        created() {
             this.getTrinityUser()
         },
-        save(){
-            if(this.selectedRecords && this.selectedRecords.length > 0){
-                var retRecords = []
-                for(let i=0;i<this.selectedRecords.length;i++){
-                    if(this.selectedRecords[i] && this.selectedRecords[i].useruid)
-                        retRecords.push(this.selectedRecords[i])
+        methods: {
+            sortBy: function (key) {
+                if (key == this.sortKey) {
+                    this.sortOrder = (this.sortOrder == 'ASC') ? 'DESC' : 'ASC';
+                } else {
+                    this.sortKey = key;
+                    this.sortOrder = 'ASC';
                 }
-                
-                if(retRecords.length > 0){
-                    HTTP_TRINITY.post('role-member/addBatch?roleUid='+this.roleuid, retRecords)
+            },
+            cancel() {
+                this.$emit('closeApply')
+            },
+            onClickCheckAll() {
+                if (this.checkAllFlag) {
+                    for (let i = 0; i < this.trinityusers.length; i++) {
+                        this.trinityusers[i].checked = false //單純為了在UI把checkbox取消而已
+                    }
+                } else {
+                    for (let i = 0; i < this.trinityusers.length; i++) {
+                        this.trinityusers[i].checked = true //單純為了在UI把checkbox勾起來而已
+                    }
+                }
+            },
+            getTrinityUser() {
+                HTTP_TRINITY.get(`trinity-user/findAll`)
                     .then(response => {
-                        this.$emit('applyMembers')
-                        this.cancel()
+                        this.trinityusers = []
+                        for (let i = 0; i < response.data.length; i++) {
+                            if (!this.memberUids.includes(response.data[i].useruid) && response.data[i].useruid.trim() !== 'trinity') {
+                                response.data[i].checked = false
+                                this.trinityusers.push(response.data[i])
+                            }
+                        }
                     })
                     .catch(error => {
                         errorHandle(this.$store, error)
                     })
-                }else{
+            },
+            reset() {
+                this.checkAllFlag = false
+                this.getTrinityUser()
+            },
+            save() {
+                var retRecords = []
+
+                for (let i = 0; i < this.trinityusers.length; i++) {
+                    if (this.trinityusers[i].checked)
+                        retRecords.push(this.trinityusers[i])
+                }
+
+                if (retRecords.length > 0) {
+                    HTTP_TRINITY.post('role-member/addBatch?roleUid=' + this.roleuid, retRecords)
+                        .then(response => {
+                            this.$emit('applyMembers')
+                            this.cancel()
+                        })
+                        .catch(error => {
+                            errorHandle(this.$store, error)
+                        })
+                } else {
                     this.cancel()
                 }
-            }else{
-                this.cancel()
             }
+        },
+        components: {
+            'modal-window': ModalWindow,
+            'form-button': FormButton
         }
-    },
-    components: {
-        'modal-window': ModalWindow,
-        'form-button': FormButton
     }
-}
 </script>
 <style scoped>
+
     input.w3-check {
         height: 16px
     }

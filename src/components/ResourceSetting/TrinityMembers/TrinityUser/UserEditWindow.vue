@@ -1,7 +1,7 @@
 <template>
     <modal-window v-if="this.windowAlive" :window-title="windowTitle" :window-bg-color="windowBgColor" @closeModalWindow="cancel">
-        <user-form v-if="urlOp === 'add'" slot="content" ref="userForm"></user-form>
-        <user-form v-else slot="content" ref="userForm" :content="content"></user-form>
+        <user-form v-if="urlOp === 'add'" slot="content" ref="userForm" :urlOp="urlOp"></user-form>
+        <user-form v-else slot="content" ref="userForm" :content="content" :urlOp="urlOp"></user-form>
         <div slot="footer">
             <form-button btn-color="signal-white" @cancel="cancel" @reset="reset" @save="save"></form-button>
         </div>
@@ -69,9 +69,9 @@ export default {
             let postContent = await this.$refs.userForm.save()
 
             let urlPath = ''
-            if(this.urlOp === 'add'){   //新增Group
+            if(this.urlOp === 'add'){
                 urlPath = 'add'
-            } else if(this.urlOp === 'edit'){   //編輯一筆已存在的Group
+            } else if(this.urlOp === 'edit'){
                 urlPath = 'edit'
             } else {
                 return

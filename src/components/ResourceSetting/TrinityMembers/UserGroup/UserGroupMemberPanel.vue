@@ -23,13 +23,13 @@
                 </div>
                 <div class="w3-col m2 w3-border w3-border-camo-black w3-camo-grey w3-center">
                     <i class="fa fa-plus-square w3-button w3-hover-none" :title="$t('Window.Member.Apply')" aria-hidden="true" @click="changeApplyWindowStatus"></i>
-                    <i class="fa fa-refresh w3-button w3-hover-none" :title="$t('Window.Member.Reload')" aria-hidden="true" @click="getMembers"></i>
+                    <!--<i class="fa fa-refresh w3-button w3-hover-none" :title="$t('Window.Member.Reload')" aria-hidden="true" @click="getMembers"></i>-->
                 </div>
             </div>
             <div class="w3-responsive w3-card w3-round" style="overflow:auto;height:142px;word-break:break-all">
                 <table :id="'UserListTable' + groupuid" class="w3-table-all">
                     <tr :key="list_index+'UserListTr'" class="w3-hover-blue-grey w3-hover-opacity" v-for="(list_info, list_index) in applyMembers">
-                        <td class="w3-center" width="84%">
+                        <td class="w3-left" width="84%">
                             {{ compositionName(list_info) }}
                         </td>
                         <td class="w3-center" width="16%" style="padding:3px 0px 0px 0px">

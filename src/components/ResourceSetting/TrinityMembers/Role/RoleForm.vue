@@ -6,7 +6,7 @@
             </div>
             <div class="w3-col m6">
                 <name-input name="rolename" :class="[inputClassList.common, errors.has('rolename')? inputClassList.invalid: '']" 
-                            v-validate="'required|alpha_dash'" v-model="new_content.rolename" type="text"
+                            v-validate="'required'" v-model="new_content.rolename" type="text"
                             maxlength="32" placeholder="" :readonly="this.new_content.roleuid.startsWith('Role')"/>
             </div>
         </div>

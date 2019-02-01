@@ -4,25 +4,27 @@
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserID') }}</label>
                 <input name="userid" :class="[inputClassList.common, errors.has('userid')? inputClassList.invalid: '']" 
-                       v-validate="'required|alpha_dash'" v-model="new_content.userid" type="text" maxlength="20" placeholder="" 
+                       v-validate="'required'" v-model="new_content.userid" type="text" maxlength="20" placeholder="" 
                        :readonly="content.userid !== ''">
             </div>
             <div class="w3-col m6">
                 <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserName') }}</label>
-                <name-input name="username" :class="[inputClassList.common, errors.has('username')? inputClassList.invalid: '']" 
-                            v-validate="'required|alpha_dash'" v-model="new_content.username" type="text" maxlength="32" placeholder="" />
+                <name-input name="username" :class="[inputClassList.common, errors.has('username')? inputClassList.invalid: '']"
+                            v-validate="'required'" v-model="new_content.username" type="text" maxlength="32" placeholder="" />
             </div>
         </div>
         <div class="w3-row-padding w3-section">
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>{{ $t('Form.User.UserPwd') }}</label>
-                <input name="pwd1" :class="[inputClassList.common, errors.has('pwd1')? inputClassList.invalid: '']" 
-                       v-validate="'required'" v-model="password1" type="password" maxlength="64" placeholder="" ref="password">
+                <span v-if="urlOp == 'add'" class="w3-text-red">*</span><label>{{ $t('Form.User.UserPwd') }}</label>
+                <input v-if="urlOp == 'add'" name="pwd1" :class="[inputClassList.common, errors.has('pwd1')? inputClassList.invalid: '']"
+                       v-validate="'required'" v-model="password1" type="password" maxlength="64" placeholder="" ref="pwd1">
+                <input v-else name="pwd1" :class="[inputClassList.common, errors.has('pwd1')? inputClassList.invalid: '']"
+                       v-validate="" v-model="password1" type="password" maxlength="64" placeholder="" ref="pwd1">
             </div>
             <div class="w3-col m6">
-                <span class="w3-text-red">*</span><label>{{ $t('Form.User.ConfirmPwd') }}</label>
-                <input name="pwd2" :class="[inputClassList.common, errors.has('pwd2')? inputClassList.invalid: '']" 
-                       v-validate="'required|confirmed:password'" v-model="password2" type="password" maxlength="64" placeholder="">
+                <label>{{ $t('Form.User.ConfirmPwd') }}</label>
+                <input name="pwd2" :class="[inputClassList.common, errors.has('pwd2')? inputClassList.invalid: '']"
+                       v-validate="{required: this.isConfirmPwd, is: password1}" v-model="password2" type="password" maxlength="64" placeholder="">
             </div>
         </div>
         <div class="w3-row-padding w3-section">
@@ -82,6 +84,11 @@
 <script>
 
     export default {
+        computed: {
+            isConfirmPwd() {
+                return this.password1.length > 0
+            }
+        },
         data() {
             return {
                 inputClassList: {
@@ -134,7 +141,11 @@
                     }
                 }
             },
-            index: Number
+            index: Number,
+            urlOp: {
+                type: String,
+                default: 'add'
+            }
         },
         methods: {
             async save() {

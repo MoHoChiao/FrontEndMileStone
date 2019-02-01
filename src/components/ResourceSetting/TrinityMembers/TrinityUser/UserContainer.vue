@@ -189,10 +189,10 @@
                                         <template v-else v-for="(content, index) in allUserObjs">
                                             <tr v-show="content.userid.trim() !== 'root'" :id="content.useruid" :key="content.useruid" class="w3-hover-blue-grey w3-hover-opacity" style="cursor: pointer"
                                                 @click="clickOnUserRecord(content.useruid, index)">
-                                                <td id="barsTD" :width="gridWidth[0]">
-                                                    <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute">
-                                                        <i id="barsLabel" class="fa fa-bars"></i>
-                                                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                <td :width="gridWidth[0]" @click.stop="clickOnRecordBar(content.useruid, index)">
+                                                    <i class="fa fa-bars w3-bar"></i>
+                                                    <div class="w3-dropdown-click w3-blue-grey" style="display:block;position:inherit">
+                                                        <div :id="'recordbar'+index" class="w3-dropdown-content w3-bar-block w3-card-4">
                                                             <button v-if="!selectedRecord.lock || selectedRecord.lock !== '1'" class="w3-bar-item w3-button w3-padding-small" @click.stop="showLockWindow(true)"> {{ $t('Container.Func.Lock') }}</button>
                                                             <button v-else class="w3-bar-item w3-button w3-padding-small" @click.stop="showLockWindow(false)"> {{ $t('Container.Func.Unlock') }}</button>
                                                             <button class="w3-bar-item w3-button w3-padding-small w3-border-top" @click.stop="showDeleteWindow"> {{ $t('Container.Func.Delete') }}</button>
@@ -332,21 +332,37 @@
         mounted() {
             this.getUsers()
         },
+        beforeUpdate() {
+            document.addEventListener('click', this.documentClick)
+        },
+        beforeDestroy() {
+            // important to clean up!!
+            document.removeEventListener('click', this.documentClick)
+        },
         methods: {
+            documentClick() {
+                if (!event.target.matches('.fa-bars')) {
+                    var dropdowns = document.getElementsByClassName("w3-dropdown-content");
+                    var i;
+                    for (i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('w3-show')) {
+                            openDropdown.classList.remove('w3-show');
+                        }
+                    }
+                }
+            },
             //When Grid List click on user record
             clickOnUserRecord(id, index) {
                 let tr = document.getElementById(id)
                 this.clearSelectedRecord(tr)
-                let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
 
                 if (tr.className.indexOf('w3-blue-grey') == -1) {
                     tr.className = 'w3-blue-grey'
                     this.selectedRecord = this.allUserObjs[index]
                     this.selectedRecord.index = index //New prop is stores which user obj will be deleted in UI
-                    menuBtn.style.display = 'block'
                 } else {
                     tr.className = 'w3-hover-blue-grey w3-hover-opacity'
-                    menuBtn.style.display = 'none'
                 }
             },
             clickOnUserRecordName(id, index) {
@@ -358,12 +374,34 @@
                     tr.className = 'w3-blue-grey'
                     this.selectedRecord = this.allUserObjs[index]
                     this.selectedRecord.index = index //New prop is stores which user obj will be deleted in UI
-
-                    let menuBtn = tr.getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
-                    menuBtn.style.display = 'block'
                 }
 
                 this.changeUserWindowStatus('edit')
+            },
+            clickOnRecordBar(id, index) {
+                let tr = document.getElementById(id)
+
+                if (tr.className.indexOf('w3-blue-grey') == -1) {
+                    this.clearSelectedRecord(tr)
+
+                    tr.className = 'w3-blue-grey'
+                    this.selectedRecord = this.allUserObjs[index]
+                    this.selectedRecord.index = index //New prop is stores which user obj will be deleted in UI
+                }
+
+                let dropdowns = document.getElementsByClassName("w3-dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    if (i == index) {
+                        continue // skip self then toggle
+                    }
+
+                    let openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('w3-show')) {
+                        openDropdown.classList.remove('w3-show');
+                    }
+                }
+
+                document.getElementById("recordbar"+index).classList.toggle("w3-show");
             },
             //When Content List click on user operation button
             clickOnUserPanel(which, index, content, isLock) {
@@ -560,11 +598,6 @@
                     for (var i = 0; i < table.childNodes.length; i++) {  //先重設所有user row的class
                         if (table.childNodes[i] !== tr) {  //等於自己的(即點到的那一列)不用重設
                             table.childNodes[i].className = 'w3-hover-blue-grey w3-hover-opacity'
-
-                            if (table.childNodes[i].nodeName !== 'DIV') {   // not empty grid
-                                let menuBtn = table.childNodes[i].getElementsByClassName('w3-dropdown-hover w3-blue-grey')[0]
-                                menuBtn.style.display = 'none'
-                            }
                         }
                     }
                 }
@@ -637,13 +670,12 @@
         height: 31px;
         width: 210px;
     }
-    #barsTD {
+    /*#barsTD {
         padding: 0px 0px;
-    }
-
-    #barsLabel {
+    }*/
+    /*#barsLabel {
         padding-top: 7px;
         padding-left: 8px;
-    }
+    }*/
 </style>
 
