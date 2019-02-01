@@ -349,13 +349,13 @@
   },
   "Time": {
     "Week": {
-      "Sun": "Su",
-      "Mon": "Mo",
-      "Tue": "Tu",
-      "Wed": "We",
-      "Thu": "Th",
-      "Fri": "Fr",
-      "Sat": "Sa"
+      "Sun": "Sun",
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat"
     },
     "Month": {
       "Jan": "January",

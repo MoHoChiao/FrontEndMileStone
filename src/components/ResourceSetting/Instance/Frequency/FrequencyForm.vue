@@ -352,8 +352,30 @@
                 },
                 option: {
                     type: 'multi-day',
-                    week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                    month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    SundayFirst: true,
+                    week: [
+                        this.$t('Time.Week.Sun'),
+                        this.$t('Time.Week.Mon'),
+                        this.$t('Time.Week.Tue'),
+                        this.$t('Time.Week.Wed'),
+                        this.$t('Time.Week.Thu'),
+                        this.$t('Time.Week.Fri'),
+                        this.$t('Time.Week.Sat')
+                    ],
+                    month: [
+                        this.$t('Time.Month.Jan'),
+                        this.$t('Time.Month.Feb'),
+                        this.$t('Time.Month.Mar'),
+                        this.$t('Time.Month.Apr'),
+                        this.$t('Time.Month.May'),
+                        this.$t('Time.Month.Jun'),
+                        this.$t('Time.Month.Jul'),
+                        this.$t('Time.Month.Aug'),
+                        this.$t('Time.Month.Sep'),
+                        this.$t('Time.Month.Oct'),
+                        this.$t('Time.Month.Nov'),
+                        this.$t('Time.Month.Dec'),
+                    ],
                     format: 'YYYY-MM-DD',
                     placeholder: 'when?',
                     inputStyle: {
@@ -432,8 +454,10 @@
                 // datetype validation
                 this.errors.remove('datetypeCalendar')
 
+                let datetimeArr
+
                 if (this.datetype === 'Calendar') {
-                    let datetimeArr = JSON.parse(datetime)
+                    datetimeArr = JSON.parse(datetime)
                     if (datetimeArr.length <= 0 || datetimeArr.length > 2000) {
                         let dateErrObj = {
                             field: 'datetypeCalendar',
