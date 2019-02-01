@@ -89,7 +89,7 @@
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCDriver') }}</label>
                         <input name="jdbc_driver" :class="[inputClassList.common, errors.has('jdbc_driver')? inputClassList.invalid: '']"
-                               v-validate="'required'" v-model="new_content.jdbc_driver" type="text" maxlength="255" placeholder="" readonly>
+                               v-validate="'required'" v-model="new_content.jdbc_driver" type="text" maxlength="255" placeholder="" :readonly="new_content.jdbc_dbType != 'Generic'">
                     </div>
                     <div class="w3-col m6">
                         <span class="w3-text-red">*</span><label>{{ $t('Form.Conn.JDBCURL') }}</label>
