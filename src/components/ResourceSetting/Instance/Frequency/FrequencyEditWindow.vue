@@ -98,7 +98,8 @@
                      * 沒有回傳categoryuid則表示是在root底下新增, 此時urlPath只需'add'路徑
                     */
                     if (postContent) {    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                        if (postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        if (postContent.categoryuid && postContent.categoryuid.trim().length > 0
+                            && postContent.categoryuid != 'root')
                             urlPath = 'add?categoryUid=' + postContent.categoryuid
                         else    //如果選擇'/'表示根目錄, 只需要add即可
                             urlPath = 'add'
@@ -109,7 +110,8 @@
                      * 沒有回傳categoryuid則表示是把frequency移動到root底下, 此時urlPath只需'edit'路徑
                     */
                     if (postContent) {    //如果有必填的欄位沒填或不合法, 會回傳undefined回來, 因此這裡需要判斷一下
-                        if (postContent.categoryuid && postContent.categoryuid.trim().length > 0)    //當categoryuid有值, 表示有選擇某一個category
+                        if (postContent.categoryuid && postContent.categoryuid.trim().length > 0
+                            && postContent.categoryuid != 'root')
                             urlPath = 'edit?categoryUid=' + postContent.categoryuid
                         else    //表示選擇'/'表示根目錄, categoryUid代為空字串
                             urlPath = 'edit?categoryUid='

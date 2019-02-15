@@ -18,7 +18,7 @@
             <button v-if="hasCancel" type="button" :class="classList" style="margin-right:3px" @click="cancel">
                 <i class="fa fa-ban"></i> {{ $t('Container.Func.Cancel') }}
             </button>
-            <button type="button" :class="classList" style="margin-right:3px" @click="reset">
+            <button v-if="hasReset" type="button" :class="classList" style="margin-right:3px" @click="reset">
                 <i class="fa fa-undo"></i> {{ $t('Container.Func.Reset') }}
             </button>
         </div>
@@ -59,6 +59,10 @@
                 default: false
             },
             hasCancel: {
+                type: Boolean,
+                default: true
+            },
+            hasReset: {
                 type: Boolean,
                 default: true
             }

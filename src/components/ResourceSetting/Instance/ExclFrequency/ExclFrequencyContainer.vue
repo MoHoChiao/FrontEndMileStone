@@ -14,14 +14,12 @@
                                btn-color="signal-white"
                                @closeDelete="closeDeleteWindow"
                                @confirmDelete="deleteExclFreq">
-
         </confirm-delete-window>
         <excl-frequency-apply-window :windowAlive="applyWindowAlive"
-                                     window-title="Apply Exclude Frequency To Other Object"
+                                     window-title="Apply Exclude Frequency"
                                      :applyTimes="selectedRecord.excludefrequencylist"
                                      :excludefrequencyuid="selectedRecord.excludefrequencyuid"
                                      @closeApply="changeApplyWindowStatus">
-
         </excl-frequency-apply-window>
         <router-view name="content">
             <!--Global Excl Freq Window組件內容會在這裡渲染-->
@@ -115,6 +113,7 @@
                                                 <div class="w3-dropdown-hover w3-blue-grey" style="display:none;position:absolute;">
                                                     <i id="barsLabel" class="fa fa-bars"></i>
                                                     <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                                                        <button class="w3-bar-item w3-button w3-padding-small" @click.stop="changeApplyWindowStatus"> Apply</button>
                                                         <button class="w3-bar-item w3-button w3-padding-small" @click.stop="showDeleteWindow"> Delete</button>
                                                     </div>
                                                 </div>
@@ -125,7 +124,7 @@
                                                 </span>
                                             </td>
                                             <td :width="gridWidth[2]">
-                                                <span :title="content.description">{{ content.description.length > 50 ? content.description.substr(0, 50) + '...' : content.description }}</span>
+                                                <span :title="content.description">{{ content.description.length > 45 ? content.description.substr(0, 45) + '...' : content.description }}</span>
                                             </td>
                                             <td :width="gridWidth[3]" class="w3-center">
                                                 <i v-if="content.activate == 1" class="fa fa-check-circle w3-text-green" />
@@ -349,9 +348,7 @@
                     this.allExclFreqObjs[index] = content
                 }
             },
-            changeApplyWindowStatus(record) {
-                if (record)
-                    this.selectedRecord = record
+            changeApplyWindowStatus() {
                 this.applyWindowAlive = !this.applyWindowAlive
             },
             //above for delete window
